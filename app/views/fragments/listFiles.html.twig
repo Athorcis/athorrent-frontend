@@ -1,0 +1,17 @@
+{% spaceless %}
+{% for file in files %}
+    {% if file.isCachable %}
+        {% cache 'file' file %}
+            {% include 'fragments/file.html.twig' %}
+        {% endcache %}
+    {% else %}
+        {% include 'fragments/file.html.twig' %}
+    {% endif %}
+{% else %}
+    <tr>
+        <td>
+            <div class="alert alert-info" role="alert">{{ 'files.none'|trans }}</div>
+        </td>
+    </tr>
+{% endfor %}
+{% endspaceless %}

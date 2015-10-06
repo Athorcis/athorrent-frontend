@@ -1,0 +1,31 @@
+{
+    "name": "athorcis/athorrent-client",
+
+    "license": "MIT",
+
+    "version": "0.1",
+
+    "type": "project",
+
+    "require": {
+        "silex/silex": "~1.2",
+        "twig/twig": "~1.18",
+        "spe/filesize-extension-bundle": "0.1.*",
+        "symfony/security": "~2.6",
+        "symfony/twig-bridge": "^2.7",
+        "asm89/twig-cache-extension": "^1.0",
+        "symfony/translation": "^2.7",
+        "symfony/yaml": "^2.7",
+        "symfony/config": "^2.7"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Athorrent\\": "app/src/"
+        }
+    },
+
+    "config": {
+        "vendor-dir": "app/vendor"
+    }
+}

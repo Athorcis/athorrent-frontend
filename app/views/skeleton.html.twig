@@ -1,0 +1,39 @@
+{% spaceless %}
+<!doctype html>
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ app.locale }}"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ app.locale }}"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="description" content="{{ 'app.description'|trans }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        {% block css_vendor %}
+            {{ css('vendor/bootstrap/dist/css/bootstrap.min')|raw }}
+            {{ css('vendor/bootstrap/dist/css/bootstrap-theme.min')|raw }}
+            {{ css('vendor/font-awesome/css/font-awesome.min')|raw }}
+        {% endblock %}
+
+        {% block css %}{% endblock %}
+
+        <!--[if lt IE 9]>
+            {{ js('vendor/html5shiv/dist/html5shiv.min')|raw }}
+        <![endif]-->
+    </head>
+    <body>
+        {% include 'nav.html.twig' %}
+
+        <div class="container">{% block content %}{% endblock %}</div>
+
+        {% if js_variables %}
+            <script type="text/javascript">
+                var athorrent = {{ js_variables|json_encode|raw }};
+            </script>
+
+            {{ js('js/config')|raw }}
+
+            <script type="text/javascript" src="{{ '//' ~ constant('STATIC_HOST') ~ '/vendor/requirejs/require.min.js' }}" data-main="{% block js %}athorrent{% endblock %}" async></script>
+        {% endif %}
+    </body>
+</html>
+{% endspaceless %}

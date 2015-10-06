@@ -1,0 +1,83 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}{{ 'users.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
+
+{% block css %}
+{{ css('css/main')|raw }}
+{{ css('css/users')|raw }}
+{% endblock %}
+
+{% block js %}users{% endblock %}
+
+{% block content %}
+{% set userId = app.security.token.user.userId %}
+<div class="page-header">
+    <h1>
+        {{ 'users.title'|trans }}
+        <a class="btn btn-default pull-right" href="{{ path('addUser') }}">{{ 'users.add.title'|trans }}</a>
+    </h1>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>{{ 'users.username'|trans }}</th>
+            <th>{{ 'users.role'|trans }}</th>
+            <th>{{ 'users.lastConnection'|trans }}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            {% cache 'user' user %}
+            <tr class="user" id="user-{{ user.userId }}">
+                <td>{{ user.userId }}</td>
+                <td class="user-name">{{ user.username }}</td>
+                <td>{{ user.roles[0]|trans }}</td>
+                <td>
+                    {% if user.connectionTimestamp %}
+                        {{ user.connectionTimestamp|date('d/m/Y H:i:s') }}
+                    {% else %}
+                        {{ 'users.lastConnectionNone'|trans }}
+                    {% endif %}
+                </td>
+                <td class="text-right user-buttons">
+                    {% if user.userId != userId %}
+                    <a class="btn btn-xs btn-default" href="{{ path('listFiles', { _switch_user: user.username }, 'files') }}">
+                        <span class="fa fa-exchange"></span>
+                    </a>
+                        {% if user.userId != 1 %}
+                    <button class="btn btn-xs btn-danger user-remove">
+                        <span class="fa fa-remove"></span>
+                    </button>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endcache %}
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if lastPage > 1 %}
+    <div class="text-center">
+        <ul class="pagination">
+        {% set startPage = max(1, page - 2) %}
+        {% set endPage = min(lastPage, startPage + 4) %}
+        {% set startPage = max(1, endPage - 4) %}
+
+        {% if page > 1 %}
+            <li><a href="{{ path('listUsers', { page: page - 1 }) }}">&laquo;</a></li>
+        {% endif %}
+
+        {% for i in startPage .. endPage %}
+            <li{% if i == page %} class="active"{% endif %}><a href="{{ path('listUsers', { page: i }) }}">{{ i }}</a></li>
+        {% endfor %}
+
+        {% if page < lastPage %}
+            <li><a href="{{ path('listUsers', { page: page + 1 }) }}">&raquo;</a></li>
+        {% endif %}
+        </ul>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+@import 'main';
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+video {
+    margin-top: 5px;
+    max-width: 100%;
+}
+
+.video-container {
+    text-align: center;
+
+    > video {
+        display: inline-block;
+    }
+}

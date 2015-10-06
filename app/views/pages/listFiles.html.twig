@@ -1,0 +1,27 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}{% if title %}{{ title }}{% else %}Fichiers{% endif %} - {{ 'app.name'|trans }}{% endblock %}
+
+{% block css %}
+{{ css('css/files')|raw }}
+{% endblock %}
+
+{% block js %}files{% endblock %}
+
+{% block content %}
+<h1>{{ title }} <span class="dirsize">({{ dir_size|readable_filesize }})</span></h1>
+<ol class="breadcrumb">
+    {% for name, path in breadcrumb %}
+        <li{% if loop.last %} class="active"{% endif %}>
+            {% if loop.last %}
+                <span>{{ name }}</span>
+            {% else %}
+                <a href="{{ path('listFiles', { path: path }) }}">{{ name }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ol>
+<table class="file-list">
+    {% include 'fragments/listFiles.html.twig' %}
+</table>
+{% endblock %}

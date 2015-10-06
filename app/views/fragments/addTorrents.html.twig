@@ -1,0 +1,17 @@
+<form class="well" id="add-torrent-form" method="post"  enctype="multipart/form-data">
+    <div class="dropzone" id="add-torrent-file-drop"></div>
+    <div id="add-torrent-magnet-wrapper">
+        <textarea class="form-control" id="add-torrent-magnet-input"></textarea>
+    </div>
+    <div class="btn-group" id="add-torrent-controls">
+        <span class="btn btn-default" id="add-torrent-file">
+            <span class="fa fa-file"></span>
+            <span id="add-torrent-file-counter">(0)</span>
+        </span>
+        <span class="btn btn-default" id="add-torrent-magnet">
+            <span class="fa fa-flip-vertical fa-magnet"></span>
+            <span id="add-torrent-magnet-counter">(0)</span>
+        </span>
+        <span class="btn btn-default disabled" id="add-torrent-submit">{{ 'torrents.add'|trans }}</span>
+    </div>
+</form>
