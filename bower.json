@@ -1,0 +1,19 @@
+{
+  "name": "athorrent-client",
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "dropzone": "~4.0.1",
+    "font-awesome": "~4.4.0",
+    "html5shiv": "~3.7.3",
+    "jquery": "~1.11.3",
+    "phpjs": "*",
+    "requirejs": "~2.1.20"
+  },
+  "moduleType": [
+    "globals"
+  ],
+  "authors": [
+    "Athorcis <athorcis@yahoo.fr>"
+  ],
+  "license": "MIT"
+}

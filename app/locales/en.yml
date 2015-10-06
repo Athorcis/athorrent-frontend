@@ -1,0 +1,106 @@
+ROLE_USER: User
+ROLE_ADMIN: Administrator
+
+error:
+    title: Error
+    pageNotFound: Page not found
+    sharingNotFound: Sharing not found
+    notATorrent: This file is not a torrent
+    fileTooBig: This file is too big
+    badRequest: Bad request
+    fileNotFound: File not found
+    notAMP4: This file is not MP4
+    cannotRemoveFile: Unable to remove this file
+    usernameAlreadyUsed: This username is already used
+    roleNotSpecified: Undefined role
+    cannotRemoveUser: Unable to remove this user
+    errorUnknown: Unknown error
+
+app:
+    name: Athorrent
+    description: Athorrent the seedbox which does Brrrrrrrrrraaaaaaaaaaaa.
+
+nav:
+    files: Files
+    torrents: Torrents
+    sharings: Sharings
+    users: Users
+
+    nickname: Nickname
+    password: Password
+    login: Login
+    logout: Logout
+    exit: Exit
+
+home:
+    title: Home
+    welcome: Welcome to Athorrent
+    description: |
+        Athorrent the seedbox which does Brrrrrrrrrraaaaaaaaaaaa.
+        Login to start using this service.
+
+files:
+    title: Files
+    root: Root
+    open: Open
+    download: Download
+    play: Play
+    directLink: Direct link
+    sharingLink: Sharing link
+    removeSharing: Remove sharing
+    share: Share
+    none: no files to display
+
+torrents:
+    title: Torrents
+    dropzone: Drop files here or click to select them
+    add: Add
+    size: Size
+    dl: DL
+    ul: UL
+    ratio: Ratio
+    seeders: Seeders
+    leechers: Leechers
+    managerUpdating: The torrent manager is neing updating
+    none: no torrents to display
+
+    state:
+        allocating: Allocating # to translate
+        queued_for_checking: Queued for checking
+        checking_files: Checking files
+        checking_resume_data: Checking resume data # to translate
+        downloading_metadata: Downloading metadata
+        downloading: Downloading
+        paused: Paused
+        finished: Finished
+        seeding: Seeding
+
+    tabMain:
+        title: Main
+
+    tabTrackers:
+        title: Trackers
+        url: URL
+        state: State
+        peers: Peers
+        message: Message
+
+    tabPeers:
+        title: Peers
+
+sharings:
+    title: Sharings
+    none: no sharings to display
+    path: Path
+
+users:
+    title: User management
+    username: Username
+    password: Password
+    role: Role
+    lastConnection: Last connection
+    lastConnectionNone: None
+
+    add:
+        title: Add a new user
+        submit: Add

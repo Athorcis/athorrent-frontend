@@ -1,0 +1,68 @@
+
+.torrent-list {
+    margin-top: 20px;
+}
+
+.torrent {
+    overflow: hidden;
+    padding: 0 10px 5px;
+}
+
+.torrent-odd {
+    background-color: #fafafa;
+}
+
+.torrent-header {
+    font-size: 1.2857em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.torrent-progress-bar {
+    height: 20px;
+    margin-bottom: 10px;
+}
+
+.torrent-info {
+    float: left;
+    font-size: 0.928em;
+
+    + .torrent-info:before {
+        content: "/";
+        float: left;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+}
+
+.torrent-info-key {
+    float: left;
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.2;
+    margin: 0 5px 0 0;
+}
+
+.torrent-info-value {
+    float: left;
+    line-height: 1.2;
+}
+
+.torrent-state {
+    float: left;
+    margin-left: 10px;
+}
+
+.torrent-controls {
+    float: right;
+    margin-top: -1px;
+
+    > .btn {
+        margin-left: 5px;
+    }
+}
+
+.torrent-panel {
+    background-color: #fff;
+    display: none;
+}

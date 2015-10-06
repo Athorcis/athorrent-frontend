@@ -1,0 +1,105 @@
+ROLE_USER: Utilisateur
+ROLE_ADMIN: Administrateur
+
+error:
+    title: Erreur
+    pageNotFound: Page introuvable
+    sharingNotFound: Partage introuvable
+    notATorrent: Ce fichier n'est pas un torrent
+    fileTooBig: Ce fichier est trop grand
+    badRequest: Requête malformée
+    fileNotFound: Fichier introuvable
+    notAMP4: Le fichier n'est pas un mp4
+    cannotRemoveFile: Impossible de supprimer le fichier
+    usernameAlreadyUsed: Ce nom d'utilisateur existe déjà.
+    roleNotSpecified: Rôle indéfini
+    cannotRemoveUser: Impossible de supprimer l'utilisateur
+    errorUnknown: Erreur inconnue
+app:
+    name: Athorrent
+    description: Athorrent la seedbox qui fait Brrrrrrrrrraaaaaaaaaaaa.
+
+nav:
+    files: Fichiers
+    torrents: Torrents
+    sharings: Partages
+    users: Utilisateurs
+
+    nickname: Pseudo
+    password: Mot de passe
+    login: Connexion
+    logout: Déconnexion
+    exit: Retour
+
+home:
+    title: Accueil
+    welcome: Bienvenue sur Athorrent
+    description: |
+        Athorrent la seedbox qui fait Brrrrrrrrrraaaaaaaaaaaa.
+        Connectez vous, pour commencez à utiliser ce service.
+
+files:
+    title: Fichiers
+    root: Racine
+    open: Ouvrir
+    download: Télécharger
+    play: Lire
+    directLink: Lien direct
+    sharingLink: Lien de partage
+    removeSharing: Supprimer le partage
+    share: Partager
+    none: Aucun fichier à afficher
+
+torrents:
+    title: Torrents
+    dropzone: Déposez des fichiers ou cliquez pour les sélectionner
+    add: Ajouter
+    size: Taille
+    dl: DL
+    ul: UL
+    ratio: Ratio
+    seeders: Seeders
+    leechers: Leechers
+    managerUpdating: Le gestionnaire de torrents est en cours de mise à jour.
+    none: Aucun torrent à afficher
+
+    state:
+        allocating: Allocating # to translate
+        queued_for_checking: En attente de vérification
+        checking_files: Vérification des fichiers
+        checking_resume_data: Checking resume data # to translate
+        downloading_metadata: Téléchargement des métadonnées
+        downloading: En téléchargement
+        paused: En pause
+        finished: Terminé
+        seeding: En upload
+
+    tabMain:
+        title: Général
+
+    tabTrackers:
+        title: Trackers
+        url: URL
+        state: Etat
+        peers: Peers
+        message: Message
+
+    tabPeers:
+        title: Peers
+
+sharings:
+    title: Partages
+    none: Aucun partage à afficher
+    path: Chemin
+
+users:
+    title: Gestion des utilisateurs
+    username: Nom d'utilisateur
+    password: Mot de passe
+    role: Rôle
+    lastConnection: Dernière connexion
+    lastConnectionNone: Aucune
+
+    add:
+        title: Ajouter un utilisateur
+        submit: Ajouter

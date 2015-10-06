@@ -1,0 +1,63 @@
+{% spaceless %}
+{% for torrent in torrents %}
+    <div class="torrent {% if loop.index is odd %}torrent-odd{% else %}torrent-even{% endif %}" id="torrent-{{ torrent.hash }}">
+        <h2 class="torrent-header">
+            <span class="torrent-name">{{ torrent.name }}</span> (<span class="torrent-progress">{{ (100 * torrent.progress)|round  }}</span>%)
+        </h2>
+        <div class="torrent-middle-container">
+            <div class="torrent-controls">
+                <button type="button" class="btn btn-default btn-xs torrent-detail">
+                    <span class="fa fa-info"></span>
+                </button>
+                <button type="button" class="btn btn-default btn-xs torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
+                    <span class="fa fa-{% if torrent.paused %}play{% else %}pause{% endif %}"></span>
+                </button>
+                <button type="button" class="btn btn-default btn-xs torrent-remove">
+                    <span class="fa fa-remove"></span>
+                </button>
+            </div>
+            <div class="progress torrent-progress-bar">
+                <div class="progress-bar progress-bar-{{ torrentStateToClass(torrent) }}" role="progressbar" aria-valuenow="{{ 100 * torrent.progress  }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ 100 * torrent.progress  }}%">
+                </div>
+            </div>
+        </div>
+        <div class="torrent-info">
+            <h3 class="torrent-info-key">{{ 'torrents.size'|trans }}:</h3>
+            <span class="torrent-info-value">{{ torrent.size|readable_filesize }}</span>
+        </div>
+        <div class="torrent-info">
+            <h3 class="torrent-info-key">{{ 'torrents.dl'|trans }}:</h3>
+            <span class="torrent-info-value">{{ torrent.download_payload_rate|readable_filesize }}/s</span>
+        </div>
+        <div class="torrent-info">
+            <h3 class="torrent-info-key">{{ 'torrents.ul'|trans }}:</h3>
+            <span class="torrent-info-value">{{ torrent.upload_payload_rate|readable_filesize }}/s</span>
+        </div>
+        <div class="torrent-info">
+            <h3 class="torrent-info-key">{{ 'torrents.ratio'|trans }}:</h3>
+            <span class="torrent-info-value">
+                {%if torrent.progress == 0 or torrent.size == 0 %}
+                    0
+                {% else %}
+                    {{ (torrent.total_payload_upload / (torrent.progress * torrent.size))|round(2) }}
+                {% endif %}
+            </span>
+        </div>
+        <div class="torrent-info">
+            <h3 class="torrent-info-key">{{ 'torrents.seeders'|trans }}:</h3>
+            <span class="torrent-info-value">{{ torrent.num_seeds }} ({{ torrent.list_seeds }})</span>
+        </div>
+        <div class="torrent-info">
+            <h3 class="torrent-info-key">{{ 'torrents.leechers'|trans }}:</h3>
+            <span class="torrent-info-value">{{ torrent.num_peers }} ({{ torrent.list_peers }})</span>
+        </div>
+        <span class="label torrent-state label-{{ torrentStateToClass(torrent) }}">{{ ('torrents.state.' ~ torrent.state)|trans }}</span>
+    </div>
+{% else %}
+    {% if client_updating %}
+    <div class="alert alert-warning" role="alert">{{ 'torrents.managerUpdating'|trans }}</div>
+    {% else %}
+    <div class="alert alert-info" role="alert">{{ 'torrents.none'|trans }}</div>
+    {% endif %}
+{% endfor %}
+{% endspaceless %}
