@@ -80,8 +80,8 @@ class User implements UserInterface {
 
     public function getRoles() {
         if ($this->roles === null) {
-            $this->roles = array_map(function ($userRole) {
-                return $userRole->getRole();
+            $this->roles = array_map(function (UserRole $role) {
+                return $role->getRole();
             }, UserRole::loadByUserId($this->userId));
         }
 

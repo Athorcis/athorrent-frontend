@@ -4,6 +4,7 @@ use Silex\Application;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\Translation\Translator;
 
 function initializeTranslation(Application $app) {
     $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use($app) {
@@ -17,7 +18,7 @@ function initializeTranslation(Application $app) {
         'locale_fallbacks' => array('fr'),
     ));
 
-    $app['translator'] = $app->share($app->extend('translator', function($translator, $app) {
+    $app['translator'] = $app->share($app->extend('translator', function(Translator $translator, $app) {
         $translator->addLoader('yaml', new YamlFileLoader());
 
         $translator->addResource('yaml', LOCALES . '/fr.yml', 'fr');
