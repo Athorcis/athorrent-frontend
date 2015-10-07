@@ -7,6 +7,7 @@ use Athorrent\Utils\Cache\KeyGenerator;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use SPE\FilesizeExtensionBundle\Twig\FilesizeExtension;
+use Twig_Environment;
 
 function initializeTwig(Application $app) {
     $app->register(new TwigServiceProvider(), array (
@@ -16,7 +17,7 @@ function initializeTwig(Application $app) {
         )
     ));
 
-    $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
+    $app['twig'] = $app->share($app->extend('twig', function(Twig_Environment $twig, $app) {
         $cacheProvider = new CacheProvider($app['cache']);
         $cacheStrategy  = new GenerationalCacheStrategy($cacheProvider, new KeyGenerator(), 0);
         $cacheExtension = new CacheExtension($cacheStrategy);

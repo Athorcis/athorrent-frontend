@@ -7,6 +7,7 @@ use Athorrent\Entity\Sharing;
 use Athorrent\Entity\User;
 use Athorrent\Utils\File;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 class KeyGenerator implements KeyGeneratorInterface {
     public function generateKey($value) {
@@ -16,7 +17,7 @@ class KeyGenerator implements KeyGeneratorInterface {
             if ($value === null) {
                 $key = 'notoken';
             } else {
-                $roles = array_map(function ($role) {
+                $roles = array_map(function (Role $role) {
                     return $role->getRole();
                 }, $value->getRoles());
 

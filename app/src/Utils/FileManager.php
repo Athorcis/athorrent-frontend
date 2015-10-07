@@ -165,7 +165,7 @@ class FileManager {
             $result['files'][] = new File($absoluteEntryPath, $relativePath . $entry, $this->ownerId, $cachable, $deletable, $sharable);
         }
 
-        usort($result['files'], function ($a, $b) {
+        usort($result['files'], function (File $a, File $b) {
             if (!$a->isFile() && $b->isFile()) {
                 return -1;
             } else if ($a->isFile() && !$b->isFile()) {

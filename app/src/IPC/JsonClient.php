@@ -34,7 +34,7 @@ class JsonClient {
         return null;
     }
 
-    public function send($request) {
+    public function send(JsonRequest $request) {
         $rawRequest = $request->toRawRequest();
         $length = strlen($rawRequest);
         $offset = 0;
