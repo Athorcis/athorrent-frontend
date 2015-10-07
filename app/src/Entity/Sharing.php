@@ -101,7 +101,7 @@ class Sharing {
         return $sth->rowCount() > 0;
     }
 
-    public static function loadByPathRecursively($path, $userId, $count = 0) {
+    public static function loadByPathRecursively($path, $userId) {
         global $app;
 
         $sth = $app['pdo']->prepare('SELECT token, path, UNIX_TIMESTAMP(creationTimestamp) AS creationTimestamp FROM sharing WHERE (path = :path OR path LIKE :like) AND userId = :userId ORDER BY CHAR_LENGTH(path)');

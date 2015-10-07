@@ -7,7 +7,7 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 
 function initializeTranslation(Application $app) {
-    $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use($app) {
+    $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) {
         $request = $event->getRequest();
         $locale = $request->getPreferredLanguage();
 
