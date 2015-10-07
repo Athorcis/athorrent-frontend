@@ -1,9 +1,9 @@
 {
-    "name": "athorcis/athorrent-client",
+    "name": "athorcis/athorrent-frontend",
+
+    "description": "A lightweight seedbox frontend",
 
     "license": "MIT",
-
-    "version": "0.1",
 
     "type": "project",
 
