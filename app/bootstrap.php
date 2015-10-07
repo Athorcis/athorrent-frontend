@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-require APP . '/constants.php';
+require APP . '/config.php';
 require APP . '/routes.php';
 require APP . '/security.php';
 require APP . '/translation.php';
