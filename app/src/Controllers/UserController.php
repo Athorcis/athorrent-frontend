@@ -5,7 +5,6 @@ namespace Athorrent\Controllers;
 use Athorrent\Entity\Sharing;
 use Athorrent\Entity\User;
 use Athorrent\Entity\UserRole;
-use Athorrent\Utils\UserProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController {

@@ -3,7 +3,6 @@
 namespace Athorrent\Utils;
 
 use Athorrent\Entity\Sharing;
-use Athorrent\Entity\User;
 
 class FileManager {
     private $ownerId;
