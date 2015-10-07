@@ -3,7 +3,6 @@
 namespace Athorrent\Utils;
 
 use Athorrent\Controllers\AbstractController;
-use Silex\Application;
 
 class AliasResolver {
     private $routes;
