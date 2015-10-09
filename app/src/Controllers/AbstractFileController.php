@@ -104,8 +104,10 @@ class AbstractFileController extends AbstractController {
             return $this->abort(404);
         }
 
+        set_time_limit(0);
+
         return $this->sendFile($path, 200, array (
-            'Content-Disposition' => ' attachment; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
+            'Content-Disposition' => ' inline; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
         ));
     }
 
@@ -119,6 +121,8 @@ class AbstractFileController extends AbstractController {
         if (!is_file($path)) {
             return $this->abort(404);
         }
+
+        set_time_limit(0);
 
         return $this->sendFile($path, 200, array (
             'Content-Disposition' => ' attachment; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
