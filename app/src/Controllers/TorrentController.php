@@ -15,6 +15,7 @@ class TorrentController extends AbstractController {
         $routes = parent::buildRoutes();
 
         $routes[] = array('GET', '/', 'listTorrents');
+        $routes[] = array('GET', '/magnet', 'addMagnet');
 
         return $routes;
     }
@@ -94,6 +95,16 @@ class TorrentController extends AbstractController {
         }
 
         return $this->abort(500, 'error.fileTooBig');
+    }
+
+    protected function addMagnet(Request $request, TorrentManager $torrentManager) {
+        $magnet = $request->query->get('magnet');
+
+        if ($magnet) {
+            $torrentManager->addTorrentFromMagnet($magnet);
+        }
+
+        return $this->redirect('listTorrents');
     }
 
     protected function addTorrents(Request $request, TorrentManager $torrentManager) {
