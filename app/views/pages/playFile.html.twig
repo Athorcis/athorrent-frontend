@@ -3,6 +3,7 @@
 {% block title %}{{ name }} - {{ 'app.name'|trans }}{% endblock %}
 
 {% block css %}
+{{ parent() }}
 {{ css('css/play')|raw }}
 {% endblock %}
 

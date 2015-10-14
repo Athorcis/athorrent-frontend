@@ -33,6 +33,8 @@ class KeyGenerator implements KeyGeneratorInterface {
             $key = $value->getToken();
         } else if ($value instanceof User) {
             $key = $value->getUserId() . $value->getConnectionTimestamp();
+        } else if (is_string($value)) {
+            $key = $value;
         }
 
         return $key . $app['locale'];

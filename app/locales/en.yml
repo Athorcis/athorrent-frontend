@@ -15,10 +15,13 @@ error:
     roleNotSpecified: Undefined role
     cannotRemoveUser: Unable to remove this user
     errorUnknown: Unknown error
+    loginFailure: Username or password invalid
+    usernameOrPasswordEmpty: Username or pasword empty
 
 app:
     name: Athorrent
-    description: Athorrent the seedbox which does Brrrrrrrrrraaaaaaaaaaaa.
+    logo: Logo of Athorrent
+    description: Download torrents and share your files where your want, when you want and safely. Use a seedbox has never been easier.
 
 nav:
     files: Files
@@ -33,11 +36,32 @@ nav:
     exit: Exit
 
 home:
-    title: Home
+    title: Use a seedbox has never been easier
     welcome: Welcome to Athorrent
     description: |
         Athorrent the seedbox which does Brrrrrrrrrraaaaaaaaaaaa.
-        Login to start using this service.
+        Download torrents and share your files where your want, when you want and safely. Use a seedbox has never been easier.
+    accessibility:
+        title: Accessibility
+        content: |
+            You can access your torrents and share all your files from your computer, your tablet or your smartphone. There is no  application to install, you only need your favorite web browser.
+    sharing:
+        title: Sharing
+        content: |
+            You want share with your friends all files on your seedbox? Nothing simpler, you only have to click once to get share link.
+    security:
+        title: Security
+        content: |
+            The use of our seedbox allow you to download torrents anonymously. Moreover each request executed on our website is encrypted via HTTPS technology to guarantee you the best possible security.
+    performance:
+        title: Performance
+        content: |
+            You dream of downloading and seeding your torrents at full speed, this website is perfect for you. It uses the latest web technologies availables, it was specifically designed to be as efficient as possible, in order to offer you a pleasant experience.
+    openSource:
+        title: Open source
+        content: |
+            Do you like open source? So do we, that's why we decided to publish the source code of Athorrent on %a_start%GitHub%a_end%,
+            so that you can use it on your own server or just contribute to the project.
 
 files:
     title: Files

@@ -3,7 +3,7 @@
 {% block title %}{{ 'users.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
 {% block css %}
-{{ css('css/main')|raw }}
+{{ parent() }}
 {{ css('css/users')|raw }}
 {% endblock %}
 

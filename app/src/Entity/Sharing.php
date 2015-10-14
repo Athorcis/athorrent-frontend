@@ -60,11 +60,12 @@ class Sharing {
         return new self($token, $row['userId'], $row['path'], $row['creationTimestamp']);
     }
 
-    public static function deleteByToken($token) {
+    public static function deleteByToken($token, $userId) {
         global $app;
 
-        $sth = $app['pdo']->prepare('DELETE FROM sharing WHERE token = :token');
+        $sth = $app['pdo']->prepare('DELETE FROM sharing WHERE token = :token AND userId = :userId');
         $sth->bindValue('token', $token);
+        $sth->bindValue('userId', $userId);
         $sth->execute();
 
         return $sth->rowCount() === 1;

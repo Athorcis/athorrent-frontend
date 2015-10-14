@@ -1,7 +1,7 @@
 /*jslint browser: true, nomen: true, plusplus: true, white: true */
 /*global require */
 
-require(['jquery', 'dropzone', 'athorrent'], function (jQuery, Dropzone, athorrent) {
+require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzone) {
     'use strict';
 
     athorrent.Updater = function (action, parameters, success, interval) {

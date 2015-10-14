@@ -75,7 +75,7 @@ class SharingController extends AbstractController {
     }
 
     protected function removeSharing(Request $request, $token) {
-        if (!Sharing::deleteByToken($token)) {
+        if (!Sharing::deleteByToken($token, $this->getUserId())) {
             return $this->abort(404, 'error.sharingNotFound');
         }
 

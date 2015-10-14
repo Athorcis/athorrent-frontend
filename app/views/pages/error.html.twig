@@ -2,10 +2,6 @@
 
 {% block title %}{{ 'error.title'|trans }} {{ code }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block css %}
-{{ css('css/main')|raw }}
-{% endblock %}
-
 {% block content %}
 <div class="jumbotron">
     <h1>{{ 'error.title'|trans }} {{ code }}</h1>

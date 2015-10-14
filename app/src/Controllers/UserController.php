@@ -73,7 +73,8 @@ class UserController extends AbstractController {
 
         if (!empty($username) && !empty($password) && !empty($role)) {
             if (User::exists($username)) {
-                return $this->forward('addUser', array('error' => 'error.usernameAlreadyUsed'));
+                $this->addNotification('error', 'error.usernameAlreadyUsed');
+                return $this->redirect('addUser');
             }
 
             if (!in_array($role, UserRole::$list)) {
@@ -87,7 +88,8 @@ class UserController extends AbstractController {
             $userRole = new UserRole($user->getUserId(), $role);
             $userRole->save();
         } else {
-            return $this->forward('addUser');
+            $this->addNotification('error', 'error.usernameOrPasswordEmpty');
+            return $this->redirect('addUser');
         }
 
         return $this->redirect('listUsers');

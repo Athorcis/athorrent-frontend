@@ -7,7 +7,6 @@ use Athorrent\Utils\Cache\KeyGenerator;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use SPE\FilesizeExtensionBundle\Twig\FilesizeExtension;
-use Twig_Environment;
 
 function initializeTwig(Application $app) {
     $app->register(new TwigServiceProvider(), array (
@@ -37,19 +36,18 @@ function initializeTwig(Application $app) {
             return $class;
         }));
 
-        function twigIncludeStatic($internalPath, $externalPath) {
-            $absolutePath = WEB . DIRECTORY_SEPARATOR . $internalPath;
+        function twigIncludeStatic($relativePath) {
+            $absolutePath = WEB . DIRECTORY_SEPARATOR . $relativePath;
 
             if (filesize($absolutePath) < 1024) {
                 return array('content' => file_get_contents($absolutePath));
             }
 
-            return array('path' => '//' . STATIC_HOST . '/' . $externalPath);
+            return array('path' => '//' . STATIC_HOST . '/' . $relativePath);
         }
 
         function twigIncludeCss($path) {
-            $path = $path . '.css';
-            $result = twigIncludeStatic($path, $path);
+            $result = twigIncludeStatic($path . '.css');
 
             if (isset($result['content'])) {
                 return '<style type="text/css">' . $result['content'] . '</style>';
@@ -59,18 +57,7 @@ function initializeTwig(Application $app) {
         }
 
         function twigIncludeJs($path) {
-            $internalPath = $path . '.js';
-
-            if (DEBUG) {
-                $externalPath = $internalPath;
-            } else {
-                require_once WEB . '/minify.php';
-
-                $internalPath = str_replace(WEB . DIRECTORY_SEPARATOR, '', getMinifiedJs($internalPath));
-                $externalPath = $path . '.min.js';
-            }
-
-            $result = twigIncludeStatic($internalPath, $externalPath);
+            $result = twigIncludeStatic($path . '.js');
 
             if (isset($result['content'])) {
                 return '<script type="text/javascript">' . $result['content'] . '</script>';
