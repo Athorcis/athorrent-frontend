@@ -15,9 +15,13 @@ error:
     roleNotSpecified: Rôle indéfini
     cannotRemoveUser: Impossible de supprimer l'utilisateur
     errorUnknown: Erreur inconnue
+    loginFailure: Nom d'utilisateur ou mot de passe invalide
+    usernameOrPasswordEmpty: Nom d'utilisateur ou mot de passe vide.
+
 app:
     name: Athorrent
-    description: Athorrent la seedbox qui fait Brrrrrrrrrraaaaaaaaaaaa.
+    logo: Logo d'Athorrent
+    description: Téléchargez des torrents et partagez vos fichiers où vous voulez, quand vous voulez et en toute sécurité. Utiliser une seedbox n'a jamais été aussi simple.
 
 nav:
     files: Fichiers
@@ -32,11 +36,31 @@ nav:
     exit: Retour
 
 home:
-    title: Accueil
+    title: Utiliser une seedbox n'a jamais été aussi simple
     welcome: Bienvenue sur Athorrent
     description: |
         Athorrent la seedbox qui fait Brrrrrrrrrraaaaaaaaaaaa.
-        Connectez vous, pour commencez à utiliser ce service.
+        Téléchargez des torrents et partagez vos fichiers où vous voulez, quand vous voulez et en toute sécurité. Utiliser une seedbox n'a jamais été aussi simple.
+    accessibility:
+        title: Accessibilité
+        content: |
+            Vous pouvez accéder à vos torrents et partager tous vos fichiers depuis votre ordinateur, votre tablette ou votre smartphone. Il n'y a aucune application à installer vous avez seulement besoin de votre navigateur internet préféré.
+    sharing:
+        title: Partage
+        content: |
+            Vous vouvez partager avec vos amis l'intégralité des fichiers présents sur votre seedbox? Rien de plus simple, vous n'avez qu'un clic à faire pour obtenir un lien de partage.
+    security:
+        title: Sécurité
+        content: |
+            L'utilisation de notre seedbox permet le téléchargement de torrents de façon totalement anonyme. De plus chaque requête effectué sur notre site est chiffrée via la technologie HTTPS pour vous garantir la meilleure sécurité possible.
+    performance:
+        title: Performance
+        content: |
+            Si vous rêvez de télécharger et seeder vos torrents à toute vitesse, ce site est fait pour vous. Il utilise les dernières technologies disponibles pour le web, il a été spécialement conçu pour être le plus performant possible, dans l'optique de vous offir une expérience plaisante.
+    openSource:
+        title: Logiciel libre
+        content: |
+            Vous aimez le logiciel libre? Nous aussi, c'est pour cette raison que nous avons décidé de publier le code source d'Athorrent sur %a_start%GitHub%a_end%, pour que vous puissiez l'utiliser sur votre propre serveur ou même tout simplement contribuer au projet.
 
 files:
     title: Fichiers

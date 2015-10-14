@@ -3,6 +3,7 @@
 {% block title %}{{ 'torrents.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
 {% block css %}
+{{ parent() }}
 {{ css('css/torrents')|raw }}
 {% endblock %}
 

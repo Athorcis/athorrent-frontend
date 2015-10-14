@@ -196,46 +196,27 @@ abstract class AbstractController implements ControllerProviderInterface {
         return $jsVariables;
     }
 
+    protected function addNotification($type, $message) {
+        global $app;
+        $app['request']->getSession()->getFlashBag()->add($type, $message);
+    }
+
     protected function getTwigParameters() {
         global $app;
         $request = $app['request'];
 
-        $parameters = array (
-            'error' => $app['security.last_error']($request)
-        );
+        $parameters = array ();
+
+        if ($request->getSession()->getFlashBag()->has('error')) {
+            $errors = $request->getSession()->getFlashBag()->get('error');
+            $parameters['error'] = $errors[0];
+        }
 
         if (!$request->isXmlHttpRequest()) {
             $parameters['js_variables'] = $this->getJsVariables();
         }
 
-        if (empty($parameters['error'])) {
-            $parameters['error'] = $request->attributes->get('error');
-        }
-
         return $parameters;
-    }
-
-    protected function forward($action, $data = array()) {
-        global $app;
-
-        $alias = $app['alias_resolver']->resolveAlias($action, $prefixAction);
-        $route = $app['routes']->get($alias);
-
-        if ($route) {
-            $url = $route->getPath();
-        }
-
-        $request = Request::create($url);
-
-        if (isset($data['error'])) {
-            $data['error'] = $app['translator']->trans($data['error']);
-        }
-
-        foreach ($data as $key => $value) {
-            $request->attributes->set($key, $value);
-        }
-
-        return $app->handle($request, HttpKernelInterface::SUB_REQUEST, false);
     }
 
     protected function redirect($url, $status = 302) {

@@ -3,6 +3,7 @@
 {% block title %}{% if title %}{{ title }}{% else %}Fichiers{% endif %} - {{ 'app.name'|trans }}{% endblock %}
 
 {% block css %}
+{{ parent() }}
 {{ css('css/files')|raw }}
 {% endblock %}
 

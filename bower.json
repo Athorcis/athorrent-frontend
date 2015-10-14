@@ -1,5 +1,5 @@
 {
-  "name": "athorrent-client",
+  "name": "athorrent-frontend",
   "dependencies": {
     "bootstrap": "~3.3.5",
     "dropzone": "~4.0.1",
@@ -7,7 +7,8 @@
     "html5shiv": "~3.7.3",
     "jquery": "~1.11.3",
     "phpjs": "*",
-    "requirejs": "~2.1.20"
+    "requirejs": "~2.1.20",
+      "picturefill": "*"
   },
   "moduleType": [
     "globals"

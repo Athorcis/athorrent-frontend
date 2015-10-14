@@ -1,22 +1,42 @@
 /*jslint plusplus: true, white: true */
-/*global athorrent */
+/*global module */
 
-var require = (function (athorrent) {
+(function (global, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        module.exports = factory;
+    } else {
+        global.require = factory(global.athorrent);
+    }
+}(this, function (config) {
     'use strict';
 
-    var suffix, require, vendors, scripts, name, i, length,
-        debug = athorrent.debug;
+    var suffix, require, vendors, scripts, name, i, scriptPrefix, vendorPrefix,
+        build = config.build,
+        debug = config.debug && !build;
 
-    suffix = debug ? '' : '.min';
+    scriptPrefix = debug ? 'js/' : 'js/dist/';
+    suffix = debug || build ? '' : '.min';
+
+    vendorPrefix = 'vendor/';
+
+    if (build) {
+        vendorPrefix = '../' + vendorPrefix;
+    }
 
     require = {
-        baseUrl: '//' + athorrent.staticHost,
+        paths: {}
+    };
 
-        deps: ['bootstrap', 'analytics'],
+    if (!build) {
+        require.baseUrl = '//' + config.staticHost;
+    }
 
-        paths: {},
+    if (debug) {
+        require.deps = ['bootstrap', 'analytics', 'picturefill'];
+    }
 
-        shim: {
+    if (debug || build) {
+        require.shim = {
             bootstrap: ['jquery'],
 
             base64_decode: {
@@ -26,37 +46,43 @@ var require = (function (athorrent) {
             urldecode: {
                 exports: 'urldecode'
             }
-        }
-    };
+        };
 
-    vendors = {
-        bootstrap: 'bootstrap/dist/js/bootstrap',
+        vendors = {
+            bootstrap: 'bootstrap/dist/js/bootstrap',
 
-        dropzone: 'dropzone/dist/dropzone-amd-module',
+            dropzone: 'dropzone/dist/dropzone-amd-module',
 
-        jquery: 'jquery/dist/jquery',
+            jquery: 'jquery/dist/jquery',
 
-        base64_decode: 'phpjs/functions/url/base64_decode',
+            picturefill: 'picturefill/dist/picturefill',
 
-        urldecode: 'phpjs/functions/url/urldecode'
-    };
+            base64_decode: 'phpjs/functions/url/base64_decode',
 
-    if (!athorrent.debug) {
-        vendors.dropzone = 'dropzone/dist/min/dropzone-amd-module';
-    }
+            urldecode: 'phpjs/functions/url/urldecode'
+        };
 
-    for (name in vendors) {
-        if (vendors.hasOwnProperty(name)) {
-            require.paths[name] = 'vendor/' + vendors[name] + suffix;
+        for (name in vendors) {
+            if (vendors.hasOwnProperty(name)) {
+                require.paths[name] = vendorPrefix + vendors[name] + suffix;
+            }
         }
     }
 
-    scripts = ['analytics', 'athorrent', 'files', 'sharings', 'torrents', 'users'];
+    if (!build) {
+        if (!debug) {
+            require.bundles = {
+                athorrent: ['jquery', 'bootstrap', 'analytics', 'urldecode', 'picturefill', 'athorrent']
+            };
+        }
 
-    for (i = scripts.length - 1; i >= 0; --i) {
-        name = scripts[i];
-        require.paths[name] = 'js/' + name + suffix;
+        scripts = ['analytics', 'athorrent', 'files', 'sharings', 'torrents', 'users'];
+
+        for (i = scripts.length - 1; i >= 0; --i) {
+            name = scripts[i];
+            require.paths[name] = scriptPrefix + name + suffix;
+        }
     }
 
     return require;
-}(athorrent));
+}));

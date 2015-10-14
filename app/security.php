@@ -1,5 +1,6 @@
 <?php
 
+use Athorrent\Utils\AuthenticationHandler;
 use Athorrent\Utils\UserProvider;
 use Silex\Application;
 use Silex\Provider\SecurityServiceProvider;
@@ -10,6 +11,11 @@ function initializeSecurity(Application $app) {
     $app->register(new SessionServiceProvider());
     $app->register(new SecurityServiceProvider());
     $app->register(new RememberMeServiceProvider());
+
+    $app['session.storage.options'] = array (
+        'name' => 'SESSION',
+        'cookie_httponly' => true
+    );
 
     $app['security.firewalls'] = array (
         'general' => array (
@@ -54,6 +60,10 @@ function initializeSecurity(Application $app) {
         array('^/sharings/[a-z0-9]{32}/files', 'IS_AUTHENTICATED_ANONYMOUSLY'),
         array('^/.+', 'ROLE_USER')
     );
+
+    $app['security.authentication.failure_handler.general'] = $app->share(function ($app) {
+        return new AuthenticationHandler();
+    });
 }
 
 ?>

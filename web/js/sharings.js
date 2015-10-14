@@ -1,7 +1,7 @@
 /*jslint browser: true, white: true */
 /*global require */
 
-require(['jquery', 'athorrent', 'base64_decode'], function (jQuery, athorrent, base64_decode) {
+require(['jquery', 'athorrent'], function (jQuery, athorrent) {
     'use strict';
 
 
