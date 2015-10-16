@@ -16,7 +16,7 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
         },
 
         ajax: function (method, pattern, parameters, success, options) {
-            var url;
+            var url, jqXhr;
 
             if (typeof parameters === 'function') {
                 options = success;
@@ -25,6 +25,10 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
             }
 
             parameters = jQuery.extend({}, parameters);
+
+            if (method === 'POST') {
+                parameters.csrf = athorrent.csrf;
+            }
 
             url = pattern.replace(/\{([a-z]+)\}/g, function (match, p1) {
                 var result;
@@ -53,7 +57,15 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
                 }
             }, options);
 
-            return jQuery.ajax(url, options);
+            jqXhr = jQuery.ajax(url, options);
+
+            if (method === 'POST') {
+                jqXhr.success(function (data) {
+                    athorrent.csrf = data.csrf;
+                });
+            }
+
+            return jqXhr;
         },
 
         ajaxify: function (action, requests) {
@@ -129,6 +141,10 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
         initialize: function () {
             this.buildAjax();
             this.initializeParameters();
+
+            jQuery('form').submit(function (event) {
+                jQuery(event.target).append('<input type="hidden" name="csrf" value="' + athorrent.csrf + '" />');
+            });
         },
 
         getItem: function (type, element, selector) {

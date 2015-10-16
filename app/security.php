@@ -1,11 +1,15 @@
 <?php
 
+use Athorrent\Utils\CSRF\TokenManager as CsrfTokenManager;
 use Athorrent\Utils\AuthenticationHandler;
 use Athorrent\Utils\UserProvider;
 use Silex\Application;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\RememberMeServiceProvider;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpFoundation\Request;
 
 function initializeSecurity(Application $app) {
     $app->register(new SessionServiceProvider());
@@ -16,6 +20,31 @@ function initializeSecurity(Application $app) {
         'name' => 'SESSION',
         'cookie_httponly' => true
     );
+
+    $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use($app) {
+        $request = $event->getRequest();
+        $session = $request->getSession();
+
+        if (!$session->isStarted()) {
+            $session->start();
+        }
+
+        $app['csrf.manager'] = new CsrfTokenManager($session);
+
+        if ($request->getMethod() === 'POST') {
+            if (!$app['csrf.manager']->isTokenValid($request->get('csrf'))) {
+                $app->abort(403);
+            }
+        }
+    }, Application::EARLY_EVENT - 400);
+
+    $app->before(function (Request $request) use ($app) {
+        if ($request->getMethod() === 'POST') {
+            $app['csrf.token'] = $app['csrf.manager']->refreshToken();
+        } else {
+            $app['csrf.token'] = $app['csrf.manager']->getToken();
+        }
+    });
 
     $app['security.firewalls'] = array (
         'general' => array (

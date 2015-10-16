@@ -125,7 +125,7 @@ abstract class AbstractController implements ControllerProviderInterface {
         global $app;
 
         if ($app['request']->isXmlHttpRequest()) {
-            $response = $app->json(array('status' => 'success', 'data' => $data), $code);
+            $response = $app->json(array('status' => 'success', 'data' => $data, 'csrf' => $app['csrf.token']), $code);
         } else {
             $response = new Response($data, $code);
         }
@@ -155,7 +155,7 @@ abstract class AbstractController implements ControllerProviderInterface {
         $error = $app['translator']->trans($error);
 
         if ($app['request']->isXmlHttpRequest()) {
-            return $app->json(array('status' => 'error', 'error' => $error), $code);
+            return $app->json(array('status' => 'error', 'error' => $error, 'csrf' => $app['csrf.token']), $code);
         }
 
         $app->abort($code, $error);
@@ -176,6 +176,8 @@ abstract class AbstractController implements ControllerProviderInterface {
 
         $jsVariables['debug'] = DEBUG;
         $jsVariables['staticHost'] = STATIC_HOST;
+
+        $jsVariables['csrf'] = $app['csrf.token'];
 
         $jsVariables['action'] = $this->action;
         $jsVariables['actionPrefix'] = static::$actionPrefix;
