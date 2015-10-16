@@ -121,11 +121,21 @@ abstract class AbstractController implements ControllerProviderInterface {
         return $app->sendFile($path, $status, $headers);
     }
 
+    protected function json($data, $code) {
+        global $app;
+
+        if ($app['request']->getMethod() === 'POST') {
+            $data['csrf'] = $app['csrf.token'];
+        }
+
+        return $app->json($data, $code);
+    }
+
     protected function success($data = array(), $code = 200) {
         global $app;
 
         if ($app['request']->isXmlHttpRequest()) {
-            $response = $app->json(array('status' => 'success', 'data' => $data, 'csrf' => $app['csrf.token']), $code);
+            $response = $this->json(array('status' => 'success', 'data' => $data), $code);
         } else {
             $response = new Response($data, $code);
         }
@@ -155,7 +165,7 @@ abstract class AbstractController implements ControllerProviderInterface {
         $error = $app['translator']->trans($error);
 
         if ($app['request']->isXmlHttpRequest()) {
-            return $app->json(array('status' => 'error', 'error' => $error, 'csrf' => $app['csrf.token']), $code);
+            return $this->json(array('status' => 'error', 'error' => $error), $code);
         }
 
         $app->abort($code, $error);
