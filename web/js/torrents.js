@@ -451,6 +451,8 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
         this.dropzone.on('removedfile', jQuery.proxy(this.onRemovedFile, this));
         this.dropzone.on('success', jQuery.proxy(this.onSuccess, this));
+
+        this.dropzone.on('sending', jQuery.proxy(this.onSending, this));
     };
 
     athorrent.AddTorrentFileMode.prototype = jQuery.extend(new athorrent.AddTorrentMode(), {
@@ -464,8 +466,12 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
             this.setCounter(this.dropzone.getAcceptedFiles().length);
         },
 
-        onSuccess: function (file) {
+        onSuccess: function () {
             this.setCounter(this.dropzone.getAcceptedFiles().length);
+        },
+
+        onSending: function (file, xhr, formData) {
+            formData.append('csrf', athorrent.csrf);
         },
 
         getItems: function () {
