@@ -466,7 +466,8 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
             this.setCounter(this.dropzone.getAcceptedFiles().length);
         },
 
-        onSuccess: function () {
+        onSuccess: function (file, result) {
+            athorrent.csrf = result.csrf;
             this.setCounter(this.dropzone.getAcceptedFiles().length);
         },
 
