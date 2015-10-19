@@ -23,7 +23,7 @@ class SharingController extends AbstractController {
         $routes = parent::buildAjaxRoutes();
 
         $routes[] = array('POST', '/', 'addSharing');
-        $routes[] = array('DELETE', '/{token}', 'removeSharing');
+        $routes[] = array('POST', '/{token}', 'removeSharing');
 
         return $routes;
     }
