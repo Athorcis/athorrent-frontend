@@ -100,6 +100,7 @@ class UserController extends AbstractController {
 
         if (!empty($userId)) {
             if (User::deleteByUserId($userId)) {
+                UserRole::deleteByUserId($userId);
                 Sharing::deleteByUserId($userId);
                 return $this->success();
             }
