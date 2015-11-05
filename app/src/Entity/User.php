@@ -19,7 +19,7 @@ class User implements UserInterface {
 
     private $roles;
 
-    public function __construct($userId, $username, $password = null, $salt = null, $creationTimestamp = null, $connectionTimestamp = null) {
+    public function __construct($userId, $username, $password = null, $salt = null, $creationTimestamp = null, $connectionTimestamp = null, $roles = null) {
         $this->userId = $userId;
         $this->username = $username;
         $this->password = $password;
@@ -32,6 +32,8 @@ class User implements UserInterface {
 
         $this->creationTimestamp = $creationTimestamp;
         $this->connectionTimestamp = $connectionTimestamp;
+
+        $this->roles = $roles;
     }
 
     public function getUserId() {
