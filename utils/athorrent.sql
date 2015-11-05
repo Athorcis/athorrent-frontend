@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 14 Octobre 2015 à 19:26
+-- GÃ©nÃ©rÃ© le :  Mer 14 Octobre 2015 Ã  19:26
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `athorrent`
+-- Base de donnÃ©es :  `athorrent`
 --
 
 -- --------------------------------------------------------
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `user_role` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Index pour les tables exportées
+-- Index pour les tables exportÃ©es
 --
 
 --
@@ -87,7 +87,7 @@ ALTER TABLE `user_role`
   ADD KEY `userId` (`userId`);
 
 --
--- AUTO_INCREMENT pour les tables exportées
+-- AUTO_INCREMENT pour les tables exportÃ©es
 --
 
 --
