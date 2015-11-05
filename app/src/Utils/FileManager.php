@@ -55,7 +55,7 @@ class FileManager {
     }
 
     public function getRelativePath($absolutePath) {
-        $relativePath = str_replace($this->root, '', $absolutePath);
+        $relativePath = str_replace($this->rootDir, '', $absolutePath);
 
         if (strlen($relativePath) > 0 && $relativePath[0] === DIRECTORY_SEPARATOR) {
             $relativePath = substr($relativePath, 1);
