@@ -446,6 +446,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
             dictDefaultMessage: athorrent.trans('torrents.dropzone'),
             previewTemplate: athorrent.templates.dropzonePreview,
     //        acceptedFiles: '.torrent',
+            parallelUploads: 1,
             maxFilesize: 1
         });
 
