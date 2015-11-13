@@ -26,7 +26,7 @@ Create a config.php file in the app directory
 define('DEBUG', true);
 
 // user credentials usable when debug is enable
-// convenient where there is no user is the database yet
+// convenient where there is no user in the database yet
 define('DEBUG_USERNAME', 'root');
 define('DEBUG_PASSWORD', 'password');
 
@@ -43,6 +43,7 @@ define('CSRF_SALT','jfgjgkofdgçà');
 // hostname for static resources
 define('STATIC_HOST', $_SERVER['HTTP_HOST']);
 
+// Google Analytics
 define('GA_ENABLED', true);
 define('GA_ID', 'UA-67608080-1');
 define('GA_DOMAIN', 'seedbox.athorcis.ovh');
