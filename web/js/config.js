@@ -33,6 +33,7 @@
 
     if (debug) {
         require.deps = ['bootstrap', 'analytics', 'picturefill'];
+        require.urlArgs = '_=' + (new Date()).getTime();
     }
 
     if (debug || build) {
