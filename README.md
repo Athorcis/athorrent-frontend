@@ -43,6 +43,10 @@ define('CSRF_SALT','jfgjgkofdgçà');
 // hostname for static resources
 define('STATIC_HOST', $_SERVER['HTTP_HOST']);
 
+define('GA_ENABLED', true);
+define('GA_ID', 'UA-67608080-1');
+define('GA_DOMAIN', 'seedbox.athorcis.ovh');
+
 ?>
 ```
 
