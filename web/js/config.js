@@ -77,13 +77,17 @@
             };
         }
 
-        scripts = ['analytics', 'athorrent', 'files', 'sharings', 'torrents', 'users'];
+        scripts = ['athorrent', 'files', 'sharings', 'torrents', 'users'];
 
+        if (debug) {
+            scripts.push('analytics');
+        }
+        
         for (i = scripts.length - 1; i >= 0; --i) {
             name = scripts[i];
             require.paths[name] = scriptPrefix + name + suffix;
         }
     }
-
+    
     return require;
 }));
