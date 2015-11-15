@@ -26,7 +26,7 @@ Create a config.php file in the app directory
 define('DEBUG', true);
 
 // user credentials usable when debug is enable
-// convenient where there is no user in the database yet
+// convenient when there is no user in the database yet
 define('DEBUG_USERNAME', 'root');
 define('DEBUG_PASSWORD', 'password');
 
