@@ -452,6 +452,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
         this.dropzone.on('removedfile', jQuery.proxy(this.onRemovedFile, this));
         this.dropzone.on('success', jQuery.proxy(this.onSuccess, this));
+        this.dropzone.on('error', jQuery.proxy(this.onError, this));
 
         this.dropzone.on('sending', jQuery.proxy(this.onSending, this));
     };
@@ -470,6 +471,12 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         onSuccess: function (file, result) {
             athorrent.csrf = result.csrf;
             this.setCounter(this.dropzone.getAcceptedFiles().length);
+        },
+
+        onError: function (file, result) {
+            if (typeof result === 'object' && result.hasOwnProperty('csrf')) {
+                athorrent.csrf = result.csrf;
+            }
         },
 
         onSending: function (file, xhr, formData) {
