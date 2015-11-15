@@ -43,7 +43,7 @@
                 {% set require_path = '/vendor/requirejs/require.min.js' %}
             {% endif %}
 
-            {{ js(config_path)|raw }}
+            {{ js(config_path, true)|raw }}
             <script type="text/javascript" src="{{ '//' ~ constant('STATIC_HOST') ~ require_path }}" data-main="{% block js %}athorrent{% endblock %}" async></script>
         {% endif %}
 
