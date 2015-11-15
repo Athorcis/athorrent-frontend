@@ -36,18 +36,18 @@ function initializeTwig(Application $app) {
             return $class;
         }));
 
-        function twigIncludeStatic($relativePath) {
+        function twigIncludeStatic($relativePath, $inline) {
             $absolutePath = WEB . DIRECTORY_SEPARATOR . $relativePath;
 
-            if (filesize($absolutePath) < 1024) {
+            if ($inline === true || ($inline === null && filesize($absolutePath) < 1024)) {
                 return array('content' => file_get_contents($absolutePath));
             }
 
             return array('path' => '//' . STATIC_HOST . '/' . $relativePath);
         }
 
-        function twigIncludeCss($path) {
-            $result = twigIncludeStatic($path . '.css');
+        function twigIncludeCss($path, $inline) {
+            $result = twigIncludeStatic($path . '.css', $inline);
 
             if (isset($result['content'])) {
                 return '<style type="text/css">' . $result['content'] . '</style>';
@@ -56,8 +56,8 @@ function initializeTwig(Application $app) {
             return '<link rel="stylesheet" type="text/css" href="' . $result['path'] . '" />';
         }
 
-        function twigIncludeJs($path) {
-            $result = twigIncludeStatic($path . '.js');
+        function twigIncludeJs($path, $inline) {
+            $result = twigIncludeStatic($path . '.js', $inline);
 
             if (isset($result['content'])) {
                 return '<script type="text/javascript">' . $result['content'] . '</script>';
@@ -66,12 +66,12 @@ function initializeTwig(Application $app) {
             return '<script type="text/javascript" src="' . $result['path'] . '"></script>';
         }
 
-        $twig->addFunction(new Twig_SimpleFunction('css', function ($path) {
-            return twigIncludeCss($path);
+        $twig->addFunction(new Twig_SimpleFunction('css', function ($path, $inline = null) {
+            return twigIncludeCss($path, $inline);
         }));
 
-        $twig->addFunction(new Twig_SimpleFunction('js', function ($path) {
-            return twigIncludeJs($path);
+        $twig->addFunction(new Twig_SimpleFunction('js', function ($path, $inline = null) {
+            return twigIncludeJs($path, $inline);
         }));
 
         $twig->addFunction(new Twig_SimpleFunction('path', function ($action, $parameters = array(), $prefixAction = null) use($app) {
