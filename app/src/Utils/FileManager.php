@@ -44,11 +44,14 @@ class FileManager {
     }
 
     public function getAbsolutePath($path) {
-        $root = $this->root . DIRECTORY_SEPARATOR;
-        $absolutePath = realpath($root . str_replace('/', DIRECTORY_SEPARATOR, $path));
+        $absolutePath = realpath($this->rootDir . '/' . str_replace('/', DIRECTORY_SEPARATOR, $path));
 
-        if (!$absolutePath || strrpos($absolutePath, $root, -strlen($absolutePath)) === false) {
-            $absolutePath = $this->root;
+        if (!$absolutePath || strrpos($absolutePath, $this->root, -strlen($absolutePath)) === false) {
+            if (empty($path)) {
+                $absolutePath = $this->root;
+            } else {
+                $absolutePath = null;
+            }
         }
 
         return $absolutePath;

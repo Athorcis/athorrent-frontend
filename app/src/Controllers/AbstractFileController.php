@@ -76,6 +76,10 @@ class AbstractFileController extends AbstractController {
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
 
+        if (!$path) {
+            return $this->abort(404);
+        }
+
         $breadcrumb = self::getBreadcrumb($fileManager, $path);
         $result = $fileManager->listEntries($path);
 
@@ -162,6 +166,10 @@ class AbstractFileController extends AbstractController {
         }
 
         $path = $fileManager->getAbsolutePath($request->request->get('path'));
+
+        if (!$path) {
+            return $this->abort(404);
+        }
 
         if ($fileManager->remove($path)) {
             return $this->success();
