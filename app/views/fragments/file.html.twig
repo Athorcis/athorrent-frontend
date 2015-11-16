@@ -1,9 +1,19 @@
+{% set isParentDirectory = file.name == '..' %}
+
+{% if isParentDirectory %}
+    {% set icon = 'fa-level-up' %}
+    {% set name = 'files.parentDirectory'|trans %}
+{% else %}
+    {% set icon = file.icon %}
+    {% set name = file.name %}
+{% endif %}
+
 <tr class="file" id="file-{{ file.encodedPath }}">
     <td class="file-icon">
-        <span class="fa fa-fw {{ file.icon }}"></span>
+        <span class="fa fa-fw {{ icon }}"></span>
     </td>
     <td class="file-name">
-        <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.relativePath }) }}" title="{{ file.name }}">{{ file.name }}</a>
+        <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.relativePath }) }}" title="{{ name }}">{{ name }}</a>
     </td>
     <td class="file-size">
         {% if file.isFile %}
@@ -11,7 +21,7 @@
         {% endif %}
     </td>
     <td class="file-buttons">
-        {% if file.name != '..' %}
+        {% if not isParentDirectory %}
             <div class="dropdown">
                 <button class="btn btn-xs btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span class="caret"></span>

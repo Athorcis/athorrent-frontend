@@ -65,6 +65,7 @@ home:
 files:
     title: Fichiers
     root: Racine
+    parentDirectory: Dossier parent
     open: Ouvrir
     download: Télécharger
     play: Lire
