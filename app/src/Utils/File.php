@@ -110,6 +110,10 @@ class File {
                 $this->icon = 'fa-file-audio-o';
             } else if (strpos($mimeType, 'video/') === 0) {
                 $this->icon = 'fa-file-video-o';
+            } else if (strpos($mimeType, 'application/pdf') === 0) {
+                $this->icon = 'fa-file-pdf-o';
+            } else if (strpos($mimeType, 'application/zip') === 0 || strpos($mimeType, 'application/x-gzip') === 0) {
+                $this->icon = 'fa-file-archive-o';
             } else {
                 $this->icon = 'fa-file-o';
             }
