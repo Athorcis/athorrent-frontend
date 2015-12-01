@@ -1,0 +1,14 @@
+
+.administration-tile {
+    margin-left: 20px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+
+    .fa {
+        display: block;
+        font-size: 115px;
+        margin: auto;
+    }
+}

@@ -52,7 +52,10 @@ class FileUtils {
         }
 
         closedir($dir);
-        rmdir($path);
+
+        if ($result) {
+            rmdir($path);
+        }
 
         return $result;
     }

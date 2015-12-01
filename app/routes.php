@@ -8,7 +8,9 @@ function initializeRoutes(Application $app) {
     Athorrent\Controllers\DefaultController::mount($app);
     Athorrent\Controllers\TorrentController::mount($app);
     Athorrent\Controllers\FileController::mount($app);
+    Athorrent\Controllers\AdministrationController::mount($app);
     Athorrent\Controllers\UserController::mount($app);
+    Athorrent\Controllers\CacheController::mount($app);
     Athorrent\Controllers\SharingController::mount($app);
     Athorrent\Controllers\SharingFileController::mount($app);
 

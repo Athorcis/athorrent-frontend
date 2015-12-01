@@ -26,7 +26,7 @@
                             </li>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li>
-                                    <a href="{{ path('listUsers') }}">{{ 'nav.users'|trans }}</a>
+                                    <a href="{{ path('listAdministrationModules') }}">{{ 'nav.administration'|trans }}</a>
                                 </li>
                             {% endif %}
                         </ul>
