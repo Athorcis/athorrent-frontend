@@ -10,10 +10,10 @@
 
         <link rel="icon" type="image/x-icon" href="{{ '//' ~ constant('STATIC_HOST') }}/favicon.ico" />
 
+        <link rel="alternate" hreflang="x-default" href="{{ url(app.request.attributes.get('_route')) }}" />
+
         {% for locale in app.locales %}
-            {% if locale != app.locale %}
-                <link rel="alternate" hreflang="{{ locale }}" href="{{ url(app.request.attributes.get('_route'), { locale: locale }) }}" />
-            {% endif %}
+            <link rel="alternate" hreflang="{{ locale }}" href="{{ url(app.request.attributes.get('_route'), { locale: locale }) }}" />
         {% endfor %}
 
         {% block css %}
