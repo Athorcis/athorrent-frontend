@@ -26,11 +26,11 @@ function initializeTranslation(Application $app) {
         $request->setLocale($locale);
     }, Application::EARLY_EVENT);
 
-    $app->after(function (Request $request, Response $response) {
-        if ($request->query->has('locale')) {
-            $response->headers->setCookie(new Cookie('locale', $request->getLocale(), time() + 3600 * 24 * 364));
-        }
-    });
+//    $app->after(function (Request $request, Response $response) {
+//        if ($request->query->has('locale')) {
+//            $response->headers->setCookie(new Cookie('locale', $request->getLocale(), time() + 3600 * 24 * 364));
+//        }
+//    });
 
     $app->register(new Silex\Provider\TranslationServiceProvider(), array (
         'locale_fallbacks' => array('en'),
