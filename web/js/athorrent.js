@@ -145,6 +145,22 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
             jQuery('form').submit(function (event) {
                 jQuery(event.target).append('<input type="hidden" name="csrf" value="' + athorrent.csrf + '" />');
             });
+
+            jQuery('[data-ajax-action]').click(function (event) {
+                var $btn = jQuery(event.target),
+                    action = $btn.data('ajax-action'),
+                    spinner = !!$btn.data('ajax-spinner');
+
+                if (spinner) {
+                    $btn.append('<span class="fa fa-refresh fa-spin"></span>');
+                }
+
+                athorrent.ajax[action]().always(function () {
+                    if (spinner) {
+                        $btn.children('.fa-spin').remove();
+                    }
+                });
+            })
         },
 
         getItem: function (type, element, selector) {

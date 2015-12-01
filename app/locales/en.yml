@@ -27,7 +27,7 @@ nav:
     files: Files
     torrents: Torrents
     sharings: Sharings
-    users: Users
+    administration: Administration
 
     nickname: Nickname
     password: Password
@@ -129,3 +129,15 @@ users:
     add:
         title: Add a new user
         submit: Add
+
+administration:
+    title: Administration
+    handleUsers: Manage users
+    handleCache: Manage cache
+
+cache:
+    title: Manage cache
+    clearApc: Clear APC cache
+    clearTwig: Clear Twig cache
+    clearTranslations: Clear translations cache
+    clearAll: Clear everything
