@@ -11,7 +11,9 @@
         <link rel="icon" type="image/x-icon" href="{{ '//' ~ constant('STATIC_HOST') }}/favicon.ico" />
 
         {% for locale in app.locales %}
-            <link rel="alternate" hreflang="{{ locale }}" href="{{ path(app.request.attributes.get('_route'), { locale: locale }) }}" />
+            {% if locale != app.locale %}
+                <link rel="alternate" hreflang="{{ locale }}" href="{{ url(app.request.attributes.get('_route'), { locale: locale }) }}" />
+            {% endif %}
         {% endfor %}
 
         {% block css %}
