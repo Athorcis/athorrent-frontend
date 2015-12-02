@@ -23,14 +23,16 @@ function initializeRoutes(Application $app) {
             $ajaxRoutes = array();
 
             foreach ($app['routes'] as $alias => $route) {
+                $locale = substr($alias, 0, 2);
+
                 if ($route->hasOption('action')) {
                     if (strpos($alias, 'ajax/') !== false) {
-                        $ajaxRoutes[] = $route;
+                        if ($locale == $app['request']->getLocale()) {
+                            $ajaxRoutes[] = $route;
+                        }
                     } else {
                         $action = $route->getOption('action');
                         $actionPrefix = $route->getOption('actionPrefix');
-
-                        $locale = substr($alias, 0, 2);
 
                         if (!isset($routes[$locale . $action])) {
                             $routes[$locale . $action] = array();
