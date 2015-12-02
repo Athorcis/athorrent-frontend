@@ -87,6 +87,7 @@ function initializeSecurity(Application $app) {
     $app['security.access_rules'] = array(
         array('^/(ajax/)?administration', 'ROLE_ADMIN'),
         array('^/(ajax/)?sharings/[a-z0-9]{32}/files', 'IS_AUTHENTICATED_ANONYMOUSLY'),
+        array('^/(en)/', 'IS_AUTHENTICATED_ANONYMOUSLY'),
         array('^/.+', 'ROLE_USER')
     );
 
