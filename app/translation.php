@@ -1,5 +1,6 @@
 <?php
 
+use Jenyak\I18nRouting\Provider\I18nRoutingServiceProvider;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ function initializeTranslation(Application $app) {
     $app['locale'] = 'fr';
     $app['locales'] = array('en', 'fr');
 
-    $app->register(new Jenyak\I18nRouting\Provider\I18nRoutingServiceProvider());
+    $app->register(new I18nRoutingServiceProvider());
     $app['i18n_routing.locales'] = $app['locales'];
 
     $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) {
