@@ -10,7 +10,11 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 
 function initializeTranslation(Application $app) {
+    $app['locale'] = 'fr';
     $app['locales'] = array('en', 'fr');
+
+    $app->register(new Jenyak\I18nRouting\Provider\I18nRoutingServiceProvider());
+    $app['i18n_routing.locales'] = $app['locales'];
 
     $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) {
         $request = $event->getRequest();
@@ -27,7 +31,7 @@ function initializeTranslation(Application $app) {
     }, Application::EARLY_EVENT);
 
     $app->register(new Silex\Provider\TranslationServiceProvider(), array (
-        'locale_fallbacks' => array('en'),
+        'locale_fallbacks' => array('fr'),
     ));
 
     $app['translator'] = $app->share($app->extend('translator', function(Translator $translator, $app) {
