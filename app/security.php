@@ -54,13 +54,13 @@ function initializeSecurity(Application $app) {
 
             'form' => array (
                 'login_path' => '/',
-                'check_path' => '/login_check',
+                'check_path' => '/_login_check',
                 'default_target_path' => '/files/',
                 'always_use_default_target_path' => false
             ),
 
             'logout' => array(
-                'logout_path' => '/logout',
+                'logout_path' => '/_logout',
                 'target_url' => '/',
             ),
 
