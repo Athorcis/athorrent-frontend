@@ -66,8 +66,8 @@ function initializeApplication() {
         $app['session']->save();
     }, Application::LATE_EVENT);
 
-    initializeRoutes($app);
     initializeTranslation($app);
+    initializeRoutes($app);
 
     return $app;
 }

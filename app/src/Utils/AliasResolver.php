@@ -3,6 +3,7 @@
 namespace Athorrent\Utils;
 
 use Athorrent\Controllers\AbstractController;
+use Jenyak\I18nRouting\I18nControllerCollection;
 
 class AliasResolver {
     private $routes;
@@ -22,7 +23,7 @@ class AliasResolver {
     public function resolveAlias($action, &$actionPrefix = null) {
         global $app;
 
-        if ($app['routes']->get($action)) {
+        if ($app['routes']->get($app['locale'] . I18nControllerCollection::ROUTING_PREFIX . $action)) {
             return $action;
         }
 
@@ -63,7 +64,9 @@ class AliasResolver {
             }
         }
 
-        return $app['url_generator']->generate($alias, $parameters);
+        $path = $app['url_generator']->generate($alias, $parameters);
+
+        return $path;
     }
 
     public function generateUrl($action, $parameters = array(), $actionPrefix = null) {

@@ -23,18 +23,20 @@ function initializeRoutes(Application $app) {
             $ajaxRoutes = array();
 
             foreach ($app['routes'] as $alias => $route) {
-                if ($alias[0] === ':') {
-                    if (substr($alias, 1, 5) === 'ajax/') {
+                if ($route->hasOption('action')) {
+                    if (strpos($alias, 'ajax/') !== false) {
                         $ajaxRoutes[] = $route;
                     } else {
                         $action = $route->getOption('action');
                         $actionPrefix = $route->getOption('actionPrefix');
 
-                        if (!isset($routes[$action])) {
-                            $routes[$action] = array();
+                        $locale = substr($alias, 0, 2);
+
+                        if (!isset($routes[$locale . $action])) {
+                            $routes[$locale . $action] = array();
                         }
 
-                        if (isset($routes[$action][$actionPrefix])) {
+                        if (isset($routes[$locale . $action][$actionPrefix])) {
                             trigger_error('route already defined', E_USER_WARNING);
                         }
 

@@ -16,7 +16,8 @@
         "asm89/twig-cache-extension": "^1.0",
         "symfony/translation": "^2.7",
         "symfony/yaml": "^2.7",
-        "symfony/config": "^2.7"
+        "symfony/config": "^2.7",
+        "jenyak/i18n-routing-service-provider": "^1.0"
     },
 
     "autoload": {
