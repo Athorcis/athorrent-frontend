@@ -244,10 +244,11 @@ abstract class AbstractController implements ControllerProviderInterface {
         global $app;
 
         $alias = $app['alias_resolver']->resolveAlias($url, $prefixAction);
-        $route = $app['routes']->get($alias);
 
-        if ($route) {
-            $url = $route->getPath();
+        try {
+            $url = $app['url_generator']->generate($alias);
+        } catch (\Exception $exception) {
+
         }
 
         return $app->redirect($url, $status);
