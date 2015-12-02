@@ -171,7 +171,10 @@ abstract class AbstractController implements ControllerProviderInterface {
     }
 
     protected function getArguments(Request $request) {
-        return array_values($request->attributes->get('_route_params'));
+        $routeParameters = $request->attributes->get('_route_params');
+        unset($routeParameters['_locale']);
+
+        return array_values($routeParameters);
     }
 
     public function getRouteParameters($action) {
