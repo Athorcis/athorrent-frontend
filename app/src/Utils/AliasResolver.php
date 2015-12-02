@@ -23,7 +23,13 @@ class AliasResolver {
     public function resolveAlias($action, &$actionPrefix = null) {
         global $app;
 
-        if ($app['routes']->get($app['locale'] . I18nControllerCollection::ROUTING_PREFIX . $action)) {
+        if ($action[0] === '_') {
+            $try = $action;
+        } else {
+            $try = $app['locale'] . I18nControllerCollection::ROUTING_PREFIX . $action;
+        }
+
+        if ($app['routes']->get($try)) {
             return $action;
         }
 

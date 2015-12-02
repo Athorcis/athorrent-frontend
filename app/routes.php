@@ -2,7 +2,6 @@
 
 use Athorrent\Utils\AliasResolver;
 use Silex\Application;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 function initializeRoutes(Application $app) {
     Athorrent\Controllers\DefaultController::mount($app);
@@ -14,7 +13,7 @@ function initializeRoutes(Application $app) {
     Athorrent\Controllers\SharingController::mount($app);
     Athorrent\Controllers\SharingFileController::mount($app);
 
-    $app['dispatcher']->addListener(KernelEvents::REQUEST, function () use($app) {
+    $app->before(function () use ($app) {
         if ($app['cache']->exists('routes')) {
             $routes = $app['cache']->fetch('routes');
             $ajaxRoutes = $app['cache']->fetch('ajaxRoutes');
@@ -27,7 +26,7 @@ function initializeRoutes(Application $app) {
 
                 if ($route->hasOption('action')) {
                     if (strpos($alias, 'ajax/') !== false) {
-                        if ($locale == $app['request']->getLocale()) {
+                        if ($locale == $app['locale']) {
                             $ajaxRoutes[] = $route;
                         }
                     } else {
@@ -53,7 +52,7 @@ function initializeRoutes(Application $app) {
 
         $app['alias_resolver'] = new AliasResolver($routes);
         $app['ajax_routes'] = $ajaxRoutes;
-    }, Application::EARLY_EVENT);
+    });
 }
 
 ?>

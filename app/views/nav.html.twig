@@ -35,11 +35,11 @@
                             {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
                                 <a href="?_switch_user=_exit" class="btn btn-success">{{ 'nav.exit'|trans }}</a>
                             {% else %}
-                                <a href="{{ path('logout') }}" class="btn btn-success">{{ 'nav.logout'|trans }}</a>
+                                <a href="{{ path('_logout') }}" class="btn btn-success">{{ 'nav.logout'|trans }}</a>
                             {% endif %}
                         </div>
                     {% else %}
-                        <form class="navbar-form navbar-right" action="{{ path('login_check') }}" method="post">
+                        <form class="navbar-form navbar-right" action="{{ path('_login_check') }}" method="post">
                             <div class="form-group">
                                 <input type="text" placeholder="{{ 'nav.nickname'|trans }}" class="form-control" name="_username" />
                             </div>
