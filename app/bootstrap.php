@@ -43,6 +43,10 @@ function initializeApplication() {
             return;
         }
 
+        if (!isset($app['alias_resolver'])) {
+            initializeAliasResolver();
+        }
+
         if ($exception instanceof NotFoundHttpException) {
             $error = 'error.pageNotFound';
         }
