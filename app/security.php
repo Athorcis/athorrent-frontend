@@ -55,7 +55,7 @@ function initializeSecurity(Application $app) {
             'form' => array (
                 'login_path' => '/',
                 'check_path' => '/_login_check',
-                'default_target_path' => '/files/',
+                'default_target_path' => '/user/files/',
                 'always_use_default_target_path' => false
             ),
 
