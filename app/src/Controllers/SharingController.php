@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SharingController extends AbstractController {
     protected static $actionPrefix = 'sharings_';
 
-    protected static $routePattern = '/sharings';
+    protected static $routePattern = '/user/sharings';
 
     protected static function buildRoutes() {
         $routes = parent::buildRoutes();

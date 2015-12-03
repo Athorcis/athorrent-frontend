@@ -15,7 +15,7 @@
         {% if route %}
             {% cache 'head' route %}
                 {% for locale in app.locales %}
-                    <link rel="alternate" href="{{ url(route, { _locale: locale }) }}" hreflang="{{ locale }}" />
+                    <link rel="alternate" href="{{ uri(app.action, { _locale: locale }) }}" hreflang="{{ locale }}" />
                 {% endfor %}
             {% endcache %}
         {% endif %}

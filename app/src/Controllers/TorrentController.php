@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TorrentController extends AbstractController {
     protected static $actionPrefix = 'torrents_';
 
-    protected static $routePattern = '/torrents';
+    protected static $routePattern = '/user/torrents';
 
     protected static function buildRoutes() {
         $routes = parent::buildRoutes();

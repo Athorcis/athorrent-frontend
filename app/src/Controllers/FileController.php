@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 class FileController extends AbstractFileController {
     protected static $actionPrefix = 'files_';
 
-    protected static $routePattern = '/files';
+    protected static $routePattern = '/user/files';
 
     protected function getArguments(Request $request) {
         $arguments = parent::getArguments($request);

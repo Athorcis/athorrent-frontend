@@ -26,8 +26,6 @@ function initializeApplication() {
 
     initializeTwig($app);
 
-    initializeSecurity($app);
-
     $app->register(new UrlGeneratorServiceProvider());
 
     $app->before(function (Request $request) use ($app) {
@@ -67,6 +65,7 @@ function initializeApplication() {
     }, Application::LATE_EVENT);
 
     initializeTranslation($app);
+    initializeSecurity($app);
     initializeRoutes($app);
 
     return $app;
