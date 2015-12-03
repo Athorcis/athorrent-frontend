@@ -12,7 +12,7 @@
 
         {% set route = app.request.attributes.get('_route') %}
 
-        {% if route %}
+        {% if route is not empty %}
             {% cache 'head' route %}
                 {% for locale in app.locales %}
                     <link rel="alternate" href="{{ uri(app.action, { _locale: locale }) }}" hreflang="{{ locale }}" />
