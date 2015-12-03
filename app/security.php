@@ -84,11 +84,22 @@ function initializeSecurity(Application $app) {
         'ROLE_ADMIN' => array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'),
     );
 
+    $nonDefaultLocales = $app['locales'];
+    $defaultLocaleKey = array_search($app['default_locale'], $nonDefaultLocales);
+
+    if ($defaultLocaleKey !== false) {
+        unset($nonDefaultLocales[$defaultLocaleKey]);
+    }
+
+    if (count($nonDefaultLocales)) {
+        $localesPrefix = '((' . implode('|', $nonDefaultLocales) . ')/)?';
+    } else {
+        $localesPrefix = '';
+    }
+
     $app['security.access_rules'] = array(
-        array('^/(ajax/)?administration', 'ROLE_ADMIN'),
-        array('^/(ajax/)?sharings/[a-z0-9]{32}/files', 'IS_AUTHENTICATED_ANONYMOUSLY'),
-        array('^/(en)/', 'IS_AUTHENTICATED_ANONYMOUSLY'),
-        array('^/.+', 'ROLE_USER')
+        array('^/' . $localesPrefix . '(ajax/)?administration', 'ROLE_ADMIN'),
+        array('^/' . $localesPrefix . '(ajax/)?user', 'ROLE_USER')
     );
 
     $app['security.authentication.failure_handler.general'] = $app->share(function ($app) {

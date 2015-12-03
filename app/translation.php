@@ -6,14 +6,14 @@ use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 
 function initializeTranslation(Application $app) {
-    $app['locale'] = 'fr';
-    $app['locales'] = array('en', 'fr');
+    $app['locale'] = $app['default_locale'] = 'fr';
+    $app['locales'] = array('fr', 'en');
 
     $app->register(new I18nRoutingServiceProvider());
     $app['i18n_routing.locales'] = $app['locales'];
 
     $app->register(new Silex\Provider\TranslationServiceProvider(), array (
-        'locale_fallbacks' => array($app['locale']),
+        'locale_fallbacks' => array($app['default_locale']),
     ));
 
     $app['translator'] = $app->share($app->extend('translator', function(Translator $translator, $app) {

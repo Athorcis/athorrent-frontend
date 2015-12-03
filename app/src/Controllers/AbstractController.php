@@ -263,7 +263,7 @@ abstract class AbstractController implements ControllerProviderInterface {
         $app['alias_resolver']->setController($this);
 
         $alias = $request->attributes->get('_route');
-        $this->action = $app['routes']->get($alias)->getOption('action');
+        $app['action'] = $this->action = $app['routes']->get($alias)->getOption('action');
 
         $arguments = $this->getArguments($request);
         array_unshift($arguments, $request);
