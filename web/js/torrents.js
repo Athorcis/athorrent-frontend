@@ -536,7 +536,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         }
     });
 
-    navigator.registerProtocolHandler('magnet', location.origin + '/torrents/magnet?magnet=%s', 'Athorrent');
+    navigator.registerProtocolHandler('magnet', location.origin + '/user/torrents/magnet?magnet=%s', 'Athorrent');
 
     athorrent.initializeTorrentsList();
     athorrent.initializeTorrentPanel();
