@@ -17,6 +17,8 @@ error:
     errorUnknown: Unknown error
     loginFailure: Username or password invalid
     usernameOrPasswordEmpty: Username or pasword empty
+    passwordInvalid: Password invalid
+    passwordsDiffer: Passwords differ
 
 app:
     name: Athorrent
@@ -31,6 +33,7 @@ nav:
 
     nickname: Nickname
     password: Password
+    accout: My account
     login: Login
     logout: Logout
     exit: Exit
@@ -141,3 +144,11 @@ cache:
     clearTwig: Clear Twig cache
     clearTranslations: Clear translations cache
     clearAll: Clear everything
+
+account:
+    edit:
+        title: Edit my account
+        submit: Save
+        current_password: Current password
+        new_password: New password
+        password_confirm: Password confirmation
