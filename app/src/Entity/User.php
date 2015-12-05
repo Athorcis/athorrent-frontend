@@ -106,7 +106,7 @@ class User implements UserInterface {
             $sth->execute();
             $this->userId = $app['pdo']->lastInsertId();
         } else {
-            $sth = $app['pdo']->prepare('UPDATE user SET username = :username, password = :password WHERE userId = :userId');
+            $sth = $app['pdo']->prepare('UPDATE user SET username = :username, password = :password, salt = :salt WHERE userId = :userId');
 
             $sth->bindValue('username', $this->username);
             $sth->bindValue('password', $this->password);
