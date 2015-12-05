@@ -12,6 +12,7 @@ function initializeRoutes(Application $app) {
     Athorrent\Controllers\CacheController::mount($app);
     Athorrent\Controllers\SharingController::mount($app);
     Athorrent\Controllers\SharingFileController::mount($app);
+    Athorrent\Controllers\AccountController::mount($app);
 
     $app->before('initializeAliasResolver');
 }

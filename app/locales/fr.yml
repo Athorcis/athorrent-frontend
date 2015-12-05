@@ -17,6 +17,8 @@ error:
     errorUnknown: Erreur inconnue
     loginFailure: Nom d'utilisateur ou mot de passe invalide
     usernameOrPasswordEmpty: Nom d'utilisateur ou mot de passe vide.
+    passwordInvalid: Mot de passe invalide
+    passwordsDiffer: Les deux mots de passes entrés sont différents
 
 app:
     name: Athorrent
@@ -31,6 +33,7 @@ nav:
 
     nickname: Pseudo
     password: Mot de passe
+    account: Mon compte
     login: Connexion
     logout: Déconnexion
     exit: Retour
@@ -140,3 +143,11 @@ cache:
     clearTwig: Vider le cache Twig
     clearTranslations: Vider le cache des traductions
     clearAll: Vider tout
+
+account:
+    edit:
+        title: Modifier mon compte
+        submit: Modifier
+        current_password: Mot de passe actuel
+        new_password: Nouveau mot de passe
+        password_confirm: Confirmation du mot de passe
