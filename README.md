@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/Athorcis/athorrent-frontend/badges/gpa.svg)](https://codeclimate.com/github/Athorcis/athorrent-frontend)
+
 ## Getting started
 
 ``` sh
