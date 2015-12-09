@@ -4,19 +4,19 @@ namespace Athorrent\Utils\Cache;
 
 class ApcCache extends Cache {
     public function exists($key) {
-        return apc_exists($key);
+        return apcu_exists($key);
     }
 
     public function fetch($key) {
-        if (apc_exists($key)) {
-            return apc_fetch($key);
+        if (apcu_exists($key)) {
+            return apcu_fetch($key);
         }
 
         return false;
     }
 
     public function store($key, $value, $lifetime = 0) {
-        return apc_store($key, $value, $lifetime);
+        return apcu_store($key, $value, $lifetime);
     }
 }
 

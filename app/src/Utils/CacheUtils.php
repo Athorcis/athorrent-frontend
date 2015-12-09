@@ -4,8 +4,8 @@ namespace Athorrent\Utils;
 
 class CacheUtils {
     public static function clearApc() {
-        if (function_exists('apc_clear_cache')) {
-            apc_clear_cache('user');
+        if (function_exists('apcu_clear_cache')) {
+            apcu_clear_cache('user');
         }
 
         return true;
