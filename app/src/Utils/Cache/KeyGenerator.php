@@ -28,7 +28,7 @@ class KeyGenerator implements KeyGeneratorInterface {
                 }
             }
         } else if ($value instanceof File) {
-            $key = $value->getAbsolutePath() . $value->getModificationTime();
+            $key = $value->getAbsolutePath() . $value->getModificationTime() . ($value->isSharable() ? 0 : 1);
         } else if ($value instanceof Sharing) {
             $key = $value->getToken();
         } else if ($value instanceof User) {
