@@ -4,6 +4,7 @@ define('ROOT', realpath(__DIR__ . DIRECTORY_SEPARATOR . '..'));
 
 define('APP', ROOT . DIRECTORY_SEPARATOR . 'app');
 define('BIN', ROOT . DIRECTORY_SEPARATOR . 'bin');
+define('VENDOR', ROOT . DIRECTORY_SEPARATOR . 'vendor');
 define('WEB', ROOT . DIRECTORY_SEPARATOR . 'web');
 define('TMP', ROOT . DIRECTORY_SEPARATOR . 'tmp');
 

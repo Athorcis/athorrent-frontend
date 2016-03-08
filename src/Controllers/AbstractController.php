@@ -190,12 +190,12 @@ abstract class AbstractController implements ControllerProviderInterface {
         $jsVariables['staticHost'] = STATIC_HOST;
 
         $jsVariables['gaEnabled'] = GA_ENABLED;
-        
+
         if (GA_ENABLED) {
             $jsVariables['gaId'] = GA_ID;
             $jsVariables['gaDomain'] = GA_DOMAIN;
         }
-        
+
         $jsVariables['csrf'] = $app['csrf.token'];
 
         $jsVariables['action'] = $this->action;
