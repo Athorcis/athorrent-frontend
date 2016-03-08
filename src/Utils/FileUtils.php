@@ -59,6 +59,11 @@ class FileUtils {
 
         return $result;
     }
+
+    public static function encodeFilename($filename) {
+        $parts = pathinfo($filename);
+        return base64_encode($parts['filename']) . $parts['extension'];
+    }
 }
 
 ?>
