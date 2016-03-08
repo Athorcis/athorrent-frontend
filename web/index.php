@@ -3,7 +3,7 @@
 require '../app/config.php';
 require '../app/constants.php';
 
-require APP . '/vendor/autoload.php';
+require VENDOR . '/autoload.php';
 require APP . '/bootstrap.php';
 
 $app = initializeApplication();

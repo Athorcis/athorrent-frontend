@@ -22,11 +22,7 @@
 
     "autoload": {
         "psr-4": {
-            "Athorrent\\": "app/src/"
+            "Athorrent\\": "src/"
         }
-    },
-
-    "config": {
-        "vendor-dir": "app/vendor"
     }
 }

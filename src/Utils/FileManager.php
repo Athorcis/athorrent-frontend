@@ -147,11 +147,11 @@ class FileManager {
         );
 
         $absolutePath .= DIRECTORY_SEPARATOR;
-        
+
         if ($relativePath != '') {
             $relativePath .= '/';
         }
-        
+
         foreach ($entries as $entry) {
             $absoluteEntryPath = $absolutePath . $entry;
 
