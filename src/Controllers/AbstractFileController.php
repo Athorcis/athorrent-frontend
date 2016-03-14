@@ -85,7 +85,7 @@ class AbstractFileController extends AbstractController {
 
         $title = $result['name'];
 
-        if ($fileManager->isRoot($path)) {
+        if ($fileManager->isRoot($path) && $this instanceof FileController) {
             $title = $app['translator']->trans('files.title');
         }
 
