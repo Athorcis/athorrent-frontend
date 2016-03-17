@@ -2,27 +2,32 @@
 
 namespace Athorrent\Entity;
 
-class UserRole {
+class UserRole
+{
     private $userId;
 
     private $role;
 
     public static $list = array('ROLE_USER', 'ROLE_ADMIN');
 
-    public function __construct($userId, $role) {
+    public function __construct($userId, $role)
+    {
         $this->userId = $userId;
         $this->role = $role;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->userId;
     }
 
-    public function getRole() {
+    public function getRole()
+    {
         return $this->role;
     }
 
-    public function save() {
+    public function save()
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('INSERT INTO user_role(userId, role) VALUES(:userId, :role)');
@@ -35,7 +40,8 @@ class UserRole {
         return $sth->rowCount() === 1;
     }
 
-    public static function loadByUserId($userId) {
+    public static function loadByUserId($userId)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('SELECT role FROM user_role WHERE userId = :userId');
@@ -51,7 +57,8 @@ class UserRole {
         return $userRoles;
     }
 
-    public static function deleteByUserId($userId) {
+    public static function deleteByUserId($userId)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('DELETE FROM user_role WHERE userId = :userId');

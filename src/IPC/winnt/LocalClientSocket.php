@@ -4,8 +4,10 @@ namespace Athorrent\IPC;
 
 use Athorrent\Utils\ServiceUnavailableException;
 
-class LocalClientSocket_winnt extends LocalSocket_winnt implements ClientSocketInterface {
-    public function __construct($path) {
+class LocalClientSocket_winnt extends LocalSocket_winnt implements ClientSocketInterface
+{
+    public function __construct($path)
+    {
         $this->namedPipe = @fopen($path, 'r+');
 
         if (!$this->namedPipe) {
@@ -13,7 +15,8 @@ class LocalClientSocket_winnt extends LocalSocket_winnt implements ClientSocketI
         }
     }
 
-    public function read(&$buffer, $length) {
+    public function read(&$buffer, $length)
+    {
         $buffer = fread($this->namedPipe, $length);
 
         if ($buffer === false) {
@@ -25,7 +28,8 @@ class LocalClientSocket_winnt extends LocalSocket_winnt implements ClientSocketI
         return $bytesRead;
     }
 
-    public function write($buffer, $length) {
+    public function write($buffer, $length)
+    {
         $bytesWritten = fwrite($this->namedPipe, $buffer, $length);
         fflush($this->namedPipe);
 
@@ -36,5 +40,3 @@ class LocalClientSocket_winnt extends LocalSocket_winnt implements ClientSocketI
         return $bytesWritten;
     }
 }
-
-?>

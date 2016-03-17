@@ -4,7 +4,8 @@ namespace Athorrent\Utils;
 
 use Athorrent\Entity\Sharing;
 
-class File {
+class File
+{
     private $absolutePath;
 
     private $relativePath;
@@ -35,7 +36,8 @@ class File {
 
     private $sharingToken;
 
-    public function __construct($absolutePath, $relativePath, $ownerId, $cachable, $deletable, $sharable) {
+    public function __construct($absolutePath, $relativePath, $ownerId, $cachable, $deletable, $sharable)
+    {
         $this->absolutePath = $absolutePath;
         $this->relativePath = $relativePath;
         $this->ownerId = $ownerId;
@@ -44,27 +46,33 @@ class File {
         $this->sharable = $sharable;
     }
 
-    public function getRelativePath() {
+    public function getRelativePath()
+    {
         return $this->relativePath;
     }
 
-    public function getAbsolutePath() {
+    public function getAbsolutePath()
+    {
         return $this->absolutePath;
     }
 
-    public function isCachable() {
+    public function isCachable()
+    {
         return $this->cachable;
     }
 
-    public function isDeletable() {
+    public function isDeletable()
+    {
         return $this->deletable;
     }
 
-    public function isSharable() {
+    public function isSharable()
+    {
         return $this->sharable;
     }
 
-    public function isFile() {
+    public function isFile()
+    {
         if ($this->file === null) {
             $this->file = is_file($this->absolutePath);
         }
@@ -72,7 +80,8 @@ class File {
         return $this->file;
     }
 
-    public function getModificationTime() {
+    public function getModificationTime()
+    {
         if ($this->modificationTime === null) {
             $this->modificationTime = filemtime($this->absolutePath);
         }
@@ -80,7 +89,8 @@ class File {
         return $this->modificationTime;
     }
 
-    public function getEncodedPath() {
+    public function getEncodedPath()
+    {
         if ($this->encodedPath === null) {
             $this->encodedPath = base64_encode($this->relativePath);
         }
@@ -88,7 +98,8 @@ class File {
         return $this->encodedPath;
     }
 
-    public function getMimeType() {
+    public function getMimeType()
+    {
         if ($this->mimeType === null) {
             $this->mimeType = FileUtils::getMimeType($this->absolutePath);
         }
@@ -96,23 +107,24 @@ class File {
         return $this->mimeType;
     }
 
-    public function getIcon() {
+    public function getIcon()
+    {
         if ($this->icon === null) {
             $mimeType = $this->getMimeType();
 
             if ($mimeType === 'directory') {
                 $this->icon = 'fa-folder-open-o';
-            } else if (strpos($mimeType, 'text/') === 0) {
+            } elseif (strpos($mimeType, 'text/') === 0) {
                 $this->icon = 'fa-file-text-o';
-            } else if (strpos($mimeType, 'image/') === 0) {
+            } elseif (strpos($mimeType, 'image/') === 0) {
                 $this->icon = 'fa-file-image-o';
-            } else if (strpos($mimeType, 'audio/') === 0) {
+            } elseif (strpos($mimeType, 'audio/') === 0) {
                 $this->icon = 'fa-file-audio-o';
-            } else if (strpos($mimeType, 'video/') === 0) {
+            } elseif (strpos($mimeType, 'video/') === 0) {
                 $this->icon = 'fa-file-video-o';
-            } else if (strpos($mimeType, 'application/pdf') === 0) {
+            } elseif (strpos($mimeType, 'application/pdf') === 0) {
                 $this->icon = 'fa-file-pdf-o';
-            } else if (strpos($mimeType, 'application/zip') === 0 || strpos($mimeType, 'application/x-gzip') === 0) {
+            } elseif (strpos($mimeType, 'application/zip') === 0 || strpos($mimeType, 'application/x-gzip') === 0) {
                 $this->icon = 'fa-file-archive-o';
             } else {
                 $this->icon = 'fa-file-o';
@@ -122,7 +134,8 @@ class File {
         return $this->icon;
     }
 
-    public function getName() {
+    public function getName()
+    {
         if ($this->name === null) {
             $this->name = basename($this->relativePath);
         }
@@ -130,7 +143,8 @@ class File {
         return $this->name;
     }
 
-    public function getSize() {
+    public function getSize()
+    {
         if ($this->size === null) {
             if ($this->isFile()) {
                 $this->size = filesize($this->absolutePath);
@@ -142,7 +156,8 @@ class File {
         return $this->size;
     }
 
-    public function isPlayable() {
+    public function isPlayable()
+    {
         if ($this->playable === null) {
             $this->playable = strpos($this->getMimeType(), 'video/mp4') === 0;
         }
@@ -150,7 +165,8 @@ class File {
         return $this->playable;
     }
 
-    public function isShared() {
+    public function isShared()
+    {
         if ($this->isSharable()) {
             return Sharing::loadByToken($this->getSharingToken()) !== null;
         }
@@ -158,7 +174,8 @@ class File {
         return false;
     }
 
-    public function getSharingToken() {
+    public function getSharingToken()
+    {
         if ($this->sharingToken === null) {
             $path = $this->relativePath;
 
@@ -172,5 +189,3 @@ class File {
         return $this->sharingToken;
     }
 }
-
-?>

@@ -2,7 +2,8 @@
 
 namespace Athorrent\Entity;
 
-class Sharing {
+class Sharing
+{
     private $token;
 
     private $userId;
@@ -11,26 +12,31 @@ class Sharing {
 
     private $creationTimestamp;
 
-    public function __construct($token = null, $userId = null, $path = null, $creationTimestamp = null) {
+    public function __construct($token = null, $userId = null, $path = null, $creationTimestamp = null)
+    {
         $this->token = $token;
         $this->userId = $userId;
         $this->path = $path;
         $this->creationTimestamp = $creationTimestamp;
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->userId;
     }
 
-    public function getPath() {
+    public function getPath()
+    {
         return $this->path;
     }
 
-    public function save() {
+    public function save()
+    {
         global $app;
 
         if ($this->token === null) {
@@ -44,7 +50,8 @@ class Sharing {
         }
     }
 
-    public static function loadByToken($token) {
+    public static function loadByToken($token)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('SELECT userId, path, UNIX_TIMESTAMP(creationTimestamp) AS creationTimestamp FROM sharing WHERE token = :token');
@@ -60,7 +67,8 @@ class Sharing {
         return new self($token, $row['userId'], $row['path'], $row['creationTimestamp']);
     }
 
-    public static function deleteByToken($token, $userId) {
+    public static function deleteByToken($token, $userId)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('DELETE FROM sharing WHERE token = :token AND userId = :userId');
@@ -71,7 +79,8 @@ class Sharing {
         return $sth->rowCount() === 1;
     }
 
-    public static function loadByUserId($userId, $offset, $limit, &$total) {
+    public static function loadByUserId($userId, $offset, $limit, &$total)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('SELECT SQL_CALC_FOUND_ROWS token, path, UNIX_TIMESTAMP(creationTimestamp) AS creationTimestamp FROM sharing WHERE userId = :userId ORDER BY creationTimestamp LIMIT :offset, :limit; SELECT FOUND_ROWS()');
@@ -92,7 +101,8 @@ class Sharing {
         return $sharings;
     }
 
-    public static function deleteByUserId($userId) {
+    public static function deleteByUserId($userId)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('DELETE FROM sharing WHERE userId = :userId');
@@ -102,7 +112,8 @@ class Sharing {
         return $sth->rowCount() > 0;
     }
 
-    public static function loadByPathRecursively($path, $userId) {
+    public static function loadByPathRecursively($path, $userId)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('SELECT token, path, UNIX_TIMESTAMP(creationTimestamp) AS creationTimestamp FROM sharing WHERE (path = :path OR path LIKE :like) AND userId = :userId ORDER BY CHAR_LENGTH(path)');
@@ -121,7 +132,8 @@ class Sharing {
         return $sharings;
     }
 
-    public static function deleteByPathRecursively($path, $userId) {
+    public static function deleteByPathRecursively($path, $userId)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('DELETE FROM sharing WHERE (path = :path OR path LIKE :like) AND userId = :userId');
@@ -134,7 +146,8 @@ class Sharing {
         return $sth->rowCount() > 0;
     }
 
-    public static function generateToken($userId, $path) {
+    public static function generateToken($userId, $path)
+    {
         return md5($userId . '/' . $path);
     }
 }

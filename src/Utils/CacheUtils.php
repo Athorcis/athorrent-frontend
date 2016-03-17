@@ -2,8 +2,10 @@
 
 namespace Athorrent\Utils;
 
-class CacheUtils {
-    public static function clearApc() {
+class CacheUtils
+{
+    public static function clearApc()
+    {
         if (function_exists('apcu_clear_cache')) {
             apcu_clear_cache('user');
         }
@@ -11,7 +13,8 @@ class CacheUtils {
         return true;
     }
 
-    protected static function clearCacheDir($path) {
+    protected static function clearCacheDir($path)
+    {
         if (is_dir($path)) {
             return FileUtils::rrmdir($path);
         }
@@ -19,13 +22,13 @@ class CacheUtils {
         return true;
     }
 
-    public static function clearTwig() {
+    public static function clearTwig()
+    {
         return self::clearCacheDir(CACHE . DIRECTORY_SEPARATOR . 'twig');
     }
 
-    public static function clearTranslations() {
+    public static function clearTranslations()
+    {
         return self::clearCacheDir(CACHE . DIRECTORY_SEPARATOR . 'translator');
     }
 }
-
-?>

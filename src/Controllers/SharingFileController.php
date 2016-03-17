@@ -6,12 +6,14 @@ use Athorrent\Entity\Sharing;
 use Athorrent\Utils\FileManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class SharingFileController extends AbstractFileController {
+class SharingFileController extends AbstractFileController
+{
     protected static $actionPrefix = 'sharings_';
 
     protected static $routePattern = '/sharings/{token}/files';
 
-    protected function getArguments(Request $request) {
+    protected function getArguments(Request $request)
+    {
         $arguments = parent::getArguments($request);
 
         $sharing = Sharing::loadByToken($request->attributes->get('token'));
@@ -25,7 +27,8 @@ class SharingFileController extends AbstractFileController {
         return $arguments;
     }
 
-    public function getRouteParameters($action) {
+    public function getRouteParameters($action)
+    {
         global $app;
 
         $parameters = parent::getRouteParameters($action);
@@ -35,5 +38,3 @@ class SharingFileController extends AbstractFileController {
         return $parameters;
     }
 }
-
-?>

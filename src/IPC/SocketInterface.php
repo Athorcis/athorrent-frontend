@@ -2,10 +2,9 @@
 
 namespace Athorrent\IPC;
 
-interface SocketInterface {
+interface SocketInterface
+{
     public function shutdown();
 
     public function close();
 }
-
-?>

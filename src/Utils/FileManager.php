@@ -4,7 +4,8 @@ namespace Athorrent\Utils;
 
 use Athorrent\Entity\Sharing;
 
-class FileManager {
+class FileManager
+{
     private $ownerId;
 
     private $root;
@@ -15,7 +16,8 @@ class FileManager {
 
     private $torrentPaths;
 
-    private function __construct($ownerId, $root, $writable) {
+    private function __construct($ownerId, $root, $writable)
+    {
         if ($root[strlen($root) - 1] === DIRECTORY_SEPARATOR) {
             $root = substr($root, -1);
         }
@@ -31,19 +33,23 @@ class FileManager {
         }
     }
 
-    public function getOwnerId() {
+    public function getOwnerId()
+    {
         return $this->ownerId;
     }
 
-    public function isOwner($userId) {
+    public function isOwner($userId)
+    {
         return $this->ownerId === $userId;
     }
 
-    public function isRoot($path) {
+    public function isRoot($path)
+    {
         return $this->root === $path;
     }
 
-    public function getAbsolutePath($path) {
+    public function getAbsolutePath($path)
+    {
         $absolutePath = realpath($this->rootDir . '/' . str_replace('/', DIRECTORY_SEPARATOR, $path));
 
         if (!$absolutePath || strrpos($absolutePath, $this->root, -strlen($absolutePath)) === false) {
@@ -57,7 +63,8 @@ class FileManager {
         return $absolutePath;
     }
 
-    public function getRelativePath($absolutePath) {
+    public function getRelativePath($absolutePath)
+    {
         $relativePath = str_replace($this->rootDir, '', $absolutePath);
 
         if (strlen($relativePath) > 0 && $relativePath[0] === DIRECTORY_SEPARATOR) {
@@ -67,7 +74,8 @@ class FileManager {
         return str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
     }
 
-    public function getTorrentPaths() {
+    public function getTorrentPaths()
+    {
         if ($this->torrentPaths === null) {
             $torrentManager = TorrentManager::getInstance($this->ownerId);
             $this->torrentPaths = $torrentManager->getPaths();
@@ -76,7 +84,8 @@ class FileManager {
         return $this->torrentPaths;
     }
 
-    public function isTorrent($path) {
+    public function isTorrent($path)
+    {
         $torrentPaths = $this->getTorrentPaths();
         $index = -strlen($path);
 
@@ -89,7 +98,8 @@ class FileManager {
         return false;
     }
 
-    public function containsTorrents($path) {
+    public function containsTorrents($path)
+    {
         $torrentPaths = $this->getTorrentPaths();
 
         foreach ($torrentPaths as $torrentPath) {
@@ -101,15 +111,18 @@ class FileManager {
         return false;
     }
 
-    public function isWritable() {
+    public function isWritable()
+    {
         return $this->writable;
     }
 
-    public function isDeletable($absolutePath) {
+    public function isDeletable($absolutePath)
+    {
         return $this->isWritable() && !$this->isTorrent($absolutePath);
     }
 
-    public function listEntries($absolutePath) {
+    public function listEntries($absolutePath)
+    {
         $writable = $this->isWritable();
         $sharable = $writable;
 
@@ -170,20 +183,23 @@ class FileManager {
             $result['files'][] = new File($absoluteEntryPath, $relativePath . $entry, $this->ownerId, $cachable, $deletable, $sharable);
         }
 
-        usort($result['files'], function (File $a, File $b) {
-            if (!$a->isFile() && $b->isFile()) {
-                return -1;
-            } else if ($a->isFile() && !$b->isFile()) {
-                return 1;
-            }
+        usort(
+            $result['files'], function (File $a, File $b) {
+                if (!$a->isFile() && $b->isFile()) {
+                    return -1;
+                } elseif ($a->isFile() && !$b->isFile()) {
+                    return 1;
+                }
 
-            return strcmp($a->getName(), $b->getName());
-        });
+                return strcmp($a->getName(), $b->getName());
+            }
+        );
 
         return $result;
     }
 
-    public function remove($path) {
+    public function remove($path)
+    {
         if (!$this->isDeletable($path)) {
             return false;
         }
@@ -192,7 +208,7 @@ class FileManager {
 
         if (is_file($path)) {
             return unlink($path);
-        } else if ($path != $this->rootDir) {
+        } elseif ($path != $this->rootDir) {
             return FileUtils::rrmdir($path);
         }
 
@@ -201,7 +217,8 @@ class FileManager {
 
     private static $instances;
 
-    public static function getInstance($ownerId, $userId = -1, $pathSuffix = '', $writable = true) {
+    public static function getInstance($ownerId, $userId = -1, $pathSuffix = '', $writable = true)
+    {
         $root = implode(DIRECTORY_SEPARATOR, array(BIN, 'files', $ownerId));
 
         if ($userId === -1) {
@@ -221,13 +238,13 @@ class FileManager {
         return self::$instances[$root];
     }
 
-    public static function getByUser($userId) {
+    public static function getByUser($userId)
+    {
         return self::getInstance($userId);
     }
 
-    public static function getBySharing($userId, Sharing $sharing) {
+    public static function getBySharing($userId, Sharing $sharing)
+    {
         return self::getInstance($sharing->getUserId(), $userId, str_replace('/', DIRECTORY_SEPARATOR, $sharing->getPath()), false);
     }
 }
-
-?>

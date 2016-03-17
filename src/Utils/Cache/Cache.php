@@ -2,16 +2,18 @@
 
 namespace Athorrent\Utils\Cache;
 
-abstract class Cache {
-    public abstract function exists($key);
+abstract class Cache
+{
+    abstract public function exists($key);
 
-    public abstract function fetch($key);
+    abstract public function fetch($key);
 
-    public abstract function store($key, $value, $lifetime = 0);
+    abstract public function store($key, $value, $lifetime = 0);
 
     private static $instances;
 
-    public static function getInstance($cacheType = CACHE_TYPE) {
+    public static function getInstance($cacheType = CACHE_TYPE)
+    {
         if (!isset(self::$instances[$cacheType])) {
             self::$instances[$cacheType] = new $cacheType();
         }
@@ -19,5 +21,3 @@ abstract class Cache {
         return self::$instances[$cacheType];
     }
 }
-
-?>

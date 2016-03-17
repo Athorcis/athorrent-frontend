@@ -7,12 +7,14 @@ use Athorrent\Entity\User;
 use Athorrent\Entity\UserRole;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserController extends AbstractController {
+class UserController extends AbstractController
+{
     protected static $actionPrefix = 'users_';
 
     protected static $routePattern = '/administration/users';
 
-    protected static function buildRoutes() {
+    protected static function buildRoutes()
+    {
         $routes = parent::buildRoutes();
 
         $routes[] = array('GET', '/', 'listUsers');
@@ -23,7 +25,8 @@ class UserController extends AbstractController {
         return $routes;
     }
 
-    protected static function buildAjaxRoutes() {
+    protected static function buildAjaxRoutes()
+    {
         $routes = parent::buildAjaxRoutes();
 
         $routes[] = array('POST', '/remove', 'removeUser');
@@ -31,7 +34,8 @@ class UserController extends AbstractController {
         return $routes;
     }
 
-    protected function listUsers(Request $request) {
+    protected function listUsers(Request $request)
+    {
         if ($request->query->has('page')) {
             $page = $request->query->get('page');
 
@@ -53,20 +57,26 @@ class UserController extends AbstractController {
 
         $lastPage = ceil($total / $usersPerPage);
 
-        return $this->render(array (
+        return $this->render(
+            array (
             'users' => $users,
             'page' => $page,
             'lastPage' => $lastPage
-        ));
+            )
+        );
     }
 
-    protected function addUser(Request $request) {
-        return $this->render(array (
+    protected function addUser(Request $request)
+    {
+        return $this->render(
+            array (
             'roleList' => UserRole::$list
-        ));
+            )
+        );
     }
 
-    protected function saveUser(Request $request) {
+    protected function saveUser(Request $request)
+    {
         $username = $request->request->get('username');
         $password = $request->request->get('password');
         $role = $request->request->get('role');
@@ -95,7 +105,8 @@ class UserController extends AbstractController {
         return $this->redirect('listUsers');
     }
 
-    protected function removeUser(Request $request) {
+    protected function removeUser(Request $request)
+    {
         $userId = $request->request->get('userId');
 
         if (!empty($userId)) {
@@ -109,5 +120,3 @@ class UserController extends AbstractController {
         $this->abort(500, 'error.cannotRemoveUser');
     }
 }
-
-?>

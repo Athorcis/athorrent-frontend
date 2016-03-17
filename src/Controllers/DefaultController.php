@@ -4,8 +4,10 @@ namespace Athorrent\Controllers;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultController extends AbstractController {
-    protected static function buildRoutes() {
+class DefaultController extends AbstractController
+{
+    protected static function buildRoutes()
+    {
         $routes = parent::buildRoutes();
 
         $routes[] = array('GET', '/', 'home');
@@ -13,9 +15,8 @@ class DefaultController extends AbstractController {
         return $routes;
     }
 
-    public function home(Request $request) {
+    public function home(Request $request)
+    {
         return $this->render();
     }
 }
-
-?>

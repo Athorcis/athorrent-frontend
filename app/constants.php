@@ -18,5 +18,3 @@ if (function_exists('apcu_exists') && !DEBUG) {
 } else {
     define('CACHE_TYPE', '\Athorrent\Utils\Cache\DummyCache');
 }
-
-?>

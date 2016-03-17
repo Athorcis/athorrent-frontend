@@ -9,17 +9,21 @@ use Athorrent\Utils\File;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
-class KeyGenerator implements KeyGeneratorInterface {
-    public function generateKey($value) {
+class KeyGenerator implements KeyGeneratorInterface
+{
+    public function generateKey($value)
+    {
         global $app;
 
         if ($value === null || $value instanceof TokenInterface) {
             if ($value === null) {
                 $key = 'notoken';
             } else {
-                $roles = array_map(function (Role $role) {
-                    return $role->getRole();
-                }, $value->getRoles());
+                $roles = array_map(
+                    function (Role $role) {
+                        return $role->getRole();
+                    }, $value->getRoles()
+                );
 
                 if (count($roles) > 0) {
                     $key = implode(',', $roles);
@@ -27,18 +31,16 @@ class KeyGenerator implements KeyGeneratorInterface {
                     $key = 'noroles';
                 }
             }
-        } else if ($value instanceof File) {
+        } elseif ($value instanceof File) {
             $key = $value->getAbsolutePath() . $value->getModificationTime() . ($value->isSharable() ? 0 : 1);
-        } else if ($value instanceof Sharing) {
+        } elseif ($value instanceof Sharing) {
             $key = $value->getToken();
-        } else if ($value instanceof User) {
+        } elseif ($value instanceof User) {
             $key = $value->getUserId() . $value->getConnectionTimestamp();
-        } else if (is_string($value)) {
+        } elseif (is_string($value)) {
             $key = $value;
         }
 
         return $key . $app['locale'];
     }
 }
-
-?>

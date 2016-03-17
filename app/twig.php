@@ -8,7 +8,8 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use SPE\FilesizeExtensionBundle\Twig\FilesizeExtension;
 
-function initializeTwig(Application $app) {
+function initializeTwig(Application $app)
+{
     $app->register(new TwigServiceProvider(), array (
         'twig.path' => APP . '/views',
         'twig.options' => array (
@@ -16,7 +17,7 @@ function initializeTwig(Application $app) {
         )
     ));
 
-    $app['twig'] = $app->share($app->extend('twig', function(Twig_Environment $twig, $app) {
+    $app['twig'] = $app->share($app->extend('twig', function (Twig_Environment $twig, $app) {
         $cacheProvider = new CacheProvider($app['cache']);
         $cacheStrategy  = new GenerationalCacheStrategy($cacheProvider, new KeyGenerator(), 0);
         $cacheExtension = new CacheExtension($cacheStrategy);
@@ -27,7 +28,7 @@ function initializeTwig(Application $app) {
         $twig->addFunction(new Twig_SimpleFunction('torrentStateToClass', function ($torrent) {
             if ($torrent['state'] === 'paused') {
                 $class = 'warning';
-            } else if ($torrent['state'] === 'seeding' || $torrent['state'] === 'downloading') {
+            } elseif ($torrent['state'] === 'seeding' || $torrent['state'] === 'downloading') {
                 $class = 'success';
             } else {
                 $class = 'info';
@@ -36,7 +37,8 @@ function initializeTwig(Application $app) {
             return $class;
         }));
 
-        function twigIncludeStatic($relativePath, $inline) {
+        function twigIncludeStatic($relativePath, $inline)
+        {
             $absolutePath = WEB . DIRECTORY_SEPARATOR . $relativePath;
 
             if ($inline === true || ($inline === null && filesize($absolutePath) < 1024)) {
@@ -56,7 +58,8 @@ function initializeTwig(Application $app) {
             return '<link rel="stylesheet" type="text/css" href="' . $result['path'] . '" />';
         }
 
-        function twigIncludeJs($path, $inline) {
+        function twigIncludeJs($path, $inline)
+        {
             $result = twigIncludeStatic($path . '.js', $inline);
 
             if (isset($result['content'])) {
@@ -74,16 +77,14 @@ function initializeTwig(Application $app) {
             return twigIncludeJs($path, $inline);
         }));
 
-        $twig->addFunction(new Twig_SimpleFunction('path', function ($action, $parameters = array(), $prefixAction = null) use($app) {
+        $twig->addFunction(new Twig_SimpleFunction('path', function ($action, $parameters = array(), $prefixAction = null) use ($app) {
             return $app['alias_resolver']->generatePath($action, $parameters, $prefixAction);
         }));
 
-        $twig->addFunction(new Twig_SimpleFunction('uri', function ($action, $parameters = array(), $prefixAction = null) use($app) {
+        $twig->addFunction(new Twig_SimpleFunction('uri', function ($action, $parameters = array(), $prefixAction = null) use ($app) {
             return $app['alias_resolver']->generateUrl($action, $parameters, $prefixAction);
         }));
 
         return $twig;
     }));
 }
-
-?>

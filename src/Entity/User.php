@@ -4,7 +4,8 @@ namespace Athorrent\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class User implements UserInterface {
+class User implements UserInterface
+{
     private $userId;
 
     private $username;
@@ -17,9 +18,14 @@ class User implements UserInterface {
 
     private $connectionTimestamp;
 
+    private $usedDiskSpace;
+
+    private $totalDiskSpace;
+
     private $roles;
 
-    public function __construct($userId, $username, $password = null, $salt = null, $creationTimestamp = null, $connectionTimestamp = null, $roles = null) {
+    public function __construct($userId, $username, $password = null, $salt = null, $creationTimestamp = null, $connectionTimestamp = null, $usedDiskSpace = null, $totalDiskSpace = null, $roles = null)
+    {
         $this->userId = $userId;
         $this->username = $username;
         $this->password = $password;
@@ -33,43 +39,55 @@ class User implements UserInterface {
         $this->creationTimestamp = $creationTimestamp;
         $this->connectionTimestamp = $connectionTimestamp;
 
+        $this->usedDiskSpace = $usedDiskSpace;
+        $this->totalDiskSpace =$totalDiskSpace;
+
         $this->roles = $roles;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->userId;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function setUsername($username) {
+    public function setUsername($username)
+    {
         $this->username = $username;
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->password;
     }
 
-    public function setRawPassword($password) {
+    public function setRawPassword($password)
+    {
         global $app;
         $this->password = $app['security.encoder.digest']->encodePassword($password, $this->salt);
     }
 
-    public function getSalt() {
+    public function getSalt()
+    {
         return $this->salt;
     }
 
-    public function getCreationTimestamp() {
+    public function getCreationTimestamp()
+    {
         return $this->creationTimestamp;
     }
 
-    public function getConnectionTimestamp() {
+    public function getConnectionTimestamp()
+    {
         return $this->connectionTimestamp;
     }
 
-    public function updateConnectionTimestamp() {
+    public function updateConnectionTimestamp()
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('UPDATE user SET connectionTimestamp = FROM_UNIXTIME(:connectionTimestamp) WHERE userId = :userId');
@@ -80,20 +98,35 @@ class User implements UserInterface {
         $sth->execute();
     }
 
-    public function getRoles() {
+    public function getUsedDiskSpace()
+    {
+        return $this->usedDiskSpace;
+    }
+
+    public function getTotaltDiskSpace()
+    {
+        return $this->totalDiskSpace;
+    }
+
+    public function getRoles()
+    {
         if ($this->roles === null) {
-            $this->roles = array_map(function (UserRole $role) {
-                return $role->getRole();
-            }, UserRole::loadByUserId($this->userId));
+            $this->roles = array_map(
+                function (UserRole $role) {
+                    return $role->getRole();
+                }, UserRole::loadByUserId($this->userId)
+            );
         }
 
         return $this->roles;
     }
 
-    public function eraseCredentials() {
+    public function eraseCredentials()
+    {
     }
 
-    public function save() {
+    public function save()
+    {
         global $app;
 
         if ($this->userId === null) {
@@ -119,7 +152,8 @@ class User implements UserInterface {
         return $sth->rowCount() === 1;
     }
 
-    public static function deleteByUserId($userId) {
+    public static function deleteByUserId($userId)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('DELETE FROM user WHERE userId = :userId');
@@ -129,7 +163,8 @@ class User implements UserInterface {
         return $sth->rowCount() === 1;
     }
 
-    public static function exists($username) {
+    public static function exists($username)
+    {
         global $app;
 
         $sth = $app['pdo']->prepare('SELECT userId FROM user WHERE username = :username');
@@ -139,10 +174,11 @@ class User implements UserInterface {
         return $sth->fetch(\PDO::FETCH_ASSOC) !== false;
     }
 
-    public static function loadByUsername($username) {
+    public static function loadByUsername($username)
+    {
         global $app;
 
-        $sth = $app['pdo']->prepare('SELECT userId, password, salt, creationTimestamp, connectionTimestamp FROM user WHERE username = :username');
+        $sth = $app['pdo']->prepare('SELECT userId, password, salt, creationTimestamp, connectionTimestamp, usedDiskSpace, totalDiskSpace FROM user WHERE username = :username');
         $sth->bindValue('username', $username);
         $sth->execute();
 
@@ -152,13 +188,14 @@ class User implements UserInterface {
             return null;
         }
 
-        return new self($row['userId'], $username, $row['password'], $row['salt'], $row['creationTimestamp'], $row['connectionTimestamp']);
+        return new self($row['userId'], $username, $row['password'], $row['salt'], $row['creationTimestamp'], $row['connectionTimestamp'], $row['usedDiskSpace'], $row['totalDiskSpace']);
     }
 
-    public static function loadAll($offset, $limit, &$total) {
+    public static function loadAll($offset, $limit, &$total)
+    {
         global $app;
 
-        $sth = $app['pdo']->prepare('SELECT SQL_CALC_FOUND_ROWS userId, username, password, salt, creationTimestamp, connectionTimestamp FROM user ORDER BY userId LIMIT :offset, :limit; SELECT FOUND_ROWS()');
+        $sth = $app['pdo']->prepare('SELECT SQL_CALC_FOUND_ROWS userId, username, password, salt, creationTimestamp, connectionTimestamp, usedDiskSpace, totalDiskSpace FROM user ORDER BY userId LIMIT :offset, :limit; SELECT FOUND_ROWS()');
         $sth->bindValue('offset', $offset, \PDO::PARAM_INT);
         $sth->bindValue('limit', $limit, \PDO::PARAM_INT);
         $sth->execute();
@@ -166,7 +203,7 @@ class User implements UserInterface {
         $users = array();
 
         foreach ($sth as $row) {
-            $users[] = new self($row['userId'], $row['username'], $row['password'], $row['salt'], $row['creationTimestamp'], $row['connectionTimestamp']);
+            $users[] = new self($row['userId'], $row['username'], $row['password'], $row['salt'], $row['creationTimestamp'], $row['connectionTimestamp'], $row['usedDiskSpace'], $row['totalDiskSpace']);
         }
 
         $sth->nextRowset();
@@ -175,5 +212,3 @@ class User implements UserInterface {
         return $users;
     }
 }
-
-?>

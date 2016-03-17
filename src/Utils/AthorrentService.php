@@ -4,41 +4,50 @@ namespace Athorrent\Utils;
 
 use Athorrent\IPC\JsonService;
 
-class AthorrentService extends JsonService {
+class AthorrentService extends JsonService
+{
     private $userId;
 
-    public function __construct($userId) {
+    public function __construct($userId)
+    {
         parent::__construct('Athorrent\IPC\LocalClientSocket_' . strtolower(PHP_OS), self::getPath($userId));
 
         $this->userId = $userId;
         $this->ensureRunning();
     }
 
-    private function hasFlag($flag) {
+    private function hasFlag($flag)
+    {
         return is_file(implode(DIRECTORY_SEPARATOR, array(BIN, 'flags', $this->userId, $flag)));
     }
 
-    private function setFlag($flag) {
+    private function setFlag($flag)
+    {
         touch(implode(DIRECTORY_SEPARATOR, array(BIN, 'flags', $this->userId, $flag)));
     }
 
-    private static function hasGlobalFlag($flag) {
+    private static function hasGlobalFlag($flag)
+    {
         return is_file(implode(DIRECTORY_SEPARATOR, array(BIN, 'flags', $flag)));
     }
 
-    private function isRunning() {
+    private function isRunning()
+    {
         return $this->hasFlag('running');
     }
 
-    private  static function isUpdating() {
+    private static function isUpdating()
+    {
         return self::hasGlobalFlag('updating');
     }
 
-    private function isBusy() {
+    private function isBusy()
+    {
         return self::isUpdating();
     }
 
-    private function ensureRunning() {
+    private function ensureRunning()
+    {
         if ($this->isRunning()) {
             return;
         }
@@ -54,7 +63,8 @@ class AthorrentService extends JsonService {
         } while (!$this->isRunning());
     }
 
-    private function start() {
+    private function start()
+    {
         $logDir = BIN . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . $this->userId;
         $logPath = $logDir . DIRECTORY_SEPARATOR . 'athorrentd.txt';
 
@@ -94,7 +104,8 @@ class AthorrentService extends JsonService {
         exec($cmd);
     }
 
-    private static function getPath($userId) {
+    private static function getPath($userId)
+    {
         switch (strtolower(PHP_OS)) {
             case 'linux':
                 $path = BIN . '/sockets/' . $userId . '.sck';
@@ -111,5 +122,3 @@ class AthorrentService extends JsonService {
         return $path;
     }
 }
-
-?>

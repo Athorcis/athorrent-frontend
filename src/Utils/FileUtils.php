@@ -2,13 +2,16 @@
 
 namespace Athorrent\Utils;
 
-class FileUtils {
-    public static function getMimeType($path) {
+class FileUtils
+{
+    public static function getMimeType($path)
+    {
         $finfo = new \finfo(FILEINFO_MIME);
         return $finfo->file($path);
     }
 
-    public static function dirsize($path) {
+    public static function dirsize($path)
+    {
         $path .= DIRECTORY_SEPARATOR;
         $dir = opendir($path);
         $size = 0;
@@ -30,7 +33,8 @@ class FileUtils {
         return $size;
     }
 
-    public static function rrmdir($path) {
+    public static function rrmdir($path)
+    {
         $path .= DIRECTORY_SEPARATOR;
         $dir = opendir($path);
         $result = true;
@@ -60,10 +64,9 @@ class FileUtils {
         return $result;
     }
 
-    public static function encodeFilename($filename) {
+    public static function encodeFilename($filename)
+    {
         $parts = pathinfo($filename);
         return base64_encode($parts['filename']) . '.' . $parts['extension'];
     }
 }
-
-?>

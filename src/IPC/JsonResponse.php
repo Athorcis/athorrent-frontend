@@ -2,25 +2,30 @@
 
 namespace Athorrent\IPC;
 
-class JsonResponse {
+class JsonResponse
+{
     private $data;
 
     private $success;
 
-    public function __construct($data, $success = true) {
+    public function __construct($data, $success = true)
+    {
         $this->data = $data;
         $this->success = $success;
     }
 
-    public function isSuccess() {
+    public function isSuccess()
+    {
         return $this->success;
     }
 
-    public function getData() {
+    public function getData()
+    {
         return $this->data;
     }
 
-    public static function parse($rawResponse) {
+    public static function parse($rawResponse)
+    {
         $array = json_decode($rawResponse, true);
 
         if (!isset($array['status'])) {
@@ -42,5 +47,3 @@ class JsonResponse {
         return new JsonResponse($array['data'], $success);
     }
 }
-
-?>

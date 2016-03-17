@@ -2,17 +2,20 @@
 
 namespace Athorrent\IPC;
 
-class JsonService {
+class JsonService
+{
     private $clientSocketType;
 
     private $address;
 
-    public function __construct($clientSocketType, $address) {
+    public function __construct($clientSocketType, $address)
+    {
         $this->clientSocketType = $clientSocketType;
         $this->address = $address;
     }
 
-    public function call($action, $parameters = array()) {
+    public function call($action, $parameters = array())
+    {
         $request = new JsonRequest($action, $parameters);
 
         $client = new JsonClient($this->clientSocketType, $this->address);
@@ -35,5 +38,3 @@ class JsonService {
         return null;
     }
 }
-
-?>
