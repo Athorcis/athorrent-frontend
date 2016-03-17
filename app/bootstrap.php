@@ -13,7 +13,8 @@ require APP . '/security.php';
 require APP . '/translation.php';
 require APP . '/twig.php';
 
-function initializeApplication() {
+function initializeApplication()
+{
     $app = new Application();
 
     $app['debug'] = DEBUG;
@@ -38,7 +39,7 @@ function initializeApplication() {
         }
     });
 
-    $app->error(function (\Exception $exception, $code) use($app) {
+    $app->error(function (\Exception $exception, $code) use ($app) {
         if ($app['debug']) {
             return;
         }
@@ -64,7 +65,7 @@ function initializeApplication() {
         return new Response($app['twig']->render('pages/error.html.twig', array('error' => $error, 'code' => $code)));
     });
 
-    $app['dispatcher']->addListener(KernelEvents::RESPONSE, function () use($app) {
+    $app['dispatcher']->addListener(KernelEvents::RESPONSE, function () use ($app) {
         $app['session']->save();
     }, Application::LATE_EVENT);
 
@@ -74,5 +75,3 @@ function initializeApplication() {
 
     return $app;
 }
-
-?>

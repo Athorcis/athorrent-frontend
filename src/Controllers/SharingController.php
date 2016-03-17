@@ -6,12 +6,14 @@ use Athorrent\Entity\Sharing;
 use Athorrent\Utils\FileManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class SharingController extends AbstractController {
+class SharingController extends AbstractController
+{
     protected static $actionPrefix = 'sharings_';
 
     protected static $routePattern = '/user/sharings';
 
-    protected static function buildRoutes() {
+    protected static function buildRoutes()
+    {
         $routes = parent::buildRoutes();
 
         $routes[] = array('GET', '/', 'listSharings');
@@ -19,7 +21,8 @@ class SharingController extends AbstractController {
         return $routes;
     }
 
-    protected static function buildAjaxRoutes() {
+    protected static function buildAjaxRoutes()
+    {
         $routes = parent::buildAjaxRoutes();
 
         $routes[] = array('POST', '/', 'addSharing');
@@ -28,7 +31,8 @@ class SharingController extends AbstractController {
         return $routes;
     }
 
-    protected function listSharings(Request $request) {
+    protected function listSharings(Request $request)
+    {
         if ($request->query->has('page')) {
             $page = $request->query->get('page');
 
@@ -49,14 +53,17 @@ class SharingController extends AbstractController {
 
         $lastPage = ceil($total / 10);
 
-        return $this->render(array (
+        return $this->render(
+            array (
             'sharings' => $sharings,
             'page' => $page,
             'lastPage' => $lastPage
-        ));
+            )
+        );
     }
 
-    protected function addSharing(Request $request) {
+    protected function addSharing(Request $request)
+    {
         if (!$request->request->has('path')) {
             return $this->abort(400);
         }
@@ -74,7 +81,8 @@ class SharingController extends AbstractController {
         return $this->success($this->url('listFiles', array('token' => $sharing->getToken()), 'sharings_'));
     }
 
-    protected function removeSharing(Request $request, $token) {
+    protected function removeSharing(Request $request, $token)
+    {
         if (!Sharing::deleteByToken($token, $this->getUserId())) {
             return $this->abort(404, 'error.sharingNotFound');
         }
@@ -82,5 +90,3 @@ class SharingController extends AbstractController {
         return $this->success();
     }
 }
-
-?>

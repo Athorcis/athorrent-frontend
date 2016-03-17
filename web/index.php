@@ -8,5 +8,3 @@ require APP . '/bootstrap.php';
 
 $app = initializeApplication();
 $app->run();
-
-?>

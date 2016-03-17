@@ -5,22 +5,26 @@ namespace Athorrent\Utils;
 use Athorrent\Controllers\AbstractController;
 use Jenyak\I18nRouting\I18nControllerCollection;
 
-class AliasResolver {
+class AliasResolver
+{
     private $routes;
 
     private $controller;
 
-    public function __construct(array $routes) {
+    public function __construct(array $routes)
+    {
         $this->routes = $routes;
         $this->controller = null;
         $this->controllerClass = '';
     }
 
-    public function setController(AbstractController $controller) {
+    public function setController(AbstractController $controller)
+    {
         $this->controller = $controller;
     }
 
-    public function resolveAlias($action, &$actionPrefix = null) {
+    public function resolveAlias($action, &$actionPrefix = null)
+    {
         global $app;
 
         if ($action[0] === '_') {
@@ -52,7 +56,8 @@ class AliasResolver {
         return $route->getOption('alias');
     }
 
-    public function generatePath($action, $parameters = array(), $actionPrefix = null) {
+    public function generatePath($action, $parameters = array(), $actionPrefix = null)
+    {
         global $app;
 
         if (is_string($parameters)) {
@@ -75,10 +80,9 @@ class AliasResolver {
         return $path;
     }
 
-    public function generateUrl($action, $parameters = array(), $actionPrefix = null) {
+    public function generateUrl($action, $parameters = array(), $actionPrefix = null)
+    {
         global $app;
         return $app['request']->getSchemeAndHttpHost() . $this->generatePath($action, $parameters, $actionPrefix);
     }
 }
-
-?>

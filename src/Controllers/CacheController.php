@@ -5,12 +5,14 @@ namespace Athorrent\Controllers;
 use Athorrent\Utils\CacheUtils;
 use Symfony\Component\HttpFoundation\Request;
 
-class CacheController extends AbstractController {
+class CacheController extends AbstractController
+{
     protected static $actionPrefix = 'cache_';
 
     protected static $routePattern = '/administration/cache';
 
-    protected static function buildRoutes() {
+    protected static function buildRoutes()
+    {
         $routes = parent::buildRoutes();
 
         $routes[] = array('GET', '/', 'handleCache');
@@ -18,7 +20,8 @@ class CacheController extends AbstractController {
         return $routes;
     }
 
-    protected static function buildAjaxRoutes() {
+    protected static function buildAjaxRoutes()
+    {
         $routes = parent::buildRoutes();
 
         $routes[] = array('POST', '/clear/apc', 'clearApc');
@@ -29,29 +32,34 @@ class CacheController extends AbstractController {
         return $routes;
     }
 
-    protected function handleCache(Request $request) {
+    protected function handleCache(Request $request)
+    {
         return $this->render(array(), 'cache');
     }
 
-    protected function clearApc(Request $request) {
+    protected function clearApc(Request $request)
+    {
         if (CacheUtils::clearApc()) {
             return $this->success();
         }
     }
 
-    protected function clearTwig(Request $request) {
+    protected function clearTwig(Request $request)
+    {
         if (CacheUtils::clearTwig()) {
             return $this->success();
         }
     }
 
-    protected function clearTranslations(Request $request) {
+    protected function clearTranslations(Request $request)
+    {
         if (CacheUtils::clearTranslations()) {
             return $this->success();
         }
     }
 
-    protected function clearAll(Request $request) {
+    protected function clearAll(Request $request)
+    {
         if (!CacheUtils::clearApc()) {
             return $this->abort();
         }
@@ -67,5 +75,3 @@ class CacheController extends AbstractController {
         return $this->success();
     }
 }
-
-?>

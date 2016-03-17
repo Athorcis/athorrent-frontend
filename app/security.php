@@ -11,7 +11,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Request;
 
-function initializeSecurity(Application $app) {
+function initializeSecurity(Application $app)
+{
     $app->register(new SessionServiceProvider());
     $app->register(new SecurityServiceProvider());
     $app->register(new RememberMeServiceProvider());
@@ -21,7 +22,7 @@ function initializeSecurity(Application $app) {
         'cookie_httponly' => true
     );
 
-    $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use($app) {
+    $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
         $request = $event->getRequest();
         $session = $request->getSession();
 
@@ -106,5 +107,3 @@ function initializeSecurity(Application $app) {
         return new AuthenticationHandler();
     });
 }
-
-?>

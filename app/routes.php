@@ -3,7 +3,8 @@
 use Athorrent\Utils\AliasResolver;
 use Silex\Application;
 
-function initializeRoutes(Application $app) {
+function initializeRoutes(Application $app)
+{
     Athorrent\Controllers\DefaultController::mount($app);
     Athorrent\Controllers\TorrentController::mount($app);
     Athorrent\Controllers\FileController::mount($app);
@@ -17,7 +18,8 @@ function initializeRoutes(Application $app) {
     $app->before('initializeAliasResolver');
 }
 
-function initializeAliasResolver() {
+function initializeAliasResolver()
+{
     global $app;
 
     if ($app['cache']->exists('routes')) {
@@ -59,4 +61,3 @@ function initializeAliasResolver() {
     $app['alias_resolver'] = new AliasResolver($routes);
     $app['ajax_routes'] = $ajaxRoutes;
 }
-?>

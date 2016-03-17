@@ -7,8 +7,10 @@ use Athorrent\Utils\FileManager;
 use Athorrent\Utils\FileUtils;
 use Symfony\Component\HttpFoundation\Request;
 
-class AbstractFileController extends AbstractController {
-    protected static function buildRoutes() {
+class AbstractFileController extends AbstractController
+{
+    protected static function buildRoutes()
+    {
         $routes = parent::buildRoutes();
 
         $routes[] = array('GET', '/', 'listFiles');
@@ -20,7 +22,8 @@ class AbstractFileController extends AbstractController {
         return $routes;
     }
 
-    protected static function buildAjaxRoutes() {
+    protected static function buildAjaxRoutes()
+    {
         $routes = parent::buildAjaxRoutes();
 
         $routes[] = array('GET', '/', 'listFiles');
@@ -32,7 +35,8 @@ class AbstractFileController extends AbstractController {
         return $routes;
     }
 
-    private static function getBreadcrumb($fileManager, $path, $trim = true) {
+    private static function getBreadcrumb($fileManager, $path, $trim = true)
+    {
         global $app;
 
         $breadcrumb = array($app['translator']->trans('files.root') => '');
@@ -53,7 +57,8 @@ class AbstractFileController extends AbstractController {
         return $breadcrumb;
     }
 
-    protected function getJsVariables() {
+    protected function getJsVariables()
+    {
         global $app;
 
         $jsVariables = parent::getJsVariables();
@@ -63,7 +68,8 @@ class AbstractFileController extends AbstractController {
         return $jsVariables;
     }
 
-    protected function abort($code, $error = null) {
+    protected function abort($code, $error = null)
+    {
         if ($error === null && $code === 404) {
             $error = 'error.fileNotFound';
         }
@@ -71,7 +77,8 @@ class AbstractFileController extends AbstractController {
         parent::abort($code, $error);
     }
 
-    protected function listFiles(Request $request, FileManager $fileManager) {
+    protected function listFiles(Request $request, FileManager $fileManager)
+    {
         global $app;
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
@@ -89,15 +96,18 @@ class AbstractFileController extends AbstractController {
             $title = $app['translator']->trans('files.title');
         }
 
-        return $this->render(array (
+        return $this->render(
+            array (
             'title' => $title,
             'dir_size' => $result['size'],
             'breadcrumb' => $breadcrumb,
             'files' => $result['files']
-        ), 'listFiles');
+            ), 'listFiles'
+        );
     }
 
-    protected function openFile(Request $request, FileManager $fileManager) {
+    protected function openFile(Request $request, FileManager $fileManager)
+    {
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -110,12 +120,15 @@ class AbstractFileController extends AbstractController {
 
         set_time_limit(0);
 
-        return $this->sendFile($path, 200, array (
+        return $this->sendFile(
+            $path, 200, array (
             'Content-Disposition' => ' inline; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
-        ));
+            )
+        );
     }
 
-    protected function downloadFile(Request $request, FileManager $fileManager) {
+    protected function downloadFile(Request $request, FileManager $fileManager)
+    {
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -128,12 +141,15 @@ class AbstractFileController extends AbstractController {
 
         set_time_limit(0);
 
-        return $this->sendFile($path, 200, array (
+        return $this->sendFile(
+            $path, 200, array (
             'Content-Disposition' => ' attachment; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
-        ));
+            )
+        );
     }
 
-    protected function playFile(Request $request, FileManager $fileManager) {
+    protected function playFile(Request $request, FileManager $fileManager)
+    {
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -153,14 +169,17 @@ class AbstractFileController extends AbstractController {
 
         $name = pathinfo($relativePath, PATHINFO_BASENAME);
 
-        return $this->render(array (
+        return $this->render(
+            array (
             'name' => $name,
             'breadcrumb' => $breadcrumb,
             'src' => $relativePath
-        ));
+            )
+        );
     }
 
-    protected function removeFile(Request $request, FileManager $fileManager) {
+    protected function removeFile(Request $request, FileManager $fileManager)
+    {
         if (!$request->request->has('path')) {
             return $this->abort(400);
         }
@@ -178,7 +197,8 @@ class AbstractFileController extends AbstractController {
         return $this->abort(500, 'error.cannotRemoveFile');
     }
 
-    protected function getDirectLink(Request $request, FileManager $fileManager) {
+    protected function getDirectLink(Request $request, FileManager $fileManager)
+    {
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -220,5 +240,3 @@ class AbstractFileController extends AbstractController {
         return $this->success($this->url('openFile', array('token' => $sharing->getToken(), 'path' => $finalPath), 'sharings_'));
     }
 }
-
-?>

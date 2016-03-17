@@ -2,19 +2,23 @@
 
 namespace Athorrent\IPC;
 
-class JsonClient {
+class JsonClient
+{
     private $clientSocket;
 
-    public function __construct($clientSocketType, $address) {
+    public function __construct($clientSocketType, $address)
+    {
         $this->clientSocket = new $clientSocketType($address);
     }
 
-    public function disconnect() {
+    public function disconnect()
+    {
         $this->clientSocket->shutdown();
         $this->clientSocket->close();
     }
 
-    public function recv() {
+    public function recv()
+    {
         $rawResponse = '';
 
         do {
@@ -34,7 +38,8 @@ class JsonClient {
         return null;
     }
 
-    public function send(JsonRequest $request) {
+    public function send(JsonRequest $request)
+    {
         $rawRequest = $request->toRawRequest();
         $length = strlen($rawRequest);
         $offset = 0;
@@ -50,5 +55,3 @@ class JsonClient {
         }
     }
 }
-
-?>
