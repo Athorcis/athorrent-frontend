@@ -34,6 +34,8 @@ class File
 
     private $playable;
 
+    private $displayable;
+    
     private $sharingToken;
 
     public function __construct($absolutePath, $relativePath, $ownerId, $cachable, $deletable, $sharable)
@@ -114,17 +116,17 @@ class File
 
             if ($mimeType === 'directory') {
                 $this->icon = 'fa-folder-open-o';
-            } elseif (strpos($mimeType, 'text/') === 0) {
+            } elseif (MimeType::isText($mimeType)) {
                 $this->icon = 'fa-file-text-o';
-            } elseif (strpos($mimeType, 'image/') === 0) {
+            } elseif (MimeType::isImage($mimeType)) {
                 $this->icon = 'fa-file-image-o';
-            } elseif (strpos($mimeType, 'audio/') === 0) {
+            } elseif (MimeType::isAudio($mimeType)) {
                 $this->icon = 'fa-file-audio-o';
-            } elseif (strpos($mimeType, 'video/') === 0) {
+            } elseif (MimeType::isVideo($mimeType)) {
                 $this->icon = 'fa-file-video-o';
-            } elseif (strpos($mimeType, 'application/pdf') === 0) {
+            } elseif (MimeType::isPdf($mimeType)) {
                 $this->icon = 'fa-file-pdf-o';
-            } elseif (strpos($mimeType, 'application/zip') === 0 || strpos($mimeType, 'application/x-gzip') === 0) {
+            } elseif (MimeType::isArchive($mimeType)) {
                 $this->icon = 'fa-file-archive-o';
             } else {
                 $this->icon = 'fa-file-o';
@@ -159,12 +161,21 @@ class File
     public function isPlayable()
     {
         if ($this->playable === null) {
-            $this->playable = strpos($this->getMimeType(), 'video/mp4') === 0;
+            $this->playable = MimeType::isPlayable($this->getMimeType());
         }
 
         return $this->playable;
     }
 
+    public function isDisplayable()
+    {
+        if ($this->displayable === null) {
+            $this->displayable = MimeType::isDisplayable($this->getMimeType());
+        }
+        
+        return $this->displayable;
+    }
+    
     public function isShared()
     {
         if ($this->isSharable()) {

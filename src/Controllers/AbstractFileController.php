@@ -5,6 +5,8 @@ namespace Athorrent\Controllers;
 use Athorrent\Entity\Sharing;
 use Athorrent\Utils\FileManager;
 use Athorrent\Utils\FileUtils;
+use Athorrent\Utils\MimeType;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class AbstractFileController extends AbstractController
@@ -13,11 +15,12 @@ class AbstractFileController extends AbstractController
     {
         $routes = parent::buildRoutes();
 
-        $routes[] = array('GET', '/', 'listFiles');
-        $routes[] = array('GET', '/play', 'playFile');
+        $routes[] = ['GET', '/', 'listFiles'];
+        $routes[] = ['GET', '/play', 'playFile'];
+        $routes[] = ['GET', '/display', 'displayFile'];
 
-        $routes[] = array('GET', '/open', 'openFile');
-        $routes[] = array('GET', '/download', 'downloadFile');
+        $routes[] = ['GET', '/open', 'openFile'];
+        $routes[] = ['GET', '/download', 'downloadFile'];
 
         return $routes;
     }
@@ -26,11 +29,11 @@ class AbstractFileController extends AbstractController
     {
         $routes = parent::buildAjaxRoutes();
 
-        $routes[] = array('GET', '/', 'listFiles');
+        $routes[] = ['GET', '/', 'listFiles'];
 
-        $routes[] = array('POST', '/remove', 'removeFile');
+        $routes[] = ['POST', '/remove', 'removeFile'];
 
-        $routes[] = array('GET', '/direct', 'getDirectLink');
+        $routes[] = ['GET', '/direct', 'getDirectLink'];
 
         return $routes;
     }
@@ -39,7 +42,7 @@ class AbstractFileController extends AbstractController
     {
         global $app;
 
-        $breadcrumb = array($app['translator']->trans('files.root') => '');
+        $breadcrumb = [$app['translator']->trans('files.root') => ''];
 
         $parts = explode('/', $fileManager->getRelativePath($path));
         $currentPath = '';
@@ -96,14 +99,12 @@ class AbstractFileController extends AbstractController
             $title = $app['translator']->trans('files.title');
         }
 
-        return $this->render(
-            array (
+        return $this->render([
             'title' => $title,
             'dir_size' => $result['size'],
             'breadcrumb' => $breadcrumb,
             'files' => $result['files']
-            ), 'listFiles'
-        );
+        ], 'listFiles');
     }
 
     protected function openFile(Request $request, FileManager $fileManager)
@@ -118,13 +119,15 @@ class AbstractFileController extends AbstractController
             return $this->abort(404);
         }
 
-        set_time_limit(0);
-
-        return $this->sendFile(
-            $path, 200, array (
-            'Content-Disposition' => ' inline; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
-            )
-        );
+        $response = new BinaryFileResponse($path, 200, [
+            "Content-Disposition" => ' inline; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
+        ], null, true);
+        
+        if (!$response->isNotModified($request)) {
+            set_time_limit(0);
+        }
+        
+        return $response;
     }
 
     protected function downloadFile(Request $request, FileManager $fileManager)
@@ -141,11 +144,9 @@ class AbstractFileController extends AbstractController
 
         set_time_limit(0);
 
-        return $this->sendFile(
-            $path, 200, array (
+        return $this->sendFile($path, 200, [
             'Content-Disposition' => ' attachment; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
-            )
-        );
+        ]);
     }
 
     protected function playFile(Request $request, FileManager $fileManager)
@@ -160,8 +161,10 @@ class AbstractFileController extends AbstractController
             return $this->abort(404);
         }
 
-        if (strpos(FileUtils::getMimeType($path), 'video/mp4') !== 0) {
-            return $this->abort(500, 'error.notAMP4');
+        $mimeType = FileUtils::getMimeType($path);
+        
+        if (!MimeType::isPlayable($mimeType)) {
+            return $this->abort(500, 'error.notPlayable');
         }
 
         $relativePath = $fileManager->getRelativePath($path);
@@ -169,13 +172,56 @@ class AbstractFileController extends AbstractController
 
         $name = pathinfo($relativePath, PATHINFO_BASENAME);
 
-        return $this->render(
-            array (
+        if (MimeType::isAudio($mimeType)) {
+            $mediaTag = "audio";
+        } elseif (MimeType::isVideo($mimeType)) {
+            $mediaTag = "video";
+        }
+        
+        return $this->render([
             'name' => $name,
             'breadcrumb' => $breadcrumb,
+            'mediaTag' => $mediaTag,
+            'type' => explode(";", $mimeType)[0],
             'src' => $relativePath
-            )
-        );
+        ]);
+    }
+
+    protected function displayFile(Request $request, FileManager $fileManager)
+    {
+        if (!$request->query->has('path')) {
+            return $this->abort(400);
+        }
+
+        $path = $fileManager->getAbsolutePath($request->query->get('path'));
+
+        if (!is_file($path)) {
+            return $this->abort(404);
+        }
+
+        $mimeType = FileUtils::getMimeType($path);
+        
+        if (!MimeType::isDisplayable($mimeType)) {
+            return $this->abort(500, 'error.notDisplayable');
+        }
+
+        $relativePath = $fileManager->getRelativePath($path);
+        $breadcrumb = self::getBreadcrumb($fileManager, $path, false);
+
+        $name = pathinfo($relativePath, PATHINFO_BASENAME);
+        
+        $data = [
+            "name" => $name,
+            "breadcrumb" => $breadcrumb
+        ];
+        
+        if (MimeType::isText($mimeType)) {
+            $data["text"] = file_get_contents($path);
+        } elseif (MimeType::isImage($mimeType)) {
+            $data["src"] = $relativePath;
+        }
+        
+        return $this->render($data);
     }
 
     protected function removeFile(Request $request, FileManager $fileManager)
@@ -237,6 +283,11 @@ class AbstractFileController extends AbstractController
 
         $finalPath = str_replace($sharingPath, '', $relativePath);
 
-        return $this->success($this->url('openFile', array('token' => $sharing->getToken(), 'path' => $finalPath), 'sharings_'));
+        $url = $this->url('openFile', [
+            'token' => $sharing->getToken(),
+            'path' => $finalPath
+        ], 'sharings_');
+        
+        return $this->success($url);
     }
 }

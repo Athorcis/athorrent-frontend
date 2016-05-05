@@ -4,25 +4,15 @@
 
 {% block css %}
 {{ parent() }}
-{{ css('css/play')|raw }}
+{{ css('css/media')|raw }}
 {% endblock %}
 
 {% block content %}
-<h1>{{ name }}</h1>
-<ol class="breadcrumb">
-    {% for name, path in breadcrumb %}
-        <li{% if loop.last %} class="active"{% endif %}>
-            {% if loop.last %}
-                <span>{{ name }}</span>
-            {% else %}
-                <a href="{{ path('listFiles', { path: path }) }}">{{ name }}</a>
-            {% endif %}
-        </li>
-    {% endfor %}
-</ol>
-<div class="video-container">
-    <video autoplay controls>
-        <source type="video/mp4" src="{{ path('openFile', { path: src }) }}"></source>
-    </video>
+<h1 title="{{ name }}">{{ name }}</h1>
+{% include 'fragments/breadcrumb.html.twig' %}
+<div class="media-container">
+    <{{ mediaTag }} autoplay controls>
+        <source type="{{ type }}" src="{{ path('openFile', { path: src }) }}" />
+    </{{ mediaTag }}>
 </div>
 {% endblock %}
