@@ -11,6 +11,11 @@ body {
     position: relative;
 }
 
+h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 footer {
     background-color: #eee;
     bottom: 0;

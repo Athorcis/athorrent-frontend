@@ -9,7 +9,8 @@ error:
     fileTooBig: This file is too big
     badRequest: Bad request
     fileNotFound: File not found
-    notAMP4: This file is not MP4
+    notPlayable: This file is neither an audio file nor a video file
+    notDisplayble: This file is neither an image nor a text file
     cannotRemoveFile: Unable to remove this file
     usernameAlreadyUsed: This username is already used
     roleNotSpecified: Undefined role
@@ -72,6 +73,7 @@ files:
     parentDirectory: Parent directory
     open: Open
     download: Download
+    display: Display
     play: Play
     directLink: Direct link
     sharingLink: Sharing link

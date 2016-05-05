@@ -4,15 +4,15 @@ h1 {
     margin-bottom: 20px;
 }
 
-video {
+img, audio, video {
     margin-top: 5px;
     max-width: 100%;
 }
 
-.video-container {
+.media-container {
     text-align: center;
 
-    > video {
+    > img, audio, video, {
         display: inline-block;
     }
 }

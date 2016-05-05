@@ -10,9 +10,11 @@
 {% block content %}
 <h1 title="{{ name }}">{{ name }}</h1>
 {% include 'fragments/breadcrumb.html.twig' %}
-<div class="media-container">
-    <{{ mediaTag }} autoplay controls>
-        <source type="{{ type }}" src="{{ path('openFile', { path: src }) }}" />
-    </{{ mediaTag }}>
-</div>
+{% if text is defined %}
+    <pre>{{ text }}</pre>
+{% elseif src is defined %}
+    <div class="media-container">
+        <img src="{{ path('openFile', { path: src }) }}" />
+    </div>
+{% endif %}
 {% endblock %}

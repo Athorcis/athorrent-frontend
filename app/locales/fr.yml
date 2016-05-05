@@ -9,7 +9,8 @@ error:
     fileTooBig: Ce fichier est trop grand
     badRequest: Requête malformée
     fileNotFound: Fichier introuvable
-    notAMP4: Le fichier n'est pas un mp4
+    notPlayable: Le fichier n'est ni un fichier audio, ni un fichier vidéo
+    notDisplayble: Le fichier n'est ni une image, ni un fichier texte
     cannotRemoveFile: Impossible de supprimer le fichier
     usernameAlreadyUsed: Ce nom d'utilisateur existe déjà.
     roleNotSpecified: Rôle indéfini
@@ -71,6 +72,7 @@ files:
     parentDirectory: Dossier parent
     open: Ouvrir
     download: Télécharger
+    display: Afficher
     play: Lire
     directLink: Lien direct
     sharingLink: Lien de partage

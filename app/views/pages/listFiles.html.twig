@@ -10,18 +10,8 @@
 {% block js %}files{% endblock %}
 
 {% block content %}
-<h1>{{ title }} <span class="dirsize">({{ dir_size|readable_filesize }})</span></h1>
-<ol class="breadcrumb">
-    {% for name, path in breadcrumb %}
-        <li{% if loop.last %} class="active"{% endif %}>
-            {% if loop.last %}
-                <span>{{ name }}</span>
-            {% else %}
-                <a href="{{ path('listFiles', { path: path }) }}">{{ name }}</a>
-            {% endif %}
-        </li>
-    {% endfor %}
-</ol>
+<h1 title="{{ title}}">{{ title }} <span class="dirsize">({{ dir_size|readable_filesize }})</span></h1>
+{% include 'fragments/breadcrumb.html.twig' %}
 <table class="file-list">
     {% include 'fragments/listFiles.html.twig' %}
 </table>

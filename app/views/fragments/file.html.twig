@@ -44,6 +44,12 @@
                                     <span class="fa fa-fw fa-play"></span>{{ 'files.play'|trans }}
                                 </a>
                             </li>
+                        {% elseif file.isDisplayable %}
+                            <li>
+                                <a href="{{ path('displayFile', { path: file.relativePath }) }}">
+                                    <span class="fa fa-fw fa-search-plus"></span>{{ 'files.display'|trans }}
+                                </a>
+                            </li>
                         {% endif %}
                         {% if file.isSharable %}
                             <li>
