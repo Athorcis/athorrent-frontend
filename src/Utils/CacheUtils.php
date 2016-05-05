@@ -7,7 +7,7 @@ class CacheUtils
     public static function clearApc()
     {
         if (function_exists('apcu_clear_cache')) {
-            apcu_clear_cache('user');
+            apcu_clear_cache();
         }
 
         return true;
