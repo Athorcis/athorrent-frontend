@@ -2,7 +2,6 @@
 
 namespace Athorrent\Controllers;
 
-use Athorrent\Utils\FileUtils;
 use Athorrent\Utils\ServiceUnvailableException;
 use Athorrent\Utils\TorrentManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,7 +97,7 @@ class TorrentController extends AbstractController
 
         if ($file && $file->getClientSize() <= 1048576) {
             if ($file->getMimeType() === 'application/x-bittorrent') {
-                $file->move($this->getTorrentsDirectory(), FileUtils::encodeFilename($file->getClientOriginalName()));
+                $file->move($this->getTorrentsDirectory(), $file->getClientOriginalName());
 
                 return $this->success();
             } else {
@@ -129,7 +128,7 @@ class TorrentController extends AbstractController
 
         if ($files) {
             foreach ($files as $file) {
-                $torrentPath = $torrentsDir . FileUtils::encodeFilename($file);
+                $torrentPath = $torrentsDir . $file;
 
                 if (file_exists($torrentPath)) {
                     $torrentManager->addTorrentFromFile($torrentPath);

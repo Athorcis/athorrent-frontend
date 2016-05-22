@@ -2,6 +2,8 @@
 
 namespace Athorrent\Utils;
 
+use Athorrent\Utils\FileUtils;
+
 class TorrentManager
 {
     private function __construct($userId)
@@ -11,15 +13,20 @@ class TorrentManager
 
     public function addTorrentFromFile($file)
     {
-        $result = $this->service->call('addTorrentFromFile', array('file' => realpath($file)));
-        unlink($file);
+        $oldFile = realpath($file);
+        $newFile = dirname($oldFile) . DIRECTORY_SEPARATOR . FileUtils::encodeFilename(basename($oldFile));
+
+        rename($oldFile, $newFile);
+
+        $result = $this->service->call('addTorrentFromFile', ['file' => $newFile]);
+        unlink($newFile);
 
         return $result;
     }
 
     public function addTorrentFromMagnet($magnet)
     {
-        return $this->service->call('addTorrentFromMagnet', array('magnet' => $magnet));
+        return $this->service->call('addTorrentFromMagnet', ['magnet' => $magnet]);
     }
 
     public function getTorrents()
@@ -42,22 +49,22 @@ class TorrentManager
 
     public function pauseTorrent($hash)
     {
-        return $this->service->call('pauseTorrent', array('hash' => $hash));
+        return $this->service->call('pauseTorrent', ['hash' => $hash]);
     }
 
     public function resumeTorrent($hash)
     {
-        return $this->service->call('resumeTorrent', array('hash' => $hash));
+        return $this->service->call('resumeTorrent', ['hash' => $hash]);
     }
 
     public function removeTorrent($hash)
     {
-        return $this->service->call('removeTorrent', array('hash' => $hash));
+        return $this->service->call('removeTorrent', ['hash' => $hash]);
     }
 
     public function listTrackers($hash)
     {
-        return $this->service->call('listTrackers', array('hash' => $hash));
+        return $this->service->call('listTrackers', ['hash' => $hash]);
     }
 
     private static $instance;
