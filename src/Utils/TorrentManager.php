@@ -6,15 +6,32 @@ use Athorrent\Utils\FileUtils;
 
 class TorrentManager
 {
+    private $userId;
+    
     private function __construct($userId)
     {
+        $this->userId = $userId;
         $this->service = new AthorrentService($userId);
     }
 
-    public function addTorrentFromFile($file)
+    public function getTorrentsDirectory()
     {
-        $oldFile = realpath($file);
-        $newFile = dirname($oldFile) . DIRECTORY_SEPARATOR . FileUtils::encodeFilename(basename($oldFile));
+        return TORRENTS . DIRECTORY_SEPARATOR . $this->userId;
+    }
+    
+    public function addTorrentFromUrl($url)
+    {
+        $path = $this->getTorrentsDirectory() . DIRECTORY_SEPARATOR . md5($url) . '.torrent';
+        
+        file_put_contents($path, file_get_contents($url));
+        
+        $this->addTorrentFromFile($path);
+    }
+    
+    public function addTorrentFromFile($path)
+    {
+        $oldFile = realpath($path);
+        $newFile = FileUtils::encodeFilename($oldFile);
 
         rename($oldFile, $newFile);
 

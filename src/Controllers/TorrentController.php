@@ -60,11 +60,6 @@ class TorrentController extends AbstractController
         return $jsVariables;
     }
 
-    public function getTorrentsDirectory()
-    {
-        return TORRENTS . DIRECTORY_SEPARATOR . $this->getUserId();
-    }
-
     public function listTorrents(Request $request, TorrentManager $torrentManager)
     {
         try {
@@ -97,7 +92,7 @@ class TorrentController extends AbstractController
 
         if ($file && $file->getClientSize() <= 1048576) {
             if ($file->getMimeType() === 'application/x-bittorrent') {
-                $file->move($this->getTorrentsDirectory(), $file->getClientOriginalName());
+                $file->move($torrentManager->getTorrentsDirectory(), $file->getClientOriginalName());
 
                 return $this->success();
             } else {
@@ -124,7 +119,7 @@ class TorrentController extends AbstractController
         $files = $request->request->get('add-torrent-files');
         $magnets = $request->request->get('add-torrent-magnets');
 
-        $torrentsDir = $this->getTorrentsDirectory() . DIRECTORY_SEPARATOR;
+        $torrentsDir = $torrentManager->getTorrentsDirectory() . DIRECTORY_SEPARATOR;
 
         if ($files) {
             foreach ($files as $file) {
