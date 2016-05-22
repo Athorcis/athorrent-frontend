@@ -64,9 +64,9 @@ class FileUtils
         return $result;
     }
 
-    public static function encodeFilename($filename)
+    public static function encodeFilename($path)
     {
-        $parts = pathinfo($filename);
-        return base64_encode($parts['filename']) . '.' . $parts['extension'];
+        $parts = pathinfo($path);
+        return $parts['dirname'] . DIRECTORY_SEPARATOR . base64_encode($parts['filename']) . '.' . $parts['extension'];
     }
 }
