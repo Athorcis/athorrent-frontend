@@ -11,10 +11,15 @@ use Symfony\Component\Security\Core\Role\Role;
 
 class KeyGenerator implements KeyGeneratorInterface
 {
+    private $locale;
+    
+    public function __construct($locale)
+    {
+        $this->locale = $locale;
+    }
+    
     public function generateKey($value)
     {
-        global $app;
-
         if ($value === null || $value instanceof TokenInterface) {
             if ($value === null) {
                 $key = 'notoken';
@@ -41,6 +46,6 @@ class KeyGenerator implements KeyGeneratorInterface
             $key = $value;
         }
 
-        return $key . $app['locale'];
+        return $key . $this->locale;
     }
 }
