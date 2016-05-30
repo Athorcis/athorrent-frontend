@@ -114,7 +114,8 @@ class User implements UserInterface
             $this->roles = array_map(
                 function (UserRole $role) {
                     return $role->getRole();
-                }, UserRole::loadByUserId($this->userId)
+                },
+                UserRole::loadByUserId($this->userId)
             );
         }
 

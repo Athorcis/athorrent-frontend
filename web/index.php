@@ -1,10 +1,9 @@
 <?php
 
-require '../app/config.php';
-require '../app/constants.php';
+require __DIR__ . '/../app/config.php';
+require __DIR__ . '/../app/constants.php';
 
 require VENDOR . '/autoload.php';
-require APP . '/bootstrap.php';
 
-$app = initializeApplication();
+$app = new \Athorrent\Application\WebApplication();
 $app->run();
