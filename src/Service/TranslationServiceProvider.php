@@ -27,11 +27,11 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
         $app['translator.cache_dir'] = CACHE . DIRECTORY_SEPARATOR . 'translator';
     }
-    
+
     public function boot(Application $app)
     {
     }
-    
+
     public function extendTranslator(Translator $translator, Application $app)
     {
         $translator->addLoader('yaml', new \Symfony\Component\Translation\Loader\YamlFileLoader());

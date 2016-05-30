@@ -25,11 +25,11 @@ class TwigServiceProvider implements ServiceProviderInterface
             return $this->extendTwig($twig, $app);
         }));
     }
-    
+
     public function extendTwig(Twig_Environment $twig, Application $app)
     {
         $this->initializeCache($twig, $app);
-        
+
         $twig->addExtension(new FilesizeExtension());
 
         $twig->addFunction(new Twig_SimpleFunction('torrentStateToClass', [$this, 'torrentStateToClass']));
@@ -48,26 +48,26 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         return $twig;
     }
-    
+
     public function boot(Application $app)
     {
     }
-    
+
     protected function initializeCache(Twig_Environment $twig, Application $app)
     {
         $cacheProvider = new CacheProvider($app['cache']);
         $keyGenerator = new KeyGenerator($app['locale']);
-        
+
         $cacheStrategy = new GenerationalCacheStrategy($cacheProvider, $keyGenerator, 0);
         $cacheExtension = new CacheExtension($cacheStrategy);
-        
+
         $twig->addExtension($cacheExtension);
     }
-    
+
     public function torrentStateToClass($torrent)
     {
         $state = $torrent['state'];
-        
+
         if ($state === 'paused') {
             $class = 'warning';
         } elseif ($state === 'seeding' || $state === 'downloading') {
@@ -78,7 +78,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         return $class;
     }
-    
+
     protected function includeResource($relativePath, $inline)
     {
         $absolutePath = WEB . DIRECTORY_SEPARATOR . $relativePath;
@@ -89,7 +89,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         return ['path' => '//' . STATIC_HOST . '/' . $relativePath];
     }
-    
+
     public function includeCss($path, $inline = null)
     {
         $result = $this->includeResource($path . '.css', $inline);
@@ -100,7 +100,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         return '<link rel="stylesheet" type="text/css" href="' . $result['path'] . '" />';
     }
-    
+
     public function includeJs($path, $inline = null)
     {
         $result = $this->includeResource($path . '.js', $inline);
