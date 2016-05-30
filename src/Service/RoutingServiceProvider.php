@@ -14,7 +14,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         if (!isset($app['url_generator'])) {
             $app->register(new UrlGeneratorServiceProvider());
         }
-        
+
         \Athorrent\Controllers\DefaultController::mount($app);
         \Athorrent\Controllers\TorrentController::mount($app);
         \Athorrent\Controllers\FileController::mount($app);
@@ -31,7 +31,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
     {
         $this->initializeAliasResolver($app);
     }
-    
+
     public function initializeAliasResolver(Application $app)
     {
         if ($app['cache']->exists('routes')) {

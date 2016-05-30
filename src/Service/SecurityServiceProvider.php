@@ -87,11 +87,11 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new AuthenticationHandler();
         });
     }
-    
+
     public function boot(Application $app)
     {
     }
-    
+
     public function handleRequest(GetResponseEvent $event, Application $app)
     {
         $request = $event->getRequest();
