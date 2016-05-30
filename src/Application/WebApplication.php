@@ -2,7 +2,6 @@
 
 namespace Athorrent\Application;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -12,12 +11,12 @@ class WebApplication extends BaseApplication
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->register(new \Athorrent\Service\TwigServiceProvider());
         $this->register(new \Athorrent\Service\TranslationServiceProvider());
         $this->register(new \Athorrent\Service\SecurityServiceProvider());
         $this->register(new \Athorrent\Service\RoutingServiceProvider());
-        
+
         $this->before([$this, 'updateConnectionTimestamp']);
 
         $this->error([$this, 'handleError']);
@@ -26,7 +25,7 @@ class WebApplication extends BaseApplication
             $this['session']->save();
         }, self::LATE_EVENT);
     }
-    
+
     public function updateConnectionTimestamp()
     {
         $user = $this['security']->getToken()->getUser();
@@ -34,20 +33,16 @@ class WebApplication extends BaseApplication
         if ($user === 'anon.') {
             return;
         }
-        
+
         if (!$this['security']->isGranted('ROLE_PREVIOUS_ADMIN')) {
             $user->updateConnectionTimestamp();
         }
     }
-    
+
     public function handleError(\Exception $exception, $code)
     {
         if ($this['debug']) {
             return;
-        }
-
-        if (!isset($this['alias_resolver'])) {
-            initializeAliasResolver();
         }
 
         if ($exception instanceof NotFoundHttpException) {
