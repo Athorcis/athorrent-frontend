@@ -4,11 +4,9 @@
 
 Install the following prerequesites
 - Apache (or any webserver)
-- PHP
+- PHP and extensions mysql, pdo, acpu (optional)
 - Mysql Server
-- Mysql extension for PHP
-- PDO extension for PHP
-- APCU extension for PHP (optional)
+- NodeJS & NPM
 
 Then run
 ``` sh
