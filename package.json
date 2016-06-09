@@ -6,9 +6,9 @@
     "license": "Apache-2.0",
 
     "dependencies": {
-        "bower": "~1.5.3",
-        "requirejs": "latest",
-        "uglify-js": "latest"
+        "bower": "~1.7.9",
+        "requirejs": "2.2.0",
+        "uglify-js": "2.6.2"
     },
 
     "repository" : {
