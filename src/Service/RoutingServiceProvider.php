@@ -24,7 +24,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         \Athorrent\Controllers\SharingController::mount($app);
         \Athorrent\Controllers\SharingFileController::mount($app);
         \Athorrent\Controllers\AccountController::mount($app);
-        \Athorrent\Controllers\SchedulerController::mount($app);
+//        \Athorrent\Controllers\SchedulerController::mount($app);
     }
 
     public function boot(Application $app)
