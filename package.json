@@ -3,7 +3,7 @@
 
     "description": "A lightweight seedbox frontend",
 
-    "license": "MIT",
+    "license": "Apache-2.0",
 
     "dependencies": {
         "bower": "~1.5.3",
