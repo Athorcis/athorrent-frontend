@@ -1,6 +1,10 @@
 #!/bin/bash
 
 function installComposer {
+    echo 
+    echo "install composer"
+    echo
+    
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '070854512ef404f16bac87071a6db9fd9721da1684cd4589b1196c3faf71b9a2682e2311b36a5079825e155ac7ce150d') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
     php composer-setup.php
@@ -100,13 +104,13 @@ echo "<?php
     define('DB_PASSWORD', '$DB_PASSWORD');
     define('DB_NAME', 'athorrent');
 
-    if (isset($_SERVER['HTTP_HOST'])) {
-        define('STATIC_HOST', $_SERVER['HTTP_HOST']);
-        
-        define('REMEMBER_ME_KEY', '$(randomString)');
+    define('REMEMBER_ME_KEY', '$(randomString)');
     
-        define('CSRF_SALT','$(randomString)');
+    define('CSRF_SALT','$(randomString)');
 
+    if (isset(\$_SERVER['HTTP_HOST'])) {
+        define('STATIC_HOST', \$_SERVER['HTTP_HOST']);
+        
         define('GA_ENABLED', false);
     }
 " > app/config.php
