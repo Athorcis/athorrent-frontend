@@ -18,3 +18,6 @@ $app = new \Athorrent\Application\WebApplication();
 $user = new \Athorrent\Entity\User(null, $username);
 $user->setRawPassword($password);
 $user->save();
+
+$userRole = new \Athorrent\Entity\UserRole($user->getUserId(), 'ROLE_ADMIN');
+$userRole->save();
