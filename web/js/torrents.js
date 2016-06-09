@@ -73,6 +73,10 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
     };
 
     athorrent.TabsPanel = function (selector) {
+        if (arguments.length === 0) {
+            return;
+        }
+        
         this.tabMap = {};
         this.$panel = jQuery(selector);
         this.$tabs = this.$panel.find('.nav-tabs a');
@@ -118,6 +122,10 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
     };
 
     athorrent.Tab = function (parent, id, action, parameters, interval) {
+        if (arguments.length === 0) {
+            return;
+        }
+        
         this.$tab = jQuery('[href=#' + id + ']');
         this.$container = jQuery('#' + id);
         this.updater = new athorrent.Updater(action, parameters, jQuery.proxy(this.onUpdate, this), interval);
@@ -358,6 +366,10 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
     };
 
     athorrent.AddTorrentMode = function (inputName, elementSelector, btnSelector, counterSelector, form) {
+        if (arguments.length === 0) {
+            return;
+        }
+        
         this.inputName = inputName;
         this.$element = jQuery(elementSelector);
         this.$btn = jQuery(btnSelector);
