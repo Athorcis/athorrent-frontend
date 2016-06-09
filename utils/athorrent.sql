@@ -47,7 +47,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` char(88) COLLATE utf8_unicode_ci NOT NULL,
   `salt` char(32) COLLATE utf8_unicode_ci NOT NULL,
   `creationTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `connectionTimestamp` timestamp NULL DEFAULT NULL
+  `connectionTimestamp` timestamp NULL DEFAULT NULL,
+  `usedDiskSpace` bigint(20) UNSIGNED NOT NULL,
+  `totalDiskSpace` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
