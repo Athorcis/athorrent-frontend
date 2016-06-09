@@ -60,7 +60,7 @@
 
             base64_decode: 'phpjs/requirejs/php/url/base64_decode',
 
-            urldecode: 'phpjs/src/requirejs/url/urldecode'
+            urldecode: 'phpjs/requirejs/url/urldecode'
         };
 
         for (name in vendors) {
