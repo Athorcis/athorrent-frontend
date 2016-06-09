@@ -4,13 +4,21 @@ var WEB = __dirname + '/../web';
 
 var rjs = (function () {
     var requirejs = require('requirejs');
-
-    return function (config, callback) {
-        requirejs.optimize(config, function () {
-            if (typeof callback === 'function') {
-                callback();
-            }
-        });
+    
+    return {
+        optimize: function (config, callback) {
+            requirejs.optimize(config, function () {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
+        },
+            
+        convert: function (input, output) {
+            var cmd = '"' + process.execPath + '" node_modules/requirejs/bin/r.js -convert "' + input + '" "' + output + '"';
+            
+            require('child_process').execSync(cmd);
+        }
     };
 }());
 
@@ -56,7 +64,7 @@ var build = (function () {
                 build(name[i], config);
             }
         } else {
-            rjs(extend({
+            rjs.optimize(extend({
                 name: name,
                 out: WEB + '/js/dist/' + name + '.min.js'
             }, baseConfig, mainConfig, config), function () {
@@ -85,6 +93,8 @@ var uglify = (function () {
         });
     };
 }());
+
+rjs.convert('web/vendor/phpjs/src', 'web/vendor/phpjs/requirejs');
 
 build('athorrent', {
     include: ['bootstrap', 'analytics']
