@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Utils\CSRF;
+namespace Athorrent\Utils\Csrf;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
