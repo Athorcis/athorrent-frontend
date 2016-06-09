@@ -2,7 +2,7 @@
 
 ## Getting started
 
-### Prerequisites
+Install the following prerequesites
 - Apache (or any webserver)
 - PHP
 - Mysql Server
@@ -10,6 +10,7 @@
 - PDO extension for PHP
 - APCU extension for PHP (optional)
 
+Then run
 ``` sh
 git clone https://github.com/Athorcis/athorrent-frontend athorrent
 cd athorrent
@@ -26,6 +27,8 @@ Options +FollowSymLinks
   RewriteRule ^ index.php [QSA,L]
 </IfModule>
 ```
-Create a bin directory and put the backend binary in it.
 
+If you don't you might find an anwser [here] (http://silex.sensiolabs.org/doc/master/web_servers.html)
+
+Create a bin directory and put the backend binary in it.
 To build the backend see (https://github.com/Athorcis/athorrent-backend)
