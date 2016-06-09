@@ -29,4 +29,4 @@ Options +FollowSymLinks
 If you don't you might find an anwser [here] (http://silex.sensiolabs.org/doc/master/web_servers.html)
 
 Create a bin directory and put the backend binary in it.
-To build the backend see (https://github.com/Athorcis/athorrent-backend)
+To build the backend see [athorrent-backend] (https://github.com/Athorcis/athorrent-backend)
