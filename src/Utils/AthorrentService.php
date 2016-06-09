@@ -93,7 +93,7 @@ class AthorrentService extends JsonService
 
         switch (strtolower(PHP_OS)) {
             case 'linux':
-                $cmd = '(cd ' . BIN . ' && ./' . $cmd . ') &> ' . $logPath . ' &';
+                $cmd = '(cd ' . BIN . ' && ./' . $cmd . ') > ' . $logPath . ' 2>&1 &';
                 break;
 
             case 'winnt':
