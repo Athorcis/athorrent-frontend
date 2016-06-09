@@ -58,9 +58,9 @@
 
             picturefill: 'picturefill/dist/picturefill',
 
-            base64_decode: 'phpjs/src/php/url/base64_decode',
+            base64_decode: 'phpjs/requirejs/php/url/base64_decode',
 
-            urldecode: 'phpjs/src/php/url/urldecode'
+            urldecode: 'phpjs/src/requirejs/url/urldecode'
         };
 
         for (name in vendors) {
