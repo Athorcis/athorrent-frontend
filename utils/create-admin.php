@@ -1,7 +1,7 @@
 <?php
 
 if (count($argv) < 3) {
-    echo "usage php create-admin.php";
+    echo "usage php create-admin.php username password";
     exit(1);
 }
 
@@ -15,6 +15,6 @@ require VENDOR . '/autoload.php';
 
 $app = new \Athorrent\Application\WebApplication();
 
-$user = new User(null, $username);
+$user = new \Athorrent\Entity\User(null, $username);
 $user->setRawPassword($password);
 $user->save();
