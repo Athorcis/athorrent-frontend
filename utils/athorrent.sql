@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `athorrent`
 --
+CREATE DATABASE IF NOT EXISTS `athorrent` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `athorrent`;
 
 -- --------------------------------------------------------
 
