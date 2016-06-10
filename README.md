@@ -17,6 +17,7 @@ cd athorrent
 
 If you use Apache, create a .htaccess file in the web directory
 ``` htaccess
+
 Options +FollowSymLinks
 
 <IfModule mod_rewrite.c>
@@ -30,3 +31,5 @@ If you don't you might find an anwser [here] (http://silex.sensiolabs.org/doc/ma
 
 Create a bin directory and put the backend binary in it.
 To build the backend see [athorrent-backend] (https://github.com/Athorcis/athorrent-backend)
+
+And make sure the athorrent directory and all its subdirectories and files are owned by the user who run the webserver.
