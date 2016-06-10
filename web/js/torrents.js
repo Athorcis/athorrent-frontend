@@ -126,7 +126,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
             return;
         }
         
-        this.$tab = jQuery('[href=#' + id + ']');
+        this.$tab = jQuery('[href="#' + id + '"]');
         this.$container = jQuery('#' + id);
         this.updater = new athorrent.Updater(action, parameters, jQuery.proxy(this.onUpdate, this), interval);
 
