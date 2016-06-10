@@ -89,7 +89,7 @@ class AthorrentService extends JsonService
             }
         }
 
-        $cmd = 'athorrentd --user ' . $this->userId;
+        $cmd = 'athorrent-backend --user ' . $this->userId;
 
         switch (strtolower(PHP_OS)) {
             case 'linux':
