@@ -4,7 +4,7 @@
 
 Install the following prerequesites
 - Apache (or any webserver)
-- PHP and extensions mysql, pdo, acpu (optional)
+- PHP and extensions mysql, pdo, apcu (optional)
 - Mysql Server
 - NodeJS & NPM
 
