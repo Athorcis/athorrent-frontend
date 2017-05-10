@@ -20,7 +20,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $app['session.storage.options'] = [
             'name' => 'SESSION',
-            'cookie_httponly' => true
+            'cookie_httponly' => true,
+            'cookie_secure' => true
         ];
 
         $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
