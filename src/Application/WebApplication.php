@@ -2,6 +2,7 @@
 
 namespace Athorrent\Application;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -18,7 +19,8 @@ class WebApplication extends BaseApplication
         $this->register(new \Athorrent\Service\RoutingServiceProvider());
 
         $this->before([$this, 'updateConnectionTimestamp']);
-
+        $this->after([$this, 'addHeaders']);
+        
         $this->error([$this, 'handleError']);
 
         $this['dispatcher']->addListener(KernelEvents::RESPONSE, function () {
@@ -36,6 +38,23 @@ class WebApplication extends BaseApplication
 
         if (!$this['security']->isGranted('ROLE_PREVIOUS_ADMIN')) {
             $user->updateConnectionTimestamp();
+        }
+    }
+
+    public function addHeaders(Request $request, Response $response)
+    {
+        $response->headers->set('X-Content-Type-Options', 'nosniff');
+
+        if ($response->headers->has('Content-Disposition')) {
+            return;
+        }
+        
+        if (strpos($request->get('_route'), ':ajax') === false) {
+            $response->headers->set('Content-Security-Policy', "script-src 'unsafe-inline' https://" . STATIC_HOST);
+            $response->headers->set('Referrer-Policy', 'strict-origin');
+            $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubdomains');
+            $response->headers->set('X-Frame-Options', 'DENY');
+            $response->headers->set('X-XSS-Protection', '1; mode=block');
         }
     }
 
