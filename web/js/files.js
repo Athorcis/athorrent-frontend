@@ -1,12 +1,12 @@
 /*jslint browser: true, white: true */
 /*global require */
 
-require(['jquery', 'athorrent', 'base64_decode'], function (jQuery, athorrent, base64_decode) {
+require(['jquery', 'athorrent', 'base64'], function (jQuery, athorrent, base64) {
     'use strict';
 
     jQuery.extend(athorrent, {
         getFilePath: function (element) {
-            return base64_decode(this.getItemId('file', element));
+            return base64.decode(this.getItemId('file', element));
         },
 
         getSharingToken: function (element, selector) {

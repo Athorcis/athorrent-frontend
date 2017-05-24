@@ -40,16 +40,14 @@
         require.shim = {
             bootstrap: ['jquery'],
 
-            base64_decode: {
-                exports: 'base64_decode'
-            },
-
             urldecode: {
                 exports: 'urldecode'
             }
         };
 
         vendors = {
+            base64: 'js-base64/base64',
+
             bootstrap: 'bootstrap/dist/js/bootstrap',
 
             dropzone: 'dropzone/dist/dropzone-amd-module',
@@ -57,8 +55,6 @@
             jquery: 'jquery/dist/jquery',
 
             picturefill: 'picturefill/dist/picturefill',
-
-            base64_decode: 'phpjs/requirejs/php/url/base64_decode',
 
             urldecode: 'phpjs/requirejs/php/url/urldecode'
         };
