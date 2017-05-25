@@ -3,6 +3,5 @@ dist
 node_modules
 tmp
 vendor
-/composer.lock
 /app/config.php
 /web/googled7814b85dbd2011a.html
