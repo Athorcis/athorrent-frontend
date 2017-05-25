@@ -30,6 +30,7 @@ nav:
     files: Files
     torrents: Torrents
     sharings: Sharings
+    search: Search
     administration: Administration
 
     nickname: Nickname
