@@ -73,7 +73,7 @@
             };
         }
 
-        scripts = ['athorrent', 'cache', 'files', 'sharings', 'torrents', 'users'];
+        scripts = ['athorrent', 'cache', 'files', 'search', 'sharings', 'torrents', 'users'];
 
         if (debug) {
             scripts.push('analytics');

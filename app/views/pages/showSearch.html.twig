@@ -1,0 +1,36 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}{{ 'search.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
+
+{% block css %}
+{{ parent() }}
+{{ css('css/search')|raw }}
+{% endblock %}
+
+{% block js %}search{% endblock %}
+
+{% block content %}
+
+    <form method="get" class="input-group search-control">
+        <select class="form-control" name="source">
+            <option value="all"{% if source == 'all' %} selected{% endif %}>{{ 'search.all-sources'|trans }}</option>
+            {% for key, name in sources %}
+                <option value="{{ key }}"{% if source == key %} selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+        <div class="input-expander">
+            <input type="text" class="form-control" name="q" placeholder="{{ 'search.keywords'|trans }}" value="{{ query }}" />
+        </div>
+        <span class="input-group-btn">
+            <button class="btn btn-default">{{ 'search.submit'|trans }}</button>
+        </span>
+    </form>
+
+    {% if query is not empty %}
+        {% if resultsMap is empty %}
+            <div class="alert alert-info" role="alert">{{ 'search.no-results'|trans }}</div>
+        {% else %}
+            {% include 'fragments/searchResults.html.twig' %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

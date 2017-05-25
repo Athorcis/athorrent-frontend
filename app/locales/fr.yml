@@ -30,6 +30,7 @@ nav:
     files: Fichiers
     torrents: Torrents
     sharings: Partages
+    search: Recherche
     administration: Administration
 
     nickname: Pseudo
@@ -116,6 +117,25 @@ torrents:
 
     tabPeers:
         title: Peers
+
+search:
+    title: Recherche
+    all-sources: Toutes les sources
+    keywords: Entrez un ou plusieurs mot clés
+    submit: Rechercher
+    no-results: "Il n'y a aucun résultat correspondant à votre recherche"
+    torrents:
+        type: Type
+        name: Nom
+        size: Taille
+        age: Age
+    age:
+        seconds: seconde|secondes
+        minutes: minute|minutes
+        hours: heure|heures
+        days: jour|jours
+        months: mois
+        years: an|ans
 
 sharings:
     title: Partages

@@ -118,6 +118,25 @@ torrents:
     tabPeers:
         title: Peers
 
+search:
+    title: Search
+    all-sources: All sources
+    keywords: Entrez un ou plusieurs mot clés
+    submit: Search
+    no-results: There is no results matching your search
+    torrents:
+        type: Type
+        name: Name
+        size: Size
+        age: Age
+    age:
+        seconds: second|seconds
+        minutes: minute|minutes
+        hours: hour|hours
+        days: day|days
+        months: month|months
+        years: year|years
+
 sharings:
     title: Sharings
     none: no sharings to display

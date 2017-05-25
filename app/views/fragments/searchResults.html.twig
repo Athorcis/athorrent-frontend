@@ -1,0 +1,50 @@
+{% if source == 'all' %}
+    <ul class="nav nav-tabs">
+        {% for key, results in resultsMap %}
+            <li role="presentation"{% if loop.first %} class="active"{% endif %}>
+                <a href="#{{ key }}">{{ sources[key] }} ({{ results|length }})</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<div class="tab-content">
+    {% for key, results in resultsMap %}
+        <div role="tabpanel" class="tab-pane{% if loop.first %} active{% endif %}" id="{{ key }}">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>{{ 'search.torrents.name'|trans }}</th>
+                        <th class="col-size">{{ 'search.torrents.size'|trans }}</th>
+                        <th class="col-age">{{ 'search.torrents.age'|trans }}</th>
+                        <th class="col-seeders">
+                            <span class="fa fa-arrow-up"></span>
+                        </th>
+                        <th class="col-leechers">
+                            <span class="fa fa-arrow-down"></span>
+                        </th>
+                        <th class="col-add-magnet"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                        <tr>
+                            <td>
+                                <a href="{{ result.href }}" target="_blank">{{ result.name }}</a>
+                            </td>
+                            <td class="col-size">{{ result.size }}</td>
+                            <td class="col-age">{{ format_age(result.age) }}</td>
+                            <td class="col-seeders">{{ result.seeders }}</td>
+                            <td class="col-leechers">{{ result.leechers }}</td>
+                            <td class="col-add-magnet">
+                                <a href="{{ path('addMagnet', { magnet: result.magnet }) }}">
+                                    <span class="fa fa-flip-vertical fa-magnet"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+</div>

@@ -17,7 +17,10 @@
         "symfony/translation": "^2.8.20",
         "symfony/yaml": "~2.8.20",
         "symfony/config": "~2.8.20",
-        "jenyak/i18n-routing-service-provider": "~1.0"
+        "jenyak/i18n-routing-service-provider": "~1.0",
+        "symfony/dom-crawler": "~3.2.8",
+        "symfony/css-selector": "~3.2.8",
+        "guzzlehttp/guzzle": "~6.2.3"
     },
 
     "autoload": {

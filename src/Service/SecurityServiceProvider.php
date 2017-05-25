@@ -21,7 +21,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $app['session.storage.options'] = [
             'name' => 'SESSION',
             'cookie_httponly' => true,
-            'cookie_secure' => true
+            'cookie_secure' => false
         ];
 
         $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
@@ -81,6 +81,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $app['security.access_rules'] = [
             ['^/' . $localesPrefix . '(ajax/)?administration', 'ROLE_ADMIN'],
+            ['^/' . $localesPrefix . '(ajax/)?search', 'ROLE_USER'],
             ['^/' . $localesPrefix . '(ajax/)?user', 'ROLE_USER']
         ];
 
