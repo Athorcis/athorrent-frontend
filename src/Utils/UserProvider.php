@@ -12,12 +12,7 @@ class UserProvider implements UserProviderInterface
 {
     public function loadUserByUsername($username)
     {
-        if (DEBUG && $username === DEBUG_USERNAME) {
-            $user = new User(0, $username, null, null, time(), time(), array('ROLE_ADMIN'));
-            $user->setRawPassword(DEBUG_PASSWORD);
-        } else {
-            $user = User::loadByUsername($username);
-        }
+        $user = User::loadByUsername($username);
 
         if ($user === null) {
             throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
