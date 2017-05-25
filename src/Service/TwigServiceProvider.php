@@ -38,6 +38,8 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $twig->addFunction(new Twig_SimpleFunction('js', [$this, 'includeJs']));
 
+        $twig->addFunction(new Twig_SimpleFunction('format_age', [$this, 'formatAge']));
+
         $twig->addFunction(new Twig_SimpleFunction('path', function ($action, $parameters = [], $prefixAction = null) use ($app) {
             return $app['alias_resolver']->generatePath($action, $parameters, $prefixAction);
         }));
@@ -110,5 +112,30 @@ class TwigServiceProvider implements ServiceProviderInterface
         }
 
         return '<script type="text/javascript" src="' . $result['path'] . '"></script>';
+    }
+
+    public function formatAge($age)
+    {
+        global $app;
+
+        $steps = [
+            'seconds' => 60,
+            'minutes' => 3600,
+            'hours' => 86400,
+            'days' => 2592000,
+            'months' => 31557600,
+            'years' => INF
+        ];
+
+        $previousLimit = 1;
+
+        foreach ($steps as $magnitude => $limit) {
+            if ($age < $limit) {
+                $n = floor($age / $previousLimit);
+                return $n . ' ' . $app['translator']->transChoice('search.age.' . $magnitude, $n);
+            }
+
+            $previousLimit = $limit;
+        }
     }
 }

@@ -142,7 +142,7 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
             this.buildAjax();
             this.initializeParameters();
 
-            jQuery('form').submit(function (event) {
+            jQuery('form[method="post"]').submit(function (event) {
                 jQuery(event.target).append('<input type="hidden" name="csrf" value="' + athorrent.csrf + '" />');
             });
 
