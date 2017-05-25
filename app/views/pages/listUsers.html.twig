@@ -29,7 +29,7 @@
     </thead>
     <tbody>
         {% for user in users %}
-            {% cache 'user' user %}
+            {% cache ('user_' ~ app.locale) user %}
             <tr class="user" id="user-{{ user.userId }}">
                 <td>{{ user.userId }}</td>
                 <td class="user-name">{{ user.username }}</td>
