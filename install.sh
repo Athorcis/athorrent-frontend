@@ -110,8 +110,6 @@ echo "<?php
 
     if (isset(\$_SERVER['HTTP_HOST'])) {
         define('STATIC_HOST', \$_SERVER['HTTP_HOST']);
-        
-        define('GA_ENABLED', false);
     }
 " > app/config.php
 

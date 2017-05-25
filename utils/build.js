@@ -97,7 +97,7 @@ var uglify = (function () {
 rjs.convert('web/vendor/phpjs/src', 'web/vendor/phpjs/requirejs');
 
 build('athorrent', {
-    include: ['bootstrap', 'analytics']
+    include: ['bootstrap']
 });
 
 build(['files', 'torrents', 'sharings', 'users'], {

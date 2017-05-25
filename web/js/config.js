@@ -32,7 +32,7 @@
     }
 
     if (debug) {
-        require.deps = ['bootstrap', 'analytics', 'picturefill'];
+        require.deps = ['bootstrap', 'picturefill'];
         require.urlArgs = '_=' + (new Date()).getTime();
     }
 
@@ -69,16 +69,12 @@
     if (!build) {
         if (!debug) {
             require.bundles = {
-                athorrent: ['jquery', 'bootstrap', 'analytics', 'urldecode', 'picturefill', 'athorrent']
+                athorrent: ['jquery', 'bootstrap', 'urldecode', 'picturefill', 'athorrent']
             };
         }
 
         scripts = ['athorrent', 'cache', 'files', 'search', 'sharings', 'torrents', 'users'];
 
-        if (debug) {
-            scripts.push('analytics');
-        }
-        
         for (i = scripts.length - 1; i >= 0; --i) {
             name = scripts[i];
             require.paths[name] = scriptPrefix + name + suffix;
