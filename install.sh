@@ -67,7 +67,7 @@ echo
 echo "Install composer dependencies"
 echo
 
-$COMPOSER update -o
+$COMPOSER install -o
 
 echo
 echo "Install npm dependencies"
