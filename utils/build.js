@@ -100,7 +100,7 @@ build('athorrent', {
     include: ['bootstrap']
 });
 
-build(['files', 'torrents', 'sharings', 'users'], {
+build(['files', 'search', 'torrents', 'sharings', 'users'], {
     exclude: ['athorrent']
 });
 
