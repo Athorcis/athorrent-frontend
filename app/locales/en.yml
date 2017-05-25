@@ -35,7 +35,7 @@ nav:
 
     nickname: Nickname
     password: Password
-    accout: My account
+    account: My account
     login: Login
     logout: Logout
     exit: Exit
@@ -122,7 +122,7 @@ torrents:
 search:
     title: Search
     all-sources: All sources
-    keywords: Entrez un ou plusieurs mot clés
+    keywords: Input one or more keywords
     submit: Search
     no-results: There is no results matching your search
     torrents:
