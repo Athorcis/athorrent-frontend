@@ -91,7 +91,7 @@ var uglify = (function () {
     };
 }());
 
-rjs.convert('web/vendor/phpjs/src', 'web/vendor/phpjs/requirejs');
+rjs.convert('web/vendor/locutus/src', 'web/vendor/locutus/requirejs');
 
 build('athorrent', {
     include: ['bootstrap']
