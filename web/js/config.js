@@ -55,7 +55,7 @@
 
             picturefill: 'picturefill/dist/picturefill',
 
-            urldecode: 'locutus/src/php/url/urldecode'
+            urldecode: 'locutus/requirejs/php/url/urldecode'
         };
 
         for (name in vendors) {
