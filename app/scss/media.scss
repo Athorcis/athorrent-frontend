@@ -4,7 +4,9 @@ h1 {
     margin-bottom: 20px;
 }
 
-img, audio, video {
+img,
+audio,
+video {
     margin-top: 5px;
     max-width: 100%;
 }
@@ -12,7 +14,9 @@ img, audio, video {
 .media-container {
     text-align: center;
 
-    > img, audio, video, {
+    > img,
+    > audio,
+    > video, {
         display: inline-block;
     }
 }

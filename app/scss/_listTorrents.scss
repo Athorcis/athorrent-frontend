@@ -25,10 +25,10 @@
 
 .torrent-info {
     float: left;
-    font-size: 0.928em;
+    font-size: .928em;
 
     + .torrent-info:before {
-        content: "/";
+        content: '/';
         float: left;
         margin-left: 5px;
         margin-right: 5px;
