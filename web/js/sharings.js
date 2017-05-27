@@ -1,9 +1,7 @@
-/*jslint browser: true, white: true */
-/*global require */
+/* eslint-env browser, amd */
 
 require(['jquery', 'athorrent'], function (jQuery, athorrent) {
     'use strict';
-
 
     function getSharingToken(element, selector) {
         return athorrent.getItemId('sharing', element, selector);

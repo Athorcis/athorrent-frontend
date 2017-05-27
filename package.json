@@ -1,18 +1,17 @@
 {
-    "name": "athorrent-frontend",
-
-    "description": "A lightweight seedbox frontend",
-
-    "license": "Apache-2.0",
-
-    "dependencies": {
-        "bower": "~1.7.9",
-        "requirejs": "2.2.0",
-        "uglify-js": "2.6.2"
-    },
-
-    "repository" : {
-        "type" : "git",
-        "url" : "https://github.com/athorcis/athorrent-frontend.git"
-    }
+  "name": "athorrent-frontend",
+  "description": "A lightweight seedbox frontend",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "bower": "~1.8.0",
+    "requirejs": "~2.3.3",
+    "uglify-js": "~3.0.11"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/athorcis/athorrent-frontend.git"
+  },
+  "devDependencies": {
+    "eslint": "~3.19.0"
+  }
 }

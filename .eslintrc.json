@@ -1,0 +1,49 @@
+{
+    "root": true,
+
+    "extends": "eslint:all",
+
+    "rules": {
+        "no-prototype-builtins": "off",
+
+        "no-alert": "warn",
+        "no-magic-numbers": ["warn", { "ignore": [-1, 0, 1] }],
+        "no-param-reassign": "off",
+        "vars-on-top": "off",
+
+        "init-declarations": "off",
+
+        "func-names": ["warn", "never"],
+        "func-style": "off",
+        "id-length": ["warn", { "exceptions": ["$", "i"] }],
+        "max-len": "off",
+        "max-lines": "off",
+        "max-params": "off",
+        "max-statements": "off",
+        "multiline-ternary": "off",
+        "newline-per-chained-call": ["warn", { "ignoreChainWithDepth": 3 }],
+        "no-invalid-this": "off",
+        "no-plusplus": "off",
+        "no-ternary": "off",
+        "no-underscore-dangle": "off",
+        "object-curly-newline": "off",
+        "object-curly-spacing": ["warn", "always"],
+        "one-var": "off",
+        "padded-blocks": ["warn", "never"],
+        "quote-props": ["error", "consistent-as-needed"],
+        "quotes": ["error", "single"],
+        "require-jsdoc": "warn",
+        "sort-keys": "off",
+        "sort-vars": "off",
+        "space-before-function-paren": ["error", { "anonymous": "always", "named": "never" }],
+
+        "no-var": "off",
+        "object-shorthand": "off",
+        "prefer-arrow-callback": "off",
+        "prefer-destructuring": "off",
+        "prefer-reflect": "off",
+        "prefer-rest-params": "off",
+        "prefer-spread": "off",
+        "prefer-template": "off"
+    }
+}

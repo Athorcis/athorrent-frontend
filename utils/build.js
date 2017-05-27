@@ -1,26 +1,27 @@
-/*global require, __dirname */
+/* eslint-env node */
+/* eslint no-console: "off", no-sync: "off" */
 
-var WEB = __dirname + '/../web';
+'use strict';
 
-var rjs = (function () {
-    var requirejs = require('requirejs');
-    
-    return {
-        optimize: function (config, callback) {
-            requirejs.optimize(config, function () {
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            });
-        },
-            
-        convert: function (input, output) {
-            var cmd = '"' + process.execPath + '" node_modules/requirejs/bin/r.js -convert "' + input + '" "' + output + '"';
-            
-            require('child_process').execSync(cmd);
-        }
-    };
-}());
+var execSync = require('child_process').execSync,
+    requirejs = require('requirejs'),
+    uglifyJs = require('uglify-js'),
+    path = require('path'),
+    fs = require('fs');
+
+var WEB = path.join(__dirname, '../web');
+
+var rjs = {
+    optimize: function (config, callback) {
+        requirejs.optimize(config, callback);
+    },
+
+    convert: function (input, output) {
+        var cmd = '"' + process.execPath + '" node_modules/requirejs/bin/r.js -convert "' + input + '" "' + output + '"';
+
+        execSync(cmd);
+    }
+};
 
 var extend = (function () {
     var slice = Array.prototype.slice;
@@ -47,14 +48,13 @@ var build = (function () {
     var baseConfig, mainConfig;
 
     baseConfig = {
-        baseUrl: WEB + '/js',
+        baseUrl: path.join(WEB, 'js'),
         findNestedDependencies: false,
         preserveLicenseComments: false
     };
 
-    mainConfig = require(WEB + '/js/config')({
-        build: true
-    });
+    // eslint-disable-next-line global-require
+    mainConfig = require(path.join(WEB, 'js/config'))({ build: true });
 
     return function (name, config) {
         if (name instanceof Array) {
@@ -66,7 +66,7 @@ var build = (function () {
         } else {
             rjs.optimize(extend({
                 name: name,
-                out: WEB + '/js/dist/' + name + '.min.js'
+                out: path.join(WEB, 'js/dist/' + name + '.min.js')
             }, baseConfig, mainConfig, config), function () {
                 console.log('module ' + name + ' builded');
             });
@@ -75,15 +75,12 @@ var build = (function () {
 }());
 
 var uglify = (function () {
-    var UglifyJS = require('uglify-js'),
-        fs = require('fs');
-
     return function (relativePath, out) {
-        var absolutePath = WEB + '/' + relativePath,
-            result = UglifyJS.minify([absolutePath]);
+        var absolutePath = path.join(WEB, relativePath),
+            result = uglifyJs.minify([absolutePath]);
 
         if (out) {
-            out = WEB + '/' + out;
+            out = path.join(WEB, out);
         } else {
             out = absolutePath.replace(/\.js$/, '.min.js');
         }

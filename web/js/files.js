@@ -1,10 +1,9 @@
-/*jslint browser: true, white: true */
-/*global require */
+/* eslint-env browser, amd */
 
-require(['jquery', 'athorrent', 'base64'], function (jQuery, athorrent, base64) {
+require(['jquery', 'athorrent', 'base64'], function ($, athorrent, base64) {
     'use strict';
 
-    jQuery.extend(athorrent, {
+    $.extend(athorrent, {
         getFilePath: function (element) {
             return base64.decode(this.getItemId('file', element));
         },
@@ -23,7 +22,7 @@ require(['jquery', 'athorrent', 'base64'], function (jQuery, athorrent, base64) 
 
         updateFileList: function () {
             athorrent.ajax.listFiles({}, function (data) {
-                jQuery('.file-list').html(data);
+                $('.file-list').html(data);
             });
         },
 
@@ -32,7 +31,7 @@ require(['jquery', 'athorrent', 'base64'], function (jQuery, athorrent, base64) 
 
             this.ajax.addSharing({
                 path: this.getFilePath(target)
-            }, jQuery.proxy(function (data) {
+            }, $.proxy(function (data) {
                 athorrent.modalSharingLink(data);
                 athorrent.updateFileList();
             }));
@@ -47,7 +46,7 @@ require(['jquery', 'athorrent', 'base64'], function (jQuery, athorrent, base64) 
         },
 
         onSharingLink: function (event) {
-            athorrent.modalSharingLink(jQuery(event.target).attr('href'));
+            athorrent.modalSharingLink($(event.target).attr('href'));
             event.preventDefault();
         },
 
@@ -57,7 +56,7 @@ require(['jquery', 'athorrent', 'base64'], function (jQuery, athorrent, base64) 
             if (window.confirm('Êtes-vous sur de vouloir supprimer "' + this.getFileName(target) + '" ?')) {
                 this.ajax.removeFile({
                     path: this.getFilePath(target)
-                }, jQuery.proxy(function () {
+                }, $.proxy(function () {
                     this.getItem('file', target).remove();
                 }, this));
             }
@@ -68,15 +67,15 @@ require(['jquery', 'athorrent', 'base64'], function (jQuery, athorrent, base64) 
 
             this.ajax.getDirectLink({
                 path: this.getFilePath(target)
-            }, jQuery.proxy(function (link) {
+            }, $.proxy(function (link) {
                 athorrent.showModal(athorrent.trans('files.directLink'), '<a href="' + link + '">' + link + '</a>');
             }, this));
         }
     });
 
-    jQuery(document).on('click', '.add-sharing', jQuery.proxy(athorrent.onSharingAdd, athorrent));
-    jQuery(document).on('click', '.sharing-remove', jQuery.proxy(athorrent.onSharingRemove, athorrent));
-    jQuery(document).on('click', '.sharing-link', jQuery.proxy(athorrent.onSharingLink, athorrent));
-    jQuery(document).on('click', '.file-remove', jQuery.proxy(athorrent.onFileRemove, athorrent));
-    jQuery(document).on('click', '.file-direct-link', jQuery.proxy(athorrent.onFileDirectLink, athorrent));
+    $(document).on('click', '.add-sharing', $.proxy(athorrent.onSharingAdd, athorrent));
+    $(document).on('click', '.sharing-remove', $.proxy(athorrent.onSharingRemove, athorrent));
+    $(document).on('click', '.sharing-link', $.proxy(athorrent.onSharingLink, athorrent));
+    $(document).on('click', '.file-remove', $.proxy(athorrent.onFileRemove, athorrent));
+    $(document).on('click', '.file-direct-link', $.proxy(athorrent.onFileDirectLink, athorrent));
 });

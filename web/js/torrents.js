@@ -1,8 +1,10 @@
-/*jslint browser: true, nomen: true, plusplus: true, white: true */
-/*global require */
+/* eslint-env browser, amd */
 
-require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzone) {
+require(['jquery', 'athorrent', 'dropzone'], function ($, athorrent, Dropzone) {
     'use strict';
+
+    var torrentListTimeout = 2000,
+        trackerListTimeout = 5000;
 
     athorrent.Updater = function (action, parameters, success, interval) {
         this.action = action;
@@ -30,7 +32,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
                     this.intervalCallback();
                 }
 
-                this.intervalId = setInterval(jQuery.proxy(this.intervalCallback, this), this.interval);
+                this.intervalId = setInterval($.proxy(this.intervalCallback, this), this.interval);
             }
         },
 
@@ -58,7 +60,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
                 this.jqXHR.abort();
             }
 
-            this.jqXhr = athorrent.ajax[this.action](this.parameters, jQuery.proxy(this.internalSuccess, this), { cache: false });
+            this.jqXhr = athorrent.ajax[this.action](this.parameters, $.proxy(this.internalSuccess, this), { cache: false });
         },
 
         internalSuccess: function (data) {
@@ -76,12 +78,12 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         if (arguments.length === 0) {
             return;
         }
-        
+
         this.tabMap = {};
-        this.$panel = jQuery(selector);
+        this.$panel = $(selector);
         this.$tabs = this.$panel.find('.nav-tabs a');
 
-        this.$tabs.on('click', jQuery.proxy(this.onClick, this));
+        this.$tabs.on('click', $.proxy(this.onClick, this));
     };
 
     athorrent.TabsPanel.prototype = {
@@ -101,7 +103,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
         onClick: function (event) {
             event.preventDefault();
-            jQuery(event.target).tab('show');
+            $(event.target).tab('show');
         },
 
         isVisible: function () {
@@ -110,13 +112,13 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
         show: function () {
             this.$panel.show();
-            jQuery('body > .container').css('margin-bottom', this.$panel.height() + 'px');
+            $('body > .container').css('margin-bottom', this.$panel.height() + 'px');
             this.$panel.find('.nav-tabs li.active a').trigger('show.bs.tab');
         },
 
         hide: function () {
             this.$panel.find('.nav-tabs li.active a').trigger('hide.bs.tab');
-            jQuery('body > .container').css('margin-bottom', '');
+            $('body > .container').css('margin-bottom', '');
             this.$panel.hide();
         }
     };
@@ -125,18 +127,18 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         if (arguments.length === 0) {
             return;
         }
-        
-        this.$tab = jQuery('[href="#' + id + '"]');
-        this.$container = jQuery('#' + id);
-        this.updater = new athorrent.Updater(action, parameters, jQuery.proxy(this.onUpdate, this), interval);
+
+        this.$tab = $('[href="#' + id + '"]');
+        this.$container = $('#' + id);
+        this.updater = new athorrent.Updater(action, parameters, $.proxy(this.onUpdate, this), interval);
 
         if (parent) {
             this.parent = parent;
             parent.addTab(id, this);
         }
 
-        this.$tab.on('show.bs.tab', jQuery.proxy(this.onShow, this));
-        this.$tab.on('hide.bs.tab', jQuery.proxy(this.onHide, this));
+        this.$tab.on('show.bs.tab', $.proxy(this.onShow, this));
+        this.$tab.on('hide.bs.tab', $.proxy(this.onHide, this));
     };
 
     athorrent.Tab.prototype = {
@@ -165,46 +167,44 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         }
     };
 
-    jQuery.extend(athorrent, {
+    $.extend(athorrent, {
         getTorrentHash: function (element) {
             return this.getItemId('torrent', element);
         },
 
         onUpdateTorrents: function (data) {
-            jQuery('.torrent-list').html(data);
+            $('.torrent-list').html(data);
+        },
+
+        updateTorrentList: function () {
+            this.torrentsUpdater.update();
         },
 
         onTorrentPause: function (event) {
             this.ajax.pauseTorrent({
                 hash: this.getTorrentHash(event.target)
-            }, jQuery.proxy(function () {
-                this.torrentsUpdater.update();
-            }, this));
+            }, $.proxy(this.updateTorrentList, this));
         },
 
         onTorrentResume: function (event) {
             this.ajax.resumeTorrent({
                 hash: this.getTorrentHash(event.target)
-            }, jQuery.proxy(function () {
-                this.torrentsUpdater.update();
-            }, this));
+            }, $.proxy(this.updateTorrentList, this));
         },
 
         onTorrentRemove: function (event) {
             this.ajax.removeTorrent({
                 hash: this.getTorrentHash(event.target)
-            }, jQuery.proxy(function () {
-                this.torrentsUpdater.update();
-            }, this));
+            }, $.proxy(this.updateTorrentList, this));
         },
 
         initializeTorrentsList: function () {
-            this.torrentsUpdater = new athorrent.Updater('listTorrents', {}, athorrent.onUpdateTorrents, 2000);
+            this.torrentsUpdater = new athorrent.Updater('listTorrents', {}, athorrent.onUpdateTorrents, torrentListTimeout);
             this.torrentsUpdater.start();
 
-            jQuery(document).on('click', '.torrent-pause', jQuery.proxy(athorrent.onTorrentPause, athorrent));
-            jQuery(document).on('click', '.torrent-resume', jQuery.proxy(athorrent.onTorrentResume, athorrent));
-            jQuery(document).on('click', '.torrent-remove', jQuery.proxy(athorrent.onTorrentRemove, athorrent));
+            $(document).on('click', '.torrent-pause', $.proxy(athorrent.onTorrentPause, athorrent));
+            $(document).on('click', '.torrent-resume', $.proxy(athorrent.onTorrentResume, athorrent));
+            $(document).on('click', '.torrent-remove', $.proxy(athorrent.onTorrentRemove, athorrent));
         },
 
         onShowDetails: function (event) {
@@ -213,9 +213,9 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
         initializeTorrentPanel: function () {
             this.torrentPanel = new athorrent.TorrentPanel();
-            this.trackersTab = new athorrent.TorrentPanelTab(this.torrentPanel, 'torrent-trackers', 'listTrackers', {}, 5000);
+            this.trackersTab = new athorrent.TorrentPanelTab(this.torrentPanel, 'torrent-trackers', 'listTrackers', {}, trackerListTimeout);
 
-            jQuery(document).on('click', '.torrent-detail', jQuery.proxy(this.onShowDetails, this));
+            $(document).on('click', '.torrent-detail', $.proxy(this.onShowDetails, this));
         },
 
         initializeAddTorrentForm: function () {
@@ -229,7 +229,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         athorrent.TabsPanel.call(this, '.torrent-panel');
     };
 
-    athorrent.TorrentPanel.prototype = jQuery.extend(new athorrent.TabsPanel(), {
+    athorrent.TorrentPanel.prototype = $.extend(new athorrent.TabsPanel(), {
         hash: '',
 
         toggleHash: function (hash) {
@@ -262,7 +262,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         athorrent.Tab.call(this, parent, id, action, parameters, interval);
     };
 
-    athorrent.TorrentPanelTab.prototype = jQuery.extend(new athorrent.Tab(), {
+    athorrent.TorrentPanelTab.prototype = $.extend(new athorrent.Tab(), {
         hash: '',
 
         setHash: function (hash) {
@@ -279,11 +279,11 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
     });
 
     athorrent.AddTorrentForm = function (selector, submitSelector) {
-        this.$form = jQuery(selector);
-        this.$submit = jQuery(submitSelector);
+        this.$form = $(selector);
+        this.$submit = $(submitSelector);
         this.modes = [];
 
-        this.$submit.click(jQuery.proxy(this.onSubmitClick, this));
+        this.$submit.click($.proxy(this.onSubmitClick, this));
     };
 
     athorrent.AddTorrentForm.prototype = {
@@ -298,7 +298,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         modes: null,
 
         onSubmitClick: function (event) {
-            if (!jQuery(event.target).hasClass('disabled')) {
+            if (!$(event.target).hasClass('disabled')) {
                 this.submit();
             }
         },
@@ -369,19 +369,19 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         if (arguments.length === 0) {
             return;
         }
-        
+
         this.inputName = inputName;
-        this.$element = jQuery(elementSelector);
-        this.$btn = jQuery(btnSelector);
-        this.$counter = jQuery(counterSelector);
+        this.$element = $(elementSelector);
+        this.$btn = $(btnSelector);
+        this.$counter = $(counterSelector);
 
         if (form) {
             this.form = form;
             form.registerMode(this);
         }
 
-        this.$btn.click(jQuery.proxy(this.toggle, this));
-        jQuery(this).on('enabled', jQuery.proxy(this.onEnabled, this));
+        this.$btn.click($.proxy(this.toggle, this));
+        $(this).on('enabled', $.proxy(this.onEnabled, this));
     };
 
     athorrent.AddTorrentMode.prototype = {
@@ -397,7 +397,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
         form: null,
 
-        onEnabled: function () {},
+        onEnabled: $.noop,
 
         enable: function () {
             this.enabled = true;
@@ -412,7 +412,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
             this.form.setMode(this);
 
-            jQuery(this).trigger('enabled');
+            $(this).trigger('enabled');
         },
 
         disable: function (recursive) {
@@ -457,19 +457,19 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
             paramName: 'upload-torrent-file',
             dictDefaultMessage: athorrent.trans('torrents.dropzone'),
             previewTemplate: athorrent.templates.dropzonePreview,
-    //        acceptedFiles: '.torrent',
+            acceptedFiles: '.torrent',
             parallelUploads: 1,
             maxFilesize: 1
         });
 
-        this.dropzone.on('removedfile', jQuery.proxy(this.onRemovedFile, this));
-        this.dropzone.on('success', jQuery.proxy(this.onSuccess, this));
-        this.dropzone.on('error', jQuery.proxy(this.onError, this));
+        this.dropzone.on('removedfile', $.proxy(this.onRemovedFile, this));
+        this.dropzone.on('success', $.proxy(this.onSuccess, this));
+        this.dropzone.on('error', $.proxy(this.onError, this));
 
-        this.dropzone.on('sending', jQuery.proxy(this.onSending, this));
+        this.dropzone.on('sending', $.proxy(this.onSending, this));
     };
 
-    athorrent.AddTorrentFileMode.prototype = jQuery.extend(new athorrent.AddTorrentMode(), {
+    athorrent.AddTorrentFileMode.prototype = $.extend(new athorrent.AddTorrentMode(), {
         dropzone: null,
 
         onEnabled: function () {
@@ -515,10 +515,10 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
     athorrent.AddTorrentMagnetMode = function (inputName, elementSelector, btnSelector, counterSelector, form) {
         athorrent.AddTorrentMode.call(this, inputName, elementSelector, btnSelector, counterSelector, form);
-        jQuery('#add-torrent-magnet-input').on('input', jQuery.proxy(this.onInput, this));
+        $('#add-torrent-magnet-input').on('input', $.proxy(this.onInput, this));
     };
 
-    athorrent.AddTorrentMagnetMode.prototype = jQuery.extend(new athorrent.AddTorrentMode(), {
+    athorrent.AddTorrentMagnetMode.prototype = $.extend(new athorrent.AddTorrentMode(), {
         onEnabled: function () {
             this.$element.children('textarea').focus();
         },
@@ -530,8 +530,8 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         getItems: function () {
             var i, length,
                 magnets = [],
-                rmagnet = /^magnet:\?[\x20-\x7E]*/, // jslint ignore:line
-                lines = jQuery('#add-torrent-magnet-input').val().split(/(?:\r\n)|\r|\n/);
+                rmagnet = /^magnet:\?[\x20-\x7E]*/,
+                lines = $('#add-torrent-magnet-input').val().split(/(?:\r\n)|\r|\n/);
 
             for (i = 0, length = lines.length; i < length; ++i) {
                 if (rmagnet.test(lines[i])) {
@@ -543,7 +543,7 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
         },
 
         clearItems: function () {
-            jQuery('#add-torrent-magnet-input').val('');
+            $('#add-torrent-magnet-input').val('');
             this.setCounter(0);
         }
     });
@@ -557,5 +557,6 @@ require(['jquery', 'athorrent', 'dropzone'], function (jQuery, athorrent, Dropzo
 
 require(['dropzone'], function (Dropzone) {
     'use strict';
+
     Dropzone.autoDiscover = false;
 });
