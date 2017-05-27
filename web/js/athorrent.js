@@ -1,12 +1,11 @@
-/*jslint browser: true, plusplus: true, white: true */
-/*global define */
+/* eslint-env browser, amd */
 
-define(['jquery', 'urldecode'], function (jQuery, urldecode) {
+define(['jquery', 'urldecode'], function ($, urldecode) {
     'use strict';
 
     var athorrent = window.athorrent || {};
 
-    jQuery.extend(athorrent, {
+    $.extend(athorrent, {
         trans: function (key) {
             if (athorrent.locale.hasOwnProperty(key)) {
                 return athorrent.locale[key];
@@ -24,7 +23,7 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
                 parameters = {};
             }
 
-            parameters = jQuery.extend({}, parameters);
+            parameters = $.extend({}, parameters);
 
             if (method === 'POST') {
                 parameters.csrf = athorrent.csrf;
@@ -43,7 +42,7 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
                 return result;
             });
 
-            options = jQuery.extend({
+            options = $.extend({
                 type: method,
                 data: parameters,
                 cache: false,
@@ -57,7 +56,7 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
                 }
             }, options);
 
-            jqXhr = jQuery.ajax(url, options);
+            jqXhr = $.ajax(url, options);
 
             if (method === 'POST') {
                 jqXhr.success(function (data) {
@@ -70,7 +69,7 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
 
         ajaxify: function (action, requests) {
             return function (parameters, success, options, actionPrefix) {
-                var request, key, ownKey, method, pattern;
+                var request, key, method, pattern;
 
                 if (!actionPrefix) {
                     actionPrefix = athorrent.actionPrefix;
@@ -95,9 +94,9 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
 
                 if (actionPrefix === athorrent.actionPrefix) {
                     if (action === athorrent.action) {
-                        parameters = jQuery.extend({}, athorrent.routeParameters, athorrent.queryParameters, parameters);
+                        parameters = $.extend({}, athorrent.routeParameters, athorrent.queryParameters, parameters);
                     } else {
-                        parameters = jQuery.extend({}, athorrent.routeParameters, parameters);
+                        parameters = $.extend({}, athorrent.routeParameters, parameters);
                     }
                 }
 
@@ -135,21 +134,20 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
 
             this.queryParameters = parameters;
             this.routeParameters = window.athorrent.routeParameters || {};
-
         },
 
         initialize: function () {
             this.buildAjax();
             this.initializeParameters();
 
-            jQuery('form[method="post"]').submit(function (event) {
-                jQuery(event.target).append('<input type="hidden" name="csrf" value="' + athorrent.csrf + '" />');
+            $('form[method="post"]').submit(function (event) {
+                $(event.target).append('<input type="hidden" name="csrf" value="' + athorrent.csrf + '" />');
             });
 
-            jQuery('[data-ajax-action]').click(function (event) {
-                var $btn = jQuery(event.target),
+            $('[data-ajax-action]').click(function (event) {
+                var $btn = $(event.target),
                     action = $btn.data('ajax-action'),
-                    spinner = !!$btn.data('ajax-spinner');
+                    spinner = Boolean($btn.data('ajax-spinner'));
 
                 if (spinner) {
                     $btn.append('<span class="fa fa-refresh fa-spin"></span>');
@@ -160,12 +158,12 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
                         $btn.children('.fa-spin').remove();
                     }
                 });
-            })
+            });
         },
 
         getItem: function (type, element, selector) {
             var $item,
-                $element = jQuery(element);
+                $element = $(element);
 
             selector = selector || '.' + type;
 
@@ -209,7 +207,7 @@ define(['jquery', 'urldecode'], function (jQuery, urldecode) {
         },
 
         showModal: function (title, content) {
-            var $modal = jQuery(athorrent.templates.modal);
+            var $modal = $(athorrent.templates.modal);
 
             $modal.find('.modal-title').text(title);
             $modal.find('.modal-body').html(content);

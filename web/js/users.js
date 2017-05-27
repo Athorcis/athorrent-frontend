@@ -1,7 +1,6 @@
-/*jslint browser: true, white: true */
-/*global require */
+/* eslint-env browser, amd */
 
-require(['jquery', 'athorrent'], function (jQuery, athorrent) {
+require(['jquery', 'athorrent'], function ($, athorrent) {
     'use strict';
 
     function getUserId(element) {
@@ -24,5 +23,5 @@ require(['jquery', 'athorrent'], function (jQuery, athorrent) {
         }
     }
 
-    jQuery(document).on('click', '.user-remove', onRemoveUser);
+    $(document).on('click', '.user-remove', onRemoveUser);
 });

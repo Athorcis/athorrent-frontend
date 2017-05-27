@@ -1,5 +1,6 @@
-/*jslint plusplus: true, white: true */
-/*global module */
+/* eslint-env browser, node */
+
+'use strict';
 
 (function (global, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
@@ -8,8 +9,6 @@
         global.require = factory(global.athorrent);
     }
 }(this, function (config) {
-    'use strict';
-
     var suffix, require, vendors, scripts, name, i, scriptPrefix, vendorPrefix,
         build = config.build,
         debug = config.debug && !build;
@@ -56,7 +55,7 @@
 
             picturefill: 'picturefill/dist/picturefill',
 
-            urldecode: 'phpjs/requirejs/php/url/urldecode'
+            urldecode: 'locutus/src/php/url/urldecode'
         };
 
         for (name in vendors) {
@@ -80,6 +79,6 @@
             require.paths[name] = scriptPrefix + name + suffix;
         }
     }
-    
+
     return require;
 }));

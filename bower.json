@@ -1,14 +1,14 @@
 {
   "name": "athorrent-frontend",
   "dependencies": {
-    "bootstrap": "~3.3.6",
+    "bootstrap": "~3.3.7",
     "dropzone": "~4.3.0",
     "font-awesome": "~4.6.3",
     "html5shiv": "~3.7.3",
     "jquery": "~1.12.4",
-    "phpjs": "~2.0.4",
-    "requirejs": "~2.2.0",
-    "picturefill": "~3.0.2",
+    "locutus": "~2.0.8",
+    "requirejs": "~2.3.3",
+    "picturefill": "~3.0.3",
     "js-base64": "master"
   },
   "moduleType": [
