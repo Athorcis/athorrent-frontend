@@ -1,4 +1,4 @@
-@import "compass/css3/border-radius";
+@import 'compass/css3/border-radius';
 
 #add-torrent-form {
     @include border-top-radius(0);
@@ -15,8 +15,8 @@
     #add-torrent-form {
         &.enabled {
             border-top: 51px solid #000;
-            left: 0;
             height: 100%;
+            left: 0;
             position: fixed;
             top: 0;
             width: 100%;
@@ -120,9 +120,9 @@
 
 #add-torrent-controls {
     bottom: -1px;
+    left: -1px;
     overflow: hidden;
     position: absolute;
-    left: -1px;
     right: -1px;
 }
 
@@ -133,7 +133,7 @@
 #add-torrent-magnet {
     > .fa {
         position: relative;
-        top:  1px;
+        top: 1px;
     }
 }
 
