@@ -50,7 +50,7 @@ class WebApplication extends BaseApplication
         }
         
         if (strpos($request->get('_route'), ':ajax') === false) {
-            $response->headers->set('Content-Security-Policy', "script-src 'unsafe-inline' https://" . STATIC_HOST);
+            $response->headers->set('Content-Security-Policy', "script-src 'unsafe-inline' " . $request->getScheme() . '://' . STATIC_HOST);
             $response->headers->set('Referrer-Policy', 'strict-origin');
             $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubdomains');
             $response->headers->set('X-Frame-Options', 'DENY');
