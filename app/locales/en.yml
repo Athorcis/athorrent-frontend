@@ -96,15 +96,16 @@ torrents:
     none: no torrents to display
 
     state:
-        allocating: Allocating # to translate
+        allocating: Allocating
         queued_for_checking: Queued for checking
         checking_files: Checking files
-        checking_resume_data: Checking resume data # to translate
+        checking_resume_data: Checking resume data
         downloading_metadata: Downloading metadata
         downloading: Downloading
         paused: Paused
         finished: Finished
         seeding: Seeding
+        disabled: Disabled
 
     tabMain:
         title: Main

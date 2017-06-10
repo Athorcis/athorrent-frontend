@@ -74,6 +74,8 @@ class TwigServiceProvider implements ServiceProviderInterface
             $class = 'warning';
         } elseif ($state === 'seeding' || $state === 'downloading') {
             $class = 'success';
+        } elseif ($state === 'disabled') {
+            $class = 'disabled';
         } else {
             $class = 'info';
         }

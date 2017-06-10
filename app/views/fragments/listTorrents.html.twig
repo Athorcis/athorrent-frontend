@@ -9,9 +9,13 @@
                 <button type="button" class="btn btn-default btn-xs torrent-detail">
                     <span class="fa fa-info"></span>
                 </button>
-                <button type="button" class="btn btn-default btn-xs torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
-                    <span class="fa fa-{% if torrent.paused %}play{% else %}pause{% endif %}"></span>
-                </button>
+
+                {% if torrent.state != 'disabled' %}
+                    <button type="button" class="btn btn-default btn-xs torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
+                        <span class="fa fa-{% if torrent.paused %}play{% else %}pause{% endif %}"></span>
+                    </button>
+                {% endif %}
+
                 <button type="button" class="btn btn-default btn-xs torrent-remove">
                     <span class="fa fa-remove"></span>
                 </button>
