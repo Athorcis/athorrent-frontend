@@ -104,6 +104,7 @@ torrents:
         paused: En pause
         finished: Terminé
         seeding: En upload
+        disabled: Désactivé
 
     tabMain:
         title: Général
