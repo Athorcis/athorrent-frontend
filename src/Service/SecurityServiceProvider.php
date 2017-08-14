@@ -53,7 +53,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
                 'remember_me' => [
                     'key' => REMEMBER_ME_KEY,
-                    'always_remember_me' => true
+                    'always_remember_me' => true,
+                    'secure' => true
                 ],
 
                 'users' => $app->share(function () {
