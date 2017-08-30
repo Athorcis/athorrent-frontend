@@ -1,4 +1,3 @@
-@import 'compass/css3/images';
 
 .torrent-list {
     margin-top: 20px;
@@ -24,7 +23,7 @@
     margin-bottom: 10px;
 
     .progress-bar-disabled {
-        @include background-image(linear-gradient(to bottom, #e4e4e4 0%, #c0c0c0 100%));
+        background-image: linear-gradient(to bottom, #e4e4e4 0%, #c0c0c0 100%);
     }
 }
 
@@ -34,7 +33,7 @@
 
 .torrent-info {
     float: left;
-    font-size: .928em;
+    font-size: 0.928em;
 
     + .torrent-info:before {
         content: '/';

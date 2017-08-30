@@ -26,13 +26,15 @@ else
     SEEDBOX_PASSWORD=$4
 fi
 
-COMPOSER=$(which composer)
+PHP=$(type -p php)
 
-if [ -z "$(which php)" ]
+if [ -z "$PHP" ]
 then
     echo "php is required to install athorrent-frontend"
     exit 1
 fi
+
+COMPOSER=$(type -p composer)
 
 if [ -z "$COMPOSER" ]
 then
@@ -44,48 +46,26 @@ then
     COMPOSER="php composer.phar"
 fi
 
-NODE=$(which node)
+YARN=$(type -p yarn)
 
-if [ -z "$NODE" ]
+if [ -z "$YARN" ]
 then
-    NODE=$(which nodejs)
-    
-    if [ -z "$NODE" ]
-    then
-        echo "nodejs is required to install athorrent-frontend"
-        exit 1
-    fi
-fi
-
-if [ -z "$(which npm)" ]
-then
-    echo "npm is required to install athorrent-frontend"
+    echo "yarn is required to install athorrent-frontend"
     exit 1
 fi
 
 echo
-echo "Install composer dependencies"
+echo "Install server dependencies"
 echo
 
-$COMPOSER install -o
+"$COMPOSER" install -o
 
 echo
-echo "Install npm dependencies"
+echo "Install client dependencies"
 echo
 
-npm update
-
-echo
-echo "Install bower dependencies"
-echo
-
-$NODE node_modules/bower/bin/bower update --allow-root
-
-echo
-echo "Compress js files"
-echo
-
-$NODE utils/build.js
+"$YARN" install
+"$YARN" run prod
 
 echo
 echo "Create database"
@@ -98,23 +78,24 @@ echo "Create config file"
 echo
 
 echo "<?php
-    define('DEBUG', false);
 
-    define('DB_USERNAME', '$DB_USERNAME');
-    define('DB_PASSWORD', '$DB_PASSWORD');
-    define('DB_NAME', 'athorrent');
+define('DEBUG', false);
 
-    define('REMEMBER_ME_KEY', '$(randomString)');
+define('DB_USERNAME', '$DB_USERNAME');
+define('DB_PASSWORD', '$DB_PASSWORD');
+define('DB_NAME', 'athorrent');
+
+define('REMEMBER_ME_KEY', '$(randomString)');
     
-    define('CSRF_SALT','$(randomString)');
+define('CSRF_SALT','$(randomString)');
 
-    if (isset(\$_SERVER['HTTP_HOST'])) {
-        define('STATIC_HOST', \$_SERVER['HTTP_HOST']);
-    }
+if (isset(\$_SERVER['HTTP_HOST'])) {
+    define('STATIC_HOST', \$_SERVER['HTTP_HOST']);
+}
 " > app/config.php
 
 echo
 echo "Create user"
 echo
 
-php utils/create-admin.php $SEEDBOX_USERNAME $SEEDBOX_PASSWORD
+"$PHP" utils/create-admin.php $SEEDBOX_USERNAME $SEEDBOX_PASSWORD
