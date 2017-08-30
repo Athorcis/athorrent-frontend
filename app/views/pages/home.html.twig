@@ -15,8 +15,8 @@
 {% cache 'home' app.locale %}
 <div class="jumbotron">
     <picture>
-        <source srcset="{{ asset_url('images\\logo-narrow.png') }}" media="(max-width: 767px)" />
-        <img class="logo" srcset="{{ asset_url('images\\logo-wide.png') }}" alt="{{ 'app.logo'|trans }}" />
+        <source srcset="{{ asset_url('images/logo-narrow.png') }}" media="(max-width: 767px)" />
+        <img class="logo" srcset="{{ asset_url('images/logo-wide.png') }}" alt="{{ 'app.logo'|trans }}" />
     </picture>
     <div class="jumbotron-text">
         <h1>{{ 'home.welcome'|trans }}</h1>
