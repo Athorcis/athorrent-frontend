@@ -10,7 +10,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 function buildWebpackConfig(config) {
     let extractSass = new ExtractTextPlugin('[name].[contenthash].css');
 
-    let production = process.env.production || false;
+    let production = process.env.NODE_ENV === 'production';
     let nonScriptEntries = {};
 
     for (var key in config.entries) {
@@ -36,10 +36,6 @@ function buildWebpackConfig(config) {
 
     plugins.push(new webpack.optimize.CommonsChunkPlugin({ name: 'scripts/runtime' }));
 
-    if (production) {
-        plugins.push(new webpack.optimize.UglifyJsPlugin({ sourceMap: true }));
-    }
-
     plugins.push(new StyleLintPlugin({ context: 'assets/styles' }));
 
     return {
@@ -62,10 +58,10 @@ function buildWebpackConfig(config) {
                 test: /\.scss$/,
                 use: extractSass.extract([{
                     loader: 'css-loader',
-                    options: { minimize: production, sourceMap: !production }
+                    options: { sourceMap: !production }
                 }, 'resolve-url-loader', {
                     loader: 'postcss-loader',
-                    options: { sourceMap: !production }
+                    options: { sourceMap: true }
                 }, {
                     loader: 'sass-loader',
                     options: { sourceMap: true }
@@ -125,8 +121,7 @@ module.exports = buildWebpackConfig({
         'styles/media': './assets/styles/media.scss',
         'styles/search': './assets/styles/search.scss',
         'styles/torrents': './assets/styles/torrents.scss',
-        'styles/users': './assets/styles/users.scss',
-        'styles/videos': './assets/styles/videos.scss'
+        'styles/users': './assets/styles/users.scss'
     },
 
     aliases: {
