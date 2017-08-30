@@ -14,6 +14,8 @@ use Twig_SimpleFunction;
 
 class TwigServiceProvider implements ServiceProviderInterface
 {
+    private $manifest;
+
     public function register(Application $app)
     {
         $app->register(new \Silex\Provider\TwigServiceProvider(), [
@@ -34,6 +36,10 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $twig->addFunction(new Twig_SimpleFunction('torrentStateToClass', [$this, 'torrentStateToClass']));
 
+        $twig->addFunction(new Twig_SimpleFunction('asset_path', [$this, 'getAssetPath']));
+
+        $twig->addFunction(new Twig_SimpleFunction('asset_url', [$this, 'getAssetUrl']));
+
         $twig->addFunction(new Twig_SimpleFunction('css', [$this, 'includeCss']));
 
         $twig->addFunction(new Twig_SimpleFunction('js', [$this, 'includeJs']));
@@ -53,6 +59,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
+        $this->manifest = json_decode(file_get_contents(WEB . '/manifest.json'), true);
     }
 
     protected function initializeCache(Twig_Environment $twig, Application $app)
@@ -83,15 +90,26 @@ class TwigServiceProvider implements ServiceProviderInterface
         return $class;
     }
 
-    protected function includeResource($relativePath, $inline)
+    public function getAssetPath($assetId)
     {
-        $absolutePath = WEB . DIRECTORY_SEPARATOR . $relativePath;
+        return $this->manifest[$assetId];
+    }
 
-        if ($inline === true || ($inline === null && filesize($absolutePath) < 1024)) {
+    public function getAssetUrl($assetId)
+    {
+        return '//' . STATIC_HOST . $this->getAssetPath($assetId);
+    }
+
+    protected function includeResource($assetId, $inline)
+    {
+        $relativePath = $this->getAssetPath($assetId);
+        $absolutePath = WEB . $relativePath;
+
+        if (!DEBUG && ($inline === true || ($inline === null && filesize($absolutePath) < 1024))) {
             return ['content' => file_get_contents($absolutePath)];
         }
 
-        return ['path' => '//' . STATIC_HOST . '/' . $relativePath];
+        return ['path' => '//' . STATIC_HOST . $relativePath];
     }
 
     public function includeCss($path, $inline = null)

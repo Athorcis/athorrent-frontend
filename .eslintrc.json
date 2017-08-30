@@ -13,6 +13,7 @@
 
         "init-declarations": "off",
 
+        "array-element-newline": "off",
         "func-names": ["warn", "never"],
         "func-style": "off",
         "id-length": ["warn", { "exceptions": ["$", "i"] }],

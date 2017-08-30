@@ -1,7 +1,9 @@
-bin
-dist
-node_modules
-tmp
-vendor
+/bin/
+/node_modules/
+/tmp/
+/vendor/
 /app/config.php
-/web/googled7814b85dbd2011a.html
+/web/
+
+!/web/index.php
+!/web/robots.txt

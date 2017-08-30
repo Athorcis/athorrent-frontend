@@ -1,8 +1,6 @@
-@import 'compass/css3/border-radius';
-@import 'compass/css3/box-shadow';
 
 .panel-fixed-bottom {
-    @include box-shadow(0 0 5px -3px);
+    box-shadow: 0 0 5px -3px;
     bottom: 0;
     left: 0;
     min-height: 300px;
@@ -15,7 +13,7 @@
 }
 
 .input-group-btn:not(:first-child):not(:last-child) > .btn {
-    @include border-radius(0);
+    border-radius: 0;
 
     &:first-child {
         margin-left: -1px;

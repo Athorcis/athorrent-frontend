@@ -8,7 +8,7 @@
         <meta name="description" content="{{ 'app.description'|trans }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" type="image/x-icon" href="{{ '//' ~ constant('STATIC_HOST') }}/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="{{ asset_url('favicon.ico') }}" />
 
         {% set route = app.request.attributes.get('_route') %}
 
@@ -21,18 +21,11 @@
         {% endif %}
 
         {% block css %}
-            {% if constant('DEBUG') %}
-                {{ css('vendor/bootstrap/dist/css/bootstrap')|raw }}
-                {{ css('vendor/bootstrap/dist/css/bootstrap-theme')|raw }}
-                {{ css('vendor/font-awesome/css/font-awesome')|raw }}
-                {{ css('css/main')|raw }}
-            {% else %}
-                {{ css('css/athorrent')|raw }}
-            {% endif %}
+            {{ css('styles/main')|raw }}
         {% endblock %}
 
         <!--[if lt IE 9]>
-            {{ js('vendor/html5shiv/dist/html5shiv.min')|raw }}
+            {{ js('scripts/html5shiv')|raw }}
         <![endif]-->
     </head>
     <body>
@@ -45,16 +38,8 @@
                 var athorrent = {{ js_variables|json_encode|raw }};
             </script>
 
-            {% if constant('DEBUG') %}
-                {% set config_path = 'js/config' %}
-                {% set require_path = '/vendor/requirejs/require.js' %}
-            {% else %}
-                {% set config_path = 'js/dist/config.min' %}
-                {% set require_path = '/vendor/requirejs/require.min.js' %}
-            {% endif %}
-
-            {{ js(config_path, true)|raw }}
-            <script type="text/javascript" src="{{ '//' ~ constant('STATIC_HOST') ~ require_path }}" data-main="{% block js %}athorrent{% endblock %}" async></script>
+            {{ js('scripts/runtime', true)|raw }}
+            {{ js('scripts/' ~ (block('js')|default('athorrent')))|raw }}
         {% endif %}
 
         {#
