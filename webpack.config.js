@@ -6,6 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SuppressChunksPlugin = require('suppress-chunks-webpack-plugin').default;
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+const RuntimePublicPathPlugin = require('webpack-runtime-public-path-plugin');
 
 function buildWebpackConfig(config) {
     let extractSass = new ExtractTextPlugin('[name].[contenthash].css');
@@ -130,6 +131,10 @@ module.exports = buildWebpackConfig({
     },
 
     plugins: [
+        new RuntimePublicPathPlugin({
+            runtimePublicPath: '"//" + athorrent.staticHost + "/"'
+        }),
+
         new webpack.ProvidePlugin({
           $: 'jquery',
           jQuery: 'jquery'
