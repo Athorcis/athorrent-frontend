@@ -1,6 +1,6 @@
 /* eslint-env browser, amd */
 
-define(['jquery', 'urldecode'], function ($, urldecode) {
+define(['jquery', 'urldecode', 'bootstrap-sass', 'picturefill'], function ($, urldecode) {
     'use strict';
 
     var athorrent = window.athorrent || {};

@@ -107,13 +107,7 @@ module.exports = buildWebpackConfig({
         'images/logo-narrow': './assets/images/logo-narrow.png',
         'images/logo-wide': './assets/images/logo-wide.png',
 
-        'scripts/athorrent': [
-            'athorrent',
-            'jquery',
-            'bootstrap-sass',
-            'urldecode',
-            'picturefill'
-        ],
+        'scripts/athorrent': 'athorrent',
         'scripts/files': 'files',
         'scripts/html5shiv': 'html5shiv',
         'scripts/search': 'search',
