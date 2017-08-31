@@ -1,7 +1,8 @@
 
 const resolve = require('path').resolve;
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ChunkHashPlugin = require('webpack-chunk-hash');
+const CleanPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SuppressChunksPlugin = require('suppress-chunks-webpack-plugin').default;
@@ -31,9 +32,15 @@ function buildWebpackConfig(config) {
         publicPath: '/'
     }));
 
-    plugins.push(new webpack.HashedModuleIdsPlugin());
+    plugins.push(new ChunkHashPlugin());
 
-    plugins.push(new CleanWebpackPlugin(['web'], { exclude: ['index.php', 'robots.txt']}));
+    if (production) {
+        plugins.push(new webpack.HashedModuleIdsPlugin());
+    } else {
+        plugins.push(new webpack.NamedModulesPlugin());
+    }
+
+    plugins.push(new CleanPlugin(['web'], { exclude: ['index.php', 'robots.txt']}));
 
     plugins.push(new webpack.optimize.CommonsChunkPlugin({ name: 'scripts/runtime' }));
 
@@ -53,20 +60,20 @@ function buildWebpackConfig(config) {
         module: {
             rules: [{
                 test: /\.js$/,
-                exclude: /node_modules/,
+                include: resolve(__dirname, 'assets/scripts'),
                 loader: 'eslint-loader'
-            },{
+            }, {
                 test: /\.scss$/,
-                use: extractSass.extract([{
-                    loader: 'css-loader',
-                    options: { sourceMap: !production }
-                }, 'resolve-url-loader', {
-                    loader: 'postcss-loader',
-                    options: { sourceMap: true }
-                }, {
-                    loader: 'sass-loader',
-                    options: { sourceMap: true }
-                }])
+                use: extractSass.extract([
+                    'css-loader',
+                    'resolve-url-loader', {
+                        loader: 'postcss-loader',
+                        options: { sourceMap: true }
+                    }, {
+                        loader: 'sass-loader',
+                        options: { sourceMap: true }
+                    }
+                ])
             }, {
                 test: /\.ico$/,
                 loader: 'file-loader',
