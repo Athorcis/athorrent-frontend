@@ -24,11 +24,11 @@ class CacheUtils
 
     public static function clearTwig()
     {
-        return self::clearCacheDir(CACHE . DIRECTORY_SEPARATOR . 'twig');
+        return self::clearCacheDir(CACHE_DIR . DIRECTORY_SEPARATOR . 'twig');
     }
 
     public static function clearTranslations()
     {
-        return self::clearCacheDir(CACHE . DIRECTORY_SEPARATOR . 'translator');
+        return self::clearCacheDir(CACHE_DIR . DIRECTORY_SEPARATOR . 'translator');
     }
 }

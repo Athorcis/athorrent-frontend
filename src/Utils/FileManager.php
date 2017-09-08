@@ -219,7 +219,7 @@ class FileManager
 
     public static function getInstance($ownerId, $userId = -1, $pathSuffix = '', $writable = true)
     {
-        $root = implode(DIRECTORY_SEPARATOR, array(BIN, 'files', $ownerId));
+        $root = implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'files', $ownerId]);
 
         if ($userId === -1) {
             $userId = $ownerId;
