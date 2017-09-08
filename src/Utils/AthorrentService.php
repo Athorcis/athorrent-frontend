@@ -18,17 +18,17 @@ class AthorrentService extends JsonService
 
     private function hasFlag($flag)
     {
-        return is_file(implode(DIRECTORY_SEPARATOR, array(BIN, 'flags', $this->userId, $flag)));
+        return is_file(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->userId, $flag]));
     }
 
     private function setFlag($flag)
     {
-        touch(implode(DIRECTORY_SEPARATOR, array(BIN, 'flags', $this->userId, $flag)));
+        touch(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->userId, $flag]));
     }
 
     private static function hasGlobalFlag($flag)
     {
-        return is_file(implode(DIRECTORY_SEPARATOR, array(BIN, 'flags', $flag)));
+        return is_file(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $flag]));
     }
 
     private function isRunning()
@@ -65,7 +65,7 @@ class AthorrentService extends JsonService
 
     private function start()
     {
-        $logDir = BIN . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . $this->userId;
+        $logDir = implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'logs', $this->userId]);
         $logPath = $logDir . DIRECTORY_SEPARATOR . 'athorrentd.txt';
 
         if (!file_exists($logDir)) {
@@ -89,15 +89,16 @@ class AthorrentService extends JsonService
             }
         }
 
+        $cwd = BIN_DIR;
         $cmd = 'athorrent-backend --user ' . $this->userId;
 
         switch (strtolower(PHP_OS)) {
             case 'linux':
-                $cmd = '(cd ' . BIN . ' && ./' . $cmd . ') > ' . $logPath . ' 2>&1 &';
+                $cmd = '(cd ' . $cwd . ' && ./' . $cmd . ') > ' . $logPath . ' 2>&1 &';
                 break;
 
             case 'winnt':
-                $cmd = 'start /D ' . BIN . ' /B ' . $cmd . ' > ' . $logPath;
+                $cmd = 'start /D ' . $cwd . ' /B ' . $cmd . ' > ' . $logPath;
                 break;
         }
 
@@ -108,7 +109,7 @@ class AthorrentService extends JsonService
     {
         switch (strtolower(PHP_OS)) {
             case 'linux':
-                $path = BIN . '/sockets/' . $userId . '.sck';
+                $path = BIN_DIR . '/sockets/' . $userId . '.sck';
                 break;
 
             case 'winnt':

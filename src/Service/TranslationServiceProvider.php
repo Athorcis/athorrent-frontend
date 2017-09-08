@@ -25,7 +25,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
             return $this->extendTranslator($translator, $app);
         }));
 
-        $app['translator.cache_dir'] = CACHE . DIRECTORY_SEPARATOR . 'translator';
+        $app['translator.cache_dir'] = CACHE_DIR . DIRECTORY_SEPARATOR . 'translator';
     }
 
     public function boot(Application $app)
@@ -37,7 +37,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
         $translator->addLoader('yaml', new \Symfony\Component\Translation\Loader\YamlFileLoader());
 
         foreach ($app['locales'] as $locale) {
-            $translator->addResource('yaml', LOCALES . '/' . $locale . '.yml', $locale);
+            $translator->addResource('yaml', LOCALES_DIR . DIRECTORY_SEPARATOR . $locale . '.yml', $locale);
         }
 
         return $translator;

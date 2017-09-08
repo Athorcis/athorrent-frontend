@@ -1,6 +1,6 @@
 /bin/
 /node_modules/
-/tmp/
+/var/
 /vendor/
 /app/config.php
 /web/

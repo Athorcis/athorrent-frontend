@@ -16,7 +16,7 @@ class TorrentManager
 
     public function getTorrentsDirectory()
     {
-        return TORRENTS . DIRECTORY_SEPARATOR . $this->userId;
+        return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->userId;
     }
     
     public function addTorrentFromUrl($url)

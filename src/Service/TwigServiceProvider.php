@@ -19,8 +19,8 @@ class TwigServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app->register(new \Silex\Provider\TwigServiceProvider(), [
-            'twig.path' => APP . '/views',
-            'twig.options' => ['cache' => CACHE . '/twig']
+            'twig.path' => APP_DIR . DIRECTORY_SEPARATOR . 'views',
+            'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
         ]);
 
         $app['twig'] = $app->share($app->extend('twig', function (Twig_Environment $twig) use ($app) {
@@ -59,7 +59,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
-        $this->manifest = json_decode(file_get_contents(WEB . '/manifest.json'), true);
+        $this->manifest = json_decode(file_get_contents(WEB_DIR . DIRECTORY_SEPARATOR . 'manifest.json'), true);
     }
 
     protected function initializeCache(Twig_Environment $twig, Application $app)
@@ -103,7 +103,7 @@ class TwigServiceProvider implements ServiceProviderInterface
     protected function includeResource($assetId, $inline)
     {
         $relativePath = $this->getAssetPath($assetId);
-        $absolutePath = WEB . $relativePath;
+        $absolutePath = WEB_DIR . $relativePath;
 
         if (!DEBUG && ($inline === true || ($inline === null && filesize($absolutePath) < 1024))) {
             return ['content' => file_get_contents($absolutePath)];
