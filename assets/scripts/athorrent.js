@@ -59,7 +59,7 @@ define(['jquery', 'urldecode', 'bootstrap-sass', 'picturefill'], function ($, ur
             jqXhr = $.ajax(url, options);
 
             if (method === 'POST') {
-                jqXhr.success(function (data) {
+                jqXhr.done(function (data) {
                     athorrent.csrf = data.csrf;
                 });
             }
