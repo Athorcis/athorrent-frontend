@@ -92,7 +92,11 @@ class TwigServiceProvider implements ServiceProviderInterface
 
     public function getAssetPath($assetId)
     {
-        return $this->manifest[$assetId];
+        if (isset($this->manifest[$assetId])) {
+            return $this->manifest[$assetId];
+        }
+
+        return '/' . $assetId;
     }
 
     public function getAssetUrl($assetId)
