@@ -1,4 +1,5 @@
 [![Code Climate](https://codeclimate.com/github/Athorcis/athorrent-frontend/badges/gpa.svg)](https://codeclimate.com/github/Athorcis/athorrent-frontend)
+[![Dependency Status](https://dependencyci.com/github/Athorcis/athorrent-frontend/badge)](https://dependencyci.com/github/Athorcis/athorrent-frontend)
 
 ## Getting started
 
