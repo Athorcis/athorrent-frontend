@@ -2,17 +2,21 @@
 
 {% block title %}{% if title %}{{ title }}{% else %}Fichiers{% endif %} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block css %}
-{{ parent() }}
-{{ css('styles/files')|raw }}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('files')|raw }}
 {% endblock %}
 
-{% block js %}files{% endblock %}
+{% block main_script %}
+    {{ script('files')|raw }}
+{% endblock %}
 
 {% block content %}
-<h1 title="{{ title}}">{{ title }} <span class="dirsize">({{ dir_size|readable_filesize }})</span></h1>
-{% include 'fragments/breadcrumb.html.twig' %}
-<table class="file-list">
-    {% include 'fragments/listFiles.html.twig' %}
-</table>
+    <h1 title="{{ title}}">{{ title }} <span class="dirsize">({{ dir_size|readable_filesize }})</span></h1>
+
+    {% include 'fragments/breadcrumb.html.twig' %}
+
+    <table class="file-list">
+        {% include 'fragments/listFiles.html.twig' %}
+    </table>
 {% endblock %}

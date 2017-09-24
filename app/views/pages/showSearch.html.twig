@@ -2,15 +2,16 @@
 
 {% block title %}{{ 'search.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block css %}
-{{ parent() }}
-{{ css('styles/search')|raw }}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('search')|raw }}
 {% endblock %}
 
-{% block js %}search{% endblock %}
+{% block main_script %}
+    {{ script('search')|raw }}
+{% endblock %}
 
 {% block content %}
-
     <form method="get" class="input-group search-control">
         <select class="form-control" name="source">
             <option value="all"{% if source == 'all' %} selected{% endif %}>{{ 'search.all-sources'|trans }}</option>

@@ -40,9 +40,9 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $twig->addFunction(new Twig_SimpleFunction('asset_url', [$this, 'getAssetUrl']));
 
-        $twig->addFunction(new Twig_SimpleFunction('css', [$this, 'includeCss']));
+        $twig->addFunction(new Twig_SimpleFunction('stylesheet', [$this, 'includeStylesheet']));
 
-        $twig->addFunction(new Twig_SimpleFunction('js', [$this, 'includeJs']));
+        $twig->addFunction(new Twig_SimpleFunction('script', [$this, 'includeScript']));
 
         $twig->addFunction(new Twig_SimpleFunction('format_age', [$this, 'formatAge']));
 
@@ -116,9 +116,9 @@ class TwigServiceProvider implements ServiceProviderInterface
         return ['path' => '//' . STATIC_HOST . $relativePath];
     }
 
-    public function includeCss($path, $inline = null)
+    public function includeStylesheet($path, $inline = null)
     {
-        $result = $this->includeResource($path . '.css', $inline);
+        $result = $this->includeResource('stylesheets/' . $path . '.css', $inline);
 
         if (isset($result['content'])) {
             return '<style type="text/css">' . $result['content'] . '</style>';
@@ -127,9 +127,9 @@ class TwigServiceProvider implements ServiceProviderInterface
         return '<link rel="stylesheet" type="text/css" href="' . $result['path'] . '" />';
     }
 
-    public function includeJs($path, $inline = null)
+    public function includeScript($path, $inline = null)
     {
-        $result = $this->includeResource($path . '.js', $inline);
+        $result = $this->includeResource('scripts/' . $path . '.js', $inline);
 
         if (isset($result['content'])) {
             return '<script type="text/javascript">' . $result['content'] . '</script>';

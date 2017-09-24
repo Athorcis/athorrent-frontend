@@ -44,7 +44,7 @@ function buildWebpackConfig(config) {
 
     plugins.push(new webpack.optimize.CommonsChunkPlugin({ name: 'scripts/runtime' }));
 
-    plugins.push(new StyleLintPlugin({ context: 'assets/styles' }));
+    plugins.push(new StyleLintPlugin({ context: 'assets/stylesheets' }));
 
     return {
         entry: config.entries,
@@ -115,15 +115,15 @@ module.exports = buildWebpackConfig({
         'scripts/torrents': 'torrents',
         'scripts/users': 'users',
 
-        'styles/administration': './assets/styles/administration.scss',
-        'styles/cache': './assets/styles/cache.scss',
-        'styles/files': './assets/styles/files.scss',
-        'styles/home': './assets/styles/home.scss',
-        'styles/main': './assets/styles/main.scss',
-        'styles/media': './assets/styles/media.scss',
-        'styles/search': './assets/styles/search.scss',
-        'styles/torrents': './assets/styles/torrents.scss',
-        'styles/users': './assets/styles/users.scss'
+        'stylesheets/administration': './assets/stylesheets/administration.scss',
+        'stylesheets/cache': './assets/stylesheets/cache.scss',
+        'stylesheets/files': './assets/stylesheets/files.scss',
+        'stylesheets/home': './assets/stylesheets/home.scss',
+        'stylesheets/main': './assets/stylesheets/main.scss',
+        'stylesheets/media': './assets/stylesheets/media.scss',
+        'stylesheets/search': './assets/stylesheets/search.scss',
+        'stylesheets/torrents': './assets/stylesheets/torrents.scss',
+        'stylesheets/users': './assets/stylesheets/users.scss'
     },
 
     aliases: {

@@ -2,31 +2,34 @@
 
 {% block title %}{{ 'torrents.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block css %}
-{{ parent() }}
-{{ css('styles/torrents')|raw }}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('torrents')|raw }}
 {% endblock %}
 
-{% block js %}torrents{% endblock %}
+{% block main_script %}
+    {{ script('torrents')|raw }}
+{% endblock %}
 
 {% block content %}
 {% include "fragments/addTorrents.html.twig" %}
-<h1>{{ 'torrents.title'|trans }}</h1>
-<div class="torrent-list">
-    {% include "fragments/listTorrents.html.twig" %}
-</div>
+    <h1>{{ 'torrents.title'|trans }}</h1>
 
-<div class="torrent-panel panel-fixed-bottom">
-    <ul class="nav nav-tabs">
-        {#<li role="presentation"><a href="#torrent-general">{{ 'torrents.tabMain.title'|trans }}</a></li>#}
-        <li role="presentation"  class="active"><a href="#torrent-trackers">{{ 'torrents.tabTrackers.title'|trans }}</a></li>
-        <li role="presentation"><a href="#torrent-peers">{{ 'torrents.tabPeers.title'|trans }}</a></li>
-    </ul>
-
-    <div class="tab-content">
-        {#<div role="tabpanel" class="tab-pane" id="torrent-general">...</div>#}
-        <div role="tabpanel" class="tab-pane active" id="torrent-trackers"></div>
-        <div role="tabpanel" class="tab-pane" id="torrent-peers">...</div>
+    <div class="torrent-list">
+        {% include "fragments/listTorrents.html.twig" %}
     </div>
-</div>
+
+    <div class="torrent-panel panel-fixed-bottom">
+        <ul class="nav nav-tabs">
+            {#<li role="presentation"><a href="#torrent-general">{{ 'torrents.tabMain.title'|trans }}</a></li>#}
+            <li role="presentation"  class="active"><a href="#torrent-trackers">{{ 'torrents.tabTrackers.title'|trans }}</a></li>
+            <li role="presentation"><a href="#torrent-peers">{{ 'torrents.tabPeers.title'|trans }}</a></li>
+        </ul>
+
+        <div class="tab-content">
+            {#<div role="tabpanel" class="tab-pane" id="torrent-general">...</div>#}
+            <div role="tabpanel" class="tab-pane active" id="torrent-trackers"></div>
+            <div role="tabpanel" class="tab-pane" id="torrent-peers">...</div>
+        </div>
+    </div>
 {% endblock %}

@@ -20,33 +20,40 @@
             {% endcache %}
         {% endif %}
 
-        {% block css %}
-            {{ css('styles/main')|raw }}
+        {% block stylesheets %}
+            {{ stylesheet('main')|raw }}
         {% endblock %}
 
-        <!--[if lt IE 9]>
-            {{ js('scripts/html5shiv')|raw }}
-        <![endif]-->
+        {% block early_scripts %}
+            <!--[if lt IE 9]>
+                {{ script('html5shiv')|raw }}
+            <![endif]-->
+        {% endblock %}
     </head>
     <body>
         {% include 'nav.html.twig' %}
 
         <div class="container">{% block content %}{% endblock %}</div>
 
-        {% if js_variables %}
-            <script type="text/javascript">
-                var athorrent = {{ js_variables|json_encode|raw }};
-            </script>
-
-            {{ js('scripts/runtime', true)|raw }}
-            {{ js('scripts/' ~ (block('js')|default('athorrent')))|raw }}
-        {% endif %}
-
         {#
         <footer>
             <div class="container">Copyright</div>
         </footer>
         #}
+
+        {% block late_scripts %}
+            {% if js_variables %}
+                <script type="text/javascript">
+                    var athorrent = {{ js_variables|json_encode|raw }};
+                </script>
+            {% endif %}
+
+            {{ script('runtime', true)|raw }}
+
+            {% block main_script %}
+                {{ script('athorrent')|raw }}
+            {% endblock %}
+        {% endblock %}
     </body>
 </html>
 {% endspaceless %}
