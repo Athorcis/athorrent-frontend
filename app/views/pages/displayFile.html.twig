@@ -2,9 +2,9 @@
 
 {% block title %}{{ name }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block css %}
-{{ parent() }}
-{{ css('styles/media')|raw }}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('media')|raw }}
 {% endblock %}
 
 {% block content %}

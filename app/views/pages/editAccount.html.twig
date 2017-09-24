@@ -3,49 +3,56 @@
 {% block title %}{{ 'account.edit.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1>{{ 'account.edit.title'|trans }}</h1>
-</div>
-{% if error is defined and error is not empty %}
-    <div class="alert alert-danger" role="alert">{{ error|trans }}</div>
-{% endif %}
-<form method="post" action="{{ path('saveAccount') }}" class="form-horizontal">
-    {% set user = app.security.token.user %}
+    <div class="page-header">
+        <h1>{{ 'account.edit.title'|trans }}</h1>
+    </div>
 
-    <div class="form-group">
-        <label for="username" class="col-sm-3 control-label">{{ 'users.username'|trans }}</label>
-        <div class="col-sm-9">
-            <input type="text" name="username" class="form-control" id="username" placeholder="{{ 'users.username'|trans }}" value="{{ user.username }}" />
+    {% if error is defined and error is not empty %}
+        <div class="alert alert-danger" role="alert">{{ error|trans }}</div>
+    {% endif %}
+
+    <form method="post" action="{{ path('saveAccount') }}" class="form-horizontal">
+        {% set user = app.security.token.user %}
+
+        <div class="form-group">
+            <label for="username" class="col-sm-3 control-label">{{ 'users.username'|trans }}</label>
+            <div class="col-sm-9">
+                <input type="text" name="username" class="form-control" id="username" placeholder="{{ 'users.username'|trans }}" value="{{ user.username }}" />
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label for="current_password" class="col-sm-3 control-label">{{ 'account.edit.current_password'|trans }}</label>
-        <div class="col-sm-9">
-            <input type="password" name="current_password" class="form-control" id="current_password" placeholder="{{ 'account.edit.current_password'|trans }}" />
+
+        <div class="form-group">
+            <label for="current_password" class="col-sm-3 control-label">{{ 'account.edit.current_password'|trans }}</label>
+            <div class="col-sm-9">
+                <input type="password" name="current_password" class="form-control" id="current_password" placeholder="{{ 'account.edit.current_password'|trans }}" />
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label for="new_password" class="col-sm-3 control-label">{{ 'account.edit.new_password'|trans }}</label>
-        <div class="col-sm-9">
-            <input type="password" name="new_password" class="form-control" id="new_password" placeholder="{{ 'account.edit.new_password'|trans }}" />
+
+        <div class="form-group">
+            <label for="new_password" class="col-sm-3 control-label">{{ 'account.edit.new_password'|trans }}</label>
+            <div class="col-sm-9">
+                <input type="password" name="new_password" class="form-control" id="new_password" placeholder="{{ 'account.edit.new_password'|trans }}" />
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label for="password_confirm" class="col-sm-3 control-label">{{ 'account.edit.password_confirm'|trans }}</label>
-        <div class="col-sm-9">
-            <input type="password" name="password_confirm" class="form-control" id="password_confirm" placeholder="{{ 'account.edit.password_confirm'|trans }}" />
+
+        <div class="form-group">
+            <label for="password_confirm" class="col-sm-3 control-label">{{ 'account.edit.password_confirm'|trans }}</label>
+            <div class="col-sm-9">
+                <input type="password" name="password_confirm" class="form-control" id="password_confirm" placeholder="{{ 'account.edit.password_confirm'|trans }}" />
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label for="role" class="col-sm-3 control-label">{{ 'users.role'|trans }}</label>
-        <div class="col-sm-9">
-            <input type="text" name="role" class="form-control" id="role" value="{{ user.roles[0]|trans }}" readonly="true" />
+
+        <div class="form-group">
+            <label for="role" class="col-sm-3 control-label">{{ 'users.role'|trans }}</label>
+            <div class="col-sm-9">
+                <input type="text" name="role" class="form-control" id="role" value="{{ user.roles[0]|trans }}" readonly="true" />
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-9">
-            <button type="submit" class="btn btn-default">{{ 'account.edit.submit'|trans }}</button>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="submit" class="btn btn-default">{{ 'account.edit.submit'|trans }}</button>
+            </div>
         </div>
-    </div>
-</form>
+    </form>
 {% endblock %}

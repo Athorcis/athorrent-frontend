@@ -2,9 +2,9 @@
 
 {% block title %}{{ 'cache.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block css %}
-{{ parent() }}
-{{ css('styles/cache')|raw }}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('cache')|raw }}
 {% endblock %}
 
 {% block content %}

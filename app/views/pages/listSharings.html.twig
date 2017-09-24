@@ -2,62 +2,65 @@
 
 {% block title %}{{ 'sharings.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block js %}sharings{% endblock %}
+{% block main_script %}
+    {{ script('sharings')|raw }}
+{% endblock %}
 
 {% block content %}
-{% set userId = app.security.token.user.userId %}
-<div class="page-header">
-    <h1>{{ 'sharings.title'|trans }}</h1>
-</div>
+    {% set userId = app.security.token.user.userId %}
 
-{% if sharings|length == 0 %}
-    <div class="alert alert-info" role="alert">{{ 'sharings.none'|trans }}</div>
-{% else %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>{{ 'sharings.path'|trans }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sharing in sharings %}
-                {% cache 'sharing' sharing %}
-                <tr class="sharing" id="sharing-{{ sharing.token }}">
-                    <td class="user-name">
-                        <a href="{{ path('listFiles', { token: sharing.token }, 'sharings_') }}">{{ sharing.path }}</a>
-                    </td>
-                    <td class="text-right">
-                        <button class="btn btn-xs btn-danger sharing-remove">
-                            <span class="fa fa-remove"></span>
-                        </button>
-                    </td>
-                </tr>
-                {% endcache %}
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
-
-{% if lastPage > 1 %}
-    <div class="text-center">
-        <ul class="pagination">
-        {% set startPage = max(1, page - 2) %}
-        {% set endPage = min(lastPage, startPage + 4) %}
-        {% set startPage = max(1, endPage - 4) %}
-
-        {% if page > 1 %}
-            <li><a href="{{ path('listSharings', { page: page - 1 }) }}">&laquo;</a></li>
-        {% endif %}
-
-        {% for i in startPage .. endPage %}
-            <li{% if i == page %} class="active"{% endif %}><a href="{{ path('listSharings', { page: i }) }}">{{ i }}</a></li>
-        {% endfor %}
-
-        {% if page < lastPage %}
-            <li><a href="{{ path('listSharings', { page: page + 1 }) }}">&raquo;</a></li>
-        {% endif %}
-        </ul>
+    <div class="page-header">
+        <h1>{{ 'sharings.title'|trans }}</h1>
     </div>
-{% endif %}
+
+    {% if sharings|length == 0 %}
+        <div class="alert alert-info" role="alert">{{ 'sharings.none'|trans }}</div>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{{ 'sharings.path'|trans }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sharing in sharings %}
+                    {% cache 'sharing' sharing %}
+                    <tr class="sharing" id="sharing-{{ sharing.token }}">
+                        <td class="user-name">
+                            <a href="{{ path('listFiles', { token: sharing.token }, 'sharings_') }}">{{ sharing.path }}</a>
+                        </td>
+                        <td class="text-right">
+                            <button class="btn btn-xs btn-danger sharing-remove">
+                                <span class="fa fa-remove"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endcache %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if lastPage > 1 %}
+        <div class="text-center">
+            <ul class="pagination">
+            {% set startPage = max(1, page - 2) %}
+            {% set endPage = min(lastPage, startPage + 4) %}
+            {% set startPage = max(1, endPage - 4) %}
+
+            {% if page > 1 %}
+                <li><a href="{{ path('listSharings', { page: page - 1 }) }}">&laquo;</a></li>
+            {% endif %}
+
+            {% for i in startPage .. endPage %}
+                <li{% if i == page %} class="active"{% endif %}><a href="{{ path('listSharings', { page: i }) }}">{{ i }}</a></li>
+            {% endfor %}
+
+            {% if page < lastPage %}
+                <li><a href="{{ path('listSharings', { page: page + 1 }) }}">&raquo;</a></li>
+            {% endif %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}

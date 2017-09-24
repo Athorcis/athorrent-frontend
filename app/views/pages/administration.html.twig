@@ -2,9 +2,9 @@
 
 {% block title %}{{ 'administration.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block css %}
-{{ parent() }}
-{{ css('styles/administration')|raw }}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('administration')|raw }}
 {% endblock %}
 
 {% block content %}

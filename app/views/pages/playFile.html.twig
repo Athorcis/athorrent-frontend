@@ -2,17 +2,19 @@
 
 {% block title %}{{ name }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block css %}
-{{ parent() }}
-{{ css('styles/media')|raw }}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('media')|raw }}
 {% endblock %}
 
 {% block content %}
-<h1 title="{{ name }}">{{ name }}</h1>
-{% include 'fragments/breadcrumb.html.twig' %}
-<div class="media-container">
-    <{{ mediaTag }} autoplay controls>
-        <source type="{{ type }}" src="{{ path('openFile', { path: src }) }}" />
-    </{{ mediaTag }}>
-</div>
+    <h1 title="{{ name }}">{{ name }}</h1>
+
+    {% include 'fragments/breadcrumb.html.twig' %}
+
+    <div class="media-container">
+        <{{ mediaTag }} autoplay controls>
+            <source type="{{ type }}" src="{{ path('openFile', { path: src }) }}" />
+        </{{ mediaTag }}>
+    </div>
 {% endblock %}
