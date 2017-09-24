@@ -19,7 +19,7 @@ class TwigServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app->register(new \Silex\Provider\TwigServiceProvider(), [
-            'twig.path' => APP_DIR . DIRECTORY_SEPARATOR . 'views',
+            'twig.path' => implode(DIRECTORY_SEPARATOR, [ROOT_DIR, 'resources', 'templates']),
             'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
         ]);
 
