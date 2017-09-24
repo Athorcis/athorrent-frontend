@@ -116,7 +116,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         return ['path' => '//' . STATIC_HOST . $relativePath];
     }
 
-    public function includeStylesheet($path, $inline = null)
+    public function includeStylesheet($path, $inline = false)
     {
         $result = $this->includeResource('stylesheets/' . $path . '.css', $inline);
 
@@ -127,7 +127,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         return '<link rel="stylesheet" type="text/css" href="' . $result['path'] . '" />';
     }
 
-    public function includeScript($path, $inline = null)
+    public function includeScript($path, $inline = false)
     {
         $result = $this->includeResource('scripts/' . $path . '.js', $inline);
 
