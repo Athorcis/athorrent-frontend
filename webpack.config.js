@@ -44,7 +44,7 @@ function buildWebpackConfig(config) {
 
     plugins.push(new webpack.optimize.CommonsChunkPlugin({ name: 'scripts/runtime' }));
 
-    plugins.push(new StyleLintPlugin({ context: 'assets/stylesheets' }));
+    plugins.push(new StyleLintPlugin({ context: 'resources/stylesheets' }));
 
     return {
         entry: config.entries,
@@ -60,7 +60,7 @@ function buildWebpackConfig(config) {
         module: {
             rules: [{
                 test: /\.js$/,
-                include: resolve(__dirname, 'assets/scripts'),
+                include: resolve(__dirname, 'resources/scripts'),
                 loader: 'eslint-loader'
             }, {
                 test: /\.scss$/,
@@ -90,7 +90,7 @@ function buildWebpackConfig(config) {
         },
 
         resolve: {
-            modules: ['node_modules', 'assets/scripts'],
+            modules: ['node_modules', 'resources/scripts'],
 
             alias: config.aliases
         },
@@ -103,9 +103,9 @@ function buildWebpackConfig(config) {
 
 module.exports = buildWebpackConfig({
     entries: {
-        'favicon.ico': './assets/images/favicon.ico',
-        'images/logo-narrow': './assets/images/logo-narrow.png',
-        'images/logo-wide': './assets/images/logo-wide.png',
+        'favicon.ico': './resources/images/favicon.ico',
+        'images/logo-narrow': './resources/images/logo-narrow.png',
+        'images/logo-wide': './resources/images/logo-wide.png',
 
         'scripts/athorrent': 'athorrent',
         'scripts/files': 'files',
@@ -115,15 +115,15 @@ module.exports = buildWebpackConfig({
         'scripts/torrents': 'torrents',
         'scripts/users': 'users',
 
-        'stylesheets/administration': './assets/stylesheets/administration.scss',
-        'stylesheets/cache': './assets/stylesheets/cache.scss',
-        'stylesheets/files': './assets/stylesheets/files.scss',
-        'stylesheets/home': './assets/stylesheets/home.scss',
-        'stylesheets/main': './assets/stylesheets/main.scss',
-        'stylesheets/media': './assets/stylesheets/media.scss',
-        'stylesheets/search': './assets/stylesheets/search.scss',
-        'stylesheets/torrents': './assets/stylesheets/torrents.scss',
-        'stylesheets/users': './assets/stylesheets/users.scss'
+        'stylesheets/administration': './resources/stylesheets/administration.scss',
+        'stylesheets/cache': './resources/stylesheets/cache.scss',
+        'stylesheets/files': './resources/stylesheets/files.scss',
+        'stylesheets/home': './resources/stylesheets/home.scss',
+        'stylesheets/main': './resources/stylesheets/main.scss',
+        'stylesheets/media': './resources/stylesheets/media.scss',
+        'stylesheets/search': './resources/stylesheets/search.scss',
+        'stylesheets/torrents': './resources/stylesheets/torrents.scss',
+        'stylesheets/users': './resources/stylesheets/users.scss'
     },
 
     aliases: {
