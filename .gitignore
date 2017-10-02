@@ -3,7 +3,7 @@
 /var/
 /vendor/
 /app/config.php
-/web/
 
+/web/*
 !/web/index.php
 !/web/robots.txt
