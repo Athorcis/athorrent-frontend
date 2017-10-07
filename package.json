@@ -10,6 +10,7 @@
     "jquery": "^3.2.1",
     "js-base64": "^2.3.2",
     "locutus": "^2.0.9",
+    "mediaelement": "^4.2.6",
     "picturefill": "^3.0.2"
   },
   "repository": {
