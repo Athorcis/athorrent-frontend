@@ -3,6 +3,7 @@ const resolve = require('path').resolve;
 const webpack = require('webpack');
 const ChunkHashPlugin = require('webpack-chunk-hash');
 const CleanPlugin = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SuppressChunksPlugin = require('suppress-chunks-webpack-plugin').default;
@@ -45,6 +46,11 @@ function buildWebpackConfig(config) {
     plugins.push(new webpack.optimize.CommonsChunkPlugin({ name: 'scripts/runtime' }));
 
     plugins.push(new StyleLintPlugin({ context: 'resources/stylesheets' }));
+
+    plugins.push(new CopyPlugin([{
+        from: 'node_modules/es6-promise/dist/es6-promise.auto.js',
+        to: 'scripts/promise.js'
+    }]));
 
     return {
         entry: config.entries,
