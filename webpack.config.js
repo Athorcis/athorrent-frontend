@@ -63,6 +63,11 @@ function buildWebpackConfig(config) {
                 include: resolve(__dirname, 'resources/scripts'),
                 loader: 'eslint-loader'
             }, {
+                test: /\.css$/,
+                use: extractSass.extract([
+                    'css-loader'
+                ])
+            }, {
                 test: /\.scss$/,
                 use: extractSass.extract([
                     'css-loader',
@@ -110,6 +115,7 @@ module.exports = buildWebpackConfig({
         'scripts/athorrent': 'athorrent',
         'scripts/files': 'files',
         'scripts/html5shiv': 'html5shiv',
+        'scripts/media': 'media',
         'scripts/search': 'search',
         'scripts/sharings': 'sharings',
         'scripts/torrents': 'torrents',
@@ -121,6 +127,7 @@ module.exports = buildWebpackConfig({
         'stylesheets/home': './resources/stylesheets/home.scss',
         'stylesheets/main': './resources/stylesheets/main.scss',
         'stylesheets/media': './resources/stylesheets/media.scss',
+        'stylesheets/media-element-player': 'mediaelement/build/mediaelementplayer.css',
         'stylesheets/search': './resources/stylesheets/search.scss',
         'stylesheets/torrents': './resources/stylesheets/torrents.scss',
         'stylesheets/users': './resources/stylesheets/users.scss'
@@ -137,8 +144,8 @@ module.exports = buildWebpackConfig({
         }),
 
         new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery'
+            $: 'jquery',
+            jQuery: 'jquery'
         })
     ]
 });

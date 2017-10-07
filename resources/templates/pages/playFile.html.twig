@@ -5,6 +5,11 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ stylesheet('media')|raw }}
+    {{ stylesheet('media-element-player')|raw }}
+{% endblock %}
+
+{% block main_script %}
+    {{ script('media')|raw }}
 {% endblock %}
 
 {% block content %}
