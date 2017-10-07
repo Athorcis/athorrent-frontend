@@ -5,6 +5,7 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
     "dropzone": "^5.1.1",
+    "es6-promise": "^4.1.1",
     "font-awesome": "^4.7.0",
     "html5shiv": "^3.7.3",
     "jquery": "^3.2.1",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.16",
+    "copy-webpack-plugin": "^4.1.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "eslint": "^4.6.1",

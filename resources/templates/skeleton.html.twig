@@ -48,6 +48,10 @@
                 </script>
             {% endif %}
 
+            <script type="text/javascript">
+                window.Promise || document.write('<script src="{{ asset_url('scripts/promise.js') }}"><\/script>');
+            </script>
+
             {{ script('runtime', true)|raw }}
 
             {% block main_script %}
