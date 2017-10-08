@@ -5,7 +5,7 @@ require(['jquery', 'athorrent', 'base64'], function ($, athorrent, base64) {
 
     $.extend(athorrent, {
         getFilePath: function (element) {
-            return base64.decode(this.getItemId('file', element));
+            return base64.Base64.decode(this.getItemId('file', element));
         },
 
         getSharingToken: function (element, selector) {
