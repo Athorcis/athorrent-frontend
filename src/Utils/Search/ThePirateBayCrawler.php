@@ -41,7 +41,7 @@ class ThePirateBayCrawler
             }
         }
 
-        return strtotime(str_replace('Y-day', 'Yesterday', $date));
+        return strtotime(str_replace('Y-day', 'Yesterday', $date)) - 3600;
     }
 
     private function getAge($date)
