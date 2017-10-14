@@ -3,34 +3,27 @@
 namespace Athorrent\Controllers;
 
 use Athorrent\Entity\User;
+use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends AbstractController
 {
-    protected static $actionPrefix = 'account_';
-
-    protected static $routePattern = '/user/account';
-
-    protected static function buildRoutes()
+    protected function getRouteDescriptors()
     {
-        $routes = parent::buildRoutes();
-
-        $routes[] = array('GET', '/', 'editAccount');
-        $routes[] = array('POST', '/', 'saveAccount');
-
-        return $routes;
+        return [
+            ['GET', '/', 'editAccount'],
+            ['POST', '/', 'saveAccount']
+        ];
     }
 
-    protected function editAccount(Request $request)
+    public function editAccount(Request $request)
     {
         return $this->render();
     }
 
-    protected function saveAccount(Request $request)
+    public function saveAccount(Application $app, Request $request)
     {
-        global $app;
-
-        $user = $app['security']->getToken()->getUser();
+        $user = $app['user'];
 
         $username = $request->request->get('username');
         $currentPassword = $request->request->get('current_password');

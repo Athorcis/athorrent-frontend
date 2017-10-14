@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    {% set userId = app.security.token.user.userId %}
+    {% set userId = app.user.userId %}
 
     <div class="page-header">
         <h1>
@@ -47,7 +47,7 @@
                     </td>
                     <td class="text-right user-buttons">
                         {% if user.userId != userId %}
-                        <a class="btn btn-xs btn-default" href="{{ path('listFiles', { _switch_user: user.username }, 'files') }}">
+                        <a class="btn btn-xs btn-default" href="{{ path('listFiles', { _switch_user: user.username, _prefixId: 'files' }) }}">
                             <span class="fa fa-exchange"></span>
                         </a>
                             {% if user.userId != 1 %}

@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    {% set userId = app.security.token.user.userId %}
+    {% set userId = app.user.userId %}
 
     <div class="page-header">
         <h1>{{ 'sharings.title'|trans }}</h1>
@@ -28,7 +28,7 @@
                     {% cache 'sharing' sharing %}
                     <tr class="sharing" id="sharing-{{ sharing.token }}">
                         <td class="user-name">
-                            <a href="{{ path('listFiles', { token: sharing.token }, 'sharings_') }}">{{ sharing.path }}</a>
+                            <a href="{{ path('listFiles', { token: sharing.token, _prefixId: 'sharings' }) }}">{{ sharing.path }}</a>
                         </td>
                         <td class="text-right">
                             <button class="btn btn-xs btn-danger sharing-remove">

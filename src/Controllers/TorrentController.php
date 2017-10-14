@@ -4,39 +4,26 @@ namespace Athorrent\Controllers;
 
 use Athorrent\Utils\ServiceUnvailableException;
 use Athorrent\Utils\TorrentManager;
+use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 class TorrentController extends AbstractController
 {
-    protected static $actionPrefix = 'torrents_';
-
-    protected static $routePattern = '/user/torrents';
-
-    protected static function buildRoutes()
+    protected function getRouteDescriptors()
     {
-        $routes = parent::buildRoutes();
+        return [
+            ['GET', '/', 'listTorrents', 'both'],
+            ['GET', '/magnet', 'addMagnet'],
 
-        $routes[] = array('GET', '/', 'listTorrents');
-        $routes[] = array('GET', '/magnet', 'addMagnet');
+            ['GET', '/trackers/{hash}', 'listTrackers', 'ajax'],
 
-        return $routes;
-    }
+            ['POST', '/files', 'uploadTorrent', 'ajax'],
+            ['POST', '/', 'addTorrents', 'ajax'],
 
-    protected static function buildAjaxRoutes()
-    {
-        $routes = parent::buildAjaxRoutes();
-
-        $routes[] = array('GET', '/', 'listTorrents');
-        $routes[] = array('GET', '/trackers/{hash}', 'listTrackers');
-
-        $routes[] = array('POST', '/files', 'uploadTorrent');
-        $routes[] = array('POST', '/', 'addTorrents');
-
-        $routes[] = array('POST', '/pause/{hash}', 'pauseTorrent');
-        $routes[] = array('POST', '/resume/{hash}', 'resumeTorrent');
-        $routes[] = array('POST', '/remove/{hash}', 'removeTorrent');
-
-        return $routes;
+            ['POST', '/pause/{hash}', 'pauseTorrent', 'ajax'],
+            ['POST', '/resume/{hash}', 'resumeTorrent', 'ajax'],
+            ['POST', '/remove/{hash}', 'removeTorrent', 'ajax']
+        ];
     }
 
     protected function getArguments(Request $request)
@@ -60,8 +47,15 @@ class TorrentController extends AbstractController
         return $jsVariables;
     }
 
-    public function listTorrents(Request $request, TorrentManager $torrentManager)
+    protected function getTorrentManager(Application $app)
     {
+        return TorrentManager::getInstance($this->getUserId());
+    }
+
+    public function listTorrents(Application $app, Request $request)
+    {
+        $torrentManager = $this->getTorrentManager($app);
+
         try {
             $torrents = $torrentManager->getTorrents();
             $clientUpdating = false;
@@ -79,15 +73,17 @@ class TorrentController extends AbstractController
         return $this->render(array('torrents' => $torrents, 'client_updating' => $clientUpdating));
     }
 
-    protected function listTrackers(Request $request, TorrentManager $torrentManager, $hash)
+    public function listTrackers(Application $app, Request $request, $hash)
     {
+        $torrentManager = $this->getTorrentManager($app);
         $trackers = $torrentManager->listTrackers($hash);
 
         return $this->render(array('trackers' => $trackers));
     }
 
-    protected function uploadTorrent(Request $request, TorrentManager $torrentManager)
+    public function uploadTorrent(Application $app, Request $request)
     {
+        $torrentManager = $this->getTorrentManager($app);
         $file = $request->files->get('upload-torrent-file');
 
         if ($file && $file->getClientSize() <= 1048576) {
@@ -103,8 +99,9 @@ class TorrentController extends AbstractController
         return $this->abort(500, 'error.fileTooBig');
     }
 
-    protected function addMagnet(Request $request, TorrentManager $torrentManager)
+    public function addMagnet(Application $app, Request $request)
     {
+        $torrentManager = $this->getTorrentManager($app);
         $magnet = $request->query->get('magnet');
 
         if ($magnet) {
@@ -114,8 +111,10 @@ class TorrentController extends AbstractController
         return $this->redirect('listTorrents');
     }
 
-    protected function addTorrents(Request $request, TorrentManager $torrentManager)
+    public function addTorrents(Application $app, Request $request)
     {
+        $torrentManager = $this->getTorrentManager($app);
+
         $files = $request->request->get('add-torrent-files');
         $magnets = $request->request->get('add-torrent-magnets');
 
@@ -140,20 +139,23 @@ class TorrentController extends AbstractController
         return $this->success();
     }
 
-    protected function pauseTorrent(Request $request, TorrentManager $torrentManager, $hash)
+    public function pauseTorrent(Application $app, Request $request, $hash)
     {
+        $torrentManager = $this->getTorrentManager($app);
         $torrentManager->pauseTorrent($hash);
         return $this->success();
     }
 
-    protected function resumeTorrent(Request $request, TorrentManager $torrentManager, $hash)
+    public function resumeTorrent(Application $app, Request $request, $hash)
     {
+        $torrentManager = $this->getTorrentManager($app);
         $torrentManager->resumeTorrent($hash);
         return $this->success();
     }
 
-    protected function removeTorrent(Request $request, TorrentManager $torrentManager, $hash)
+    public function removeTorrent(Application $app, Request $request, $hash)
     {
+        $torrentManager = $this->getTorrentManager($app);
         $torrentManager->removeTorrent($hash);
         return $this->success();
     }

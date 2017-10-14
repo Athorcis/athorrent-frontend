@@ -2,34 +2,27 @@
 
 namespace Athorrent\Service;
 
-use Jenyak\I18nRouting\Provider\I18nRoutingServiceProvider;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Silex\Application;
-use Silex\ServiceProviderInterface;
 use Symfony\Component\Translation\Translator;
 
 class TranslationServiceProvider implements ServiceProviderInterface
 {
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $app['locale'] = $app['default_locale'] = 'fr';
         $app['locales'] = ['fr', 'en'];
-
-        $app->register(new I18nRoutingServiceProvider());
-        $app['i18n_routing.locales'] = $app['locales'];
 
         $app->register(new \Silex\Provider\TranslationServiceProvider(), [
             'locale_fallbacks' => [$app['default_locale']],
         ]);
 
-        $app['translator'] = $app->share($app->extend('translator', function (Translator $translator) use ($app) {
+        $app->extend('translator', function (Translator $translator) use ($app) {
             return $this->extendTranslator($translator, $app);
-        }));
+        });
 
         $app['translator.cache_dir'] = CACHE_DIR . DIRECTORY_SEPARATOR . 'translator';
-    }
-
-    public function boot(Application $app)
-    {
     }
 
     public function extendTranslator(Translator $translator, Application $app)

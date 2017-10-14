@@ -9,32 +9,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
 {
-    protected static $actionPrefix = 'users_';
-
-    protected static $routePattern = '/administration/users';
-
-    protected static function buildRoutes()
+    protected function getRouteDescriptors()
     {
-        $routes = parent::buildRoutes();
+        return [
+            ['GET', '/', 'listUsers'],
 
-        $routes[] = array('GET', '/', 'listUsers');
+            ['GET', '/add', 'addUser'],
+            ['POST', '/add', 'saveUser'],
 
-        $routes[] = array('GET', '/add', 'addUser');
-        $routes[] = array('POST', '/add', 'saveUser');
-
-        return $routes;
+            ['POST', '/remove', 'removeUser', 'ajax']
+        ];
     }
 
-    protected static function buildAjaxRoutes()
-    {
-        $routes = parent::buildAjaxRoutes();
-
-        $routes[] = array('POST', '/remove', 'removeUser');
-
-        return $routes;
-    }
-
-    protected function listUsers(Request $request)
+    public function listUsers(Request $request)
     {
         if ($request->query->has('page')) {
             $page = $request->query->get('page');
@@ -66,7 +53,7 @@ class UserController extends AbstractController
         );
     }
 
-    protected function addUser(Request $request)
+    public function addUser(Request $request)
     {
         return $this->render(
             array (
@@ -75,7 +62,7 @@ class UserController extends AbstractController
         );
     }
 
-    protected function saveUser(Request $request)
+    public function saveUser(Request $request)
     {
         $username = $request->request->get('username');
         $password = $request->request->get('password');
@@ -105,7 +92,7 @@ class UserController extends AbstractController
         return $this->redirect('listUsers');
     }
 
-    protected function removeUser(Request $request)
+    public function removeUser(Request $request)
     {
         $userId = $request->request->get('userId');
 

@@ -10,12 +10,12 @@
 
         <link rel="icon" type="image/x-icon" href="{{ asset_url('favicon.ico') }}" />
 
-        {% set route = app.request.attributes.get('_route') %}
+        {% set route = app.request_stack.currentRequest.attributes.get('_route') %}
 
         {% if route is not empty %}
             {% cache 'head' route %}
                 {% for locale in app.locales %}
-                    <link rel="alternate" href="{{ uri(app.action, { _locale: locale }) }}" hreflang="{{ locale }}" />
+                    <link rel="alternate" href="{{ url(global.request.attributes.get('_action'), { _locale: locale }) }}" hreflang="{{ locale }}" />
                 {% endfor %}
             {% endcache %}
         {% endif %}

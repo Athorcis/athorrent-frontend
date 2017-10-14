@@ -62,7 +62,7 @@
                     {% if file.isSharable %}
                         {% if file.isShared %}
                             <li>
-                                <a href="{{ uri('listFiles', { token: file.sharingToken }, 'sharings_') }}" class="sharing-link">
+                                <a href="{{ url('listFiles', { token: file.sharingToken, _prefixId: 'sharings' }) }}" class="sharing-link">
                                     <span class="fa fa-fw fa-link"></span>{{ 'files.sharingLink'|trans }}
                                 </a>
                             </li>

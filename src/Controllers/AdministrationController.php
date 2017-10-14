@@ -6,20 +6,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AdministrationController extends AbstractController
 {
-    protected static $actionPrefix = 'administration_';
-
-    protected static $routePattern = '/administration';
-
-    protected static function buildRoutes()
+    protected function getRouteDescriptors()
     {
-        $routes = parent::buildRoutes();
-
-        $routes[] = array('GET', '/', 'listAdministrationModules');
-
-        return $routes;
+        return [['GET', '/', 'listAdministrationModules']];
     }
 
-    protected function listAdministrationModules(Request $request)
+    public function listAdministrationModules(Request $request)
     {
         return $this->render(array(), 'administration');
     }

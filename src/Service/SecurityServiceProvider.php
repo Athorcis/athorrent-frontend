@@ -5,14 +5,15 @@ namespace Athorrent\Service;
 use Athorrent\Utils\AuthenticationHandler;
 use Athorrent\Utils\Csrf\TokenManager;
 use Athorrent\Utils\UserProvider;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Silex\Application;
-use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class SecurityServiceProvider implements ServiceProviderInterface
 {
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $app->register(new \Silex\Provider\SessionServiceProvider());
         $app->register(new \Silex\Provider\SecurityServiceProvider());
@@ -57,9 +58,9 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'secure' => true
                 ],
 
-                'users' => $app->share(function () {
+                'users' => function () {
                     return new UserProvider();
-                })
+                }
             ]
         ];
 
@@ -86,13 +87,11 @@ class SecurityServiceProvider implements ServiceProviderInterface
             ['^/' . $localesPrefix . '(ajax/)?user', 'ROLE_USER']
         ];
 
-        $app['security.authentication.failure_handler.general'] = $app->share(function () {
-            return new AuthenticationHandler();
-        });
-    }
+        $app['security.default_encoder'] = $app['security.encoder.digest'];
 
-    public function boot(Application $app)
-    {
+        $app['security.authentication.failure_handler.general'] = function () {
+            return new AuthenticationHandler();
+        };
     }
 
     public function handleRequest(GetResponseEvent $event, Application $app)

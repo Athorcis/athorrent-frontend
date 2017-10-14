@@ -3,11 +3,11 @@
 namespace Athorrent\Controllers;
 
 use Silex\Application;
-use Silex\ControllerProviderInterface;
+use Silex\Api\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractController implements ControllerProviderInterface
+abstract class AbstractController extends \Athorrent\Routing\AbstractController implements ControllerProviderInterface
 {
     protected $action;
 
@@ -23,62 +23,10 @@ abstract class AbstractController implements ControllerProviderInterface
         return preg_replace('/^:(?:ajax/)?' . static::$actionPrefix . '([a-zA-Z]+)$/', '$1', $alias);
     }
 
-    private static function buildControllerCollection(Application $app, array $routes, $aliasPrefix = ':')
-    {
-        $to = get_called_class() . '::dispatcher';
-        $controllers = $app['controllers_factory'];
-
-        foreach ($routes as list($method, $pattern, $action)) {
-            $alias = $aliasPrefix . static::$actionPrefix . $action;
-
-            $controller = $controllers->match($pattern, $to);
-            $route = $controller->getRoute();
-
-            $controller->bind($alias);
-            $controller->method($method);
-
-            $route->setOption('alias', $alias);
-            $route->setOption('action', $action);
-            $route->setOption('actionPrefix', static::$actionPrefix);
-        }
-
-        return $controllers;
-    }
-
-    protected static function buildRoutes()
-    {
-        return array();
-    }
-
-    public function connect(Application $app)
-    {
-        return self::buildControllerCollection($app, static::buildRoutes());
-    }
-
-    protected static function buildAjaxRoutes()
-    {
-        return array();
-    }
-
-    public function connectAjax(Application $app)
-    {
-        return self::buildControllerCollection($app, static::buildAjaxRoutes(), ':ajax/');
-    }
-
-    protected static $routePattern = '';
-
-    public static function mount(Application $app)
-    {
-        $controller = new static();
-
-        $app->mount(static::$routePattern, $controller->connect($app));
-        $app->mount('/ajax' . static::$routePattern, $controller->connectAjax($app));
-    }
-
     protected function getUser()
     {
         global $app;
-        return $app['security']->getToken()->getUser();
+        return $app['user'];
     }
 
     protected function getUserId()
@@ -97,7 +45,7 @@ abstract class AbstractController implements ControllerProviderInterface
         global $app;
 
         if (!$view) {
-            $view = $this->action;
+            $view = $app['request_stack']->getCurrentRequest()->attributes->get('_action');
         }
 
         return $app['twig']->render('fragments/' . $view . '.html.twig', $parameters);
@@ -108,7 +56,7 @@ abstract class AbstractController implements ControllerProviderInterface
         global $app;
 
         if (!$view) {
-            $view = $this->action;
+            $view = $app['request_stack']->getCurrentRequest()->attributes->get('_action');
         }
 
         return $app['twig']->render('pages/' . $view . '.html.twig', $parameters);
@@ -120,7 +68,7 @@ abstract class AbstractController implements ControllerProviderInterface
 
         $parameters = array_merge($this->getTwigParameters(), $parameters);
 
-        if ($app['request']->isXmlHttpRequest()) {
+        if ($app['request_stack']->getCurrentRequest()->isXmlHttpRequest()) {
             $response = $this->success($this->renderFragment($parameters, $view));
         } else {
             $response = $this->renderPage($parameters, $view);
@@ -139,7 +87,7 @@ abstract class AbstractController implements ControllerProviderInterface
     {
         global $app;
 
-        if ($app['request']->getMethod() === 'POST') {
+        if ($app['request_stack']->getCurrentRequest()->getMethod() === 'POST') {
             $data['csrf'] = $app['csrf.token'];
         }
 
@@ -150,7 +98,7 @@ abstract class AbstractController implements ControllerProviderInterface
     {
         global $app;
 
-        if ($app['request']->isXmlHttpRequest()) {
+        if ($app['request_stack']->getCurrentRequest()->isXmlHttpRequest()) {
             $response = $this->json(array('status' => 'success', 'data' => $data), $code);
         } else {
             $response = new Response($data, $code);
@@ -181,7 +129,7 @@ abstract class AbstractController implements ControllerProviderInterface
 
         $error = $app['translator']->trans($error);
 
-        if ($app['request']->isXmlHttpRequest()) {
+        if ($app['request_stack']->getCurrentRequest()->isXmlHttpRequest()) {
             return $this->json(array('status' => 'error', 'error' => $error), $code);
         }
 
@@ -220,12 +168,7 @@ abstract class AbstractController implements ControllerProviderInterface
             unset($jsVariables['routeParameters']);
         }
 
-        foreach ($app['ajax_routes'] as $route) {
-            $methods = $route->getMethods();
-            $action = $route->getOption('action');
-            $jsVariables['routes'][$action][$route->getOption('actionPrefix')] = array(current($methods), $route->getPath());
-        }
-
+        $jsVariables['routes'] = $app['ajax_route_descriptors'];
         $jsVariables['templates']['modal'] = $this->renderFragment(array(), 'modal');
 
         return $jsVariables;
@@ -234,13 +177,13 @@ abstract class AbstractController implements ControllerProviderInterface
     protected function addNotification($type, $message)
     {
         global $app;
-        $app['request']->getSession()->getFlashBag()->add($type, $message);
+        $app['request_stack']->getCurrentRequest()->getSession()->getFlashBag()->add($type, $message);
     }
 
     protected function getTwigParameters()
     {
         global $app;
-        $request = $app['request'];
+        $request = $app['request_stack']->getCurrentRequest();
 
         $parameters = array ();
 
@@ -260,10 +203,8 @@ abstract class AbstractController implements ControllerProviderInterface
     {
         global $app;
 
-        $alias = $app['alias_resolver']->resolveAlias($url, $prefixAction);
-
         try {
-            $url = $app['url_generator']->generate($alias);
+            $url = $app['url_generator']->generate($url);
         } catch (\Exception $exception) {
 
         }
@@ -274,12 +215,13 @@ abstract class AbstractController implements ControllerProviderInterface
     protected function url($action, $parameters = array(), $actionPrefix = '')
     {
         global $app;
-        return $app['alias_resolver']->generateUrl($action, $parameters, $actionPrefix);
+
+        return $app->url($action, $parameters, $actionPrefix);
     }
 
     public function dispatcher(Application $app, Request $request)
     {
-        $app['alias_resolver']->setController($this);
+//        $app['alias_resolver']->setController($this);
 
         $alias = $request->attributes->get('_route');
         $app['action'] = $this->action = $app['routes']->get($alias)->getOption('action');

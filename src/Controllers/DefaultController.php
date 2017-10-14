@@ -6,13 +6,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends AbstractController
 {
-    protected static function buildRoutes()
+    protected function getRouteDescriptors()
     {
-        $routes = parent::buildRoutes();
-
-        $routes[] = array('GET', '/', 'home');
-
-        return $routes;
+        return [['GET', '/', 'home']];
     }
 
     public function home(Request $request)
