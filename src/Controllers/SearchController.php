@@ -7,20 +7,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SearchController extends AbstractController
 {
-    protected static $actionPrefix = 'search_';
-
-    protected static $routePattern = '/search';
-
-    protected static function buildRoutes()
+    protected function getRouteDescriptors()
     {
-        $routes = parent::buildRoutes();
-
-        $routes[] = ['GET', '/', 'showSearch'];
-
-        return $routes;
+        return [['GET', '/', 'showSearch']];
     }
 
-    protected function showSearch(Request $request)
+    public function showSearch(Request $request)
     {
         $query = $request->query->get('q');
         $source = $request->query->get('source');

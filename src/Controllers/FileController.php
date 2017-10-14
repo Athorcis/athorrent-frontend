@@ -19,4 +19,9 @@ class FileController extends AbstractFileController
 
         return $arguments;
     }
+
+    protected function getFileManager()
+    {
+        return FileManager::getByUser($this->getUserId());
+    }
 }

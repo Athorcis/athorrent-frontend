@@ -6,26 +6,28 @@ use Asm89\Twig\CacheExtension\CacheStrategy\GenerationalCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Athorrent\Utils\Cache\CacheProvider;
 use Athorrent\Utils\Cache\KeyGenerator;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use Silex\Api\BootableProviderInterface;
 use Silex\Application;
-use Silex\ServiceProviderInterface;
 use SPE\FilesizeExtensionBundle\Twig\FilesizeExtension;
 use Twig_Environment;
 use Twig_SimpleFunction;
 
-class TwigServiceProvider implements ServiceProviderInterface
+class TwigServiceProvider implements ServiceProviderInterface, BootableProviderInterface
 {
     private $manifest;
 
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $app->register(new \Silex\Provider\TwigServiceProvider(), [
             'twig.path' => TEMPLATES_DIR,
             'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
         ]);
 
-        $app['twig'] = $app->share($app->extend('twig', function (Twig_Environment $twig) use ($app) {
+        $app->extend('twig', function (Twig_Environment $twig) use ($app) {
             return $this->extendTwig($twig, $app);
-        }));
+        });
     }
 
     public function extendTwig(Twig_Environment $twig, Application $app)
@@ -46,13 +48,13 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $twig->addFunction(new Twig_SimpleFunction('format_age', [$this, 'formatAge']));
 
-        $twig->addFunction(new Twig_SimpleFunction('path', function ($action, $parameters = [], $prefixAction = null) use ($app) {
-            return $app['alias_resolver']->generatePath($action, $parameters, $prefixAction);
-        }));
-
-        $twig->addFunction(new Twig_SimpleFunction('uri', function ($action, $parameters = [], $prefixAction = null) use ($app) {
-            return $app['alias_resolver']->generateUrl($action, $parameters, $prefixAction);
-        }));
+//        $twig->addFunction(new Twig_SimpleFunction('path', function ($action, $parameters = [], $prefixAction = null) use ($app) {
+//            return $app['alias_resolver']->generatePath($action, $parameters, $prefixAction);
+//        }));
+//
+//        $twig->addFunction(new Twig_SimpleFunction('uri', function ($action, $parameters = [], $prefixAction = null) use ($app) {
+//            return $app['alias_resolver']->generateUrl($action, $parameters, $prefixAction);
+//        }));
 
         return $twig;
     }

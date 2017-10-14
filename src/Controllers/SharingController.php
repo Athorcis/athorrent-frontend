@@ -8,30 +8,17 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SharingController extends AbstractController
 {
-    protected static $actionPrefix = 'sharings_';
-
-    protected static $routePattern = '/user/sharings';
-
-    protected static function buildRoutes()
+    protected function getRouteDescriptors()
     {
-        $routes = parent::buildRoutes();
+        return [
+            ['GET', '/', 'listSharings'],
 
-        $routes[] = array('GET', '/', 'listSharings');
-
-        return $routes;
+            ['POST', '/', 'addSharing', 'ajax'],
+            ['POST', '/{token}', 'removeSharing', 'ajax']
+        ];
     }
 
-    protected static function buildAjaxRoutes()
-    {
-        $routes = parent::buildAjaxRoutes();
-
-        $routes[] = array('POST', '/', 'addSharing');
-        $routes[] = array('POST', '/{token}', 'removeSharing');
-
-        return $routes;
-    }
-
-    protected function listSharings(Request $request)
+    public function listSharings(Request $request)
     {
         if ($request->query->has('page')) {
             $page = $request->query->get('page');
@@ -62,7 +49,7 @@ class SharingController extends AbstractController
         );
     }
 
-    protected function addSharing(Request $request)
+    public function addSharing(Request $request)
     {
         if (!$request->request->has('path')) {
             return $this->abort(400);
@@ -78,10 +65,10 @@ class SharingController extends AbstractController
         $sharing = new Sharing(null, $this->getUserId(), $fileManager->getRelativePath($path));
         $sharing->save();
 
-        return $this->success($this->url('listFiles', array('token' => $sharing->getToken()), 'sharings_'));
+        return $this->success($this->url('listFiles', ['token' => $sharing->getToken(), '_prefixId' => 'sharings']));
     }
 
-    protected function removeSharing(Request $request, $token)
+    public function removeSharing(Request $request, $token)
     {
         if (!Sharing::deleteByToken($token, $this->getUserId())) {
             return $this->abort(404, 'error.sharingNotFound');

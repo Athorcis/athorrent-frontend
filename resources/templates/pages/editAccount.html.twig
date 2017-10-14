@@ -12,7 +12,7 @@
     {% endif %}
 
     <form method="post" action="{{ path('saveAccount') }}" class="form-horizontal">
-        {% set user = app.security.token.user %}
+        {% set user = app.user %}
 
         <div class="form-group">
             <label for="username" class="col-sm-3 control-label">{{ 'users.username'|trans }}</label>

@@ -2,6 +2,8 @@
 
 namespace Athorrent\Application;
 
+use Athorrent\Routing\ControllerMounterTrait;
+use Silex\Application\UrlGeneratorTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -9,19 +11,24 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class WebApplication extends BaseApplication
 {
+    use ControllerMounterTrait;
+    use UrlGeneratorTrait;
+
     public function __construct()
     {
         parent::__construct();
-
-        $this->register(new \Athorrent\Service\TwigServiceProvider());
-        $this->register(new \Athorrent\Service\TranslationServiceProvider());
-        $this->register(new \Athorrent\Service\SecurityServiceProvider());
-        $this->register(new \Athorrent\Service\RoutingServiceProvider());
 
         $this->before([$this, 'updateConnectionTimestamp']);
         $this->after([$this, 'addHeaders']);
         
         $this->error([$this, 'handleError']);
+
+        $this->register(new \Athorrent\Service\TwigServiceProvider());
+        $this->register(new \Athorrent\Service\TranslationServiceProvider());
+        $this->register(new \Athorrent\Service\SecurityServiceProvider());
+        $this->register(new \Athorrent\Routing\RoutingServiceProvider());
+        $this->register(new \Athorrent\Routing\RoutingServiceProvider());
+        $this->register(new \Silex\Provider\LocaleServiceProvider());
 
         $this['dispatcher']->addListener(KernelEvents::RESPONSE, function () {
             $this['session']->save();
@@ -30,13 +37,13 @@ class WebApplication extends BaseApplication
 
     public function updateConnectionTimestamp()
     {
-        $user = $this['security']->getToken()->getUser();
+        $user = $this['user'];
 
-        if ($user === 'anon.') {
+        if ($user === null) {
             return;
         }
 
-        if (!$this['security']->isGranted('ROLE_PREVIOUS_ADMIN')) {
+        if (!$this['security.authorization_checker']->isGranted('ROLE_PREVIOUS_ADMIN')) {
             $user->updateConnectionTimestamp();
         }
     }
@@ -79,5 +86,25 @@ class WebApplication extends BaseApplication
         }
 
         return new Response($this['twig']->render('pages/error.html.twig', ['error' => $error, 'code' => $code]));
+    }
+
+    public function mountControllers()
+    {
+        $this->mount('/', new \Athorrent\Controllers\DefaultController(), '');
+
+        $this->mount('/search', new \Athorrent\Controllers\SearchController(), 'search');
+
+        $this->mount('/user/files', new \Athorrent\Controllers\FileController(), 'files');
+        $this->mount('/user/torrents', new \Athorrent\Controllers\TorrentController(), 'torrents');
+        $this->mount('/user/account', new \Athorrent\Controllers\AccountController(), 'account');
+
+        $this->mount('/user/sharings', new \Athorrent\Controllers\SharingController(), 'sharings');
+        $this->mount('/sharings/{token}/files', new \Athorrent\Controllers\SharingFileController(), 'sharings');
+
+        $this->mount('/administration', new \Athorrent\Controllers\AdministrationController(), 'administration');
+        $this->mount('/administration/users', new \Athorrent\Controllers\UserController(), 'users');
+        $this->mount('/administration/cache', new \Athorrent\Controllers\CacheController(), 'cache');
+
+//        $this->mount('/user/scheduler', new \Athorrent\Controller\SchedulerController(), 'scheduler');
     }
 }

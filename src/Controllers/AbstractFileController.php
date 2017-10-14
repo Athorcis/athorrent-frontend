@@ -6,36 +6,26 @@ use Athorrent\Entity\Sharing;
 use Athorrent\Utils\FileManager;
 use Athorrent\Utils\FileUtils;
 use Athorrent\Utils\MimeType;
+use Silex\Application;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class AbstractFileController extends AbstractController
 {
-    protected static function buildRoutes()
+    protected function getRouteDescriptors()
     {
-        $routes = parent::buildRoutes();
+        return [
+            ['GET', '/', 'listFiles', 'both'],
+            ['GET', '/play', 'playFile'],
+            ['GET', '/display', 'displayFile'],
 
-        $routes[] = ['GET', '/', 'listFiles'];
-        $routes[] = ['GET', '/play', 'playFile'];
-        $routes[] = ['GET', '/display', 'displayFile'];
+            ['GET', '/open', 'openFile'],
+            ['GET', '/download', 'downloadFile'],
 
-        $routes[] = ['GET', '/open', 'openFile'];
-        $routes[] = ['GET', '/download', 'downloadFile'];
+            ['POST', '/remove', 'removeFile', 'ajax'],
 
-        return $routes;
-    }
-
-    protected static function buildAjaxRoutes()
-    {
-        $routes = parent::buildAjaxRoutes();
-
-        $routes[] = ['GET', '/', 'listFiles'];
-
-        $routes[] = ['POST', '/remove', 'removeFile'];
-
-        $routes[] = ['GET', '/direct', 'getDirectLink'];
-
-        return $routes;
+            ['GET', '/direct', 'getDirectLink', 'ajax']
+        ];
     }
 
     private static function getBreadcrumb($fileManager, $path, $trim = true)
@@ -80,9 +70,9 @@ class AbstractFileController extends AbstractController
         parent::abort($code, $error);
     }
 
-    protected function listFiles(Request $request, FileManager $fileManager)
+    public function listFiles(Application $app, Request $request)
     {
-        global $app;
+        $fileManager = $this->getFileManager($request);
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
 
@@ -107,8 +97,10 @@ class AbstractFileController extends AbstractController
         ], 'listFiles');
     }
 
-    protected function openFile(Request $request, FileManager $fileManager)
+    public function openFile(Application $app, Request $request)
     {
+        $fileManager = $this->getFileManager($request);
+
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -130,8 +122,10 @@ class AbstractFileController extends AbstractController
         return $response;
     }
 
-    protected function downloadFile(Request $request, FileManager $fileManager)
+    public function downloadFile(Application $app, Request $request)
     {
+        $fileManager = $this->getFileManager($request);
+
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -149,8 +143,10 @@ class AbstractFileController extends AbstractController
         ]);
     }
 
-    protected function playFile(Request $request, FileManager $fileManager)
+    public function playFile(Application $app, Request $request)
     {
+        $fileManager = $this->getFileManager($request);
+
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -187,8 +183,10 @@ class AbstractFileController extends AbstractController
         ]);
     }
 
-    protected function displayFile(Request $request, FileManager $fileManager)
+    public function displayFile(Application $app, Request $request)
     {
+        $fileManager = $this->getFileManager($request);
+
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -224,8 +222,10 @@ class AbstractFileController extends AbstractController
         return $this->render($data);
     }
 
-    protected function removeFile(Request $request, FileManager $fileManager)
+    public function removeFile(Application $app, Request $request)
     {
+        $fileManager = $this->getFileManager($request);
+
         if (!$request->request->has('path')) {
             return $this->abort(400);
         }
@@ -243,8 +243,10 @@ class AbstractFileController extends AbstractController
         return $this->abort(500, 'error.cannotRemoveFile');
     }
 
-    protected function getDirectLink(Request $request, FileManager $fileManager)
+    public function getDirectLink(Application $app, Request $request)
     {
+        $fileManager = $this->getFileManager($request);
+
         if (!$request->query->has('path')) {
             return $this->abort(400);
         }
@@ -284,9 +286,10 @@ class AbstractFileController extends AbstractController
         $finalPath = str_replace($sharingPath, '', $relativePath);
 
         $url = $this->url('openFile', [
+            '_prefixId' => 'sharings',
             'token' => $sharing->getToken(),
             'path' => $finalPath
-        ], 'sharings_');
+        ]);
         
         return $this->success($url);
     }

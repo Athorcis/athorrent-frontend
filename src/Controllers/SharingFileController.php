@@ -8,10 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SharingFileController extends AbstractFileController
 {
-    protected static $actionPrefix = 'sharings_';
-
-    protected static $routePattern = '/sharings/{token}/files';
-
     protected function getArguments(Request $request)
     {
         $arguments = parent::getArguments($request);
@@ -33,8 +29,14 @@ class SharingFileController extends AbstractFileController
 
         $parameters = parent::getRouteParameters($action);
 
-        $parameters['token'] = $app['request']->attributes->get('token');
+        $parameters['token'] = $app['request_stack']->getCurrentRequest()->attributes->get('token');
 
         return $parameters;
+    }
+
+    protected function getFileManager($request)
+    {
+        $sharing = Sharing::loadByToken($request->attributes->get('token'));
+        return FileManager::getBySharing($this->getUserId(), $sharing);
     }
 }

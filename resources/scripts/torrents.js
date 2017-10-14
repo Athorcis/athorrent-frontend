@@ -453,7 +453,7 @@ require(['jquery', 'athorrent', 'dropzone'], function ($, athorrent, Dropzone) {
         athorrent.AddTorrentMode.call(this, inputName, elementSelector, btnSelector, counterSelector, form);
 
         this.dropzone = new Dropzone(elementSelector, {
-            url: athorrent.routes.uploadTorrent.torrents_[1],
+            url: athorrent.routes.uploadTorrent.torrents[1],
             paramName: 'upload-torrent-file',
             dictDefaultMessage: athorrent.trans('torrents.dropzone'),
             previewTemplate: athorrent.templates.dropzonePreview,
