@@ -8,21 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SharingFileController extends AbstractFileController
 {
-    protected function getArguments(Request $request)
-    {
-        $arguments = parent::getArguments($request);
-
-        $sharing = Sharing::loadByToken($request->attributes->get('token'));
-
-        if (!$sharing) {
-            $this->abort(404, 'error.sharingNotFound');
-        }
-
-        array_unshift($arguments, FileManager::getBySharing($this->getUserId(), $sharing));
-
-        return $arguments;
-    }
-
     public function getRouteParameters($action)
     {
         global $app;
@@ -37,6 +22,11 @@ class SharingFileController extends AbstractFileController
     protected function getFileManager($request)
     {
         $sharing = Sharing::loadByToken($request->attributes->get('token'));
+
+        if (!$sharing) {
+            $this->abort(404, 'error.sharingNotFound');
+        }
+
         return FileManager::getBySharing($this->getUserId(), $sharing);
     }
 }
