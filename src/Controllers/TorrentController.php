@@ -26,15 +26,6 @@ class TorrentController extends AbstractController
         ];
     }
 
-    protected function getArguments(Request $request)
-    {
-        $arguments = parent::getArguments($request);
-
-        array_unshift($arguments, TorrentManager::getInstance($this->getUserId()));
-
-        return $arguments;
-    }
-
     protected function getJsVariables()
     {
         global $app;

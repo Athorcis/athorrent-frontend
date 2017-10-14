@@ -11,18 +11,6 @@ abstract class AbstractController extends \Athorrent\Routing\AbstractController 
 {
     protected $action;
 
-    protected static $actionPrefix = '';
-
-    public static function getActionPrefix()
-    {
-        return static::$actionPrefix;
-    }
-
-    protected function getActionFromAlias($alias)
-    {
-        return preg_replace('/^:(?:ajax/)?' . static::$actionPrefix . '([a-zA-Z]+)$/', '$1', $alias);
-    }
-
     protected function getUser()
     {
         global $app;
@@ -136,14 +124,6 @@ abstract class AbstractController extends \Athorrent\Routing\AbstractController 
         $app->abort($code, $error);
     }
 
-    protected function getArguments(Request $request)
-    {
-        $routeParameters = $request->attributes->get('_route_params');
-        unset($routeParameters['_locale']);
-
-        return array_values($routeParameters);
-    }
-
     public function getRouteParameters($action)
     {
         return array();
@@ -161,7 +141,7 @@ abstract class AbstractController extends \Athorrent\Routing\AbstractController 
         $jsVariables['csrf'] = $app['csrf.token'];
 
         $jsVariables['action'] = $this->action;
-        $jsVariables['actionPrefix'] = static::$actionPrefix;
+        $jsVariables['actionPrefix'] = $app['request_stack']->getCurrentRequest()->attributes->get('_prefixId');
         $jsVariables['routeParameters'] = $this->getRouteParameters(null);
 
         if (!count($jsVariables['routeParameters'])) {
@@ -212,25 +192,10 @@ abstract class AbstractController extends \Athorrent\Routing\AbstractController 
         return $app->redirect($url, $status);
     }
 
-    protected function url($action, $parameters = array(), $actionPrefix = '')
+    protected function url($action, $parameters = array())
     {
         global $app;
 
-        return $app->url($action, $parameters, $actionPrefix);
-    }
-
-    public function dispatcher(Application $app, Request $request)
-    {
-//        $app['alias_resolver']->setController($this);
-
-        $alias = $request->attributes->get('_route');
-        $app['action'] = $this->action = $app['routes']->get($alias)->getOption('action');
-
-        $arguments = $this->getArguments($request);
-        array_unshift($arguments, $request);
-
-        $response = call_user_func_array(array($this, $this->action), $arguments);
-
-        return $response;
+        return $app->url($action, $parameters);
     }
 }
