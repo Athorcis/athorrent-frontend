@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f9c3a7637d223724ec1bd411ab043a5",
+    "content-hash": "e16c4623d4f12c9691b46788671bd6ae",
     "packages": [
         {
             "name": "asm89/twig-cache-extension",
@@ -62,16 +62,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.2.3",
+            "version": "6.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006"
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8d6c6cc55186db87b7dc5009827429ba4e9dc006",
-                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
                 "shasum": ""
             },
             "require": {
@@ -81,8 +81,11 @@
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.0",
+                "phpunit/phpunit": "^4.0 || ^5.0",
                 "psr/log": "^1.0"
+            },
+            "suggest": {
+                "psr/log": "Required for using the Log middleware"
             },
             "type": "library",
             "extra": {
@@ -120,7 +123,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-02-28T22:50:30+00:00"
+            "time": "2017-06-22T18:50:49+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -237,44 +240,6 @@
                 "url"
             ],
             "time": "2017-03-20T17:10:46+00:00"
-        },
-        {
-            "name": "jenyak/i18n-routing-service-provider",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jenyak/I18nRoutingServiceProvider.git",
-                "reference": "8114f7174f8d197339159e6f69ac7a2dac839b2e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jenyak/I18nRoutingServiceProvider/zipball/8114f7174f8d197339159e6f69ac7a2dac839b2e",
-                "reference": "8114f7174f8d197339159e6f69ac7a2dac839b2e",
-                "shasum": ""
-            },
-            "require": {
-                "silex/silex": "~2.0@dev",
-                "symfony/translation": "~2.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Jenyak\\I18nRouting": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Silex i18n routing service provider.",
-            "keywords": [
-                "i18n routing",
-                "silex"
-            ],
-            "time": "2015-09-14T13:12:50+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -1632,30 +1597,31 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.8.28",
+            "version": "v3.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "1248f84f702c4490adb526856e9356e52aa991be"
+                "reference": "409bf229cd552bf7e3faa8ab7e3980b07672073f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/1248f84f702c4490adb526856e9356e52aa991be",
-                "reference": "1248f84f702c4490adb526856e9356e52aa991be",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/409bf229cd552bf7e3faa8ab7e3980b07672073f",
+                "reference": "409bf229cd552bf7e3faa8ab7e3980b07672073f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
+                "php": "^5.5.9|>=7.0.8",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "conflict": {
-                "symfony/config": "<2.7"
+                "symfony/config": "<2.8",
+                "symfony/yaml": "<3.3"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.8",
-                "symfony/intl": "~2.7.25|^2.8.18|~3.2.5",
-                "symfony/yaml": "~2.2|~3.0.0"
+                "symfony/config": "~2.8|~3.0",
+                "symfony/intl": "^2.8.18|^3.2.5",
+                "symfony/yaml": "~3.3"
             },
             "suggest": {
                 "psr/log": "To use logging capability in translator",
@@ -1665,7 +1631,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -1692,7 +1658,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-10-01T21:00:16+00:00"
+            "time": "2017-10-02T06:42:24+00:00"
         },
         {
             "name": "symfony/twig-bridge",
@@ -1906,9 +1872,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "jenyak/i18n-routing-service-provider": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
