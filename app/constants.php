@@ -16,7 +16,7 @@ define('CACHE_DIR', VAR_DIR . DIRECTORY_SEPARATOR . 'cache');
 define('TORRENTS_DIR', VAR_DIR . DIRECTORY_SEPARATOR . 'torrents');
 
 if (function_exists('apcu_exists') && !DEBUG) {
-    define('CACHE_TYPE', '\Athorrent\Utils\Cache\ApcCache');
+    define('CACHE_DRIVER', 'Apcu');
 } else {
-    define('CACHE_TYPE', '\Athorrent\Utils\Cache\DummyCache');
+    define('CACHE_DRIVER', 'Memstatic');
 }

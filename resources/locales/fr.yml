@@ -162,7 +162,7 @@ administration:
 
 cache:
     title: Gestion du cache
-    clearApc: Vider le cache APC
+    clearApc: Vider le cache applicatif
     clearTwig: Vider le cache Twig
     clearTranslations: Vider le cache des traductions
     clearAll: Vider tout

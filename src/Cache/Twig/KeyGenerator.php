@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Utils\Cache;
+namespace Athorrent\Cache\Twig;
 
 use Asm89\Twig\CacheExtension\CacheStrategy\KeyGeneratorInterface;
 use Athorrent\Entity\Sharing;
@@ -12,12 +12,12 @@ use Symfony\Component\Security\Core\Role\Role;
 class KeyGenerator implements KeyGeneratorInterface
 {
     private $locale;
-    
+
     public function __construct($locale)
     {
         $this->locale = $locale;
     }
-    
+
     public function generateKey($value)
     {
         if ($value === null || $value instanceof TokenInterface) {
@@ -37,7 +37,7 @@ class KeyGenerator implements KeyGeneratorInterface
                 }
             }
         } elseif ($value instanceof File) {
-            $key = $value->getAbsolutePath() . $value->getModificationTime() . ($value->isSharable() ? 0 : 1);
+            $key = base64_encode($value->getAbsolutePath() . $value->getModificationTime() . ($value->isSharable() ? 0 : 1));
         } elseif ($value instanceof Sharing) {
             $key = $value->getToken();
         } elseif ($value instanceof User) {

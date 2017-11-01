@@ -163,7 +163,7 @@ administration:
 
 cache:
     title: Manage cache
-    clearApc: Clear APC cache
+    clearApc: Clear application cache
     clearTwig: Clear Twig cache
     clearTranslations: Clear translations cache
     clearAll: Clear everything

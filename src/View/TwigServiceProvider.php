@@ -4,8 +4,8 @@ namespace Athorrent\View;
 
 use Asm89\Twig\CacheExtension\CacheStrategy\GenerationalCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
-use Athorrent\Utils\Cache\CacheProvider;
-use Athorrent\Utils\Cache\KeyGenerator;
+use Athorrent\Cache\Twig\PsrSimpleCacheAdapter;
+use Athorrent\Cache\Twig\KeyGenerator;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Silex\Api\BootableProviderInterface;
@@ -32,6 +32,7 @@ class TwigServiceProvider extends BaseTwigServiceProvider implements BootablePro
         $app->extend('twig', function (Twig_Environment $twig) use ($app) {
             return $this->extendTwig($twig, $app);
         });
+
         $app['renderer'] = function (Application $app) {
             return new Renderer($app['twig'], $app['request_stack']);
         };
@@ -106,7 +107,7 @@ class TwigServiceProvider extends BaseTwigServiceProvider implements BootablePro
 
     protected function initializeCache(Twig_Environment $twig, Application $app)
     {
-        $cacheProvider = new CacheProvider($app['cache']);
+        $cacheProvider = new PsrSimpleCacheAdapter($app['cache']);
         $keyGenerator = new KeyGenerator($app['locale']);
 
         $cacheStrategy = new GenerationalCacheStrategy($cacheProvider, $keyGenerator, 0);
