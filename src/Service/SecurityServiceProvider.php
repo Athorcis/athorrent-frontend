@@ -92,6 +92,13 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
         };
     }
 
+    public function boot(Application $app)
+    {
+        if (!$app['cache']->has('routes')) {
+            parent::boot($app);
+        }
+    }
+
     public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
     {
         parent::subscribe($app, $dispatcher);

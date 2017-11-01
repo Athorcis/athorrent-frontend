@@ -48,7 +48,7 @@ class UrlGenerator extends BaseUrlGenerator
             }
 
             try {
-                return parent::generate($locale . '|' . $prefixId . '#' . $name, $parameters, $referenceType);
+                return parent::generate($locale . '|' . $prefixId . '.' . $name, $parameters, $referenceType);
             } catch (RouteNotFoundException $ex) {
                 // fallback to default behavior
             }

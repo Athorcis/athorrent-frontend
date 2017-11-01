@@ -3,7 +3,7 @@
 namespace Athorrent\Controllers;
 
 use Athorrent\Routing\AbstractController;
-use Athorrent\Utils\CacheUtils;
+use Athorrent\Cache\CacheUtils;
 use Athorrent\View\View;
 
 class CacheController extends AbstractController
@@ -27,8 +27,8 @@ class CacheController extends AbstractController
 
     public function clearApc()
     {
-        if (!CacheUtils::clearApc()) {
-            throw new \Exception('unable to clear apc cache');
+        if (!$app['cache.cleaner']->cleanApplicationCache()) {
+            throw new \Exception('unable to clear application cache');
         }
 
         return [];
@@ -36,7 +36,7 @@ class CacheController extends AbstractController
 
     public function clearTwig()
     {
-        if (!CacheUtils::clearTwig()) {
+        if (!$app['cache.cleaner']->cleanTwigCache()) {
             throw new \Exception('unable to clear twig cache');
         }
 
@@ -45,7 +45,7 @@ class CacheController extends AbstractController
 
     public function clearTranslations()
     {
-        if (!CacheUtils::clearTranslations()) {
+        if (!$app['cache.cleaner']->cleanTranslationsCache()) {
             throw new \Exception('unable to clear translation cache');
         }
 

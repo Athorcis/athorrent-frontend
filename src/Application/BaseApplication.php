@@ -2,7 +2,8 @@
 
 namespace Athorrent\Application;
 
-use PDO;
+use Athorrent\Cache\CacheCleaner;
+use phpFastCache\Helper\Psr16Adapter;
 use Silex\Application;
 
 class BaseApplication extends Application
@@ -12,15 +13,19 @@ class BaseApplication extends Application
         parent::__construct(['debug' => DEBUG]);
         
         $this['cache'] = function () {
-            return \Athorrent\Utils\Cache\Cache::getInstance();
+            return new Psr16Adapter(CACHE_DRIVER, ['ignoreSymfonyNotice' => true]);
+        };
+
+        $this['cache.cleaner'] = function (Application $app) {
+            return new CacheCleaner($app['cache'], CACHE_DIR);
         };
         
         $this['pdo'] = function () {
-            return new PDO(
+            return new \PDO(
                 'mysql:host=127.0.0.1;dbname=' . DB_NAME . ';charset=utf8',
                 DB_USERNAME,
                 DB_PASSWORD,
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
             );
         };
     }

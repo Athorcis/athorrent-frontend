@@ -87,7 +87,7 @@ class ControllerCollection extends BaseControllerCollection
                 if (isset($this->prefixId)) {
                     $route->setDefault('_prefixId', $this->prefixId);
 
-                    $name = $this->prefixId . '#' . $name;
+                    $name = $this->prefixId . '.' . $name;
 
                     if ($route->getDefault('_ajax')) {
                         $path = '/ajax' . $path;
