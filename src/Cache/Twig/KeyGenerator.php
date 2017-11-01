@@ -5,7 +5,7 @@ namespace Athorrent\Cache\Twig;
 use Asm89\Twig\CacheExtension\CacheStrategy\KeyGeneratorInterface;
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Database\Entity\User;
-use Athorrent\Utils\File;
+use Athorrent\Filesystem\Entry;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
@@ -36,7 +36,7 @@ class KeyGenerator implements KeyGeneratorInterface
                     $key = 'noroles';
                 }
             }
-        } elseif ($value instanceof File) {
+        } elseif ($value instanceof Entry) {
             $key = base64_encode($value->getAbsolutePath() . $value->getModificationTime() . ($value->isSharable() ? 0 : 1));
         } elseif ($value instanceof Sharing) {
             $key = $value->getToken();

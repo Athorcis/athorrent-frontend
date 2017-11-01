@@ -2,8 +2,11 @@
 
 namespace Athorrent\Application;
 
+use Athorrent\Database\Entity\User;
 use Athorrent\Routing\ControllerMounterTrait;
+use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
+use Silex\Application;
 use Silex\Application\UrlGeneratorTrait;
 use Silex\Provider\RememberMeServiceProvider;
 use Silex\Provider\SessionServiceProvider;
@@ -24,6 +27,25 @@ class WebApplication extends BaseApplication
         $this['locale'] = $this['default_locale'] = 'fr';
         $this['locales'] = ['fr', 'en'];
 
+        $this['torrent_manager'] = $this->protect(function (User $user) {
+            static $instances = [];
+
+            $userId = $user->getId();
+
+            if (!isset($instances[$userId])) {
+                $instances[$userId] = TorrentManager::getInstance($userId);
+            }
+
+            return $instances[$userId];
+        });
+
+//        $this['fs'] = function () {
+//            return new Filesystem();
+//        };
+
+        $this['user.fs'] = function (Application $app) {
+            return new \Athorrent\Filesystem\UserFilesystem($app, $app['user']);
+        };
         $this->before([$this, 'updateConnectionTimestamp']);
 
         $this->view(function (View $result, Request $request) {

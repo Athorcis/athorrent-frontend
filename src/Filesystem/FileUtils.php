@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Utils;
+namespace Athorrent\Filesystem;
 
 class FileUtils
 {

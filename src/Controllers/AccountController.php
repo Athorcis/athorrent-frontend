@@ -2,7 +2,6 @@
 
 namespace Athorrent\Controllers;
 
-use Athorrent\Entity\User;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
 use Silex\Application;
