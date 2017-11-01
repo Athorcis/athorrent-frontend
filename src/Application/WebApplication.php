@@ -59,7 +59,7 @@ class WebApplication extends BaseApplication
             'translator.cache_dir' => CACHE_DIR . '/translator'
         ]);
 
-        $this->register(new \Athorrent\Service\SecurityServiceProvider());
+        $this->register(new \Athorrent\Security\SecurityServiceProvider());
 
         $this->register(new SessionServiceProvider());
         $this->register(new RememberMeServiceProvider());

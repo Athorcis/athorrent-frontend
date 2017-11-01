@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Utils\Csrf;
+namespace Athorrent\Security\Csrf;
 
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 

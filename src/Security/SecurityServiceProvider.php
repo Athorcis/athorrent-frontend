@@ -1,10 +1,8 @@
 <?php
 
-namespace Athorrent\Service;
+namespace Athorrent\Security;
 
-use Athorrent\Utils\AuthenticationHandler;
-use Athorrent\Utils\Csrf\TokenManager;
-use Athorrent\Utils\UserProvider;
+use Athorrent\Security\Csrf\TokenManager;
 use Athorrent\View\View;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
