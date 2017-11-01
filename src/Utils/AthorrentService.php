@@ -10,7 +10,20 @@ class AthorrentService extends JsonService
 
     public function __construct($userId)
     {
-        parent::__construct('Athorrent\IPC\LocalClientSocket_' . strtolower(PHP_OS), self::getPath($userId));
+        switch (strtolower(PHP_OS)) {
+            case 'unix':
+                $socketType = 'UnixSocket';
+                break;
+
+            case 'winnt':
+                $socketType = 'NamedPipe';
+                break;
+
+            default:
+                throw new \Exception('unsuported system: ' . PHP_OS);
+        }
+
+        parent::__construct('Athorrent\\Ipc\\Socket\\' . $socketType . 'Client', self::getPath($userId));
 
         $this->userId = $userId;
         $this->ensureRunning();

@@ -2,21 +2,22 @@
 
 namespace Athorrent\Utils;
 
-use Athorrent\Utils\FileUtils;
+use Athorrent\Database\Entity\User;
+use Athorrent\Filesystem\FileUtils;
 
 class TorrentManager
 {
-    private $userId;
+    private $user;
     
-    private function __construct($userId)
+    public function __construct(User $user)
     {
-        $this->userId = $userId;
-        $this->service = new AthorrentService($userId);
+        $this->user = $user;
+        $this->service = new AthorrentService($user->getId());
     }
 
     public function getTorrentsDirectory()
     {
-        return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->userId;
+        return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->user->getId();
     }
     
     public function addTorrentFromUrl($url)
@@ -25,7 +26,7 @@ class TorrentManager
         
         file_put_contents($path, file_get_contents($url));
         
-        $this->addTorrentFromFile($path);
+        return $this->addTorrentFromFile($path);
     }
     
     public function addTorrentFromFile($path)
@@ -82,16 +83,5 @@ class TorrentManager
     public function listTrackers($hash)
     {
         return $this->service->call('listTrackers', ['hash' => $hash]);
-    }
-
-    private static $instance;
-
-    public static function getInstance($userId)
-    {
-        if (!self::$instance) {
-            self::$instance = new TorrentManager($userId);
-        }
-
-        return self::$instance;
     }
 }

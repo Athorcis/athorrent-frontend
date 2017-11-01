@@ -1,8 +1,8 @@
 <?php
 
-namespace Athorrent\IPC;
+namespace Athorrent\Ipc\Socket;
 
-abstract class LocalSocket_linux implements SocketInterface
+abstract class UnixSocket implements SocketInterface
 {
     protected $socket;
 

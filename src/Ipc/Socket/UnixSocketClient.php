@@ -1,10 +1,10 @@
 <?php
 
-namespace Athorrent\IPC;
+namespace Athorrent\Ipc\Socket;
 
-use Athorrent\Utils\ServiceUnavailableException;
+use Athorrent\Util\ServiceUnavailableException;
 
-class LocalClientSocket_linux extends LocalSocket_linux implements ClientSocketInterface
+class UnixSocketClient extends UnixSocket implements ClientSocketInterface
 {
     public function __construct($path)
     {

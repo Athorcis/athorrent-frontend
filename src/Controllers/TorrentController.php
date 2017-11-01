@@ -30,7 +30,7 @@ class TorrentController extends AbstractController
 
     protected function getTorrentManager(Application $app)
     {
-        return TorrentManager::getInstance($app['user']->getId());
+        return $app['torrent_manager']($app['user']);
     }
 
     public function listTorrents(Application $app, Request $request)
