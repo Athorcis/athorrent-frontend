@@ -4,29 +4,18 @@ namespace Athorrent\Controllers;
 
 use Athorrent\Entity\Sharing;
 use Athorrent\Utils\FileManager;
-use Symfony\Component\HttpFoundation\Request;
+use Silex\Application;
 
 class SharingFileController extends AbstractFileController
 {
-    public function getRouteParameters($action)
+    protected function getFileManager(Application $app)
     {
-        global $app;
-
-        $parameters = parent::getRouteParameters($action);
-
-        $parameters['token'] = $app['request_stack']->getCurrentRequest()->attributes->get('token');
-
-        return $parameters;
-    }
-
-    protected function getFileManager($request)
-    {
-        $sharing = Sharing::loadByToken($request->attributes->get('token'));
+        $sharing = Sharing::loadByToken($app['request_stack']->getCurrentRequest()->attributes->get('token'));
 
         if (!$sharing) {
-            $this->abort(404, 'error.sharingNotFound');
+            $app->abort(404, 'error.sharingNotFound');
         }
 
-        return FileManager::getBySharing($this->getUserId(), $sharing);
+        return FileManager::getBySharing($app['user']->getUserId(), $sharing);
     }
 }

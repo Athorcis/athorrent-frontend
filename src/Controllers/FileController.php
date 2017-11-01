@@ -3,12 +3,13 @@
 namespace Athorrent\Controllers;
 
 use Athorrent\Utils\FileManager;
+use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 class FileController extends AbstractFileController
 {
-    protected function getFileManager()
+    protected function getFileManager(Application $app)
     {
-        return FileManager::getByUser($this->getUserId());
+        return FileManager::getByUser($app['user']->getUserId());
     }
 }

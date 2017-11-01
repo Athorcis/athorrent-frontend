@@ -39,7 +39,7 @@ trait ControllerMounterTrait
                     $action = $route->getDefault('_action');
                     $prefixId = $route->getDefault('_prefixId');
 
-                    if ($route->getOption('ajax')) {
+                    if ($route->getDefault('_ajax')) {
                         if ($route->getDefault('_locale') === $locale) {
                             $ajaxRouteDescriptors[$action][$prefixId] = [
                                 $route->getMethods()[0],

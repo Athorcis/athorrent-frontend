@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Service;
+namespace Athorrent\View;
 
 use Asm89\Twig\CacheExtension\CacheStrategy\GenerationalCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
@@ -9,25 +9,73 @@ use Athorrent\Utils\Cache\KeyGenerator;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Silex\Api\BootableProviderInterface;
+use Silex\Api\EventListenerProviderInterface;
 use Silex\Application;
+use Silex\Provider\TwigServiceProvider as BaseTwigServiceProvider;
 use SPE\FilesizeExtensionBundle\Twig\FilesizeExtension;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Twig_Environment;
 use Twig_SimpleFunction;
 
-class TwigServiceProvider implements ServiceProviderInterface, BootableProviderInterface
+class TwigServiceProvider extends BaseTwigServiceProvider implements BootableProviderInterface, EventListenerProviderInterface
 {
     private $manifest;
 
     public function register(Container $app)
     {
-        $app->register(new \Silex\Provider\TwigServiceProvider(), [
-            'twig.path' => TEMPLATES_DIR,
-            'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
-        ]);
+		parent::register($app);
 
         $app->extend('twig', function (Twig_Environment $twig) use ($app) {
             return $this->extendTwig($twig, $app);
         });
+        $app['renderer'] = function (Application $app) {
+            return new Renderer($app['twig'], $app['request_stack']);
+        };
+    }
+
+    public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
+    {
+        $dispatcher->addListener(KernelEvents::VIEW, function (GetResponseForControllerResultEvent $event) use ($app) {
+            $data = $event->getControllerResult();
+            $xhr = $event->getRequest()->attributes->get('_ajax');
+
+            if ($data === null && !$xhr) {
+                return;
+            }
+
+            if ($data instanceof View) {
+                if ($xhr) {
+                    $data = $data->render($app);
+                } else {
+                    return;
+                }
+            }
+
+            $event->setControllerResult([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        }, Application::EARLY_EVENT);
+
+        $dispatcher->addListener(KernelEvents::VIEW, function (GetResponseForControllerResultEvent $event) use ($app) {
+            $result = $event->getControllerResult();
+
+            if ($result === null) {
+                return;
+            }
+
+            if ($result instanceof View) {
+                $response = new Response($result->render($app));
+            } else {
+                $response = new JsonResponse($result);
+            }
+
+            $event->setResponse($response);
+        }, Application::LATE_EVENT);
     }
 
     public function extendTwig(Twig_Environment $twig, Application $app)
@@ -47,14 +95,6 @@ class TwigServiceProvider implements ServiceProviderInterface, BootableProviderI
         $twig->addFunction(new Twig_SimpleFunction('script', [$this, 'includeScript']));
 
         $twig->addFunction(new Twig_SimpleFunction('format_age', [$this, 'formatAge']));
-
-//        $twig->addFunction(new Twig_SimpleFunction('path', function ($action, $parameters = [], $prefixAction = null) use ($app) {
-//            return $app['alias_resolver']->generatePath($action, $parameters, $prefixAction);
-//        }));
-//
-//        $twig->addFunction(new Twig_SimpleFunction('uri', function ($action, $parameters = [], $prefixAction = null) use ($app) {
-//            return $app['alias_resolver']->generateUrl($action, $parameters, $prefixAction);
-//        }));
 
         return $twig;
     }

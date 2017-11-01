@@ -5,29 +5,27 @@ namespace Athorrent\Service;
 use Athorrent\Utils\AuthenticationHandler;
 use Athorrent\Utils\Csrf\TokenManager;
 use Athorrent\Utils\UserProvider;
+use Athorrent\View\View;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Silex\Application;
+use Silex\Provider\SecurityServiceProvider as BaseSecurityServiceProvider;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class SecurityServiceProvider implements ServiceProviderInterface
+class SecurityServiceProvider extends BaseSecurityServiceProvider
 {
     public function register(Container $app)
     {
-        $app->register(new \Silex\Provider\SessionServiceProvider());
-        $app->register(new \Silex\Provider\SecurityServiceProvider());
-        $app->register(new \Silex\Provider\RememberMeServiceProvider());
+        parent::register($app);
 
         $app['session.storage.options'] = [
             'name' => 'SESSION',
             'cookie_httponly' => true,
-            'cookie_secure' => true
+            'cookie_secure' => !$app['debug']
         ];
-
-        $app['dispatcher']->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
-            $this->handleRequest($event, $app);
-        }, Application::EARLY_EVENT - 400);
 
         $app['security.firewalls'] = [
             'general' => [
@@ -55,7 +53,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 'remember_me' => [
                     'key' => REMEMBER_ME_KEY,
                     'always_remember_me' => true,
-                    'secure' => true
+                    'secure' => !$app['debug']
                 ],
 
                 'users' => function () {
@@ -94,6 +92,31 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
     }
 
+    public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
+    {
+        parent::subscribe($app, $dispatcher);
+
+        $dispatcher->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
+            $this->handleRequest($event, $app);
+        });
+
+        $dispatcher->addListener(KernelEvents::VIEW, function (GetResponseForControllerResultEvent $event) use ($app) {
+            $result = $event->getControllerResult();
+
+            if ($result === null) {
+                return;
+            }
+
+            if ($result instanceof View) {
+                $result->setJsVar('csrfToken', $app['csrf.token']);
+            } elseif ($event->getRequest()->getMethod() === 'POST') {
+                $result['csrfToken'] = $app['csrf.token'];
+            }
+
+            $event->setControllerResult($result);
+        });
+    }
+
     public function handleRequest(GetResponseEvent $event, Application $app)
     {
         $request = $event->getRequest();
@@ -106,7 +129,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $app['csrf.manager'] = new TokenManager($session);
 
         if ($request->getMethod() === 'POST') {
-            if (!$app['csrf.manager']->isTokenValid($request->get('csrf'))) {
+            if (!$app['csrf.manager']->isTokenValid($request->get('csrfToken'))) {
                 $app->abort(403);
             }
 

@@ -2,7 +2,9 @@
 
 namespace Athorrent\Controllers;
 
+use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\Search\TorrentSearcher;
+use Athorrent\View\View;
 use Symfony\Component\HttpFoundation\Request;
 
 class SearchController extends AbstractController
@@ -30,7 +32,7 @@ class SearchController extends AbstractController
             $results = $searcher->search($query, $source);
         }
 
-        return $this->render([
+        return new View([
             'query' => $query,
             'source' => $source,
             'sources' => $sources,

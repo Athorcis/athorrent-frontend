@@ -3,7 +3,10 @@
 namespace Athorrent\Application;
 
 use Athorrent\Routing\ControllerMounterTrait;
+use Athorrent\View\View;
 use Silex\Application\UrlGeneratorTrait;
+use Silex\Provider\RememberMeServiceProvider;
+use Silex\Provider\SessionServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -18,14 +21,49 @@ class WebApplication extends BaseApplication
     {
         parent::__construct();
 
+        $this['locale'] = $this['default_locale'] = 'fr';
+        $this['locales'] = ['fr', 'en'];
+
         $this->before([$this, 'updateConnectionTimestamp']);
+
+        $this->view(function (View $result, Request $request) {
+            if (!$request->attributes->get('_ajax')) {
+                $flashBag = $this['session']->getFlashBag();
+
+                if ($flashBag->has('notifications')) {
+                    $result->set('notifications', $flashBag->get('notifications'));
+                }
+
+                $result->addTemplate('modal');
+
+                $vars = [
+                    'debug' => $this['debug'],
+                    'staticHost' => STATIC_HOST
+                ];
+
+                $result->setJsVars($vars);
+            }
+        });
+
         $this->after([$this, 'addHeaders']);
         
         $this->error([$this, 'handleError']);
 
-        $this->register(new \Athorrent\Service\TwigServiceProvider());
-        $this->register(new \Athorrent\Service\TranslationServiceProvider());
+        $this->register(new \Athorrent\View\TwigServiceProvider(), [
+            'twig.path' => TEMPLATES_DIR,
+            'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
+        ]);
+
+        $this->register(new \Athorrent\View\TranslationServiceProvider(), [
+            'locale_fallbacks' => [$this['default_locale']],
+            'translator.cache_dir' => CACHE_DIR . '/translator'
+        ]);
+
         $this->register(new \Athorrent\Service\SecurityServiceProvider());
+
+        $this->register(new SessionServiceProvider());
+        $this->register(new RememberMeServiceProvider());
+
         $this->register(new \Athorrent\Routing\RoutingServiceProvider());
         $this->register(new \Athorrent\Routing\RoutingServiceProvider());
         $this->register(new \Silex\Provider\LocaleServiceProvider());
@@ -58,7 +96,7 @@ class WebApplication extends BaseApplication
         
         if (strpos($request->get('_route'), ':ajax') === false) {
             $response->headers->set('Content-Security-Policy', "script-src 'unsafe-inline' " . $request->getScheme() . '://' . STATIC_HOST);
-            $response->headers->set('Referrer-Policy', 'strict-origin');
+            $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
             $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubdomains');
             $response->headers->set('X-Frame-Options', 'DENY');
             $response->headers->set('X-XSS-Protection', '1; mode=block');
@@ -106,5 +144,29 @@ class WebApplication extends BaseApplication
         $this->mount('/administration/cache', new \Athorrent\Controllers\CacheController(), 'cache');
 
 //        $this->mount('/user/scheduler', new \Athorrent\Controller\SchedulerController(), 'scheduler');
+    }
+
+    public function redirect($url, $status = 302)
+    {
+        try {
+            $url = $this['url_generator']->generate($url);
+        } catch (\Exception $exception) {
+
+        }
+
+        return parent::redirect($url, $status);
+    }
+
+    public function notify($type, $message, $url = null)
+    {
+        $flashBag = $this['session']->getFlashBag();
+        $flashBag->add('notifications', ['type' => $type, 'message' => $message]);
+
+        if (!$url) {
+            $request = $this['request_stack']->getCurrentRequest();
+            $url = $request->headers->get('Referer');
+        }
+
+        return $this->redirect($url);
     }
 }

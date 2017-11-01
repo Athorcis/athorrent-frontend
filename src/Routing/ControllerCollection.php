@@ -37,10 +37,9 @@ class ControllerCollection extends BaseControllerCollection
 
         $route = $controller->getRoute();
         $route->setDefault('_action', $action);
+        $route->setDefault('_ajax', $type === 'ajax');
 
-        if ($type === 'ajax') {
-            $route->setOption('ajax', true);
-        } elseif ($type === 'both') {
+        if ($type === 'both') {
             $this->addController($controllers, $callback, $method, $pattern, $action, 'ajax');
         }
     }
@@ -90,7 +89,7 @@ class ControllerCollection extends BaseControllerCollection
 
                     $name = $this->prefixId . '#' . $name;
 
-                    if ($route->getOption('ajax')) {
+                    if ($route->getDefault('_ajax')) {
                         $path = '/ajax' . $path;
                         $name = 'ajax|' . $name;
                     }

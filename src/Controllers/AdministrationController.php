@@ -2,7 +2,8 @@
 
 namespace Athorrent\Controllers;
 
-use Symfony\Component\HttpFoundation\Request;
+use Athorrent\Routing\AbstractController;
+use Athorrent\View\View;
 
 class AdministrationController extends AbstractController
 {
@@ -11,8 +12,8 @@ class AdministrationController extends AbstractController
         return [['GET', '/', 'listAdministrationModules']];
     }
 
-    public function listAdministrationModules(Request $request)
+    public function listAdministrationModules()
     {
-        return $this->render(array(), 'administration');
+        return new View([], 'administration');
     }
 }
