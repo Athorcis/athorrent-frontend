@@ -2,6 +2,7 @@
 
 namespace Athorrent\Cache;
 
+use Athorrent\Filesystem\FileUtils;
 use Psr\SimpleCache\CacheInterface;
 
 class CacheCleaner
@@ -10,18 +11,18 @@ class CacheCleaner
 
     private $cacheDir;
 
-    public function(CacheInterface $cache, $cacheDir)
+    public function __construct(CacheInterface $cache, $cacheDir)
     {
         $this->cache = $cache;
         $this->cacheDir = $cacheDir;
     }
 
-    public function cleanApplicationCache()
+    public function clearApplicationCache()
     {
-        $this->cache->clear();
+        return $this->cache->clear();
     }
 
-    protected function cleanCacheDir($subdir)
+    protected function clearCacheDir($subdir)
     {
         $path = $this->cacheDir . DIRECTORY_SEPARATOR . $subdir;
 
@@ -34,11 +35,11 @@ class CacheCleaner
 
     public function clearTwigCache()
     {
-        return $this->cleanCacheDir('twig');
+        return $this->clearCacheDir('twig');
     }
 
     public function clearTranslationsCache()
     {
-        return $this->cleanCacheDir('translator');
+        return $this->clearCacheDir('translator');
     }
 }

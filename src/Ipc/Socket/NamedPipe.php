@@ -1,8 +1,8 @@
 <?php
 
-namespace Athorrent\IPC;
+namespace Athorrent\Ipc\Socket;
 
-abstract class LocalSocket_winnt implements SocketInterface
+abstract class NamedPipe implements SocketInterface
 {
     protected $namedPipe;
 

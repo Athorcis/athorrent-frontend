@@ -5,6 +5,7 @@ namespace Athorrent\Controllers;
 use Athorrent\Routing\AbstractController;
 use Athorrent\Cache\CacheUtils;
 use Athorrent\View\View;
+use Silex\Application;
 
 class CacheController extends AbstractController
 {
@@ -25,40 +26,40 @@ class CacheController extends AbstractController
         return new View([], 'cache');
     }
 
-    public function clearApc()
+    public function clearApc(Application $app)
     {
-        if (!$app['cache.cleaner']->cleanApplicationCache()) {
+        if (!$app['cache.cleaner']->clearApplicationCache()) {
             throw new \Exception('unable to clear application cache');
         }
 
         return [];
     }
 
-    public function clearTwig()
+    public function clearTwig(Application $app)
     {
-        if (!$app['cache.cleaner']->cleanTwigCache()) {
+        if (!$app['cache.cleaner']->clearTwigCache()) {
             throw new \Exception('unable to clear twig cache');
         }
 
         return [];
     }
 
-    public function clearTranslations()
+    public function clearTranslations(Application $app)
     {
-        if (!$app['cache.cleaner']->cleanTranslationsCache()) {
+        if (!$app['cache.cleaner']->clearTranslationsCache()) {
             throw new \Exception('unable to clear translation cache');
         }
 
         return [];
     }
 
-    public function clearAll()
+    public function clearAll(Application $app)
     {
-        $this->clearApc();
+        $this->clearApc($app);
 
-        $this->clearTwig();
+        $this->clearTwig($app);
 
-        $this->clearTranslations();
+        $this->clearTranslations($app);
 
         return [];
     }

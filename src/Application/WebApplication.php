@@ -33,7 +33,7 @@ class WebApplication extends BaseApplication
             $userId = $user->getId();
 
             if (!isset($instances[$userId])) {
-                $instances[$userId] = TorrentManager::getInstance($userId);
+                $instances[$userId] = new TorrentManager($user);
             }
 
             return $instances[$userId];
@@ -146,6 +146,15 @@ class WebApplication extends BaseApplication
             $error = $this['translator']->trans($error);
         } else {
             $error = $exception->getMessage();
+        }
+
+        $request = $this['request_stack']->getCurrentRequest();
+
+        if ($request->attributes->get('_ajax')) {
+            return $this->json([
+                'status' => 'error',
+                'error' => $error
+            ]);
         }
 
         return new Response($this['twig']->render('pages/error.html.twig', ['error' => $error, 'code' => $code]));
