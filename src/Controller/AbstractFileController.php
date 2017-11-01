@@ -101,11 +101,11 @@ abstract class AbstractFileController extends AbstractController
         $response = new BinaryFileResponse($path, 200, [
             'Content-Disposition' => ' ' . $contentDisposition . '; filename="' . basename($path) . '"'
         ], false, null, true);
-        
+
         if (!$response->isNotModified($request)) {
             set_time_limit(0);
         }
-        
+
         return $response;
     }
 
@@ -125,7 +125,7 @@ abstract class AbstractFileController extends AbstractController
         $path = $this->getRelativeFilePath($app, $fs);
 
         $mimeType = $fs->getMimeType($path);
-        
+
         if (!MimeType::isPlayable($mimeType)) {
             $app->abort(500, 'error.notPlayable');
         }
@@ -139,7 +139,7 @@ abstract class AbstractFileController extends AbstractController
         } elseif (MimeType::isVideo($mimeType)) {
             $mediaTag = 'video';
         }
-        
+
         return new View([
             'name' => $name,
             'breadcrumb' => $breadcrumb,
@@ -156,7 +156,7 @@ abstract class AbstractFileController extends AbstractController
         $relativePath = $fs->getRelativePath($path);
 
         $mimeType = $fs->getMimeType($relativePath);
-        
+
         if (!MimeType::isDisplayable($mimeType)) {
             return $app->abort(500, 'error.notDisplayable');
         }
@@ -165,18 +165,18 @@ abstract class AbstractFileController extends AbstractController
         $breadcrumb = self::getBreadcrumb($app, $fs->getRelativePath($path), false);
 
         $name = pathinfo($relativePath, PATHINFO_BASENAME);
-        
+
         $data = [
             'name' => $name,
             'breadcrumb' => $breadcrumb
         ];
-        
+
         if (MimeType::isText($mimeType)) {
             $data['text'] = file_get_contents($path);
         } elseif (MimeType::isImage($mimeType)) {
             $data['src'] = $relativePath;
         }
-        
+
         return new View($data);
     }
 

@@ -162,20 +162,20 @@ class WebApplication extends BaseApplication
 
     public function mountControllers()
     {
-        $this->mount('/', new \Athorrent\Controllers\DefaultController(), '');
+        $this->mount('/', new \Athorrent\Controller\DefaultController(), '');
 
-        $this->mount('/search', new \Athorrent\Controllers\SearchController(), 'search');
+        $this->mount('/search', new \Athorrent\Controller\SearchController(), 'search');
 
-        $this->mount('/user/files', new \Athorrent\Controllers\FileController(), 'files');
-        $this->mount('/user/torrents', new \Athorrent\Controllers\TorrentController(), 'torrents');
-        $this->mount('/user/account', new \Athorrent\Controllers\AccountController(), 'account');
+        $this->mount('/user/files', new \Athorrent\Controller\FileController(), 'files');
+        $this->mount('/user/torrents', new \Athorrent\Controller\TorrentController(), 'torrents');
+        $this->mount('/user/account', new \Athorrent\Controller\AccountController(), 'account');
 
-        $this->mount('/user/sharings', new \Athorrent\Controllers\SharingController(), 'sharings');
-        $this->mount('/sharings/{token}/files', new \Athorrent\Controllers\SharingFileController(), 'sharings');
+        $this->mount('/user/sharings', new \Athorrent\Controller\SharingController(), 'sharings');
+        $this->mount('/sharings/{token}/files', new \Athorrent\Controller\SharingFileController(), 'sharings');
 
-        $this->mount('/administration', new \Athorrent\Controllers\AdministrationController(), 'administration');
-        $this->mount('/administration/users', new \Athorrent\Controllers\UserController(), 'users');
-        $this->mount('/administration/cache', new \Athorrent\Controllers\CacheController(), 'cache');
+        $this->mount('/administration', new \Athorrent\Controller\AdministrationController(), 'administration');
+        $this->mount('/administration/users', new \Athorrent\Controller\UserController(), 'users');
+        $this->mount('/administration/cache', new \Athorrent\Controller\CacheController(), 'cache');
 
 //        $this->mount('/user/scheduler', new \Athorrent\Controller\SchedulerController(), 'scheduler');
     }
