@@ -54,8 +54,8 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
                     'secure' => !$app['debug']
                 ],
 
-                'users' => function () {
-                    return new UserProvider();
+                'users' => function (Application $app) {
+                    return $app['user_manager'];
                 }
             ]
         ];
@@ -87,6 +87,10 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
 
         $app['security.authentication.failure_handler.general'] = function () {
             return new AuthenticationHandler();
+        };
+
+        $app['user_manager'] = function (Container $app) {
+            return new UserManager($app['orm.em'], $app['orm.repo.user'], $app['security.default_encoder']);
         };
     }
 

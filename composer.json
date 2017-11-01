@@ -20,7 +20,9 @@
         "symfony/dom-crawler": "~3.3.9",
         "symfony/css-selector": "~3.3.9",
         "guzzlehttp/guzzle": "~6.3.0",
-        "phpFastCache/phpFastCache": "^6.0"
+        "phpFastCache/phpFastCache": "^6.0",
+        "doctrine/orm": "^2.5",
+        "knplabs/console-service-provider": "^2.1"
     },
 
     "autoload": {

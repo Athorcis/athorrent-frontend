@@ -178,8 +178,10 @@ class File
     
     public function isShared()
     {
+        global $app;
+
         if ($this->isSharable()) {
-            return Sharing::loadByToken($this->getSharingToken()) !== null;
+            return $app['orm.repo.sharing']->findOneBy(['token' => $this->getSharingToken()]) !== null;
         }
 
         return false;

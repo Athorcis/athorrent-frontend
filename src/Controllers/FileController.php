@@ -10,6 +10,6 @@ class FileController extends AbstractFileController
 {
     protected function getFileManager(Application $app)
     {
-        return FileManager::getByUser($app['user']->getUserId());
+        return FileManager::getByUser($app['user']->getId());
     }
 }

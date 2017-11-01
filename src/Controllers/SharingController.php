@@ -2,10 +2,10 @@
 
 namespace Athorrent\Controllers;
 
-use Athorrent\Entity\Sharing;
+use Athorrent\Database\Entity\Sharing;
 use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\FileManager;
-use Athorrent\View\View;
+use Athorrent\View\PaginatedView;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,31 +23,7 @@ class SharingController extends AbstractController
 
     public function listSharings(Application $app, Request $request)
     {
-        if ($request->query->has('page')) {
-            $page = $request->query->get('page');
-
-            if (!is_numeric($page) || $page < 1) {
-                $app->abort(400);
-            }
-        } else {
-            $page = 1;
-        }
-
-        $offset = 10 * ($page - 1);
-
-        $sharings = Sharing::loadByUserId($app['user']->getUserId(), $offset, 10, $total);
-
-        if ($offset >= $total && $total > 0) {
-            $app->abort(404);
-        }
-
-        $lastPage = ceil($total / 10);
-
-        return new View([
-            'sharings' => $sharings,
-            'page' => $page,
-            'lastPage' => $lastPage
-        ]);
+        return new PaginatedView($request, $app['orm.repo.sharing'], 10, ['user', $app['user']]);
     }
 
     public function addSharing(Application $app, Request $request)
@@ -56,25 +32,23 @@ class SharingController extends AbstractController
             $app->abort(400);
         }
 
-        $fileManager = FileManager::getByUser($app['user']->getUserId());
+        $fileManager = FileManager::getByUser($app['user']->getId());
         $path = $fileManager->getAbsolutePath($request->request->get('path'));
 
         if (!file_exists($path)) {
             $app->abort(404);
         }
 
-        $sharing = new Sharing(null, $app['user']->getUserId(), $fileManager->getRelativePath($path));
-        $sharing->save();
+        $sharing = new Sharing($app['user'], $fileManager->getRelativePath($path));
+        $app['orm.em']->persist($sharing);
+        $app['orm.em']->flush();
 
         return [$app->url('listFiles', ['token' => $sharing->getToken(), '_prefixId' => 'sharings'])];
     }
 
-    public function removeSharing(Application $app, Request $request, $token)
+    public function removeSharing(Application $app, $token)
     {
-        if (!Sharing::deleteByToken($token, $app['user']->getUserId())) {
-            $app->abort(404, 'error.sharingNotFound');
-        }
-
+        $app['orm.repo.sharing']->delete($token);
         return [];
     }
 }

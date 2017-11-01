@@ -11,9 +11,9 @@
     {{ script('users')|raw }}
 {% endblock %}
 
-{% block content %}
-    {% set userId = app.user.userId %}
+{% set userId = app.user.id %}
 
+{% block content %}
     <div class="page-header">
         <h1>
             {{ 'users.title'|trans }}
@@ -32,10 +32,10 @@
             </tr>
         </thead>
         <tbody>
-            {% for user in users %}
+            {% for user in pagination.entities %}
                 {% cache ('user_' ~ app.locale) user %}
-                <tr class="user" id="user-{{ user.userId }}">
-                    <td>{{ user.userId }}</td>
+                <tr class="user" id="user-{{ user.id }}">
+                    <td>{{ user.id }}</td>
                     <td class="user-name">{{ user.username }}</td>
                     <td>{{ user.roles[0]|trans }}</td>
                     <td>
@@ -46,11 +46,11 @@
                         {% endif %}
                     </td>
                     <td class="text-right user-buttons">
-                        {% if user.userId != userId %}
+                        {% if user.id != userId %}
                         <a class="btn btn-xs btn-default" href="{{ path('listFiles', { _switch_user: user.username, _prefixId: 'files' }) }}">
                             <span class="fa fa-exchange"></span>
                         </a>
-                            {% if user.userId != 1 %}
+                            {% if user.id != 1 %}
                         <button class="btn btn-xs btn-danger user-remove">
                             <span class="fa fa-remove"></span>
                         </button>
@@ -63,25 +63,6 @@
         </tbody>
     </table>
 
-    {% if lastPage > 1 %}
-        <div class="text-center">
-            <ul class="pagination">
-            {% set startPage = max(1, page - 2) %}
-            {% set endPage = min(lastPage, startPage + 4) %}
-            {% set startPage = max(1, endPage - 4) %}
+    {% include "fragments/pagination.html.twig" %}
 
-            {% if page > 1 %}
-                <li><a href="{{ path('listUsers', { page: page - 1 }) }}">&laquo;</a></li>
-            {% endif %}
-
-            {% for i in startPage .. endPage %}
-                <li{% if i == page %} class="active"{% endif %}><a href="{{ path('listUsers', { page: i }) }}">{{ i }}</a></li>
-            {% endfor %}
-
-            {% if page < lastPage %}
-                <li><a href="{{ path('listUsers', { page: page + 1 }) }}">&raquo;</a></li>
-            {% endif %}
-            </ul>
-        </div>
-    {% endif %}
 {% endblock %}
