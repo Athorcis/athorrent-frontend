@@ -12,8 +12,6 @@ class View
 
     private $data;
 
-    private $renderer;
-
     public function __construct(array $data = [], $name = null)
     {
         $this->name = $name;

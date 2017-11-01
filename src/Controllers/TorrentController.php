@@ -33,7 +33,7 @@ class TorrentController extends AbstractController
         return $app['torrent_manager']($app['user']);
     }
 
-    public function listTorrents(Application $app, Request $request)
+    public function listTorrents(Application $app)
     {
         $torrentManager = $this->getTorrentManager($app);
 
@@ -59,7 +59,7 @@ class TorrentController extends AbstractController
         ]);
     }
 
-    public function listTrackers(Application $app, Request $request, $hash)
+    public function listTrackers(Application $app, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
         $trackers = $torrentManager->listTrackers($hash);
@@ -125,21 +125,21 @@ class TorrentController extends AbstractController
         return [];
     }
 
-    public function pauseTorrent(Application $app, Request $request, $hash)
+    public function pauseTorrent(Application $app, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
         $torrentManager->pauseTorrent($hash);
         return [];
     }
 
-    public function resumeTorrent(Application $app, Request $request, $hash)
+    public function resumeTorrent(Application $app, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
         $torrentManager->resumeTorrent($hash);
         return [];
     }
 
-    public function removeTorrent(Application $app, Request $request, $hash)
+    public function removeTorrent(Application $app, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
         $torrentManager->removeTorrent($hash);

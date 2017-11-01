@@ -48,7 +48,7 @@ abstract class AbstractFileController extends AbstractController
         return $absolutePath;
     }
 
-	protected function getRelativeFilePath(Application $app, UserFilesystem $fs)
+    protected function getRelativeFilePath(Application $app, UserFilesystem $fs)
     {
         return $fs->getRelativePath($this->getAbsoluteFilePath($app, $fs));
     }
@@ -119,7 +119,7 @@ abstract class AbstractFileController extends AbstractController
         return $this->sendFile($app, $request, 'attachment');
     }
 
-    public function playFile(Application $app, Request $request)
+    public function playFile(Application $app)
     {
         $fs = $this->getFilesystem($app);
         $path = $this->getRelativeFilePath($app, $fs);
@@ -200,7 +200,7 @@ abstract class AbstractFileController extends AbstractController
         return [];
     }
 
-    public function getDirectLink(Application $app, Request $request)
+    public function getDirectLink(Application $app)
     {
         $fs = $this->getFilesystem($app);
         $path = $this->getRelativeFilePath($app, $fs);

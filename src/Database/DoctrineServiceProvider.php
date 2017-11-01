@@ -24,7 +24,7 @@ class DoctrineServiceProvider extends BaseDoctrineServiceProvider
         $config->setMetadataCacheImpl($cache);
         $config->setQueryCacheImpl($cache);
 
-        $app['orm.em'] = function () use($app, $config) {
+        $app['orm.em'] = function () use ($app, $config) {
             $connection = $app['db'];
             $platform = $connection->getDatabasePlatform();
 

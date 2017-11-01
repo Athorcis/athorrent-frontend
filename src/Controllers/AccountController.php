@@ -17,7 +17,7 @@ class AccountController extends AbstractController
         ];
     }
 
-    public function editAccount(Request $request)
+    public function editAccount()
     {
         return new View();
     }
