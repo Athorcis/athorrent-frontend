@@ -5,6 +5,9 @@ namespace Athorrent\Controllers;
 use Athorrent\Entity\Sharing;
 use Athorrent\Entity\User;
 use Athorrent\Entity\UserRole;
+use Athorrent\Routing\AbstractController;
+use Athorrent\View\View;
+use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
@@ -39,30 +42,24 @@ class UserController extends AbstractController
         $users = User::loadAll($offset, $usersPerPage, $total);
 
         if ($offset >= $total) {
-            $this->abort(404);
+            $app->abort(404);
         }
 
         $lastPage = ceil($total / $usersPerPage);
 
-        return $this->render(
-            array (
+        return new View([
             'users' => $users,
             'page' => $page,
             'lastPage' => $lastPage
-            )
-        );
+        ]);
     }
 
-    public function addUser(Request $request)
+    public function addUser()
     {
-        return $this->render(
-            array (
-            'roleList' => UserRole::$list
-            )
-        );
+        return new View(['roleList' => UserRole::$list]);
     }
 
-    public function saveUser(Request $request)
+    public function saveUser(Application $app, Request $request)
     {
         $username = $request->request->get('username');
         $password = $request->request->get('password');
@@ -70,12 +67,11 @@ class UserController extends AbstractController
 
         if (!empty($username) && !empty($password) && !empty($role)) {
             if (User::exists($username)) {
-                $this->addNotification('error', 'error.usernameAlreadyUsed');
-                return $this->redirect('addUser');
+                return $app->notify('error', 'error.usernameAlreadyUsed');
             }
 
             if (!in_array($role, UserRole::$list)) {
-                $this->abort(400, 'error.roleNotSpecified');
+                $app->abort(400, 'error.roleNotSpecified');
             }
 
             $user = new User(null, $username);
@@ -85,11 +81,10 @@ class UserController extends AbstractController
             $userRole = new UserRole($user->getUserId(), $role);
             $userRole->save();
         } else {
-            $this->addNotification('error', 'error.usernameOrPasswordEmpty');
-            return $this->redirect('addUser');
+            return $app->notify('error', 'error.usernameOrPasswordEmpty');
         }
 
-        return $this->redirect('listUsers');
+        return $app->redirect('listUsers');
     }
 
     public function removeUser(Request $request)
@@ -100,10 +95,10 @@ class UserController extends AbstractController
             if (User::deleteByUserId($userId)) {
                 UserRole::deleteByUserId($userId);
                 Sharing::deleteByUserId($userId);
-                return $this->success();
+                return [];
             }
         }
 
-        $this->abort(500, 'error.cannotRemoveUser');
+        $app->abort(500, 'error.cannotRemoveUser');
     }
 }

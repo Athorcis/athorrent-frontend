@@ -2,8 +2,9 @@
 
 namespace Athorrent\Controllers;
 
+use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\CacheUtils;
-use Symfony\Component\HttpFoundation\Request;
+use Athorrent\View\View;
 
 class CacheController extends AbstractController
 {
@@ -19,46 +20,46 @@ class CacheController extends AbstractController
         ];
     }
 
-    public function handleCache(Request $request)
+    public function handleCache()
     {
-        return $this->render(array(), 'cache');
+        return new View([], 'cache');
     }
 
-    public function clearApc(Request $request)
-    {
-        if (CacheUtils::clearApc()) {
-            return $this->success();
-        }
-    }
-
-    public function clearTwig(Request $request)
-    {
-        if (CacheUtils::clearTwig()) {
-            return $this->success();
-        }
-    }
-
-    public function clearTranslations(Request $request)
-    {
-        if (CacheUtils::clearTranslations()) {
-            return $this->success();
-        }
-    }
-
-    public function clearAll(Request $request)
+    public function clearApc()
     {
         if (!CacheUtils::clearApc()) {
-            return $this->abort();
+            throw new \Exception('unable to clear apc cache');
         }
 
+        return [];
+    }
+
+    public function clearTwig()
+    {
         if (!CacheUtils::clearTwig()) {
-            return $this->abort();
+            throw new \Exception('unable to clear twig cache');
         }
 
+        return [];
+    }
+
+    public function clearTranslations()
+    {
         if (!CacheUtils::clearTranslations()) {
-            return $this->abort();
+            throw new \Exception('unable to clear translation cache');
         }
 
-        return $this->success();
+        return [];
+    }
+
+    public function clearAll()
+    {
+        $this->clearApc();
+
+        $this->clearTwig();
+
+        $this->clearTranslations();
+
+        return [];
     }
 }

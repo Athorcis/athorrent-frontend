@@ -481,18 +481,18 @@ require(['jquery', 'athorrent', 'dropzone'], function ($, athorrent, Dropzone) {
         },
 
         onSuccess: function (file, result) {
-            athorrent.csrf = result.csrf;
+            athorrent.csrfToken = result.csrfToken;
             this.setCounter(this.dropzone.getAcceptedFiles().length);
         },
 
         onError: function (file, result) {
-            if (typeof result === 'object' && result.hasOwnProperty('csrf')) {
-                athorrent.csrf = result.csrf;
+            if (typeof result === 'object' && result.hasOwnProperty('csrfToken')) {
+                athorrent.csrfToken = result.csrfToken;
             }
         },
 
         onSending: function (file, xhr, formData) {
-            formData.append('csrf', athorrent.csrf);
+            formData.append('csrfToken', athorrent.csrfToken);
         },
 
         getItems: function () {

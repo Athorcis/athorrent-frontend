@@ -2,8 +2,10 @@
 
 namespace Athorrent\Controllers;
 
+use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\ServiceUnvailableException;
 use Athorrent\Utils\TorrentManager;
+use Athorrent\View\View;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,21 +28,9 @@ class TorrentController extends AbstractController
         ];
     }
 
-    protected function getJsVariables()
-    {
-        global $app;
-
-        $jsVariables = parent::getJsVariables();
-
-        $jsVariables['templates']['dropzonePreview'] = $this->renderFragment(array(), 'dropzonePreview');
-        $jsVariables['locale']['torrents.dropzone'] = $app['translator']->trans('torrents.dropzone');
-
-        return $jsVariables;
-    }
-
     protected function getTorrentManager(Application $app)
     {
-        return TorrentManager::getInstance($this->getUserId());
+        return TorrentManager::getInstance($app['user']->getUserId());
     }
 
     public function listTorrents(Application $app, Request $request)
@@ -61,7 +51,12 @@ class TorrentController extends AbstractController
             $clientUpdating = true;
         }
 
-        return $this->render(array('torrents' => $torrents, 'client_updating' => $clientUpdating));
+        return new View([
+            'torrents' => $torrents,
+            'client_updating' => $clientUpdating,
+            '_templates' => ['dropzonePreview'],
+            '_strings' => ['torrents.dropzone']
+        ]);
     }
 
     public function listTrackers(Application $app, Request $request, $hash)
@@ -69,7 +64,7 @@ class TorrentController extends AbstractController
         $torrentManager = $this->getTorrentManager($app);
         $trackers = $torrentManager->listTrackers($hash);
 
-        return $this->render(array('trackers' => $trackers));
+        return new View(['trackers' => $trackers]);
     }
 
     public function uploadTorrent(Application $app, Request $request)
@@ -81,13 +76,13 @@ class TorrentController extends AbstractController
             if ($file->getMimeType() === 'application/x-bittorrent') {
                 $file->move($torrentManager->getTorrentsDirectory(), $file->getClientOriginalName());
 
-                return $this->success();
+                return [];
             } else {
-                return $this->abort(500, 'error.notATorrent');
+                $app->abort(500, 'error.notATorrent');
             }
         }
 
-        return $this->abort(500, 'error.fileTooBig');
+        $app->abort(500, 'error.fileTooBig');
     }
 
     public function addMagnet(Application $app, Request $request)
@@ -99,7 +94,7 @@ class TorrentController extends AbstractController
             $torrentManager->addTorrentFromMagnet($magnet);
         }
 
-        return $this->redirect('listTorrents');
+        return $app->redirect('listTorrents');
     }
 
     public function addTorrents(Application $app, Request $request)
@@ -127,27 +122,27 @@ class TorrentController extends AbstractController
             }
         }
 
-        return $this->success();
+        return [];
     }
 
     public function pauseTorrent(Application $app, Request $request, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
         $torrentManager->pauseTorrent($hash);
-        return $this->success();
+        return [];
     }
 
     public function resumeTorrent(Application $app, Request $request, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
         $torrentManager->resumeTorrent($hash);
-        return $this->success();
+        return [];
     }
 
     public function removeTorrent(Application $app, Request $request, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
         $torrentManager->removeTorrent($hash);
-        return $this->success();
+        return [];
     }
 }

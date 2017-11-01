@@ -2,7 +2,8 @@
 
 namespace Athorrent\Controllers;
 
-use Symfony\Component\HttpFoundation\Request;
+use Athorrent\Routing\AbstractController;
+use Athorrent\View\View;
 
 class DefaultController extends AbstractController
 {
@@ -11,8 +12,8 @@ class DefaultController extends AbstractController
         return [['GET', '/', 'home']];
     }
 
-    public function home(Request $request)
+    public function home()
     {
-        return $this->render();
+        return new View();
     }
 }

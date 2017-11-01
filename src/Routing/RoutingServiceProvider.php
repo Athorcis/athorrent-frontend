@@ -48,7 +48,7 @@ class RoutingServiceProvider implements ServiceProviderInterface, EventListenerP
 
             $request = $event->getRequest();
 
-            if ($result instanceof View && !$request->isXmlHttpRequest()) {
+            if ($result instanceof View && !$request->attributes->get('_ajax')) {
                 $result->setJsVar('routes', $app['ajax_route_descriptors']);
             }
         }, Application::EARLY_EVENT);

@@ -3,6 +3,8 @@
 namespace Athorrent\Controllers;
 
 use Athorrent\Entity\User;
+use Athorrent\Routing\AbstractController;
+use Athorrent\View\View;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,7 +20,7 @@ class AccountController extends AbstractController
 
     public function editAccount(Request $request)
     {
-        return $this->render();
+        return new View();
     }
 
     public function saveAccount(Application $app, Request $request)
@@ -29,19 +31,17 @@ class AccountController extends AbstractController
         $currentPassword = $request->request->get('current_password');
 
         if (empty($username) || empty($currentPassword)) {
-            $this->addNotification('error', 'error.usernameOrPasswordEmpty');
-            return $this->redirect('editAccount');
+            return $app->notify('error', 'error.usernameOrPasswordEmpty');
         }
 
         if ($app['security.encoder.digest']->encodePassword($currentPassword, $user->getSalt()) !== $user->getPassword()) {
-            $this->addNotification('error', 'error.passwordInvalid');
-            return $this->redirect('editAccount');
+            return $app->notify('error', 'error.passwordInvalid');
         }
 
         if ($user->getUsername() !== $username) {
             if (User::exists($username)) {
-                $this->addNotification('error', 'error.usernameAlreadyUsed');
-                return $this->redirect('editAccount');
+
+                return $app->notify('error', 'error.usernameAlreadyUsed');
             }
 
             $user->setUsername($username);
@@ -52,8 +52,7 @@ class AccountController extends AbstractController
 
         if (!empty($newPassword) || !empty($passwordConfirm)) {
             if ($newPassword !== $passwordConfirm) {
-                $this->addNotification('error', 'error.passwordsDiffer');
-                return $this->redirect('editAccount');
+                return $app->notify('error', 'error.passwordsDiffer');
             }
 
             $user->setRawPassword($newPassword);
@@ -61,6 +60,6 @@ class AccountController extends AbstractController
 
         $user->save();
 
-        return $this->redirect('editAccount');
+        return $app->redirect('editAccount');
     }
 }

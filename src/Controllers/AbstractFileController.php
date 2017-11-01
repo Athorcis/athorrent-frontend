@@ -3,9 +3,11 @@
 namespace Athorrent\Controllers;
 
 use Athorrent\Entity\Sharing;
+use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\FileManager;
 use Athorrent\Utils\FileUtils;
 use Athorrent\Utils\MimeType;
+use Athorrent\View\View;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,34 +52,14 @@ class AbstractFileController extends AbstractController
         return $breadcrumb;
     }
 
-    protected function getJsVariables()
-    {
-        global $app;
-
-        $jsVariables = parent::getJsVariables();
-        $jsVariables['locale']['files.directLink'] = $app['translator']->trans('files.directLink');
-        $jsVariables['locale']['files.sharingLink'] = $app['translator']->trans('files.sharingLink');
-
-        return $jsVariables;
-    }
-
-    protected function abort($code, $error = null)
-    {
-        if ($error === null && $code === 404) {
-            $error = 'error.fileNotFound';
-        }
-
-        parent::abort($code, $error);
-    }
-
     public function listFiles(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($request);
+        $fileManager = $this->getFileManager($app);
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
 
         if (!$path) {
-            return $this->abort(404);
+            $app->abort(404);
         }
 
         $breadcrumb = self::getBreadcrumb($fileManager, $path);
@@ -89,26 +71,30 @@ class AbstractFileController extends AbstractController
             $title = $app['translator']->trans('files.title');
         }
 
-        return $this->render([
+        return new View([
             'title' => $title,
             'dir_size' => $result['size'],
             'breadcrumb' => $breadcrumb,
-            'files' => $result['files']
+            'files' => $result['files'],
+            '_strings' => [
+                'files.directLink',
+                'files.sharingLink'
+            ]
         ], 'listFiles');
     }
 
     public function openFile(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($request);
+        $fileManager = $this->getFileManager($app);
 
         if (!$request->query->has('path')) {
-            return $this->abort(400);
+            $app->abort(400);
         }
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
 
         if (!is_file($path)) {
-            return $this->abort(404);
+            $app->abort(404);
         }
 
         $response = new BinaryFileResponse($path, 200, [
@@ -124,43 +110,43 @@ class AbstractFileController extends AbstractController
 
     public function downloadFile(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($request);
+        $fileManager = $this->getFileManager($app);
 
         if (!$request->query->has('path')) {
-            return $this->abort(400);
+            $app->abort(400);
         }
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
 
         if (!is_file($path)) {
-            return $this->abort(404);
+            $app->abort(404);
         }
 
         set_time_limit(0);
 
-        return $this->sendFile($path, 200, [
+        return $app->sendFile($path, 200, [
             'Content-Disposition' => ' attachment; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
         ]);
     }
 
     public function playFile(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($request);
+        $fileManager = $this->getFileManager($app);
 
         if (!$request->query->has('path')) {
-            return $this->abort(400);
+            $app->abort(400);
         }
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
 
         if (!is_file($path)) {
-            return $this->abort(404);
+            $app->abort(404);
         }
 
         $mimeType = FileUtils::getMimeType($path);
         
         if (!MimeType::isPlayable($mimeType)) {
-            return $this->abort(500, 'error.notPlayable');
+            $app->abort(500, 'error.notPlayable');
         }
 
         $relativePath = $fileManager->getRelativePath($path);
@@ -174,7 +160,7 @@ class AbstractFileController extends AbstractController
             $mediaTag = "video";
         }
         
-        return $this->render([
+        return new View([
             'name' => $name,
             'breadcrumb' => $breadcrumb,
             'mediaTag' => $mediaTag,
@@ -185,22 +171,22 @@ class AbstractFileController extends AbstractController
 
     public function displayFile(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($request);
+        $fileManager = $this->getFileManager($app);
 
         if (!$request->query->has('path')) {
-            return $this->abort(400);
+            $app->abort(400);
         }
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
 
         if (!is_file($path)) {
-            return $this->abort(404);
+            $app->abort(404);
         }
 
         $mimeType = FileUtils::getMimeType($path);
         
         if (!MimeType::isDisplayable($mimeType)) {
-            return $this->abort(500, 'error.notDisplayable');
+            $app->abort(500, 'error.notDisplayable');
         }
 
         $relativePath = $fileManager->getRelativePath($path);
@@ -219,46 +205,46 @@ class AbstractFileController extends AbstractController
             $data["src"] = $relativePath;
         }
         
-        return $this->render($data);
+        return new View($data);
     }
 
     public function removeFile(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($request);
+        $fileManager = $this->getFileManager($app);
 
         if (!$request->request->has('path')) {
-            return $this->abort(400);
+            $app->abort(400);
         }
 
         $path = $fileManager->getAbsolutePath($request->request->get('path'));
 
         if (!$path) {
-            return $this->abort(404);
+            $app->abort(404);
         }
 
         if ($fileManager->remove($path)) {
-            return $this->success();
+            return [];
         }
 
-        return $this->abort(500, 'error.cannotRemoveFile');
+        $app->abort(500, 'error.cannotRemoveFile');
     }
 
     public function getDirectLink(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($request);
+        $fileManager = $this->getFileManager($app);
 
         if (!$request->query->has('path')) {
-            return $this->abort(400);
+            $app->abort(400);
         }
 
         $path = $fileManager->getAbsolutePath($request->query->get('path'));
 
         if (!is_file($path)) {
-            return $this->abort(404);
+            $app->abort(404);
         }
 
         if (!$fileManager->isWritable()) {
-            return $this->abort(500);
+            $app->abort(500);
         }
 
         $relativePath = $fileManager->getRelativePath($path);
@@ -285,12 +271,10 @@ class AbstractFileController extends AbstractController
 
         $finalPath = str_replace($sharingPath, '', $relativePath);
 
-        $url = $this->url('openFile', [
+        return $app->url('openFile', [
             '_prefixId' => 'sharings',
             'token' => $sharing->getToken(),
             'path' => $finalPath
         ]);
-        
-        return $this->success($url);
     }
 }

@@ -7,8 +7,8 @@ define(['jquery', 'urldecode', 'bootstrap-sass', 'picturefill'], function ($, ur
 
     $.extend(athorrent, {
         trans: function (key) {
-            if (athorrent.locale.hasOwnProperty(key)) {
-                return athorrent.locale[key];
+            if (athorrent.strings.hasOwnProperty(key)) {
+                return athorrent.strings[key];
             }
 
             return key;
@@ -26,7 +26,7 @@ define(['jquery', 'urldecode', 'bootstrap-sass', 'picturefill'], function ($, ur
             parameters = $.extend({}, parameters);
 
             if (method === 'POST') {
-                parameters.csrf = athorrent.csrf;
+                parameters.csrfToken = athorrent.csrfToken;
             }
 
             url = pattern.replace(/\{([a-z]+)\}/g, function (match, p1) {
@@ -60,7 +60,7 @@ define(['jquery', 'urldecode', 'bootstrap-sass', 'picturefill'], function ($, ur
 
             if (method === 'POST') {
                 jqXhr.done(function (data) {
-                    athorrent.csrf = data.csrf;
+                    athorrent.csrfToken = data.csrfToken;
                 });
             }
 
@@ -141,7 +141,7 @@ define(['jquery', 'urldecode', 'bootstrap-sass', 'picturefill'], function ($, ur
             this.initializeParameters();
 
             $('form[method="post"]').submit(function (event) {
-                $(event.target).append('<input type="hidden" name="csrf" value="' + athorrent.csrf + '" />');
+                $(event.target).append('<input type="hidden" name="csrfToken" value="' + athorrent.csrfToken + '" />');
             });
 
             $('[data-ajax-action]').click(function (event) {
