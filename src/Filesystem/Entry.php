@@ -1,16 +1,18 @@
 <?php
 
-namespace Athorrent\Utils;
+namespace Athorrent\Filesystem;
 
-use Athorrent\Entity\Sharing;
+use Athorrent\Database\Entity\Sharing;
+use Athorrent\Database\Entity\User;
+use Doctrine\Common\Collections\Criteria;
 
-class File
+class Entry
 {
     private $absolutePath;
 
     private $relativePath;
 
-    private $ownerId;
+    private $user;
 
     private $cachable;
 
@@ -35,14 +37,14 @@ class File
     private $playable;
 
     private $displayable;
-    
+
     private $sharingToken;
 
-    public function __construct($absolutePath, $relativePath, $ownerId, $cachable, $deletable, $sharable)
+    public function __construct($absolutePath, $relativePath, User $user, $cachable, $deletable, $sharable)
     {
         $this->absolutePath = $absolutePath;
         $this->relativePath = $relativePath;
-        $this->ownerId = $ownerId;
+        $this->user = $user;
         $this->cachable = $cachable;
         $this->deletable = $deletable;
         $this->sharable = $sharable;
@@ -172,16 +174,14 @@ class File
         if ($this->displayable === null) {
             $this->displayable = MimeType::isDisplayable($this->getMimeType());
         }
-        
+
         return $this->displayable;
     }
-    
+
     public function isShared()
     {
-        global $app;
-
         if ($this->isSharable()) {
-            return $app['orm.repo.sharing']->findOneBy(['token' => $this->getSharingToken()]) !== null;
+            return isset($this->user->getSharings()[$this->getSharingToken()]);
         }
 
         return false;
@@ -196,9 +196,20 @@ class File
                 $path .= '/';
             }
 
-            $this->sharingToken = Sharing::generateToken($this->ownerId, $this->relativePath);
+            $this->sharingToken = Sharing::generateToken($this->user, $this->relativePath);
         }
 
         return $this->sharingToken;
+    }
+
+    public static function compare(Entry $entry, Entry $other)
+    {
+        if (!$entry->isFile() && $other->isFile()) {
+            return -1;
+        } elseif ($entry->isFile() && !$other->isFile()) {
+            return 1;
+        }
+
+        return strcmp($entry->getName(), $other->getName());
     }
 }

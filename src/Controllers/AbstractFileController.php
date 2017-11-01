@@ -3,16 +3,15 @@
 namespace Athorrent\Controllers;
 
 use Athorrent\Database\Entity\Sharing;
+use Athorrent\Filesystem\MimeType;
+use Athorrent\Filesystem\UserFilesystem;
 use Athorrent\Routing\AbstractController;
-use Athorrent\Utils\FileManager;
-use Athorrent\Utils\FileUtils;
-use Athorrent\Utils\MimeType;
 use Athorrent\View\View;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class AbstractFileController extends AbstractController
+abstract class AbstractFileController extends AbstractController
 {
     protected function getRouteDescriptors()
     {
@@ -30,18 +29,36 @@ class AbstractFileController extends AbstractController
         ];
     }
 
-    private static function getBreadcrumb($fileManager, $path, $trim = true)
-    {
-        global $app;
+    abstract protected function getFilesystem(Application $app);
 
+    protected function getAbsoluteFilePath(Application $app, UserFilesystem $fs)
+    {
+        $rawPath = $app['request_stack']->getCurrentRequest()->get('path');
+
+        if ($rawPath === null) {
+            $app->abort(400);
+        }
+
+        $absolutePath = $fs->getAbsolutePath($rawPath);
+
+        if (!is_file($absolutePath)) {
+            $app->abort(404);
+        }
+
+        return $absolutePath;
+    }
+
+	protected function getRelativeFilePath(Application $app, UserFilesystem $fs)
+    {
+        return $fs->getRelativePath($this->getAbsoluteFilePath($app, $fs));
+    }
+
+    protected function getBreadcrumb(Application $app, $path)
+    {
         $breadcrumb = [$app['translator']->trans('files.root') => ''];
 
-        $parts = explode('/', $fileManager->getRelativePath($path));
+        $parts = explode('/', $path);
         $currentPath = '';
-
-        if (is_file($path) && $trim) {
-            array_pop($parts);
-        }
 
         foreach ($parts as $currentName) {
             $currentPath .= $currentName;
@@ -54,28 +71,22 @@ class AbstractFileController extends AbstractController
 
     public function listFiles(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($app);
+        $fs = $this->getFilesystem($app);
+        $path = $request->query->get('path');
 
-        $path = $fileManager->getAbsolutePath($request->query->get('path'));
-
-        if (!$path) {
-            $app->abort(404);
-        }
-
-        $breadcrumb = self::getBreadcrumb($fileManager, $path);
-        $result = $fileManager->listEntries($path);
-
-        $title = $result['name'];
-
-        if ($fileManager->isRoot($path) && $this instanceof FileController) {
+        if ($fs->isRoot($path) && $this instanceof FileController) {
             $title = $app['translator']->trans('files.title');
+        } else {
+            $title = basename($fs->getAbsolutePath($path));
         }
+
+        $breadcrumb = $this->getBreadcrumb($app, $fs->getRelativePath($path));
+        $entries = $fs->list($path);
 
         return new View([
             'title' => $title,
-            'dir_size' => $result['size'],
             'breadcrumb' => $breadcrumb,
-            'files' => $result['files'],
+            'files' => $entries,
             '_strings' => [
                 'files.directLink',
                 'files.sharingLink'
@@ -83,23 +94,13 @@ class AbstractFileController extends AbstractController
         ], 'listFiles');
     }
 
-    public function openFile(Application $app, Request $request)
+    protected function sendFile(Application $app, Request $request, $contentDisposition)
     {
-        $fileManager = $this->getFileManager($app);
-
-        if (!$request->query->has('path')) {
-            $app->abort(400);
-        }
-
-        $path = $fileManager->getAbsolutePath($request->query->get('path'));
-
-        if (!is_file($path)) {
-            $app->abort(404);
-        }
+        $path = $this->getAbsoluteFilePath($app, $this->getFilesystem($app));
 
         $response = new BinaryFileResponse($path, 200, [
-            "Content-Disposition" => ' inline; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
-        ], null, true);
+            'Content-Disposition' => ' ' . $contentDisposition . '; filename="' . basename($path) . '"'
+        ], false, null, true);
         
         if (!$response->isNotModified($request)) {
             set_time_limit(0);
@@ -108,101 +109,72 @@ class AbstractFileController extends AbstractController
         return $response;
     }
 
+    public function openFile(Application $app, Request $request)
+    {
+        return $this->sendFile($app, $request, 'inline');
+    }
+
     public function downloadFile(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($app);
-
-        if (!$request->query->has('path')) {
-            $app->abort(400);
-        }
-
-        $path = $fileManager->getAbsolutePath($request->query->get('path'));
-
-        if (!is_file($path)) {
-            $app->abort(404);
-        }
-
-        set_time_limit(0);
-
-        return $app->sendFile($path, 200, [
-            'Content-Disposition' => ' attachment; filename="' . pathinfo($path, PATHINFO_BASENAME) . '"'
-        ]);
+        return $this->sendFile($app, $request, 'attachment');
     }
 
     public function playFile(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($app);
+        $fs = $this->getFilesystem($app);
+        $path = $this->getRelativeFilePath($app, $fs);
 
-        if (!$request->query->has('path')) {
-            $app->abort(400);
-        }
-
-        $path = $fileManager->getAbsolutePath($request->query->get('path'));
-
-        if (!is_file($path)) {
-            $app->abort(404);
-        }
-
-        $mimeType = FileUtils::getMimeType($path);
+        $mimeType = $fs->getMimeType($path);
         
         if (!MimeType::isPlayable($mimeType)) {
             $app->abort(500, 'error.notPlayable');
         }
 
-        $relativePath = $fileManager->getRelativePath($path);
-        $breadcrumb = self::getBreadcrumb($fileManager, $path, false);
+        $breadcrumb = self::getBreadcrumb($app, $path, false);
 
-        $name = pathinfo($relativePath, PATHINFO_BASENAME);
+        $name = basename($path);
 
         if (MimeType::isAudio($mimeType)) {
-            $mediaTag = "audio";
+            $mediaTag = 'audio';
         } elseif (MimeType::isVideo($mimeType)) {
-            $mediaTag = "video";
+            $mediaTag = 'video';
         }
         
         return new View([
             'name' => $name,
             'breadcrumb' => $breadcrumb,
             'mediaTag' => $mediaTag,
-            'type' => explode(";", $mimeType)[0],
-            'src' => $relativePath
+            'type' => explode(';', $mimeType)[0],
+            'src' => $path
         ]);
     }
 
-    public function displayFile(Application $app, Request $request)
+    public function displayFile(Application $app)
     {
-        $fileManager = $this->getFileManager($app);
+        $fs = $this->getFilesystem($app);
+        $path = $this->getAbsoluteFilePath($app, $fs);
+        $relativePath = $fs->getRelativePath($path);
 
-        if (!$request->query->has('path')) {
-            $app->abort(400);
-        }
-
-        $path = $fileManager->getAbsolutePath($request->query->get('path'));
-
-        if (!is_file($path)) {
-            $app->abort(404);
-        }
-
-        $mimeType = FileUtils::getMimeType($path);
+        $mimeType = $fs->getMimeType($relativePath);
         
         if (!MimeType::isDisplayable($mimeType)) {
-            $app->abort(500, 'error.notDisplayable');
+            return $app->abort(500, 'error.notDisplayable');
         }
 
-        $relativePath = $fileManager->getRelativePath($path);
-        $breadcrumb = self::getBreadcrumb($fileManager, $path, false);
+        $relativePath = $fs->getRelativePath($path);
+        $breadcrumb = self::getBreadcrumb($app, $fs->getRelativePath($path), false);
 
         $name = pathinfo($relativePath, PATHINFO_BASENAME);
         
         $data = [
-            "name" => $name,
-            "breadcrumb" => $breadcrumb
+            'name' => $name,
+            'breadcrumb' => $breadcrumb
         ];
         
         if (MimeType::isText($mimeType)) {
-            $data["text"] = file_get_contents($path);
+            $data['text'] = file_get_contents($path);
         } elseif (MimeType::isImage($mimeType)) {
-            $data["src"] = $relativePath;
+            $data['src'] = $relativePath;
         }
         
         return new View($data);
@@ -210,49 +182,36 @@ class AbstractFileController extends AbstractController
 
     public function removeFile(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($app);
+        $path = $request->get('path');
 
-        if (!$request->request->has('path')) {
+        if ($path === null) {
             $app->abort(400);
         }
 
-        $path = $fileManager->getAbsolutePath($request->request->get('path'));
+        $fs = $this->getFilesystem($app);
 
-        if (!$path) {
+        if ($fs->isRoot($path)) {
             $app->abort(404);
         }
 
-        if ($fileManager->remove($path)) {
-            $app['orm.repo.sharing']->deleteByUserAndRoot($app['orm.em']->getReference('Athorrent\Database\Entity\User', $fileManager->getOwnerId()), $path);
+        $fs->remove($path);
+        $app['orm.repo.sharing']->deleteByUserAndRoot($fs->getUser(), $path);
 
-            return [];
-        }
-
-        $app->abort(500, 'error.cannotRemoveFile');
+        return [];
     }
 
     public function getDirectLink(Application $app, Request $request)
     {
-        $fileManager = $this->getFileManager($app);
+        $fs = $this->getFilesystem($app);
+        $path = $this->getRelativeFilePath($app, $fs);
 
-        if (!$request->query->has('path')) {
-            $app->abort(400);
+        if (!$fs->isWritable()) {
+            return $app->abort(500);
         }
 
-        $path = $fileManager->getAbsolutePath($request->query->get('path'));
+        list($parentPath) = explode('/', $path);
 
-        if (!is_file($path)) {
-            $app->abort(404);
-        }
-
-        if (!$fileManager->isWritable()) {
-            $app->abort(500);
-        }
-
-        $relativePath = $fileManager->getRelativePath($path);
-        list($parentPath) = explode('/', $relativePath);
-
-        $sharings = $app['orm.repo.sharing']->findByUserAndRoot($app['orm.em']->getReference('Athorrent\Database\Entity\User', $fileManager->getOwnerId()), $parentPath);
+        $sharings = $app['orm.repo.sharing']->findByUserAndRoot($fs->getUser(), $parentPath);
 
         if (count($sharings) > 0) {
             $sharing = $sharings[0];

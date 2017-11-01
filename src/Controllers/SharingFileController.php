@@ -2,14 +2,12 @@
 
 namespace Athorrent\Controllers;
 
-use Athorrent\Entity\Sharing;
-use Athorrent\Utils\FileManager;
+use Athorrent\Filesystem\SharedFilesystem;
 use Silex\Application;
 
 class SharingFileController extends AbstractFileController
 {
-
-    protected function getFileManager(Application $app)
+    protected function getFilesystem(Application $app)
     {
         $token = $app['request_stack']->getCurrentRequest()->attributes->get('token');
         $sharing = $app['orm.repo.sharing']->findOneBy(['token' => $token]);
@@ -18,6 +16,6 @@ class SharingFileController extends AbstractFileController
             $app->abort(404, 'error.sharingNotFound');
         }
 
-        return FileManager::getBySharing($app['user']->getId(), $sharing);
+        return new SharedFilesystem($app, $sharing);
     }
 }

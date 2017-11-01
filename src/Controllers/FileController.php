@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FileController extends AbstractFileController
 {
-    protected function getFileManager(Application $app)
+    protected function getFilesystem(Application $app)
     {
-        return FileManager::getByUser($app['user']->getId());
+        return $app['user.fs'];
     }
 }
