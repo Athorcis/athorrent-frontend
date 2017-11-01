@@ -2,7 +2,7 @@
 
 namespace Athorrent\Utils;
 
-use Athorrent\Entity\Sharing;
+use Athorrent\Database\Entity\Sharing;
 
 class FileManager
 {
@@ -204,7 +204,7 @@ class FileManager
             return false;
         }
 
-        Sharing::deleteByPathRecursively($this->getRelativePath($path), $this->ownerId);
+//        Sharing::deleteByPathRecursively($this->getRelativePath($path), $this->ownerId);
 
         if (is_file($path)) {
             return unlink($path);
@@ -245,6 +245,6 @@ class FileManager
 
     public static function getBySharing($userId, Sharing $sharing)
     {
-        return self::getInstance($sharing->getUserId(), $userId, str_replace('/', DIRECTORY_SEPARATOR, $sharing->getPath()), false);
+        return self::getInstance($sharing->getUser()->getId(), $userId, str_replace('/', DIRECTORY_SEPARATOR, $sharing->getPath()), false);
     }
 }

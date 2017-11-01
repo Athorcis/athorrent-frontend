@@ -34,12 +34,12 @@ class AccountController extends AbstractController
             return $app->notify('error', 'error.usernameOrPasswordEmpty');
         }
 
-        if ($app['security.encoder.digest']->encodePassword($currentPassword, $user->getSalt()) !== $user->getPassword()) {
+        if (!$app['user_manager']->checkUserPassword($user, $currentPassword)) {
             return $app->notify('error', 'error.passwordInvalid');
         }
 
         if ($user->getUsername() !== $username) {
-            if (User::exists($username)) {
+            if ($app['user_manager']->userExists($username)) {
 
                 return $app->notify('error', 'error.usernameAlreadyUsed');
             }
@@ -55,10 +55,11 @@ class AccountController extends AbstractController
                 return $app->notify('error', 'error.passwordsDiffer');
             }
 
-            $user->setRawPassword($newPassword);
+            $app['user_manager']->setUserPassword($user, $newPassword);
         }
 
-        $user->save();
+        $app['orm.em']->persist($user);
+        $app['orm.em']->flush();
 
         return $app->redirect('editAccount');
     }

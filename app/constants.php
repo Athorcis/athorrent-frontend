@@ -5,6 +5,7 @@ define('ROOT_DIR', dirname(__DIR__));
 define('APP_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'app');
 define('BIN_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'bin');
 define('RESOURCES_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'resources');
+define('SRC_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'src');
 define('VAR_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'var');
 define('VENDOR_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'vendor');
 define('WEB_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'web');

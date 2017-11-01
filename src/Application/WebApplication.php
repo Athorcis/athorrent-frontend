@@ -82,7 +82,10 @@ class WebApplication extends BaseApplication
         }
 
         if (!$this['security.authorization_checker']->isGranted('ROLE_PREVIOUS_ADMIN')) {
-            $user->updateConnectionTimestamp();
+            $user->setConnectionDateTime(new \DateTime());
+
+            $this['orm.em']->persist($user);
+            $this['orm.em']->flush();
         }
     }
 

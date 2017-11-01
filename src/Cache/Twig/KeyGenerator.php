@@ -3,8 +3,8 @@
 namespace Athorrent\Cache\Twig;
 
 use Asm89\Twig\CacheExtension\CacheStrategy\KeyGeneratorInterface;
-use Athorrent\Entity\Sharing;
-use Athorrent\Entity\User;
+use Athorrent\Database\Entity\Sharing;
+use Athorrent\Database\Entity\User;
 use Athorrent\Utils\File;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
@@ -41,7 +41,7 @@ class KeyGenerator implements KeyGeneratorInterface
         } elseif ($value instanceof Sharing) {
             $key = $value->getToken();
         } elseif ($value instanceof User) {
-            $key = $value->getUserId() . $value->getConnectionTimestamp();
+            $key = $value->getId() . $value->getConnectionTimestamp();
         } elseif (is_string($value)) {
             $key = $value;
         }

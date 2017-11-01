@@ -2,10 +2,11 @@
 
 namespace Athorrent\Controllers;
 
-use Athorrent\Entity\Sharing;
-use Athorrent\Entity\User;
-use Athorrent\Entity\UserRole;
+use Athorrent\Dtabase\Entity\Sharing;
+use Athorrent\Database\Entity\User;
+use Athorrent\Database\Type\UserRole;
 use Athorrent\Routing\AbstractController;
+use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,39 +25,14 @@ class UserController extends AbstractController
         ];
     }
 
-    public function listUsers(Request $request)
+    public function listUsers(Application $app, Request $request)
     {
-        if ($request->query->has('page')) {
-            $page = $request->query->get('page');
-
-            if (!is_numeric($page) || $page < 1) {
-                $app->abort(400);
-            }
-        } else {
-            $page = 1;
-        }
-
-        $usersPerPage = 10;
-        $offset = $usersPerPage * ($page - 1);
-
-        $users = User::loadAll($offset, $usersPerPage, $total);
-
-        if ($offset >= $total) {
-            $app->abort(404);
-        }
-
-        $lastPage = ceil($total / $usersPerPage);
-
-        return new View([
-            'users' => $users,
-            'page' => $page,
-            'lastPage' => $lastPage
-        ]);
+        return new PaginatedView($request, $app['orm.repo.user'], 10);
     }
 
     public function addUser()
     {
-        return new View(['roleList' => UserRole::$list]);
+        return new View(['roleList' => UserRole::$values]);
     }
 
     public function saveUser(Application $app, Request $request)
@@ -65,38 +41,29 @@ class UserController extends AbstractController
         $password = $request->request->get('password');
         $role = $request->request->get('role');
 
-        if (!empty($username) && !empty($password) && !empty($role)) {
-            if (User::exists($username)) {
-                return $app->notify('error', 'error.usernameAlreadyUsed');
-            }
-
-            if (!in_array($role, UserRole::$list)) {
-                $app->abort(400, 'error.roleNotSpecified');
-            }
-
-            $user = new User(null, $username);
-            $user->setRawPassword($password);
-            $user->save();
-
-            $userRole = new UserRole($user->getUserId(), $role);
-            $userRole->save();
-        } else {
+        if (empty($username) || empty($password) || empty($role)) {
             return $app->notify('error', 'error.usernameOrPasswordEmpty');
         }
+
+        if ($app['user_manager']->userExists($username)) {
+            return $app->notify('error', 'error.usernameAlreadyUsed');
+        }
+
+        if (!in_array($role, UserRole::$values)) {
+            $app->abort(400, 'error.roleInvalid');
+        }
+
+        $app['user_manager']->createUser($username, $password, $role);
 
         return $app->redirect('listUsers');
     }
 
-    public function removeUser(Request $request)
+    public function removeUser(Application $app, Request $request)
     {
-        $userId = $request->request->get('userId');
+        $id = $request->request->get('userId');
 
-        if (!empty($userId)) {
-            if (User::deleteByUserId($userId)) {
-                UserRole::deleteByUserId($userId);
-                Sharing::deleteByUserId($userId);
-                return [];
-            }
+        if ($id && $app['user_manager']->deleteUserById($id)) {
+            return [];
         }
 
         $app->abort(500, 'error.cannotRemoveUser');

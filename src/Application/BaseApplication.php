@@ -3,7 +3,9 @@
 namespace Athorrent\Application;
 
 use Athorrent\Cache\CacheCleaner;
+use Doctrine\DBAL\Types\Type;
 use phpFastCache\Helper\Psr16Adapter;
+
 use Silex\Application;
 
 class BaseApplication extends Application
@@ -20,13 +22,25 @@ class BaseApplication extends Application
             return new CacheCleaner($app['cache'], CACHE_DIR);
         };
         
-        $this['pdo'] = function () {
-            return new \PDO(
-                'mysql:host=127.0.0.1;dbname=' . DB_NAME . ';charset=utf8',
-                DB_USERNAME,
-                DB_PASSWORD,
-                [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
-            );
+        $this->register(new \Athorrent\Database\DoctrineServiceProvider(), [
+            'db.options' => [
+                'host' => '127.0.0.1',
+                'user' => DB_USERNAME,
+                'password' => DB_PASSWORD,
+                'dbname' => DB_NAME,
+                'charset' => 'utf8'
+            ]
+        ]);
+
+        Type::addType('UserRole', 'Athorrent\Database\Type\UserRole');
+
+        $this['orm.repo.user'] = function (Application $app) {
+            return $app['orm.em']->getRepository('Athorrent\\Database\\Entity\\User');
         };
+
+        $this['orm.repo.sharing'] = function (Application $app) {
+            return $app['orm.em']->getRepository('Athorrent\\Database\\Entity\\Sharing');
+        };
+//        var_dump($this['orm.em']->getRepository('Athorrent\Database\Entity\User')->findAll());
     }
 }

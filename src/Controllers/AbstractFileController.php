@@ -2,7 +2,7 @@
 
 namespace Athorrent\Controllers;
 
-use Athorrent\Entity\Sharing;
+use Athorrent\Database\Entity\Sharing;
 use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\FileManager;
 use Athorrent\Utils\FileUtils;
@@ -223,6 +223,8 @@ class AbstractFileController extends AbstractController
         }
 
         if ($fileManager->remove($path)) {
+            $app['orm.repo.sharing']->deleteByUserAndRoot($app['orm.em']->getReference('Athorrent\Database\Entity\User', $fileManager->getOwnerId()), $path);
+
             return [];
         }
 
@@ -250,7 +252,7 @@ class AbstractFileController extends AbstractController
         $relativePath = $fileManager->getRelativePath($path);
         list($parentPath) = explode('/', $relativePath);
 
-        $sharings = Sharing::loadByPathRecursively($parentPath, $fileManager->getOwnerId());
+        $sharings = $app['orm.repo.sharing']->findByUserAndRoot($app['orm.em']->getReference('Athorrent\Database\Entity\User', $fileManager->getOwnerId()), $parentPath);
 
         if (count($sharings) > 0) {
             $sharing = $sharings[0];

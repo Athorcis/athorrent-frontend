@@ -7,11 +7,11 @@
 {% endblock %}
 
 {% block content %}
-    {% set userId = app.user.userId %}
-
     <div class="page-header">
         <h1>{{ 'sharings.title'|trans }}</h1>
     </div>
+
+    {% set sharings = pagination.entities %}
 
     {% if sharings|length == 0 %}
         <div class="alert alert-info" role="alert">{{ 'sharings.none'|trans }}</div>
@@ -42,25 +42,6 @@
         </table>
     {% endif %}
 
-    {% if lastPage > 1 %}
-        <div class="text-center">
-            <ul class="pagination">
-            {% set startPage = max(1, page - 2) %}
-            {% set endPage = min(lastPage, startPage + 4) %}
-            {% set startPage = max(1, endPage - 4) %}
+    {% include "fragments/pagination.html.twig" %}
 
-            {% if page > 1 %}
-                <li><a href="{{ path('listSharings', { page: page - 1 }) }}">&laquo;</a></li>
-            {% endif %}
-
-            {% for i in startPage .. endPage %}
-                <li{% if i == page %} class="active"{% endif %}><a href="{{ path('listSharings', { page: i }) }}">{{ i }}</a></li>
-            {% endfor %}
-
-            {% if page < lastPage %}
-                <li><a href="{{ path('listSharings', { page: page + 1 }) }}">&raquo;</a></li>
-            {% endif %}
-            </ul>
-        </div>
-    {% endif %}
 {% endblock %}
