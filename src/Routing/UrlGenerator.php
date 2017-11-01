@@ -26,7 +26,7 @@ class UrlGenerator extends BaseUrlGenerator
 
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        if ($name[0] !== '_') {
+        if ($name[0] !== '_' && isset($this->actionMap[$name])) {
             if (isset($parameters['_locale'])) {
                 $locale = $parameters['_locale'];
             } elseif ($this->context->hasParameter('_locale')) {
