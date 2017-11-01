@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Utils;
+namespace Athorrent\Security;
 
 use Athorrent\Entity\User;
 use Symfony\Component\Security\Core\User\UserProviderInterface;

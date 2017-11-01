@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Utils;
+namespace Athorrent\Security;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
