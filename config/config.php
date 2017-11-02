@@ -1,8 +1,9 @@
 <?php
 
+require __DIR__ . '/env.php';
+
 define('ROOT_DIR', dirname(__DIR__));
 
-define('APP_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'app');
 define('BIN_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'bin');
 define('RESOURCES_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'resources');
 define('SRC_DIR', ROOT_DIR . DIRECTORY_SEPARATOR . 'src');
