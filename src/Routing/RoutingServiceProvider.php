@@ -23,6 +23,8 @@ class RoutingServiceProvider implements ServiceProviderInterface, EventListenerP
         $app['controllers_factory'] = $app->factory(function (Application $app) {
             return new ControllerCollection($app['route_factory'], $app['default_locale'], $app['locales']);
         });
+
+        $app['request_matcher_cache'] = new RequestMatcherCache($app);
     }
 
     public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
