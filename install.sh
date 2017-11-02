@@ -92,7 +92,7 @@ define('CSRF_SALT','$(randomString)');
 if (isset(\$_SERVER['HTTP_HOST'])) {
     define('STATIC_HOST', \$_SERVER['HTTP_HOST']);
 }
-" > app/config.php
+" > config/env.php
 
 echo
 echo "Create user"

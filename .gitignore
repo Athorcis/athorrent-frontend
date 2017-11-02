@@ -1,9 +1,10 @@
-/bin/
+/bin/*
+/config/env.php
 /node_modules/
 /var/
 /vendor/
-/app/config.php
-
 /web/*
+
+!/bin/athorrent-frontend
 !/web/index.php
 !/web/robots.txt
