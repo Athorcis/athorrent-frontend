@@ -87,7 +87,6 @@ class WebApplication extends BaseApplication
         $this->register(new RememberMeServiceProvider());
 
         $this->register(new \Athorrent\Routing\RoutingServiceProvider());
-        $this->register(new \Athorrent\Routing\RoutingServiceProvider());
         $this->register(new \Silex\Provider\LocaleServiceProvider());
 
         $this['dispatcher']->addListener(KernelEvents::RESPONSE, function () {
