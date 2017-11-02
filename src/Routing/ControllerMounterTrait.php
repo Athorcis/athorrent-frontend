@@ -21,7 +21,7 @@ trait ControllerMounterTrait
             $routes = $this['controllers']->flush();
 
             $cache->set('routes', $routes);
-            $app['request_matcher_cache']->storeRequestManager($routes);
+            $this['request_matcher_cache']->storeRequestManager($routes);
         }
 
         $this['routes']->addCollection($routes);
