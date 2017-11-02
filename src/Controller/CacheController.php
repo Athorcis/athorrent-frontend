@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Controllers;
+namespace Athorrent\Controller;
 
 use Athorrent\Routing\AbstractController;
 use Athorrent\Cache\CacheUtils;

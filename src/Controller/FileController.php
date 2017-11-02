@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Controllers;
+namespace Athorrent\Controller;
 
 use Athorrent\Utils\FileManager;
 use Silex\Application;

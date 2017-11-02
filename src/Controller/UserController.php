@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Controllers;
+namespace Athorrent\Controller;
 
 use Athorrent\Dtabase\Entity\Sharing;
 use Athorrent\Database\Entity\User;

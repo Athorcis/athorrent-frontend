@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Controllers;
+namespace Athorrent\Controller;
 
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Routing\AbstractController;
