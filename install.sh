@@ -68,12 +68,6 @@ echo
 "$YARN" run prod
 
 echo
-echo "Create database"
-echo
-
-mysql -h 127.0.0.1 -u $DB_USERNAME -p$DB_PASSWORD < utils/athorrent.sql
-
-echo
 echo "Create config file"
 echo
 
@@ -93,6 +87,12 @@ if (isset(\$_SERVER['HTTP_HOST'])) {
     define('STATIC_HOST', \$_SERVER['HTTP_HOST']);
 }
 " > config/env.php
+
+echo
+echo "Create database"
+echo
+
+php bin/athorrent-frontend orm:schema-tool:create
 
 echo
 echo "Create user"

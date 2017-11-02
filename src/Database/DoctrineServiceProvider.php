@@ -15,7 +15,7 @@ class DoctrineServiceProvider extends BaseDoctrineServiceProvider
 
         $config = Setup::createAnnotationMetadataConfiguration([SRC_DIR . '/Database/Entity'], $app['debug']);
 
-        if ($app['debug']) {
+        if ($app['debug'] || php_sapi_name() === 'cli') {
             $cache = new \Doctrine\Common\Cache\ArrayCache();
         } else {
             $cache = new \Doctrine\Common\Cache\ApcuCache();
