@@ -4,6 +4,7 @@ namespace Athorrent\Application;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Routing\ControllerMounterTrait;
+use Athorrent\Security\Csrf\CsrfServiceProvider;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Silex\Application;
@@ -85,6 +86,7 @@ class WebApplication extends BaseApplication
 
         $this->register(new SessionServiceProvider());
         $this->register(new RememberMeServiceProvider());
+        $this->register(new CsrfServiceProvider());
 
         $this->register(new \Athorrent\Routing\RoutingServiceProvider());
         $this->register(new \Silex\Provider\LocaleServiceProvider());

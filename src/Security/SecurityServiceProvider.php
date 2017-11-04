@@ -2,16 +2,9 @@
 
 namespace Athorrent\Security;
 
-use Athorrent\Security\Csrf\TokenManager;
-use Athorrent\View\View;
 use Pimple\Container;
-use Pimple\ServiceProviderInterface;
 use Silex\Application;
 use Silex\Provider\SecurityServiceProvider as BaseSecurityServiceProvider;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 class SecurityServiceProvider extends BaseSecurityServiceProvider
 {
@@ -98,53 +91,6 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
     {
         if (!$app['cache']->has('routes')) {
             parent::boot($app);
-        }
-    }
-
-    public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
-    {
-        parent::subscribe($app, $dispatcher);
-
-        $dispatcher->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
-            $this->handleRequest($event, $app);
-        });
-
-        $dispatcher->addListener(KernelEvents::VIEW, function (GetResponseForControllerResultEvent $event) use ($app) {
-            $result = $event->getControllerResult();
-
-            if ($result === null) {
-                return;
-            }
-
-            if ($result instanceof View) {
-                $result->setJsVar('csrfToken', $app['csrf.token']);
-            } elseif ($event->getRequest()->getMethod() === 'POST') {
-                $result['csrfToken'] = $app['csrf.token'];
-            }
-
-            $event->setControllerResult($result);
-        });
-    }
-
-    public function handleRequest(GetResponseEvent $event, Application $app)
-    {
-        $request = $event->getRequest();
-        $session = $request->getSession();
-
-        if (!$session->isStarted()) {
-            $session->start();
-        }
-
-        $app['csrf.manager'] = new TokenManager($session);
-
-        if ($request->getMethod() === 'POST') {
-            if (!$app['csrf.manager']->isTokenValid($request->get('csrfToken'))) {
-                $app->abort(403);
-            }
-
-            $app['csrf.token'] = $app['csrf.manager']->refreshToken();
-        } else {
-            $app['csrf.token'] = $app['csrf.manager']->getToken();
         }
     }
 }
