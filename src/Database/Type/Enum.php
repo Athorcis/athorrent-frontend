@@ -7,7 +7,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 abstract class Enum extends Type
 {
-    public abstract function getValues();
+    abstract public function getValues();
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {

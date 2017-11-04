@@ -7,7 +7,7 @@ use Silex\ControllerCollection;
 
 trait ControllerMounterTrait
 {
-    public abstract function mountControllers();
+    abstract public function mountControllers();
 
     public function flush()
     {
