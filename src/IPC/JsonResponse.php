@@ -44,6 +44,6 @@ class JsonResponse
             return null;
         }
 
-        return new JsonResponse($array['data'], $success);
+        return new self($array['data'], $success);
     }
 }
