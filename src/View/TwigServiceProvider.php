@@ -26,7 +26,7 @@ class TwigServiceProvider extends BaseTwigServiceProvider implements BootablePro
 
     public function register(Container $app)
     {
-		parent::register($app);
+        parent::register($app);
 
         $app->extend('twig', function (Twig_Environment $twig) use ($app) {
             return $this->extendTwig($twig, $app);

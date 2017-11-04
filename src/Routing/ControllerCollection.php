@@ -79,7 +79,6 @@ class ControllerCollection extends BaseControllerCollection
                 $path = $prefix . $route->getPath();
                 $name = $controller->getRouteName();
 
-
                 if (!$name) {
                     $name = $controller->generateRouteName($prefix);
                 }
