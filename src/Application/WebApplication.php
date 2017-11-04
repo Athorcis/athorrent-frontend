@@ -69,7 +69,7 @@ class WebApplication extends BaseApplication
         });
 
         $this->after([$this, 'addHeaders']);
-        
+
         $this->error([$this, 'handleError']);
 
         $this->register(new \Athorrent\View\TwigServiceProvider(), [
@@ -119,7 +119,7 @@ class WebApplication extends BaseApplication
         if ($response->headers->has('Content-Disposition')) {
             return;
         }
-        
+
         if (strpos($request->get('_route'), ':ajax') === false) {
             $response->headers->set('Content-Security-Policy', "script-src 'unsafe-inline' " . $request->getScheme() . '://' . STATIC_HOST);
             $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -177,8 +177,6 @@ class WebApplication extends BaseApplication
         $this->mount('/administration', new \Athorrent\Controller\AdministrationController(), 'administration');
         $this->mount('/administration/users', new \Athorrent\Controller\UserController(), 'users');
         $this->mount('/administration/cache', new \Athorrent\Controller\CacheController(), 'cache');
-
-//        $this->mount('/user/scheduler', new \Athorrent\Controller\SchedulerController(), 'scheduler');
     }
 
     public function redirect($url, $status = 302)

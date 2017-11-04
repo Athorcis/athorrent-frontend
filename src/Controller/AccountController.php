@@ -39,7 +39,6 @@ class AccountController extends AbstractController
 
         if ($user->getUsername() !== $username) {
             if ($app['user_manager']->userExists($username)) {
-
                 return $app->notify('error', 'error.usernameAlreadyUsed');
             }
 

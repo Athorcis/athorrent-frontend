@@ -45,7 +45,7 @@ class RoutingServiceProvider implements ServiceProviderInterface, EventListenerP
             $result = $event->getControllerResult();
 
             if ($result === null) {
-                return ;
+                return;
             }
 
             $request = $event->getRequest();

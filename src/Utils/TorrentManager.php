@@ -8,7 +8,7 @@ use Athorrent\Filesystem\FileUtils;
 class TorrentManager
 {
     private $user;
-    
+
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -19,16 +19,16 @@ class TorrentManager
     {
         return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->user->getId();
     }
-    
+
     public function addTorrentFromUrl($url)
     {
         $path = $this->getTorrentsDirectory() . DIRECTORY_SEPARATOR . md5($url) . '.torrent';
-        
+
         file_put_contents($path, file_get_contents($url));
-        
+
         return $this->addTorrentFromFile($path);
     }
-    
+
     public function addTorrentFromFile($path)
     {
         $oldFile = realpath($path);
@@ -54,7 +54,7 @@ class TorrentManager
 
     public function getPaths()
     {
-        $paths =  $this->service->call('getPaths');
+        $paths = $this->service->call('getPaths');
 
         if (DIRECTORY_SEPARATOR !== '/') {
             for ($i = 0, $size = count($paths); $i < $size; ++$i) {

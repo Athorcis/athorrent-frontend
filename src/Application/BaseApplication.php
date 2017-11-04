@@ -13,7 +13,7 @@ class BaseApplication extends Application
     public function __construct()
     {
         parent::__construct(['debug' => DEBUG]);
-        
+
         $this['cache'] = function () {
             return new Psr16Adapter(CACHE_DRIVER, ['ignoreSymfonyNotice' => true]);
         };
@@ -21,7 +21,7 @@ class BaseApplication extends Application
         $this['cache.cleaner'] = function (Application $app) {
             return new CacheCleaner($app['cache'], CACHE_DIR);
         };
-        
+
         $this->register(new \Athorrent\Database\DoctrineServiceProvider(), [
             'db.options' => [
                 'host' => '127.0.0.1',
@@ -41,6 +41,5 @@ class BaseApplication extends Application
         $this['orm.repo.sharing'] = function (Application $app) {
             return $app['orm.em']->getRepository('Athorrent\\Database\\Entity\\Sharing');
         };
-//        var_dump($this['orm.em']->getRepository('Athorrent\Database\Entity\User')->findAll());
     }
 }
