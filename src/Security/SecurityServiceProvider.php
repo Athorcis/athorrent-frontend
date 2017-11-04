@@ -72,8 +72,7 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
 
         $app['security.access_rules'] = [
             ['^/' . $localesPrefix . '(ajax/)?administration', 'ROLE_ADMIN'],
-            ['^/' . $localesPrefix . '(ajax/)?search', 'ROLE_USER'],
-            ['^/' . $localesPrefix . '(ajax/)?user', 'ROLE_USER']
+            ['^/' . $localesPrefix . '(ajax/)?(search|user)', 'ROLE_USER']
         ];
 
         $app['security.default_encoder'] = $app['security.encoder.digest'];
