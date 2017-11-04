@@ -7,7 +7,6 @@ use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Athorrent\Cache\Twig\PsrSimpleCacheAdapter;
 use Athorrent\Cache\Twig\KeyGenerator;
 use Pimple\Container;
-use Pimple\ServiceProviderInterface;
 use Silex\Api\BootableProviderInterface;
 use Silex\Api\EventListenerProviderInterface;
 use Silex\Application;

@@ -6,7 +6,6 @@ use Athorrent\Database\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class SharingRepository extends EntityRepository
 {

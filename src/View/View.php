@@ -3,7 +3,6 @@
 namespace Athorrent\View;
 
 use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\Translator;
 
 class View

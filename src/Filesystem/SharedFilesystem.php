@@ -3,7 +3,6 @@
 namespace Athorrent\Filesystem;
 
 use Athorrent\Database\Entity\Sharing;
-use Athorrent\Utils\TorrentManager;
 use Silex\Application;
 
 class SharedFilesystem extends UserFilesystem

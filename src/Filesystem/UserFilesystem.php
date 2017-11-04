@@ -3,7 +3,6 @@
 namespace Athorrent\Filesystem;
 
 use Athorrent\Database\Entity\User;
-use Athorrent\Utils\TorrentManager;
 use FilesystemIterator;
 use Silex\Application;
 

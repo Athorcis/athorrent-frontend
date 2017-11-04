@@ -2,7 +2,6 @@
 
 namespace Athorrent\View;
 
-use Athorrent\Database\Repository\PaginableTrait;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
