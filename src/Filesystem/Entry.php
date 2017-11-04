@@ -4,7 +4,6 @@ namespace Athorrent\Filesystem;
 
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Database\Entity\User;
-use Doctrine\Common\Collections\Criteria;
 
 class Entry
 {

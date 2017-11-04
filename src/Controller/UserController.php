@@ -2,7 +2,6 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Dtabase\Entity\Sharing;
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Type\UserRole;
 use Athorrent\Routing\AbstractController;

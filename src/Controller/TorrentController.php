@@ -4,7 +4,6 @@ namespace Athorrent\Controller;
 
 use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\ServiceUnvailableException;
-use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;

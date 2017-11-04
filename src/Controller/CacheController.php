@@ -3,7 +3,6 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Routing\AbstractController;
-use Athorrent\Cache\CacheUtils;
 use Athorrent\View\View;
 use Silex\Application;
 
