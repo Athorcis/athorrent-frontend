@@ -82,7 +82,7 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
             return new AuthenticationHandler();
         };
 
-        $app['user_manager'] = function (Container $app) {
+        $app['user_manager'] = function (Application $app) {
             return new UserManager($app['orm.em'], $app['orm.repo.user'], $app['security.default_encoder']);
         };
     }
