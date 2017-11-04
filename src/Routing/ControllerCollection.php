@@ -29,7 +29,7 @@ class ControllerCollection extends BaseControllerCollection
         $controllers->prefixId = $prefixId;
     }
 
-    public function addController(ControllerCollection $controllers, $callback, $method, $pattern, $action, $type)
+    public function addController(self $controllers, $callback, $method, $pattern, $action, $type)
     {
         $controller = $controllers->match($pattern, $callback);
         $controller->method($method);

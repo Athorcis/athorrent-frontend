@@ -201,7 +201,7 @@ class Entry
         return $this->sharingToken;
     }
 
-    public static function compare(Entry $entry, Entry $other)
+    public static function compare(self $entry, self $other)
     {
         if (!$entry->isFile() && $other->isFile()) {
             return -1;
