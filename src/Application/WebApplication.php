@@ -25,9 +25,6 @@ class WebApplication extends BaseApplication
     {
         parent::__construct();
 
-        $this['locale'] = $this['default_locale'] = 'fr';
-        $this['locales'] = ['fr', 'en'];
-
         $this['torrent_manager'] = $this->protect(function (User $user) {
             static $instances = [];
 
@@ -47,6 +44,7 @@ class WebApplication extends BaseApplication
         $this['user.fs'] = function (Application $app) {
             return new \Athorrent\Filesystem\UserFilesystem($app, $app['user']);
         };
+
         $this->before([$this, 'updateConnectionTimestamp']);
 
         $this->view(function (View $result, Request $request) {
@@ -72,14 +70,11 @@ class WebApplication extends BaseApplication
 
         $this->error([$this, 'handleError']);
 
+        $this->initializeTranslations();
+
         $this->register(new \Athorrent\View\TwigServiceProvider(), [
             'twig.path' => TEMPLATES_DIR,
             'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
-        ]);
-
-        $this->register(new \Athorrent\View\TranslationServiceProvider(), [
-            'locale_fallbacks' => [$this['default_locale']],
-            'translator.cache_dir' => CACHE_DIR . '/translator'
         ]);
 
         $this->register(new \Athorrent\Security\SecurityServiceProvider());
@@ -94,6 +89,18 @@ class WebApplication extends BaseApplication
         $this['dispatcher']->addListener(KernelEvents::RESPONSE, function () {
             $this['session']->save();
         }, self::LATE_EVENT);
+    }
+
+
+    protected function initializeTranslations()
+    {
+        $this['locale'] = $this['default_locale'] = 'fr';
+        $this['locales'] = ['fr', 'en'];
+
+        $this->register(new \Athorrent\View\TranslationServiceProvider(), [
+            'locale_fallbacks' => [$this['default_locale']],
+            'translator.cache_dir' => CACHE_DIR . '/translator'
+        ]);
     }
 
     public function updateConnectionTimestamp()
@@ -133,6 +140,10 @@ class WebApplication extends BaseApplication
     {
         if ($this['debug']) {
             return;
+        }
+
+        if ($exception instanceof NotifiableException) {
+            return $this->notify('error', $exception->getMessage());
         }
 
         if ($exception instanceof NotFoundHttpException) {

@@ -2,6 +2,7 @@
 
 namespace Athorrent\Controller;
 
+use Athorrent\Application\NotifiableException;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
 use Silex\Application;
@@ -30,16 +31,16 @@ class AccountController extends AbstractController
         $currentPassword = $request->request->get('current_password');
 
         if (empty($username) || empty($currentPassword)) {
-            return $app->notify('error', 'error.usernameOrPasswordEmpty');
+            throw new NotifiableException('error', 'error.usernameOrPasswordEmpty');
         }
 
         if (!$app['user_manager']->checkUserPassword($user, $currentPassword)) {
-            return $app->notify('error', 'error.passwordInvalid');
+            throw new NotifiableException('error', 'error.passwordInvalid');
         }
 
         if ($user->getUsername() !== $username) {
             if ($app['user_manager']->userExists($username)) {
-                return $app->notify('error', 'error.usernameAlreadyUsed');
+                throw new NotifiableException('error', 'error.usernameAlreadyUsed');
             }
 
             $user->setUsername($username);
@@ -50,7 +51,7 @@ class AccountController extends AbstractController
 
         if (!empty($newPassword) || !empty($passwordConfirm)) {
             if ($newPassword !== $passwordConfirm) {
-                return $app->notify('error', 'error.passwordsDiffer');
+                throw new NotifiableException('error.passwordsDiffer');
             }
 
             $app['user_manager']->setUserPassword($user, $newPassword);
