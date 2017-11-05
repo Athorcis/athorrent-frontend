@@ -89,10 +89,11 @@ class UserManager implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        $class = $this->app['orm.repo.user']->getClassName();
+        $userRepository = $this->app['orm.repo.user'];
+        $class = $userRepository->getClassName();
 
         if ($user instanceof $class) {
-            return $this->app['orm.repo.user']->find($user->getId());
+            return $userRepository->find($user->getId());
         }
 
         throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
