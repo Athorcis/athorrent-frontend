@@ -14,6 +14,12 @@ class BaseApplication extends Application
     {
         parent::__construct(['debug' => DEBUG]);
 
+        $this->initializeCache();
+        $this->initializeDoctrine();
+    }
+
+    protected function initializeCache()
+    {
         $this['cache'] = function () {
             return new Psr16Adapter(CACHE_DRIVER, ['ignoreSymfonyNotice' => true]);
         };
@@ -21,7 +27,10 @@ class BaseApplication extends Application
         $this['cache.cleaner'] = function (Application $app) {
             return new CacheCleaner($app['cache'], CACHE_DIR);
         };
+    }
 
+    protected function initializeDoctrine()
+    {
         $this->register(new \Athorrent\Database\DoctrineServiceProvider(), [
             'db.options' => [
                 'host' => '127.0.0.1',
