@@ -4,8 +4,7 @@ namespace Athorrent\Security;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Type\UserRole;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
+use Silex\Application;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -14,16 +13,13 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserManager implements UserProviderInterface
 {
-    private $entityManager;
-
-    private $userRepository;
+    private $app;
 
     private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $entityManager, EntityRepository $userRepository, PasswordEncoderInterface $passwordEncoder)
+    public function __construct(Application $app, PasswordEncoderInterface $passwordEncoder)
     {
-        $this->entityManager = $entityManager;
-        $this->userRepository = $userRepository;
+        $this->app = $app;
         $this->passwordEncoder = $passwordEncoder;
     }
 
@@ -43,23 +39,25 @@ class UserManager implements UserProviderInterface
         $encodedPassword = $this->passwordEncoder->encodePassword($password, $salt);
 
         $user = new User($username, $encodedPassword, $salt, $roles);
-        $this->entityManager->persist($user);
+
+        $entityManager = $this->app['orm.em'];
+        $entityManager->persist($user);
 
         foreach ($user->getHasRoles() as $userRole) {
-            $this->entityManager->persist($userRole);
+            $entityManager->persist($userRole);
         }
 
-        $this->entityManager->flush();
+        $entityManager->flush();
     }
 
     public function userExists($username)
     {
-        return $this->userRepository->findOneBy(['username' => $username]) !== null;
+        return $this->app['orm.repo.user']->findOneBy(['username' => $username]) !== null;
     }
 
     public function loadUserByUsername($username)
     {
-        $user = $this->userRepository->findOneBy(['username' => $username]);
+        $user = $this->app['orm.repo.user']->findOneBy(['username' => $username]);
 
         if ($user === null) {
             throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
@@ -81,7 +79,7 @@ class UserManager implements UserProviderInterface
     public function deleteUserById($id)
     {
         try {
-            $this->userRepository->delete($id);
+            $this->app['orm.repo.user']->delete($id);
         } catch (ORMException $exception) {
             return false;
         }
@@ -91,10 +89,10 @@ class UserManager implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        $class = $this->userRepository->getClassName();
+        $class = $this->app['orm.repo.user']->getClassName();
 
         if ($user instanceof $class) {
-            return $this->userRepository->find($user->getId());
+            return $this->app['orm.repo.user']->find($user->getId());
         }
 
         throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
@@ -102,6 +100,6 @@ class UserManager implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        return $class === $this->userRepository->getClassName();
+        return $class === $this->app['orm.repo.user']->getClassName();
     }
 }

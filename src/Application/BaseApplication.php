@@ -5,7 +5,6 @@ namespace Athorrent\Application;
 use Athorrent\Cache\CacheCleaner;
 use Doctrine\DBAL\Types\Type;
 use phpFastCache\Helper\Psr16Adapter;
-
 use Silex\Application;
 
 class BaseApplication extends Application
