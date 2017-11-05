@@ -3,15 +3,18 @@
 namespace Athorrent\Security;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Silex\Application;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 
 class LoginListener implements EventSubscriberInterface
 {
-    public function __construct(EntityManagerInterface $entityManager)
+    private $app;
+
+    public function __construct(Application $app)
     {
-        $this->entityManager = $entityManager;
+        $this->app = $app;
     }
 
     public function onInteractiveLogin(InteractiveLoginEvent $event)
@@ -19,8 +22,9 @@ class LoginListener implements EventSubscriberInterface
         $user = $event->getAuthenticationToken()->getUser();
         $user->setConnectionDateTime(new \DateTime());
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $entityManager = $this->app['orm.em'];
+        $entityManager->persist($user);
+        $entityManager->flush();
     }
 
     public static function getSubscribedEvents()

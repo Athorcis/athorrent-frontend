@@ -79,7 +79,7 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
         $app['security.default_encoder'] = $app['security.encoder.digest'];
 
         $app['security.login.listener'] = function () use ($app) {
-            return new LoginListener($app['orm.em']);
+            return new LoginListener($app);
         };
 
         $app['security.authentication.failure_handler.general'] = function () {
@@ -87,7 +87,7 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
         };
 
         $app['user_manager'] = function (Application $app) {
-            return new UserManager($app['orm.em'], $app['orm.repo.user'], $app['security.default_encoder']);
+            return new UserManager($app, $app['security.default_encoder']);
         };
     }
 
