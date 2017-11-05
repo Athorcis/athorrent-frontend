@@ -2,8 +2,9 @@
 
 namespace Athorrent\Application;
 
-use Athorrent\Command\HookTriggerCommand;
+use Athorrent\Command\CreateUserCommand;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Knp\Provider\ConsoleServiceProvider;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -23,7 +24,7 @@ class ConsoleApplication extends BaseApplication
 
         $this->initializeDoctrine();
 
-//        $this['console']->add(new HookTriggerCommand());
+        $this['console']->add(new CreateUserCommand());
     }
 
     protected function initializeDoctrine()
@@ -35,7 +36,7 @@ class ConsoleApplication extends BaseApplication
 
         $this['console']->setHelperSet($helperSet);
 
-        \Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($this['console']);
+        ConsoleRunner::addCommands($this['console']);
     }
 
     public function run(Request $request = null)

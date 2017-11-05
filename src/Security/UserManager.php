@@ -2,6 +2,7 @@
 
 namespace Athorrent\Security;
 
+use Athorrent\Application\NotifiableException;
 use Athorrent\Database\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -32,9 +33,16 @@ class UserManager implements UserProviderInterface
             $roles = [$roles];
         }
 
-        $salt = base64_encode(random_bytes(22));
-        $user = new User($username, $this->passwordEncoder->encodePassword($password, $salt), $salt, $roles);
+        $rolesDiff = array_diff($roles, UserRole::$values);
 
+        if (count($rolesDiff) > 0) {
+            throw new \Exception(sprintf('%s is not a valid role', $rolesDiff[0]));
+        }
+
+        $salt = base64_encode(random_bytes(22));
+        $encodedPassword = $this->passwordEncoder->encodePassword($password, $salt);
+
+        $user = new User($username, $encodedPassword, $salt, $roles);
         $this->entityManager->persist($user);
 
         foreach ($user->getHasRoles() as $userRole) {
