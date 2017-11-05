@@ -5,6 +5,7 @@ namespace Athorrent\Security;
 use Pimple\Container;
 use Silex\Application;
 use Silex\Provider\SecurityServiceProvider as BaseSecurityServiceProvider;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SecurityServiceProvider extends BaseSecurityServiceProvider
 {
@@ -77,13 +78,23 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
 
         $app['security.default_encoder'] = $app['security.encoder.digest'];
 
+        $app['security.login.listener'] = function () use ($app) {
+            return new LoginListener($app['orm.em']);
+        };
+
         $app['security.authentication.failure_handler.general'] = function () {
-            return new AuthenticationHandler();
+            return new AuthenticationFailureHandler();
         };
 
         $app['user_manager'] = function (Application $app) {
             return new UserManager($app['orm.em'], $app['orm.repo.user'], $app['security.default_encoder']);
         };
+    }
+
+    public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
+    {
+        parent::subscribe($app, $dispatcher);
+        $dispatcher->addSubscriber($app['security.login.listener']);
     }
 
     public function boot(Application $app)

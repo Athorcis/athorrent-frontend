@@ -45,8 +45,6 @@ class WebApplication extends BaseApplication
             return new \Athorrent\Filesystem\UserFilesystem($app, $app['user']);
         };
 
-        $this->before([$this, 'updateConnectionTimestamp']);
-
         $this->view(function (View $result, Request $request) {
             if (!$request->attributes->get('_ajax')) {
                 $flashBag = $this['session']->getFlashBag();
@@ -87,22 +85,6 @@ class WebApplication extends BaseApplication
         $this['dispatcher']->addListener(KernelEvents::RESPONSE, function () {
             $this['session']->save();
         }, self::LATE_EVENT);
-    }
-
-    public function updateConnectionTimestamp()
-    {
-        $user = $this['user'];
-
-        if ($user === null) {
-            return;
-        }
-
-        if (!$this['security.authorization_checker']->isGranted('ROLE_PREVIOUS_ADMIN')) {
-            $user->setConnectionDateTime(new \DateTime());
-
-            $this['orm.em']->persist($user);
-            $this['orm.em']->flush();
-        }
     }
 
     public function addHeaders(Request $request, Response $response)

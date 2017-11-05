@@ -2,16 +2,16 @@
 
 namespace Athorrent\Security;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Athorrent\Application\NotifiableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
-class AuthenticationHandler implements AuthenticationFailureHandlerInterface
+class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $request->getSession()->getFlashBag()->add('error', 'error.loginFailure');
-        return new RedirectResponse($request->headers->get('referer'));
+        throw new NotifiableException('error.loginFailure');
     }
 }
