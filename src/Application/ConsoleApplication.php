@@ -22,12 +22,12 @@ class ConsoleApplication extends BaseApplication
             'console.project_directory' => ROOT_DIR
         ]);
 
-        $this->initializeDoctrine();
+        $this->initializeDoctrineHelpers();
 
         $this['console']->add(new CreateUserCommand());
     }
 
-    protected function initializeDoctrine()
+    protected function initializeDoctrineHelpers()
     {
         $helperSet = new HelperSet([
             'db' => new ConnectionHelper($this['db']),
