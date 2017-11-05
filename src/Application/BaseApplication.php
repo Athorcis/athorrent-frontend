@@ -16,6 +16,7 @@ class BaseApplication extends Application
 
         $this->initializeCache();
         $this->initializeDoctrine();
+        $this->initializeTranslations();
     }
 
     protected function initializeCache()
@@ -50,5 +51,16 @@ class BaseApplication extends Application
         $this['orm.repo.sharing'] = function (Application $app) {
             return $app['orm.em']->getRepository('Athorrent\\Database\\Entity\\Sharing');
         };
+    }
+
+    protected function initializeTranslations()
+    {
+        $this['locale'] = $this['default_locale'] = 'fr';
+        $this['locales'] = ['fr', 'en'];
+
+        $this->register(new \Athorrent\View\TranslationServiceProvider(), [
+            'locale_fallbacks' => [$this['default_locale']],
+            'translator.cache_dir' => CACHE_DIR . '/translator'
+        ]);
     }
 }

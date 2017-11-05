@@ -70,8 +70,6 @@ class WebApplication extends BaseApplication
 
         $this->error([$this, 'handleError']);
 
-        $this->initializeTranslations();
-
         $this->register(new \Athorrent\View\TwigServiceProvider(), [
             'twig.path' => TEMPLATES_DIR,
             'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
@@ -89,18 +87,6 @@ class WebApplication extends BaseApplication
         $this['dispatcher']->addListener(KernelEvents::RESPONSE, function () {
             $this['session']->save();
         }, self::LATE_EVENT);
-    }
-
-
-    protected function initializeTranslations()
-    {
-        $this['locale'] = $this['default_locale'] = 'fr';
-        $this['locales'] = ['fr', 'en'];
-
-        $this->register(new \Athorrent\View\TranslationServiceProvider(), [
-            'locale_fallbacks' => [$this['default_locale']],
-            'translator.cache_dir' => CACHE_DIR . '/translator'
-        ]);
     }
 
     public function updateConnectionTimestamp()

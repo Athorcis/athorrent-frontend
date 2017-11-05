@@ -2,8 +2,8 @@
 
 namespace Athorrent\Security;
 
-use Athorrent\Application\NotifiableException;
 use Athorrent\Database\Entity\User;
+use Athorrent\Database\Type\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
