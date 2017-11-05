@@ -5,10 +5,10 @@ function installComposer {
     echo "install composer"
     echo
     
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    php -r "if (hash_file('SHA384', 'composer-setup.php') === '070854512ef404f16bac87071a6db9fd9721da1684cd4589b1196c3faf71b9a2682e2311b36a5079825e155ac7ce150d') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-    php composer-setup.php
-    php -r "unlink('composer-setup.php');"
+    "$PHP" -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    "$PHP" -r "if (hash_file('SHA384', 'composer-setup.php') === '070854512ef404f16bac87071a6db9fd9721da1684cd4589b1196c3faf71b9a2682e2311b36a5079825e155ac7ce150d') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    "$PHP" composer-setup.php
+    "$PHP" -r "unlink('composer-setup.php');"
 }
 
 function randomString {
@@ -43,7 +43,7 @@ then
         installComposer
     fi
     
-    COMPOSER="php composer.phar"
+    COMPOSER="$PHP composer.phar"
 fi
 
 YARN=$(type -p yarn)
@@ -92,10 +92,10 @@ echo
 echo "Create database"
 echo
 
-php bin/athorrent-frontend orm:schema-tool:create
+"$PHP" bin/athorrent-frontend orm:schema-tool:create
 
 echo
 echo "Create user"
 echo
 
-"$PHP" utils/create-admin.php $SEEDBOX_USERNAME $SEEDBOX_PASSWORD
+"$PHP" bin/athorrent-frontend user: create $SEEDBOX_USERNAME $SEEDBOX_PASSWORD ROLE_ADMIN

@@ -2,6 +2,8 @@
 
 namespace Athorrent\Database;
 
+use Doctrine\Common\Cache\ApcuCache;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
@@ -16,9 +18,9 @@ class DoctrineServiceProvider extends BaseDoctrineServiceProvider
         $config = Setup::createAnnotationMetadataConfiguration([SRC_DIR . '/Database/Entity'], $app['debug']);
 
         if (function_exists('apcu_exists') && !$app['debug']) {
-            $cache = new \Doctrine\Common\Cache\ApcuCache();
+            $cache = new ApcuCache();
         } else {
-            $cache = new \Doctrine\Common\Cache\ArrayCache();
+            $cache = new ArrayCache();
         }
 
         $config->setMetadataCacheImpl($cache);

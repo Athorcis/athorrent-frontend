@@ -48,10 +48,6 @@ class UserController extends AbstractController
             return $app->notify('error', 'error.usernameAlreadyUsed');
         }
 
-        if (!in_array($role, UserRole::$values)) {
-            $app->abort(400, 'error.roleInvalid');
-        }
-
         $app['user_manager']->createUser($username, $password, $role);
 
         return $app->redirect('listUsers');
