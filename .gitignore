@@ -1,5 +1,6 @@
 /bin/*
 /config/env.php
+/.idea/
 /node_modules/
 /var/
 /vendor/
