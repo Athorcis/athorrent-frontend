@@ -9,7 +9,7 @@
     "font-awesome": "^4.7.0",
     "html5shiv": "^3.7.3",
     "jquery": "^3.2.1",
-    "js-base64": "^2.3.2",
+    "js-base64": "^2.4.1",
     "locutus": "^2.0.9",
     "mediaelement": "^4.2.6",
     "picturefill": "^3.0.2"
