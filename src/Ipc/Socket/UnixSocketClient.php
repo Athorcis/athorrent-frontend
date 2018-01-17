@@ -2,7 +2,7 @@
 
 namespace Athorrent\Ipc\Socket;
 
-use Athorrent\Util\ServiceUnavailableException;
+use Athorrent\Utils\ServiceUnavailableException;
 
 class UnixSocketClient extends UnixSocket implements ClientSocketInterface
 {
