@@ -41,8 +41,9 @@ class BaseApplication extends Application
             ]
         ]);
 
+        Type::addType('UserRole', 'Athorrent\Database\Type\UserRole');
+
         $this['orm.repo.user'] = function (Application $app) {
-            Type::addType('UserRole', 'Athorrent\Database\Type\UserRole');
             return $app['orm.em']->getRepository('Athorrent\\Database\\Entity\\User');
         };
 
