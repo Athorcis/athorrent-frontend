@@ -4,6 +4,7 @@ namespace Athorrent\Security;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Type\UserRole;
+use Doctrine\ORM\ORMException;
 use Silex\Application;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;

@@ -195,7 +195,7 @@ class Entry
                 $path .= '/';
             }
 
-            $this->sharingToken = Sharing::generateToken($this->user, $this->relativePath);
+            $this->sharingToken = Sharing::generateToken($this->user, $path);
         }
 
         return $this->sharingToken;

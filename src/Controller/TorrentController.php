@@ -3,7 +3,8 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Routing\AbstractController;
-use Athorrent\Utils\ServiceUnvailableException;
+use Athorrent\Utils\ServiceUnavailableException;
+use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,10 @@ class TorrentController extends AbstractController
         ];
     }
 
+    /**
+     * @param Application $app
+     * @return TorrentManager
+     */
     protected function getTorrentManager(Application $app)
     {
         return $app['torrent_manager']($app['user']);
@@ -45,7 +50,7 @@ class TorrentController extends AbstractController
                     return strcmp($a['name'], $b['name']);
                 }
             );
-        } catch (ServiceUnvailableException $e) {
+        } catch (ServiceUnavailableException $e) {
             $torrents = array();
             $clientUpdating = true;
         }

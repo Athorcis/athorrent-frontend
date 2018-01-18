@@ -9,6 +9,8 @@ class TorrentManager
 {
     private $user;
 
+    private $service;
+
     public function __construct(User $user)
     {
         $this->user = $user;
