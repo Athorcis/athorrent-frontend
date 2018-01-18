@@ -130,7 +130,7 @@ abstract class AbstractFileController extends AbstractController
             $app->abort(500, 'error.notPlayable');
         }
 
-        $breadcrumb = self::getBreadcrumb($app, $path, false);
+        $breadcrumb = self::getBreadcrumb($app, $path);
 
         $name = basename($path);
 
@@ -162,7 +162,7 @@ abstract class AbstractFileController extends AbstractController
         }
 
         $relativePath = $fs->getRelativePath($path);
-        $breadcrumb = self::getBreadcrumb($app, $fs->getRelativePath($path), false);
+        $breadcrumb = self::getBreadcrumb($app, $fs->getRelativePath($path));
 
         $name = pathinfo($relativePath, PATHINFO_BASENAME);
 
