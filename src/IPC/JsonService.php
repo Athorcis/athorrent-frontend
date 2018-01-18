@@ -28,13 +28,11 @@ class JsonService
         if ($response) {
             if ($response->isSuccess()) {
                 return $response->getData();
-            } else {
-                throw new \Exception($response->getData());
             }
-        } else {
-            throw new \Exception('no response');
+
+            throw new \Exception($response->getData());
         }
 
-        return null;
+        throw new \Exception('no response');
     }
 }
