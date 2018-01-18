@@ -4,7 +4,6 @@ namespace Athorrent\Controller;
 
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Routing\AbstractController;
-use Athorrent\Utils\FileManager;
 use Athorrent\View\PaginatedView;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +31,7 @@ class SharingController extends AbstractController
             $app->abort(400);
         }
 
-        $fileManager = FileManager::getByUser($app['user']->getId());
+        $fileManager = $app['user.fs'];
         $path = $fileManager->getAbsolutePath($request->request->get('path'));
 
         if (!file_exists($path)) {

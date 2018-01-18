@@ -66,7 +66,7 @@ class AthorrentService extends JsonService
         }
 
         if ($this->isBusy()) {
-            throw ServiceUnvailableException('SERVICE_UPDATING');
+            throw new ServiceUnavailableException('SERVICE_UPDATING');
         }
 
         $this->start();

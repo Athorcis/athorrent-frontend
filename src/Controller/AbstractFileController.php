@@ -29,6 +29,10 @@ abstract class AbstractFileController extends AbstractController
         ];
     }
 
+    /**
+     * @param Application $app
+     * @return UserFilesystem
+     */
     abstract protected function getFilesystem(Application $app);
 
     protected function getAbsoluteFilePath(Application $app, UserFilesystem $fs)
