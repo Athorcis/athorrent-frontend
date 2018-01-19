@@ -1,4 +1,4 @@
-/* eslint-env amd */
+/* eslint-env browser */
 
 import $ from 'jquery';
 import athorrent from 'athorrent';
