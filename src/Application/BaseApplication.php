@@ -3,6 +3,8 @@
 namespace Athorrent\Application;
 
 use Athorrent\Cache\CacheCleaner;
+use Athorrent\Database\DoctrineServiceProvider;
+use Athorrent\View\TranslationServiceProvider;
 use Doctrine\DBAL\Types\Type;
 use phpFastCache\Helper\Psr16Adapter;
 use Silex\Application;
@@ -31,7 +33,7 @@ class BaseApplication extends Application
 
     protected function initializeDoctrine()
     {
-        $this->register(new \Athorrent\Database\DoctrineServiceProvider(), [
+        $this->register(new DoctrineServiceProvider(), [
             'db.options' => [
                 'host' => '127.0.0.1',
                 'user' => DB_USERNAME,
@@ -57,7 +59,7 @@ class BaseApplication extends Application
         $this['locale'] = $this['default_locale'] = 'fr';
         $this['locales'] = ['fr', 'en'];
 
-        $this->register(new \Athorrent\View\TranslationServiceProvider(), [
+        $this->register(new TranslationServiceProvider(), [
             'locale_fallbacks' => [$this['default_locale']],
             'translator.cache_dir' => CACHE_DIR . '/translator'
         ]);
