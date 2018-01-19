@@ -17,7 +17,7 @@ function buildWebpackConfig(config) {
     let production = process.env.NODE_ENV === 'production';
     let nonScriptEntries = {};
 
-    for (var key in config.entries) {
+    for (let key in config.entries) {
         if (!key.match(/^scripts\//)) {
             nonScriptEntries[key] = config.entries[key];
         }
