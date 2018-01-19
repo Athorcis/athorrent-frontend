@@ -18,7 +18,7 @@ Object.assign(athorrent, {
     },
 
     modalSharingLink(link) {
-        athorrent.showModal(athorrent.trans('files.sharingLink'), '<a href="' + link + '">' + link + '</a>');
+        athorrent.showModal(athorrent.trans('files.sharingLink'), `<a href="${link}">${link}</a>`);
     },
 
     updateFileList() {
@@ -54,7 +54,7 @@ Object.assign(athorrent, {
     onFileRemove(event) {
         let { target } = event;
 
-        if (window.confirm('Êtes-vous sur de vouloir supprimer "' + this.getFileName(target) + '" ?')) {
+        if (window.confirm(`Êtes-vous sur de vouloir supprimer "${ this.getFileName(target) }" ?`)) {
             this.ajax.removeFile({
                 path: this.getFilePath(target)
             }, $.proxy(() => {
@@ -69,7 +69,7 @@ Object.assign(athorrent, {
         this.ajax.getDirectLink({
             path: this.getFilePath(target)
         }, (link) => {
-            athorrent.showModal(athorrent.trans('files.directLink'), '<a href="' + link + '">' + link + '</a>');
+            athorrent.showModal(athorrent.trans('files.directLink'), `<a href="${link}">${link}</a>`);
         });
     }
 });

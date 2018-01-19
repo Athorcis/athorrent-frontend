@@ -45,6 +45,7 @@
         "sort-keys": "off",
         "sort-vars": "off",
         "space-before-function-paren": ["error", { "anonymous": "always", "named": "never" }],
+        "template-curly-spacing": "off",
 
         "prefer-const": "off"
     }

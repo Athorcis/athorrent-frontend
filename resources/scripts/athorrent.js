@@ -1,9 +1,9 @@
 /* eslint-env browser */
 
 import $ from 'jquery';
-import urldecode from 'urldecode';
 import bs from 'bootstrap-sass';
 import pf from 'picturefill';
+import urldecode from 'urldecode';
 
 let athorrent = window.athorrent || {};
 
@@ -29,7 +29,7 @@ Object.assign(athorrent, {
             parameters.csrfToken = athorrent.csrfToken;
         }
 
-        let url = pattern.replace(/{([a-z]+)}/g, function (match, p1) {
+        let url = pattern.replace(/{([a-z]+)}/g, (match, p1) => {
             let result;
 
             if (parameters.hasOwnProperty(p1)) {
@@ -47,7 +47,7 @@ Object.assign(athorrent, {
             data: parameters,
             cache: false,
             dataType: 'json',
-            success: function (result) {
+            success: (result) => {
                 if (result.status === 'success') {
                     if (typeof success === 'function') {
                         success(result.data);
@@ -59,7 +59,7 @@ Object.assign(athorrent, {
         let jqXhr = $.ajax(url, options);
 
         if (method === 'POST') {
-            jqXhr.done(function (data) {
+            jqXhr.done((data) => {
                 athorrent.csrfToken = data.csrfToken;
             });
         }
@@ -121,7 +121,7 @@ Object.assign(athorrent, {
             for (let i = 0, { length } = rawParameters; i < length; ++i) {
                 let rawParameter = rawParameters[i].split('=');
 
-                let key = rawParameter[0];
+                let [key] = rawParameter;
                 let value = urldecode(rawParameter[1]);
 
                 parameters[key] = value;
@@ -137,7 +137,7 @@ Object.assign(athorrent, {
         this.initializeParameters();
 
         $('form[method="post"]').submit((event) => {
-            $(event.target).append('<input type="hidden" name="csrfToken" value="' + athorrent.csrfToken + '" />');
+            $(event.target).append(`<input type="hidden" name="csrfToken" value="${athorrent.csrfToken}" />`);
         });
 
         $('[data-ajax-action]').click((event) => {
@@ -161,7 +161,7 @@ Object.assign(athorrent, {
         let $item,
             $element = $(element);
 
-        selector = selector || '.' + type;
+        selector = selector || `.${type}`;
 
         if ($element.filter(selector).length) {
             $item = $element;
@@ -181,7 +181,7 @@ Object.assign(athorrent, {
             $item = this.getItem(type, element, selector);
 
         if ($item) {
-            id = $item.attr('id').replace(type + '-', '');
+            id = $item.attr('id').replace(`${type}-`, '');
         } else {
             id = null;
         }
@@ -194,7 +194,7 @@ Object.assign(athorrent, {
             $item = this.getItem(type, element, selector);
 
         if ($item) {
-            attr = $item.children('.' + type + '-' + name).text();
+            attr = $item.children(`.${type}-${name}`).text();
         } else {
             attr = null;
         }

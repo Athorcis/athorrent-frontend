@@ -1,4 +1,4 @@
-/* eslint-env browser, amd */
+/* eslint-env browser */
 
 import $ from 'jquery';
 import Dropzone from 'dropzone';
@@ -33,7 +33,7 @@ athorrent.Updater.prototype = {
                 this.intervalCallback();
             }
 
-            this.intervalId = setInterval($.proxy(this.intervalCallback, this), this.interval);
+            this.intervalId = setInterval(this.intervalCallback.bind(this), this.interval);
         }
     },
 
@@ -61,7 +61,7 @@ athorrent.Updater.prototype = {
             this.jqXHR.abort();
         }
 
-        this.jqXhr = athorrent.ajax[this.action](this.parameters, $.proxy(this.internalSuccess, this), { cache: false });
+        this.jqXhr = athorrent.ajax[this.action](this.parameters, this.internalSuccess.bind(this), { cache: false });
     },
 
     internalSuccess(data) {
@@ -84,7 +84,7 @@ athorrent.TabsPanel = function (selector) {
     this.$panel = $(selector);
     this.$tabs = this.$panel.find('.nav-tabs a');
 
-    this.$tabs.on('click', $.proxy(this.onClick, this));
+    this.$tabs.on('click', this.onClick.bind(this));
 };
 
 athorrent.TabsPanel.prototype = {
@@ -113,7 +113,7 @@ athorrent.TabsPanel.prototype = {
 
     show() {
         this.$panel.show();
-        $('body > .container').css('margin-bottom', this.$panel.height() + 'px');
+        $('body > .container').css('margin-bottom', `${ this.$panel.height() }px`);
         this.$panel.find('.nav-tabs li.active a').trigger('show.bs.tab');
     },
 
@@ -129,17 +129,17 @@ athorrent.Tab = function (parent, id, action, parameters, interval) {
         return;
     }
 
-    this.$tab = $('[href="#' + id + '"]');
-    this.$container = $('#' + id);
-    this.updater = new athorrent.Updater(action, parameters, $.proxy(this.onUpdate, this), interval);
+    this.$tab = $(`[href="#${id}"]`);
+    this.$container = $(`#${id}`);
+    this.updater = new athorrent.Updater(action, parameters, this.onUpdate.bind(this), interval);
 
     if (parent) {
         this.parent = parent;
         parent.addTab(id, this);
     }
 
-    this.$tab.on('show.bs.tab', $.proxy(this.onShow, this));
-    this.$tab.on('hide.bs.tab', $.proxy(this.onHide, this));
+    this.$tab.on('show.bs.tab', this.onShow.bind(this));
+    this.$tab.on('hide.bs.tab', this.onHide.bind(this));
 };
 
 athorrent.Tab.prototype = {
@@ -184,19 +184,19 @@ $.extend(athorrent, {
     onTorrentPause(event) {
         this.ajax.pauseTorrent({
             hash: this.getTorrentHash(event.target)
-        }, $.proxy(this.updateTorrentList, this));
+        }, this.updateTorrentList.bind(this));
     },
 
     onTorrentResume(event) {
         this.ajax.resumeTorrent({
             hash: this.getTorrentHash(event.target)
-        }, $.proxy(this.updateTorrentList, this));
+        }, this.updateTorrentList.bind(this));
     },
 
     onTorrentRemove(event) {
         this.ajax.removeTorrent({
             hash: this.getTorrentHash(event.target)
-        }, $.proxy(this.updateTorrentList, this));
+        }, this.updateTorrentList.bind(this));
     },
 
     initializeTorrentsList() {
@@ -216,7 +216,7 @@ $.extend(athorrent, {
         this.torrentPanel = new athorrent.TorrentPanel();
         this.trackersTab = new athorrent.TorrentPanelTab(this.torrentPanel, 'torrent-trackers', 'listTrackers', {}, trackerListTimeout);
 
-        $(document).on('click', '.torrent-detail', $.proxy(this.onShowDetails, this));
+        $(document).on('click', '.torrent-detail', this.onShowDetails.bind(this));
     },
 
     initializeAddTorrentForm() {
@@ -269,7 +269,7 @@ athorrent.TorrentPanelTab.prototype = $.extend(new athorrent.Tab(), {
     setHash(hash) {
         if (this.hash !== hash) {
             this.hash = hash;
-            this.setParameters({ hash: hash });
+            this.setParameters({ hash });
         }
     },
 
@@ -284,7 +284,7 @@ athorrent.AddTorrentForm = function (selector, submitSelector) {
     this.$submit = $(submitSelector);
     this.modes = [];
 
-    this.$submit.click($.proxy(this.onSubmitClick, this));
+    this.$submit.click(this.onSubmitClick.bind(this));
 };
 
 athorrent.AddTorrentForm.prototype = {
@@ -351,7 +351,7 @@ athorrent.AddTorrentForm.prototype = {
             params[this.modes[i].getInputName()] = this.modes[i].getItems();
         }
 
-        athorrent.ajax.addTorrents(params, function () {
+        athorrent.ajax.addTorrents(params, () => {
             athorrent.torrentsUpdater.update();
         });
 
@@ -379,8 +379,8 @@ athorrent.AddTorrentMode = function (inputName, elementSelector, btnSelector, co
         form.registerMode(this);
     }
 
-    this.$btn.click($.proxy(this.toggle, this));
-    $(this).on('enabled', $.proxy(this.onEnabled, this));
+    this.$btn.click(this.toggle.bind(this));
+    $(this).on('enabled', this.onEnabled.bind(this));
 };
 
 athorrent.AddTorrentMode.prototype = {
@@ -435,7 +435,7 @@ athorrent.AddTorrentMode.prototype = {
 
     setCounter(number) {
         this.counter = number;
-        this.$counter.text('(' + number + ')');
+        this.$counter.text(`(${number})`);
         this.form.updateFileCounter();
     },
 
@@ -461,11 +461,11 @@ athorrent.AddTorrentFileMode = function (inputName, elementSelector, btnSelector
         maxFilesize: 1
     });
 
-    this.dropzone.on('removedfile', $.proxy(this.onRemovedFile, this));
-    this.dropzone.on('success', $.proxy(this.onSuccess, this));
-    this.dropzone.on('error', $.proxy(this.onError, this));
+    this.dropzone.on('removedfile', this.onRemovedFile.bind(this));
+    this.dropzone.on('success', this.onSuccess.bind(this));
+    this.dropzone.on('error', this.onError.bind(this));
 
-    this.dropzone.on('sending', $.proxy(this.onSending, this));
+    this.dropzone.on('sending', this.onSending.bind(this));
 };
 
 athorrent.AddTorrentFileMode.prototype = $.extend(new athorrent.AddTorrentMode(), {
@@ -513,7 +513,7 @@ athorrent.AddTorrentFileMode.prototype = $.extend(new athorrent.AddTorrentMode()
 
 athorrent.AddTorrentMagnetMode = function (inputName, elementSelector, btnSelector, counterSelector, form) {
     athorrent.AddTorrentMode.call(this, inputName, elementSelector, btnSelector, counterSelector, form);
-    $('#add-torrent-magnet-input').on('input', $.proxy(this.onInput, this));
+    $('#add-torrent-magnet-input').on('input', this.onInput.bind(this));
 };
 
 athorrent.AddTorrentMagnetMode.prototype = $.extend(new athorrent.AddTorrentMode(), {
@@ -545,7 +545,7 @@ athorrent.AddTorrentMagnetMode.prototype = $.extend(new athorrent.AddTorrentMode
     }
 });
 
-navigator.registerProtocolHandler('magnet', location.origin + '/user/torrents/magnet?magnet=%s', 'Athorrent');
+navigator.registerProtocolHandler('magnet', `${ location.origin }/user/torrents/magnet?magnet=%s`, 'Athorrent');
 
 athorrent.initializeTorrentsList();
 athorrent.initializeTorrentPanel();

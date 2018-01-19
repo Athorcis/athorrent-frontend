@@ -1,4 +1,4 @@
-/* eslint-env browser, amd */
+/* eslint-env browser */
 
 import $ from 'jquery';
 import athorrent from 'athorrent';
@@ -14,7 +14,7 @@ function getUserName(element) {
 function onRemoveUser(event) {
     let { target } = event;
 
-    if (window.confirm('Êtes-vous sur de vouloir supprimer l\'utilisateur ' + getUserName(target) + '?')) {
+    if (window.confirm(`Êtes-vous sur de vouloir supprimer l'utilisateur ${ getUserName(target) } ?`)) {
         athorrent.ajax.removeUser({
             userId: getUserId(target)
         }, () => {
