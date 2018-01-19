@@ -1,3 +1,4 @@
+/* eslint-env node */
 
 const resolve = require('path').resolve;
 const webpack = require('webpack');
@@ -67,7 +68,7 @@ function buildWebpackConfig(config) {
             rules: [{
                 test: /\.js$/,
                 include: resolve(__dirname, 'resources/scripts'),
-                loader: 'eslint-loader'
+                loader: 'babel-loader'
             }, {
                 test: /\.css$/,
                 use: extractSass.extract([
