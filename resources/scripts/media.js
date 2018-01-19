@@ -1,9 +1,9 @@
 /* eslint-env browser, amd */
 
-require(['jquery', 'athorrent', 'mediaelement'], function ($) {
-    'use strict';
+import $ from 'jquery';
+import athorrent from 'athorrent';
+import MediaElement from 'mediaelement';
 
-    $('audio, video').mediaelementplayer({
-        stretching: 'responsive'
-    });
+$('audio, video').mediaelementplayer({
+    stretching: 'responsive'
 });

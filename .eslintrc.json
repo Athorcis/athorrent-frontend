@@ -1,6 +1,14 @@
 {
     "root": true,
 
+    "env": {
+        "es6": true
+    },
+
+    "parserOptions": {
+        "sourceType": "module"
+    },
+
     "extends": "eslint:all",
 
     "rules": {
@@ -38,13 +46,6 @@
         "sort-vars": "off",
         "space-before-function-paren": ["error", { "anonymous": "always", "named": "never" }],
 
-        "no-var": "off",
-        "object-shorthand": "off",
-        "prefer-arrow-callback": "off",
-        "prefer-destructuring": "off",
-        "prefer-reflect": "off",
-        "prefer-rest-params": "off",
-        "prefer-spread": "off",
-        "prefer-template": "off"
+        "prefer-const": "off"
     }
 }

@@ -19,6 +19,9 @@
     "url": "https://github.com/athorcis/athorrent-frontend.git"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin": "^4.1.1",
     "cross-env": "^5.0.5",
