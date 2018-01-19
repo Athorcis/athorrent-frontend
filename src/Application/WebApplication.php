@@ -2,13 +2,28 @@
 
 namespace Athorrent\Application;
 
+use Athorrent\Controller\AccountController;
+use Athorrent\Controller\AdministrationController;
+use Athorrent\Controller\CacheController;
+use Athorrent\Controller\DefaultController;
+use Athorrent\Controller\FileController;
+use Athorrent\Controller\SearchController;
+use Athorrent\Controller\SharingController;
+use Athorrent\Controller\SharingFileController;
+use Athorrent\Controller\TorrentController;
+use Athorrent\Controller\UserController;
 use Athorrent\Database\Entity\User;
+use Athorrent\Filesystem\UserFilesystem;
 use Athorrent\Routing\ControllerMounterTrait;
+use Athorrent\Routing\RoutingServiceProvider;
 use Athorrent\Security\Csrf\CsrfServiceProvider;
+use Athorrent\Security\SecurityServiceProvider;
 use Athorrent\Utils\TorrentManager;
+use Athorrent\View\TwigServiceProvider;
 use Athorrent\View\View;
 use Silex\Application;
 use Silex\Application\UrlGeneratorTrait;
+use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\RememberMeServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +57,7 @@ class WebApplication extends BaseApplication
 //        };
 
         $this['user.fs'] = function (Application $app) {
-            return new \Athorrent\Filesystem\UserFilesystem($app, $app['user']);
+            return new UserFilesystem($app, $app['user']);
         };
 
         $this->view(function (View $result, Request $request) {
@@ -68,19 +83,19 @@ class WebApplication extends BaseApplication
 
         $this->error([$this, 'handleError']);
 
-        $this->register(new \Athorrent\View\TwigServiceProvider(), [
+        $this->register(new TwigServiceProvider(), [
             'twig.path' => TEMPLATES_DIR,
             'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
         ]);
 
-        $this->register(new \Athorrent\Security\SecurityServiceProvider());
+        $this->register(new SecurityServiceProvider());
 
         $this->register(new SessionServiceProvider());
         $this->register(new RememberMeServiceProvider());
         $this->register(new CsrfServiceProvider());
 
-        $this->register(new \Athorrent\Routing\RoutingServiceProvider());
-        $this->register(new \Silex\Provider\LocaleServiceProvider());
+        $this->register(new RoutingServiceProvider());
+        $this->register(new LocaleServiceProvider());
 
         $this['dispatcher']->addListener(KernelEvents::RESPONSE, function () {
             $this['session']->save();
@@ -142,20 +157,20 @@ class WebApplication extends BaseApplication
 
     public function mountControllers()
     {
-        $this->mount('/', new \Athorrent\Controller\DefaultController(), '');
+        $this->mount('/', new DefaultController(), '');
 
-        $this->mount('/search', new \Athorrent\Controller\SearchController(), 'search');
+        $this->mount('/search', new SearchController(), 'search');
 
-        $this->mount('/user/files', new \Athorrent\Controller\FileController(), 'files');
-        $this->mount('/user/torrents', new \Athorrent\Controller\TorrentController(), 'torrents');
-        $this->mount('/user/account', new \Athorrent\Controller\AccountController(), 'account');
+        $this->mount('/user/files', new FileController(), 'files');
+        $this->mount('/user/torrents', new TorrentController(), 'torrents');
+        $this->mount('/user/account', new AccountController(), 'account');
 
-        $this->mount('/user/sharings', new \Athorrent\Controller\SharingController(), 'sharings');
-        $this->mount('/sharings/{token}/files', new \Athorrent\Controller\SharingFileController(), 'sharings');
+        $this->mount('/user/sharings', new SharingController(), 'sharings');
+        $this->mount('/sharings/{token}/files', new SharingFileController(), 'sharings');
 
-        $this->mount('/administration', new \Athorrent\Controller\AdministrationController(), 'administration');
-        $this->mount('/administration/users', new \Athorrent\Controller\UserController(), 'users');
-        $this->mount('/administration/cache', new \Athorrent\Controller\CacheController(), 'cache');
+        $this->mount('/administration', new AdministrationController(), 'administration');
+        $this->mount('/administration/users', new UserController(), 'users');
+        $this->mount('/administration/cache', new CacheController(), 'cache');
     }
 
     public function redirect($url, $status = 302)
