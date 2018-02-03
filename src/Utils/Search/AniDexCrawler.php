@@ -40,7 +40,7 @@ class AniDexCrawler
 
     public function initializeRequest(Client $client, $query)
     {
-        $promise = $client->getAsync('https://' . $this->domain . '/ajax/page.ajax.php?page=torrents&filename=' . urlencode($query), [
+        $promise = $client->getAsync('https://' . $this->domain . '/?q=' . urlencode($query), [
             'headers' => ['X-Requested-With' => 'XMLHttpRequest']
         ]);
 
