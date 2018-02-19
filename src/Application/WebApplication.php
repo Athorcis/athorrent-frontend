@@ -20,18 +20,22 @@ use Athorrent\Security\Csrf\CsrfServiceProvider;
 use Athorrent\Security\SecurityServiceProvider;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\TwigServiceProvider;
-use Athorrent\View\View;
 use Silex\Application;
 use Silex\Application\UrlGeneratorTrait;
 use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\RememberMeServiceProvider;
 use Silex\Provider\SessionServiceProvider;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class WebApplication extends BaseApplication
+class WebApplication extends BaseApplication implements EventSubscriberInterface
 {
     use ControllerMounterTrait;
     use UrlGeneratorTrait;
@@ -60,28 +64,7 @@ class WebApplication extends BaseApplication
             return new UserFilesystem($app, $app['user']);
         };
 
-        $this->view(function (View $result, Request $request) {
-            if (!$request->attributes->get('_ajax')) {
-                $flashBag = $this['session']->getFlashBag();
-
-                if ($flashBag->has('notifications')) {
-                    $result->set('notifications', $flashBag->get('notifications'));
-                }
-
-                $result->addTemplate('modal');
-
-                $vars = [
-                    'debug' => $this['debug'],
-                    'staticHost' => STATIC_HOST
-                ];
-
-                $result->setJsVars($vars);
-            }
-        });
-
-        $this->after([$this, 'addHeaders']);
-
-        $this->error([$this, 'handleError']);
+        $this['dispatcher']->addSubscriber($this);
 
         $this->register(new TwigServiceProvider(), [
             'twig.path' => TEMPLATES_DIR,
@@ -96,19 +79,62 @@ class WebApplication extends BaseApplication
 
         $this->register(new RoutingServiceProvider());
         $this->register(new LocaleServiceProvider());
-
-        $this['dispatcher']->addListener(KernelEvents::RESPONSE, function () {
-            $this['session']->save();
-        }, self::LATE_EVENT);
     }
 
-    public function addHeaders(Request $request, Response $response)
+    public static function getSubscribedEvents()
     {
+        return [
+            KernelEvents::VIEW => 'onKernelView',
+            KernelEvents::RESPONSE => [
+                ['addHeaders', 0],
+                ['saveSession', -512]
+            ],
+            KernelEvents::EXCEPTION => 'onKernelException'
+        ];
+    }
+
+    public function onKernelView(GetResponseForControllerResultEvent $event)
+    {
+        $request = $event->getRequest();
+
+        if (!$request->attributes->get('_ajax')) {
+            $result = $event->getControllerResult();
+            $flashBag = $this['session']->getFlashBag();
+
+            if ($flashBag->has('notifications')) {
+                $result->set('notifications', $flashBag->get('notifications'));
+            }
+
+            $result->addTemplate('modal');
+
+            $vars = [
+                'debug' => $this['debug'],
+                'staticHost' => STATIC_HOST
+            ];
+
+            $result->setJsVars($vars);
+        }
+    }
+
+    public function saveSession(FilterResponseEvent $event)
+    {
+        $session = $event->getRequest()->getSession();
+
+        if ($session->isStarted()) {
+            $session->save();
+        }
+    }
+
+    public function addHeaders(FilterResponseEvent $event)
+    {
+        $response = $event->getResponse();
         $response->headers->set('X-Content-Type-Options', 'nosniff');
 
         if ($response->headers->has('Content-Disposition')) {
             return;
         }
+
+        $request = $event->getRequest();
 
         if (strpos($request->get('_route'), ':ajax') === false) {
             $response->headers->set('Content-Security-Policy', "script-src 'unsafe-inline' " . $request->getScheme() . '://' . STATIC_HOST);
@@ -119,8 +145,20 @@ class WebApplication extends BaseApplication
         }
     }
 
-    public function handleError(\Exception $exception, $code)
+    public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        $response = $this->handleError($event->getException());
+        $event->setResponse($response);
+    }
+
+    public function handleError(\Exception $exception)
+    {
+        if ($exception instanceof HttpException) {
+            $statusCode = $exception->getStatusCode();
+        } else {
+            $statusCode = 500;
+        }
+
         if ($this['debug']) {
             return;
         }
@@ -133,7 +171,7 @@ class WebApplication extends BaseApplication
             $error = 'error.pageNotFound';
         }
 
-        if ($code === 500) {
+        if ($statusCode === 500) {
             $error = 'error.errorUnknown';
         }
 
@@ -152,7 +190,7 @@ class WebApplication extends BaseApplication
             ]);
         }
 
-        return new Response($this['twig']->render('pages/error.html.twig', ['error' => $error, 'code' => $code]));
+        return new Response($this['twig']->render('pages/error.html.twig', ['error' => $error, 'code' => $statusCode]));
     }
 
     public function mountControllers()
