@@ -148,7 +148,10 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $response = $this->handleError($event->getException());
-        $event->setResponse($response);
+
+        if ($response) {
+            $event->setResponse($response);
+        }
     }
 
     public function handleError(\Exception $exception)
