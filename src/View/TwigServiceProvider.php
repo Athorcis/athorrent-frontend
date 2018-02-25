@@ -6,6 +6,7 @@ use Asm89\Twig\CacheExtension\CacheStrategy\GenerationalCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Athorrent\Cache\Twig\PsrSimpleCacheAdapter;
 use Athorrent\Cache\Twig\KeyGenerator;
+use Athorrent\Notification\Notification;
 use Pimple\Container;
 use Silex\Api\BootableProviderInterface;
 use Silex\Api\EventListenerProviderInterface;
@@ -53,6 +54,8 @@ class TwigServiceProvider extends BaseTwigServiceProvider implements BootablePro
                 } else {
                     return;
                 }
+            } elseif ($data instanceof Notification) {
+                return;
             }
 
             $event->setControllerResult([
@@ -70,6 +73,8 @@ class TwigServiceProvider extends BaseTwigServiceProvider implements BootablePro
 
             if ($result instanceof View) {
                 $response = new Response($result->render($app));
+            } elseif ($result instanceof Notification) {
+                return;
             } else {
                 $response = new JsonResponse($result);
             }
