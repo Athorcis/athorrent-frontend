@@ -35,7 +35,7 @@ class NotificationListener implements EventSubscriberInterface
             $response = $this->handleNotification($result, $request);
         }
 
-        if ($response) {
+        if (isset($response)) {
             $event->setResponse($response);
         }
     }
