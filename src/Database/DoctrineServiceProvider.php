@@ -15,9 +15,9 @@ class DoctrineServiceProvider extends BaseDoctrineServiceProvider
     {
         parent::register($app);
 
-        $config = Setup::createAnnotationMetadataConfiguration([SRC_DIR . '/Database/Entity'], $app['debug']);
+        $config = Setup::createAnnotationMetadataConfiguration([SRC_DIR . '/Database/Entity'], DEBUG);
 
-        if (function_exists('apcu_exists') && !$app['debug']) {
+        if (function_exists('apcu_exists') && !DEBUG) {
             $cache = new ApcuCache();
         } else {
             $cache = new ArrayCache();
