@@ -7,6 +7,8 @@ use Athorrent\Routing\AbstractController;
 use Athorrent\View\PaginatedView;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SharingController extends AbstractController
 {
@@ -28,14 +30,14 @@ class SharingController extends AbstractController
     public function addSharing(Application $app, Request $request)
     {
         if (!$request->request->has('path')) {
-            $app->abort(400);
+            throw new BadRequestHttpException();
         }
 
         $fileManager = $app['user.fs'];
         $path = $fileManager->getAbsolutePath($request->request->get('path'));
 
         if (!file_exists($path)) {
-            $app->abort(404);
+            throw new NotFoundHttpException();
         }
 
         $sharing = new Sharing($app['user'], $fileManager->getRelativePath($path));

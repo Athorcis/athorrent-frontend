@@ -10,6 +10,8 @@ use Athorrent\View\View;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class AbstractFileController extends AbstractController
 {
@@ -40,13 +42,13 @@ abstract class AbstractFileController extends AbstractController
         $rawPath = $app['request_stack']->getCurrentRequest()->get('path');
 
         if ($rawPath === null) {
-            $app->abort(400);
+            throw new BadRequestHttpException();
         }
 
         $absolutePath = $fs->getAbsolutePath($rawPath);
 
         if (!is_file($absolutePath)) {
-            $app->abort(404);
+            throw new NotFoundHttpException();
         }
 
         return $absolutePath;
@@ -131,7 +133,7 @@ abstract class AbstractFileController extends AbstractController
         $mimeType = $fs->getMimeType($path);
 
         if (!MimeType::isPlayable($mimeType)) {
-            $app->abort(500, 'error.notPlayable');
+            throw new \Exception('error.notPlayable');
         }
 
         $breadcrumb = self::getBreadcrumb($app, $path);
@@ -162,7 +164,7 @@ abstract class AbstractFileController extends AbstractController
         $mimeType = $fs->getMimeType($relativePath);
 
         if (!MimeType::isDisplayable($mimeType)) {
-            return $app->abort(500, 'error.notDisplayable');
+            throw new \Exception('error.notDisplayable');
         }
 
         $relativePath = $fs->getRelativePath($path);
@@ -189,13 +191,13 @@ abstract class AbstractFileController extends AbstractController
         $path = $request->get('path');
 
         if ($path === null) {
-            $app->abort(400);
+            throw new BadRequestHttpException();
         }
 
         $fs = $this->getFilesystem($app);
 
         if ($fs->isRoot($path)) {
-            $app->abort(404);
+            throw new NotFoundHttpException();
         }
 
         $fs->remove($path);
@@ -210,7 +212,7 @@ abstract class AbstractFileController extends AbstractController
         $path = $this->getRelativeFilePath($app, $fs);
 
         if (!$fs->isWritable()) {
-            return $app->abort(500);
+            throw new \Exception('filesystem is not writable');
         }
 
         list($parentPath) = explode('/', $path);

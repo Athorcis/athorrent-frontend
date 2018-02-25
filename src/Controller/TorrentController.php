@@ -82,11 +82,11 @@ class TorrentController extends AbstractController
 
                 return [];
             } else {
-                $app->abort(500, 'error.notATorrent');
+                throw new \Exception('error.NotATorrent');
             }
         }
 
-        $app->abort(500, 'error.fileTooBig');
+        throw new \Exception('error.fileTooBig');
     }
 
     public function addMagnet(Application $app, Request $request)

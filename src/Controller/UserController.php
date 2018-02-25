@@ -60,6 +60,6 @@ class UserController extends AbstractController
             return [];
         }
 
-        $app->abort(500, 'error.cannotRemoveUser');
+        throw new \Exception('error.cannotRemoveUser');
     }
 }
