@@ -20,7 +20,7 @@ use Athorrent\Routing\RoutingServiceProvider;
 use Athorrent\Security\AuthenticationFailureHandler;
 use Athorrent\Security\Csrf\CsrfServiceProvider;
 use Athorrent\Security\SecurityServiceProvider;
-use Athorrent\Utils\TorrentManager;
+use Athorrent\Utils\TorrentManagerProvider;
 use Athorrent\View\TwigServiceProvider;
 use Athorrent\View\View;
 use Silex\Application;
@@ -31,7 +31,6 @@ use Silex\Provider\SessionServiceProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class WebApplication extends BaseApplication implements EventSubscriberInterface
@@ -43,16 +42,12 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
     {
         parent::__construct();
 
+        $this['torrent_manager.provider'] = function () {
+            return new TorrentManagerProvider();
+        };
+
         $this['torrent_manager'] = $this->protect(function (User $user) {
-            static $instances = [];
-
-            $userId = $user->getId();
-
-            if (!isset($instances[$userId])) {
-                $instances[$userId] = new TorrentManager($user);
-            }
-
-            return $instances[$userId];
+            return $this['torrent_manager.provider']->get($user);
         });
 
 //        $this['fs'] = function () {
