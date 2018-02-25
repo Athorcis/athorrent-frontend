@@ -4,6 +4,7 @@ namespace Athorrent\Controller;
 
 use Athorrent\Filesystem\SharedFilesystem;
 use Silex\Application;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SharingFileController extends AbstractFileController
 {
@@ -13,7 +14,7 @@ class SharingFileController extends AbstractFileController
         $sharing = $app['orm.repo.sharing']->findOneBy(['token' => $token]);
 
         if ($sharing === null) {
-            $app->abort(404, 'error.sharingNotFound');
+            throw new NotFoundHttpException('error.sharingNotFound');
         }
 
         return new SharedFilesystem($app, $sharing);
