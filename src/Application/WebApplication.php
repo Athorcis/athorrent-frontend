@@ -26,13 +26,8 @@ use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\RememberMeServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class WebApplication extends BaseApplication implements EventSubscriberInterface
@@ -88,8 +83,7 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
             KernelEvents::RESPONSE => [
                 ['addHeaders', 0],
                 ['saveSession', -512]
-            ],
-            KernelEvents::EXCEPTION => 'onKernelException'
+            ]
         ];
     }
 
@@ -99,7 +93,7 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
 
         if (!$request->attributes->get('_ajax')) {
             $result = $event->getControllerResult();
-            $flashBag = $this['session']->getFlashBag();
+            $flashBag = $request->getSession()->getFlashBag();
 
             if ($flashBag->has('notifications')) {
                 $result->set('notifications', $flashBag->get('notifications'));
@@ -108,7 +102,7 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
             $result->addTemplate('modal');
 
             $vars = [
-                'debug' => $this['debug'],
+                'debug' => DEBUG,
                 'staticHost' => STATIC_HOST
             ];
 
@@ -143,57 +137,6 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
             $response->headers->set('X-Frame-Options', 'DENY');
             $response->headers->set('X-XSS-Protection', '1; mode=block');
         }
-    }
-
-    public function onKernelException(GetResponseForExceptionEvent $event)
-    {
-        $response = $this->handleError($event->getException());
-
-        if ($response) {
-            $event->setResponse($response);
-        }
-    }
-
-    public function handleError(\Exception $exception)
-    {
-        if ($exception instanceof HttpException) {
-            $statusCode = $exception->getStatusCode();
-        } else {
-            $statusCode = 500;
-        }
-
-        if ($this['debug']) {
-            return;
-        }
-
-        if ($exception instanceof NotifiableException) {
-            return $this->notify('error', $exception->getMessage());
-        }
-
-        if ($exception instanceof NotFoundHttpException) {
-            $error = 'error.pageNotFound';
-        }
-
-        if ($statusCode === 500) {
-            $error = 'error.errorUnknown';
-        }
-
-        if (isset($error)) {
-            $error = $this['translator']->trans($error);
-        } else {
-            $error = $exception->getMessage();
-        }
-
-        $request = $this['request_stack']->getCurrentRequest();
-
-        if ($request->attributes->get('_ajax')) {
-            return $this->json([
-                'status' => 'error',
-                'error' => $error
-            ]);
-        }
-
-        return new Response($this['twig']->render('pages/error.html.twig', ['error' => $error, 'code' => $statusCode]));
     }
 
     public function mountControllers()
