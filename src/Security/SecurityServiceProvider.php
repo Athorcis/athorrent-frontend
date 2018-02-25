@@ -16,7 +16,7 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
         $app['session.storage.options'] = [
             'name' => 'SESSION',
             'cookie_httponly' => true,
-            'cookie_secure' => !$app['debug']
+            'cookie_secure' => !DEBUG
         ];
 
         $app['security.firewalls'] = [
@@ -45,7 +45,7 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
                 'remember_me' => [
                     'key' => REMEMBER_ME_KEY,
                     'always_remember_me' => true,
-                    'secure' => !$app['debug']
+                    'secure' => !DEBUG
                 ],
 
                 'users' => function (Application $app) {

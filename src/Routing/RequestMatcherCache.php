@@ -23,7 +23,7 @@ class RequestMatcherCache
 
     public function fetchRequestMatcher()
     {
-        if ($this->app['debug']) {
+        if (DEBUG) {
             return;
         }
 
@@ -40,7 +40,7 @@ class RequestMatcherCache
 
     public function storeRequestMatcher(RouteCollection $routes)
     {
-        if ($this->app['debug']) {
+        if (DEBUG) {
             return;
         }
 
