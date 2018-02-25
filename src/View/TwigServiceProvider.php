@@ -6,7 +6,6 @@ use Asm89\Twig\CacheExtension\CacheStrategy\GenerationalCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Athorrent\Cache\Twig\PsrSimpleCacheAdapter;
 use Athorrent\Cache\Twig\KeyGenerator;
-use Athorrent\Notification\Notification;
 use Pimple\Container;
 use Silex\Api\BootableProviderInterface;
 use Silex\Api\EventListenerProviderInterface;
@@ -14,10 +13,6 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider as BaseTwigServiceProvider;
 use SPE\FilesizeExtensionBundle\Twig\FilesizeExtension;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Twig_Environment;
 use Twig_SimpleFunction;
 
@@ -40,47 +35,7 @@ class TwigServiceProvider extends BaseTwigServiceProvider implements BootablePro
 
     public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
     {
-        $dispatcher->addListener(KernelEvents::VIEW, function (GetResponseForControllerResultEvent $event) use ($app) {
-            $data = $event->getControllerResult();
-            $xhr = $event->getRequest()->attributes->get('_ajax');
-
-            if ($data === null && !$xhr) {
-                return;
-            }
-
-            if ($data instanceof View) {
-                if ($xhr) {
-                    $data = $data->render($app);
-                } else {
-                    return;
-                }
-            } elseif ($data instanceof Notification) {
-                return;
-            }
-
-            $event->setControllerResult([
-                'status' => 'success',
-                'data' => $data
-            ]);
-        }, Application::EARLY_EVENT);
-
-        $dispatcher->addListener(KernelEvents::VIEW, function (GetResponseForControllerResultEvent $event) use ($app) {
-            $result = $event->getControllerResult();
-
-            if ($result === null) {
-                return;
-            }
-
-            if ($result instanceof View) {
-                $response = new Response($result->render($app));
-            } elseif ($result instanceof Notification) {
-                return;
-            } else {
-                $response = new JsonResponse($result);
-            }
-
-            $event->setResponse($response);
-        }, Application::LATE_EVENT);
+        $dispatcher->addSubscriber(new ViewListener($app['translator'], $app['renderer']));
     }
 
     public function extendTwig(Twig_Environment $twig, Application $app)

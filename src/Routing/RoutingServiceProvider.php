@@ -29,30 +29,8 @@ class RoutingServiceProvider implements ServiceProviderInterface, EventListenerP
 
     public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
     {
-        $dispatcher->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($app) {
-            $attributes = $event->getRequest()->attributes;
-
-            $app['request_context']->setParameter('_prefixId', $attributes->get('_prefixId'));
-
-            foreach ($attributes->get('_route_params') as $key => $value) {
-                if ($key[0] !== '_') {
-                    $app['request_context']->setParameter($key, $value);
-                }
-            }
-        });
-
-        $dispatcher->addListener(KernelEvents::VIEW, function (GetResponseForControllerResultEvent $event) use ($app) {
-            $result = $event->getControllerResult();
-
-            if ($result === null) {
-                return;
-            }
-
-            $request = $event->getRequest();
-
-            if ($result instanceof View && !$request->attributes->get('_ajax')) {
-                $result->setJsVar('routes', $app['ajax_route_descriptors']);
-            }
-        }, Application::EARLY_EVENT);
+        $dispatcher->addSubscriber(new RoutingListener($app['request_context'], function () use ($app) {
+            return $app['ajax_route_descriptors'];
+        }));
     }
 }

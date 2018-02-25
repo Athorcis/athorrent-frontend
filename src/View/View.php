@@ -2,7 +2,7 @@
 
 namespace Athorrent\View;
 
-use Silex\Application;
+use Symfony\Component\Translation\Translator;
 
 class View
 {
@@ -48,28 +48,28 @@ class View
         $this->data['_templates'][] = $name;
     }
 
-    public function render(Application $app)
+    public function render(Translator $translator, Renderer $renderer)
     {
         $name = $this->name;
 
         if ($name === null) {
-            $name = $app['request_stack']->getCurrentRequest()->attributes->get('_action');
+            $name = $renderer->getDefaultTemplateName();
         }
 
         $data = $this->data;
 
         if (isset($data['_strings'])) {
             foreach ($data['_strings'] as $id) {
-                $data['js_vars']['strings'][$id] = $app['translator']->trans($id);
+                $data['js_vars']['strings'][$id] = $translator->trans($id);
             }
         }
 
         if (isset($data['_templates'])) {
             foreach ($data['_templates'] as $fragmentName) {
-                $data['js_vars']['templates'][$fragmentName] = $app['renderer']->renderFragment($fragmentName);
+                $data['js_vars']['templates'][$fragmentName] = $renderer->renderFragment($fragmentName);
             }
         }
 
-        return $app['renderer']->render($name, $data);
+        return $renderer->render($name, $data);
     }
 }
