@@ -2,7 +2,8 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Application\NotifiableException;
+use Athorrent\Notification\ErrorNotification;
+use Athorrent\Notification\SuccessNotification;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
 use Silex\Application;
@@ -31,16 +32,16 @@ class AccountController extends AbstractController
         $currentPassword = $request->request->get('current_password');
 
         if (empty($username) || empty($currentPassword)) {
-            throw new NotifiableException('error', 'error.usernameOrPasswordEmpty');
+            return new ErrorNotification('error.usernameOrPasswordEmpty');
         }
 
         if (!$app['user_manager']->checkUserPassword($user, $currentPassword)) {
-            throw new NotifiableException('error', 'error.passwordInvalid');
+            return new ErrorNotification('error.passwordInvalid');
         }
 
         if ($user->getUsername() !== $username) {
             if ($app['user_manager']->userExists($username)) {
-                throw new NotifiableException('error', 'error.usernameAlreadyUsed');
+                return new ErrorNotification('error.usernameAlreadyUsed');
             }
 
             $user->setUsername($username);
@@ -51,7 +52,7 @@ class AccountController extends AbstractController
 
         if (!empty($newPassword) || !empty($passwordConfirm)) {
             if ($newPassword !== $passwordConfirm) {
-                throw new NotifiableException('error.passwordsDiffer');
+                return new ErrorNotification('error.passwordsDiffer');
             }
 
             $app['user_manager']->setUserPassword($user, $newPassword);
@@ -60,6 +61,6 @@ class AccountController extends AbstractController
         $app['orm.em']->persist($user);
         $app['orm.em']->flush();
 
-        return $app->redirect('editAccount');
+        return new SuccessNotification('account updated successfully');
     }
 }

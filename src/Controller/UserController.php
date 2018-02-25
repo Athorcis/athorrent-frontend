@@ -3,6 +3,8 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Database\Type\UserRole;
+use Athorrent\Notification\ErrorNotification;
+use Athorrent\Notification\SuccessNotification;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
@@ -40,16 +42,16 @@ class UserController extends AbstractController
         $role = $request->request->get('role');
 
         if (empty($username) || empty($password) || empty($role)) {
-            return $app->notify('error', 'error.usernameOrPasswordEmpty');
+            return new ErrorNotification('error.usernameOrPasswordEmpty');
         }
 
         if ($app['user_manager']->userExists($username)) {
-            return $app->notify('error', 'error.usernameAlreadyUsed');
+            return new ErrorNotification('error.usernameAlreadyUsed');
         }
 
         $app['user_manager']->createUser($username, $password, $role);
 
-        return $app->redirect('listUsers');
+        return new SuccessNotification('user successfully updated', 'listUsers');
     }
 
     public function removeUser(Application $app, Request $request)

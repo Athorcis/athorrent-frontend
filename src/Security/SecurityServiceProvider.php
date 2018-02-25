@@ -82,10 +82,6 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
             return new LoginListener($app);
         };
 
-        $app['security.authentication.failure_handler.general'] = function () {
-            return new AuthenticationFailureHandler();
-        };
-
         $app['user_manager'] = function (Application $app) {
             return new UserManager($app, $app['security.default_encoder']);
         };

@@ -2,6 +2,7 @@
 
 namespace Athorrent\Security\Csrf;
 
+use Athorrent\Notification\Notification;
 use Athorrent\View\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -48,6 +49,8 @@ class CsrfListener implements EventSubscriberInterface
 
         if ($result instanceof View) {
             $result->setJsVar('csrfToken', $csrfToken);
+        } elseif ($result instanceof Notification) {
+            return;
         } elseif ($request->getMethod() === 'POST') {
             $result['csrfToken'] = $csrfToken;
         }

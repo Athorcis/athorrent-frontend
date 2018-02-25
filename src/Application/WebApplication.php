@@ -14,12 +14,15 @@ use Athorrent\Controller\TorrentController;
 use Athorrent\Controller\UserController;
 use Athorrent\Database\Entity\User;
 use Athorrent\Filesystem\UserFilesystem;
+use Athorrent\Notification\NotificationListener;
 use Athorrent\Routing\ControllerMounterTrait;
 use Athorrent\Routing\RoutingServiceProvider;
+use Athorrent\Security\AuthenticationFailureHandler;
 use Athorrent\Security\Csrf\CsrfServiceProvider;
 use Athorrent\Security\SecurityServiceProvider;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\TwigServiceProvider;
+use Athorrent\View\View;
 use Silex\Application;
 use Silex\Application\UrlGeneratorTrait;
 use Silex\Provider\LocaleServiceProvider;
@@ -28,6 +31,7 @@ use Silex\Provider\SessionServiceProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class WebApplication extends BaseApplication implements EventSubscriberInterface
@@ -74,6 +78,14 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
 
         $this->register(new RoutingServiceProvider());
         $this->register(new LocaleServiceProvider());
+
+
+        $notificationListener = new NotificationListener($this['url_generator']);
+        $this['dispatcher']->addSubscriber($notificationListener);
+
+        $app['security.authentication.failure_handler.general'] = function () use ($notificationListener) {
+            return new AuthenticationFailureHandler($notificationListener);
+        };
     }
 
     public static function getSubscribedEvents()
@@ -89,24 +101,21 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        $request = $event->getRequest();
+        $result = $event->getControllerResult();
 
-        if (!$request->attributes->get('_ajax')) {
-            $result = $event->getControllerResult();
-            $flashBag = $request->getSession()->getFlashBag();
+        if ($result instanceof View) {
+            $request = $event->getRequest();
 
-            if ($flashBag->has('notifications')) {
-                $result->set('notifications', $flashBag->get('notifications'));
+            if (!$request->attributes->get('_ajax')) {
+                $result->addTemplate('modal');
+
+                $vars = [
+                    'debug' => DEBUG,
+                    'staticHost' => STATIC_HOST
+                ];
+
+                $result->setJsVars($vars);
             }
-
-            $result->addTemplate('modal');
-
-            $vars = [
-                'debug' => DEBUG,
-                'staticHost' => STATIC_HOST
-            ];
-
-            $result->setJsVars($vars);
         }
     }
 
@@ -166,18 +175,5 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
         }
 
         return parent::redirect($url, $status);
-    }
-
-    public function notify($type, $message, $url = null)
-    {
-        $flashBag = $this['session']->getFlashBag();
-        $flashBag->add('notifications', ['type' => $type, 'message' => $message]);
-
-        if (!$url) {
-            $request = $this['request_stack']->getCurrentRequest();
-            $url = $request->headers->get('Referer');
-        }
-
-        return $this->redirect($url);
     }
 }
