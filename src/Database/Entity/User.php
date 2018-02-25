@@ -75,6 +75,11 @@ class User implements UserInterface
         return $this->username;
     }
 
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+    
     public function getPassword()
     {
         return $this->password;
