@@ -2,17 +2,17 @@
 
 namespace Athorrent\Routing;
 
-use Silex\Application;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
 class RequestMatcherCache
 {
-    private $app;
+    private $requestContext;
 
-    public function __construct(Application $app)
+    public function __construct(RequestContext $requestContext)
     {
-        $this->app = $app;
+        $this->requestContext = $requestContext;
         $this->fetchRequestMatcher();
     }
 
@@ -32,8 +32,8 @@ class RequestMatcherCache
         if (file_exists($requestMatcherPath)) {
             require $requestMatcherPath;
 
-            $this->app['request_matcher'] = function (Application $app) {
-                return new \DumpedUrlMatcher($app['request_context']);
+            $this->app['request_matcher'] = function () {
+                return new \DumpedUrlMatcher($this->requestContext);
             };
         }
     }

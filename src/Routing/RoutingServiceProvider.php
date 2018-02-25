@@ -2,15 +2,11 @@
 
 namespace Athorrent\Routing;
 
-use Athorrent\View\View;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Silex\Api\EventListenerProviderInterface;
 use Silex\Application;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 class RoutingServiceProvider implements ServiceProviderInterface, EventListenerProviderInterface
 {
@@ -24,7 +20,7 @@ class RoutingServiceProvider implements ServiceProviderInterface, EventListenerP
             return new ControllerCollection($app['route_factory'], $app['default_locale'], $app['locales']);
         });
 
-        $app['request_matcher_cache'] = new RequestMatcherCache($app);
+        $app['request_matcher_cache'] = new RequestMatcherCache($app['request_context']);
     }
 
     public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
