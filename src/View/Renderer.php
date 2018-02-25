@@ -17,6 +17,11 @@ class Renderer
         $this->requestStack = $requestStack;
     }
 
+    public function getDefaultTemplateName()
+    {
+        return $this->requestStack->getCurrentRequest()->attributes->get('_action');
+    }
+
     protected function renderTemplate($id, array $parameters)
     {
         return $this->twig->render($id . '.html.twig', $parameters);

@@ -65,12 +65,12 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
 
         $this['dispatcher']->addSubscriber($this);
 
+        $this->register(new SecurityServiceProvider());
+
         $this->register(new TwigServiceProvider(), [
             'twig.path' => TEMPLATES_DIR,
             'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
         ]);
-
-        $this->register(new SecurityServiceProvider());
 
         $this->register(new SessionServiceProvider());
         $this->register(new RememberMeServiceProvider());
@@ -79,11 +79,10 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
         $this->register(new RoutingServiceProvider());
         $this->register(new LocaleServiceProvider());
 
-
         $notificationListener = new NotificationListener($this['url_generator']);
         $this['dispatcher']->addSubscriber($notificationListener);
 
-        $app['security.authentication.failure_handler.general'] = function () use ($notificationListener) {
+        $this['security.authentication.failure_handler.general'] = function () use ($notificationListener) {
             return new AuthenticationFailureHandler($notificationListener);
         };
     }
