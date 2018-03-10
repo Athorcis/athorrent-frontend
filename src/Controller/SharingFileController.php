@@ -2,7 +2,6 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Database\Entity\Sharing;
 use Athorrent\Filesystem\SharedFilesystem;
 use Silex\Application;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
