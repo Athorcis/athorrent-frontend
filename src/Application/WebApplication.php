@@ -13,7 +13,7 @@ use Athorrent\Controller\SharingFileController;
 use Athorrent\Controller\TorrentController;
 use Athorrent\Controller\UserController;
 use Athorrent\Database\Entity\User;
-use Athorrent\Filesystem\UserFilesystem;
+use Athorrent\Filesystem\TorrentFilesystem;
 use Athorrent\Notification\NotificationListener;
 use Athorrent\Routing\ControllerMounterTrait;
 use Athorrent\Routing\RoutingServiceProvider;
@@ -55,10 +55,8 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
 //        };
 
         $this['user.fs'] = function (Application $app) {
-            return new UserFilesystem($app, $app['user']);
+            return new TorrentFilesystem($app['torrent_manager']($app['user']), $app['user']);
         };
-
-        $this['dispatcher']->addSubscriber($this);
 
         $this->register(new SecurityServiceProvider());
 
@@ -67,6 +65,12 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
             'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
         ]);
 
+//        $this->register(new \Silex\Provider\HttpFragmentServiceProvider());
+//        $this->register(new \Silex\Provider\ServiceControllerServiceProvider());
+//        $this->register(new  \Silex\Provider\WebProfilerServiceProvider(), array(
+//            'profiler.cache_dir' => __DIR__.'/../cache/profiler',
+//            'profiler.mount_prefix' => '/_profiler', // this is the default
+//        ));
         $this->register(new SessionServiceProvider());
         $this->register(new RememberMeServiceProvider());
         $this->register(new CsrfServiceProvider());
@@ -74,12 +78,17 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
         $this->register(new RoutingServiceProvider());
         $this->register(new LocaleServiceProvider());
 
+
         $notificationListener = new NotificationListener($this['url_generator']);
+        $this['dispatcher']->addSubscriber($this);
+
+
         $this['dispatcher']->addSubscriber($notificationListener);
 
         $this['security.authentication.failure_handler.general'] = function () use ($notificationListener) {
             return new AuthenticationFailureHandler($notificationListener);
         };
+
     }
 
     public static function getSubscribedEvents()

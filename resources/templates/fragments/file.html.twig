@@ -4,16 +4,16 @@
     {% set icon = 'fa-level-up' %}
     {% set name = 'files.parentDirectory'|trans %}
 {% else %}
-    {% set icon = file.icon %}
+    {% set icon = icon(file) %}
     {% set name = file.name %}
 {% endif %}
 
-<tr class="file" id="file-{{ file.encodedPath }}">
+<tr class="file" id="file-{{ base64_encode(file.path) }}">
     <td class="file-icon">
         <span class="fa fa-fw {{ icon }}"></span>
     </td>
     <td class="file-name">
-        <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.relativePath }) }}" title="{{ name }}">{{ name }}</a>
+        <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.path }) }}" title="{{ name }}">{{ name }}</a>
     </td>
     <td class="file-size">
         {% if file.isFile %}
@@ -28,25 +28,25 @@
                 </button>
                 <ul class="dropdown-menu pull-right">
                     <li>
-                        <a href="{{ path(file.isFile ? 'openFile' : 'listFiles', { path: file.relativePath }) }}">
-                            <span class="fa fa-fw {{ file.icon }}"></span>{{ 'files.open'|trans }}
+                        <a href="{{ path(file.isFile ? 'openFile' : 'listFiles', { path: file.path }) }}">
+                            <span class="fa fa-fw {{ icon }}"></span>{{ 'files.open'|trans }}
                         </a>
                     </li>
                     {% if file.isFile %}
                         <li>
-                            <a href="{{ path('downloadFile', { path: file.relativePath }) }}">
+                            <a href="{{ path('downloadFile', { path: file.path }) }}">
                                 <span class="fa fa-fw fa-download"></span>{{ 'files.download'|trans }}
                             </a>
                         </li>
                         {% if file.isPlayable %}
                             <li>
-                                <a href="{{ path('playFile', { path: file.relativePath }) }}">
+                                <a href="{{ path('playFile', { path: file.path }) }}">
                                     <span class="fa fa-fw fa-play"></span>{{ 'files.play'|trans }}
                                 </a>
                             </li>
                         {% elseif file.isDisplayable %}
                             <li>
-                                <a href="{{ path('displayFile', { path: file.relativePath }) }}">
+                                <a href="{{ path('displayFile', { path: file.path }) }}">
                                     <span class="fa fa-fw fa-search-plus"></span>{{ 'files.display'|trans }}
                                 </a>
                             </li>
@@ -81,7 +81,7 @@
                     {% endif %}
                 </ul>
             </div>
-            {% if file.isDeletable %}
+            {% if file.isWritable %}
                 <button class="btn btn-xs btn-danger file-remove">
                     <span class="fa fa-remove"></span>
                 </button>

@@ -3,153 +3,57 @@
 namespace Athorrent\Filesystem;
 
 use Athorrent\Database\Entity\User;
-use FilesystemIterator;
-use Silex\Application;
 
 class UserFilesystem extends SubFilesystem
 {
-    private $user;
+    /** @var User */
+    protected $owner;
 
-    private $torrentManager;
+    /** @var User */
+    protected $accessor;
 
-    private $torrentPaths;
-
-    public function __construct(Application $app, User $user, $path = '', $writable = true)
+    public function __construct(User $owner, User $accessor, string $path = '')
     {
-        $this->user = $user;
-        $this->torrentManager = $app['torrent_manager']($user);
+        parent::__construct($this->buildRoot($owner, $path));
 
-        parent::__construct(FILES_DIR . DIRECTORY_SEPARATOR . $user->getId() . DIRECTORY_SEPARATOR . $path, $writable);
+        $this->owner = $owner;
+        $this->accessor = $accessor;
     }
 
-    public function getUser()
+    /**
+     * @param User $owner
+     * @param string $path
+     * @return string
+     */
+    protected function buildRoot(User $owner, string $path)
     {
-        return $this->user;
+        $root = FILES_DIR . DIRECTORY_SEPARATOR . $owner->getId();
+
+        if (strlen($path) > 0) {
+            $root .= DIRECTORY_SEPARATOR . $path;
+        }
+
+        return $root;
     }
 
-    protected function getTorrentPaths()
+    public function getEntry(string $path): FilesystemEntryInterface
     {
-        if ($this->torrentPaths === null) {
-            $this->torrentPaths = $this->torrentManager->getPaths();
-        }
-
-        return $this->torrentPaths;
+        return new UserFilesystemEntry($this, $path);
     }
 
-    protected function isTorrent($path)
+    /**
+     * @return User
+     */
+    public function getOwner(): User
     {
-        $torrentPaths = $this->getTorrentPaths();
-        $index = -strlen($path);
-
-        foreach ($torrentPaths as $torrentPath) {
-            if (strrpos($path, $torrentPath, $index) !== false) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->owner;
     }
 
-    protected function containsTorrents($path)
+    /**
+     * @return bool
+     */
+    public function isWritable(): bool
     {
-        $torrentPaths = $this->getTorrentPaths();
-
-        foreach ($torrentPaths as $torrentPath) {
-            if (strrpos($torrentPath, $path, -strlen($torrentPath)) !== false) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected function isDeletable($path)
-    {
-        return $this->writable && !$this->isTorrent($path);
-    }
-
-    protected function doRemove($files)
-    {
-        if ($files instanceof \Traversable) {
-            $files = iterator_to_array($files, false);
-        } elseif (!is_array($files)) {
-            $files = array($files);
-        }
-
-        $removableFiles = [];
-
-        foreach ($files as $file) {
-            if (!$this->isTorrent($file)) {
-                $removableFiles[] = $file;
-            }
-        }
-
-        parent::doRemove($removableFiles);
-
-        return count($removableFiles) > 0;
-    }
-
-    public function list($path)
-    {
-        $absolutePath = $this->getAbsolutePath($path);
-
-        $dirIsTorrent = $this->isTorrent($absolutePath);
-        $dirDeletable = $this->writable && !$dirIsTorrent;
-
-        $dirContainsTorrents = $this->containsTorrents($absolutePath);
-
-        if (is_dir($absolutePath)) {
-            $relativePath = $this->getRelativePath($absolutePath);
-
-            if (!empty($relativePath)) {
-                $names[] = '..';
-            }
-
-            $iterator = new FilesystemIterator(
-                $absolutePath,
-                FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::CURRENT_AS_PATHNAME | FilesystemIterator::SKIP_DOTS
-            );
-
-            foreach ($iterator as $name => $path) {
-                $names[] = $name;
-            }
-        } else {
-            $names[] = basename($absolutePath);
-
-            $absolutePath = dirname($absolutePath);
-            $relativePath = $this->getRelativePath($absolutePath);
-        }
-
-        if (empty($names)) {
-            $entries = [];
-        } else {
-            $absolutePath .= DIRECTORY_SEPARATOR;
-
-            if ($relativePath != '') {
-                $relativePath .= '/';
-            }
-
-            foreach ($names as $name) {
-                $absoluteEntryPath = $absolutePath . $name;
-
-                if ($dirDeletable) {
-                    $cachable = $deletable = $dirContainsTorrents ? !$this->isTorrent($absoluteEntryPath) : true;
-                } else {
-                    if ($dirIsTorrent) {
-                        $cachable = false;
-                    } else {
-                        $cachable = $dirContainsTorrents ? !$this->isTorrent($absoluteEntryPath) : true;
-                    }
-
-                    $deletable = false;
-                }
-
-                $entries[] = new Entry($absoluteEntryPath, $relativePath . $name, $this->user, $cachable, $deletable, $this->writable);
-            }
-
-            usort($entries, ['Athorrent\Filesystem\Entry', 'compare']);
-        }
-
-        return $entries;
+        return $this->owner === $this->accessor;
     }
 }

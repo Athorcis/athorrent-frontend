@@ -2,53 +2,35 @@
 
 namespace Athorrent\Filesystem;
 
-use ArrayObject;
-use FilesystemIterator;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem as BaseFilesystem;
-use Traversable;
-
-class Filesystem extends BaseFilesystem
+class Filesystem extends AbstractFilesystem
 {
-    public function getSize($files)
+    /** @var FileUtils */
+    private $fileUtils;
+
+    public function __construct(string $root)
     {
-        if (!$files instanceof Traversable) {
-            $files = new ArrayObject(is_array($files) ? $files : [$files]);
-        }
-
-        $size = 0;
-
-        foreach ($files as $file) {
-
-            if (is_dir($file)) {
-                $size += $this->getSize(new FilesystemIterator(
-                    $file,
-                    FilesystemIterator::CURRENT_AS_PATHNAME | FilesystemIterator::SKIP_DOTS
-                ));
-            } else {
-                $tmp = @filesize($file);
-
-                if ($tmp === false) {
-                    $error = error_get_last();
-                    throw new IOException(sprintf('Failed to retrieve size of "%s": %s.', $file, $error['message']));
-                }
-
-                $size += $tmp;
-            }
-        }
-
-        return $size;
+        parent::__construct($root);
+        $this->fileUtils = new FileUtils();
     }
 
-    public function getMimeType($path)
+    public function getSize(string $path): int
     {
-        $finfo = new \finfo(FILEINFO_MIME);
-        return $finfo->file($path);
+        return $this->fileUtils->getSize($path);
     }
 
-    public function encodeFilename($path)
+    public function readDirectory(string $path): array
     {
-        $parts = pathinfo($path);
-        return $parts['dirname'] . DIRECTORY_SEPARATOR . base64_encode($parts['filename']) . '.' . $parts['extension'];
+        $iterator = new \FilesystemIterator($path, \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS);
+        return iterator_to_array($iterator);
+    }
+
+    public function remove(string $path): void
+    {
+        $this->fileUtils->remove($path);
+    }
+
+    public function getEntry(string $path): FilesystemEntryInterface
+    {
+        return new FilesystemEntry($this, $path);
     }
 }
