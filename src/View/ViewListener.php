@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ViewListener implements EventSubscriberInterface
 {
@@ -15,7 +15,7 @@ class ViewListener implements EventSubscriberInterface
 
     private $renderer;
 
-    public function __construct(Translator $translator, Renderer $renderer)
+    public function __construct(TranslatorInterface $translator, Renderer $renderer)
     {
         $this->translator = $translator;
         $this->renderer = $renderer;
