@@ -2,7 +2,7 @@
 
 namespace Athorrent\View;
 
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class View
 {
@@ -48,7 +48,7 @@ class View
         $this->data['_templates'][] = $name;
     }
 
-    public function render(Translator $translator, Renderer $renderer)
+    public function render(TranslatorInterface $translator, Renderer $renderer)
     {
         $name = $this->name;
 

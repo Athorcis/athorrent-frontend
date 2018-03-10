@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ExceptionListener implements EventSubscriberInterface
 {
@@ -20,7 +20,7 @@ class ExceptionListener implements EventSubscriberInterface
 
     private $app;
 
-    public function __construct(Translator $translator, \Twig_Environment $twig, WebApplication $app)
+    public function __construct(TranslatorInterface $translator, \Twig_Environment $twig, WebApplication $app)
     {
         $this->translator = $translator;
         $this->twig = $twig;
