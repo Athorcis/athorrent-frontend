@@ -3,15 +3,23 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Database\Entity\Sharing;
+use Athorrent\Filesystem\FilesystemAwareTrait;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\PaginatedView;
 use Silex\Application;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SharingController extends AbstractController
 {
+    use FilesystemAwareTrait;
+
+    public function getFilesystem(Application $app)
+    {
+        return $app['user.fs'];
+    }
+
     protected function getRouteDescriptors()
     {
         return [
@@ -33,14 +41,13 @@ class SharingController extends AbstractController
             throw new BadRequestHttpException();
         }
 
-        $fileManager = $app['user.fs'];
-        $path = $fileManager->getAbsolutePath($request->request->get('path'));
+        $entry = $this->getEntry($request, $app, ['path' => true]);
 
-        if (!file_exists($path)) {
-            throw new NotFoundHttpException();
+        if (!$entry->exists()) {
+            throw new FileNotFoundException();
         }
 
-        $sharing = new Sharing($app['user'], $fileManager->getRelativePath($path));
+        $sharing = new Sharing($app['user'], $entry->getPath());
         $app['orm.em']->persist($sharing);
         $app['orm.em']->flush();
 

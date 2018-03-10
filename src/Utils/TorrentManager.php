@@ -11,10 +11,20 @@ class TorrentManager
 
     private $service;
 
+    /**
+     * TorrentManager constructor.
+     * @param User $user
+     * @throws \Exception
+     */
     public function __construct(User $user)
     {
         $this->user = $user;
         $this->service = new AthorrentService($user->getId());
+    }
+
+    public function getUser()
+    {
+        return $this->user;
     }
 
     public function getTorrentsDirectory()
@@ -22,7 +32,12 @@ class TorrentManager
         return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->user->getId();
     }
 
-    public function addTorrentFromUrl($url)
+    /**
+     * @param string $url
+     * @return mixed
+     * @throws \Exception
+     */
+    public function addTorrentFromUrl(string $url)
     {
         $path = $this->getTorrentsDirectory() . DIRECTORY_SEPARATOR . md5($url) . '.torrent';
 
@@ -31,7 +46,12 @@ class TorrentManager
         return $this->addTorrentFromFile($path);
     }
 
-    public function addTorrentFromFile($path)
+    /**
+     * @param string $path
+     * @return mixed
+     * @throws \Exception
+     */
+    public function addTorrentFromFile(string $path)
     {
         $oldFile = realpath($path);
         $newFile = FileUtils::encodeFilename($oldFile);
@@ -44,16 +64,29 @@ class TorrentManager
         return $result;
     }
 
-    public function addTorrentFromMagnet($magnet)
+    /**
+     * @param string $magnet
+     * @return mixed
+     * @throws \Exception
+     */
+    public function addTorrentFromMagnet(string $magnet)
     {
         return $this->service->call('addTorrentFromMagnet', ['magnet' => $magnet]);
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function getTorrents()
     {
         return $this->service->call('getTorrents');
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function getPaths()
     {
         $paths = $this->service->call('getPaths');
@@ -67,22 +100,42 @@ class TorrentManager
         return $paths;
     }
 
-    public function pauseTorrent($hash)
+    /**
+     * @param string $hash
+     * @return mixed
+     * @throws \Exception
+     */
+    public function pauseTorrent(string $hash)
     {
         return $this->service->call('pauseTorrent', ['hash' => $hash]);
     }
 
-    public function resumeTorrent($hash)
+    /**
+     * @param string $hash
+     * @return mixed
+     * @throws \Exception
+     */
+    public function resumeTorrent(string $hash)
     {
         return $this->service->call('resumeTorrent', ['hash' => $hash]);
     }
 
-    public function removeTorrent($hash)
+    /**
+     * @param string $hash
+     * @return mixed
+     * @throws \Exception
+     */
+    public function removeTorrent(string $hash)
     {
         return $this->service->call('removeTorrent', ['hash' => $hash]);
     }
 
-    public function listTrackers($hash)
+    /**
+     * @param string $hash
+     * @return mixed
+     * @throws \Exception
+     */
+    public function listTrackers(string $hash)
     {
         return $this->service->call('listTrackers', ['hash' => $hash]);
     }

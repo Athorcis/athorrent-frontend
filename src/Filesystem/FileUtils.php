@@ -2,69 +2,40 @@
 
 namespace Athorrent\Filesystem;
 
-class FileUtils
+use Symfony\Component\Filesystem\Exception\IOException;
+
+class FileUtils extends \Symfony\Component\Filesystem\Filesystem
 {
-    public static function getMimeType($path)
+    public function getSize($files): int
     {
-        $finfo = new \finfo(FILEINFO_MIME);
-        return $finfo->file($path);
-    }
-
-    public static function dirsize($path)
-    {
-        $path .= DIRECTORY_SEPARATOR;
-        $dir = opendir($path);
         $size = 0;
+        $files = $this->toIterable($files);
 
-        while ($entry = readdir($dir)) {
-            if ($entry != '.' && $entry != '..') {
-                $entryPath = $path . $entry;
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                $iterator = new \FilesystemIterator($file, \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS);
+                $size += $this->getSize($iterator);
+            } else {
+                $bytes = @filesize($file);
 
-                if (is_dir($entryPath)) {
-                    $size += self::dirsize($entryPath);
-                } else {
-                    $size += filesize($entryPath);
+                if ($bytes === false) {
+                    $error = error_get_last();
+                    throw new IOException(sprintf('Failed to get size of file "%s": %s.', $file, $error['message']));
                 }
+
+                $size += $bytes;
             }
         }
-
-        closedir($dir);
 
         return $size;
     }
 
-    public static function rrmdir($path)
+    private function toIterable($files): iterable
     {
-        $path .= DIRECTORY_SEPARATOR;
-        $dir = opendir($path);
-        $result = true;
-
-        while ($entry = readdir($dir)) {
-            if ($entry != '.' && $entry != '..') {
-                $entryPath = $path . $entry;
-
-                if (is_dir($entryPath)) {
-                    if (!self::rrmdir($entryPath)) {
-                        $result = false;
-                    }
-                } else {
-                    if (!unlink($entryPath)) {
-                        $result = false;
-                    }
-                }
-            }
-        }
-
-        closedir($dir);
-
-        if ($result) {
-            rmdir($path);
-        }
-
-        return $result;
+        return is_array($files) || $files instanceof \Traversable ? $files : array($files);
     }
 
-    public static function encodeFilename($path)
+    public static function encodeFilename(string $path)
     {
         $parts = pathinfo($path);
         return $parts['dirname'] . DIRECTORY_SEPARATOR . base64_encode($parts['filename']) . '.' . $parts['extension'];

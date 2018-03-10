@@ -6,6 +6,7 @@ use Asm89\Twig\CacheExtension\CacheStrategy\GenerationalCacheStrategy;
 use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Athorrent\Cache\Twig\PsrSimpleCacheAdapter;
 use Athorrent\Cache\Twig\KeyGenerator;
+use Athorrent\Filesystem\UserFilesystemEntry;
 use Pimple\Container;
 use Silex\Api\BootableProviderInterface;
 use Silex\Api\EventListenerProviderInterface;
@@ -56,6 +57,9 @@ class TwigServiceProvider extends BaseTwigServiceProvider implements BootablePro
 
         $twig->addFunction(new Twig_SimpleFunction('format_age', [$this, 'formatAge']));
 
+        $twig->addFunction(new Twig_SimpleFunction('icon', [$this, 'getIcon']));
+
+        $twig->addFunction(new Twig_SimpleFunction('base64_encode', 'base64_encode'));
         return $twig;
     }
 
@@ -73,6 +77,31 @@ class TwigServiceProvider extends BaseTwigServiceProvider implements BootablePro
         $cacheExtension = new CacheExtension($cacheStrategy);
 
         $twig->addExtension($cacheExtension);
+    }
+
+    public function getIcon($value)
+    {
+        if ($value instanceof UserFilesystemEntry) {
+            if ($value->isDirectory()) {
+                return 'fa-folder-open-o';
+            } elseif ($value->isText()) {
+                return 'fa-file-text-o';
+            } elseif ($value->isImage()) {
+                return 'fa-file-image-o';
+            } elseif ($value->isAudio()) {
+                return 'fa-file-audio-o';
+            } elseif ($value->isVideo()) {
+                return 'fa-file-video-o';
+            } elseif ($value->isPdf()) {
+                return 'fa-file-pdf-o';
+            } elseif ($value->isArchive()) {
+                return 'fa-file-archive-o';
+            }
+
+            return 'fa-file-o';
+        }
+
+        return '';
     }
 
     public function torrentStateToClass($torrent)

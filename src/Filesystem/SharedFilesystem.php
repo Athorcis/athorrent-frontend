@@ -3,12 +3,18 @@
 namespace Athorrent\Filesystem;
 
 use Athorrent\Database\Entity\Sharing;
-use Silex\Application;
+use Athorrent\Database\Entity\User;
+use Athorrent\Utils\TorrentManager;
 
-class SharedFilesystem extends UserFilesystem
+class SharedFilesystem extends TorrentFilesystem
 {
-    public function __construct(Application $app, Sharing $sharing)
+    public function __construct(TorrentManager $torrentManager, User $accessor, Sharing $sharing)
     {
-        parent::__construct($app, $sharing->getUser(), $sharing->getPath(), false);
+        parent::__construct($torrentManager, $accessor, $sharing->getPath());
+    }
+
+    public function getEntry(string $path): FilesystemEntryInterface
+    {
+        return new SharedFilesystemEntry($this, $path);
     }
 }

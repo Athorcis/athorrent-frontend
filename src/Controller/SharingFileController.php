@@ -2,6 +2,7 @@
 
 namespace Athorrent\Controller;
 
+use Athorrent\Database\Entity\Sharing;
 use Athorrent\Filesystem\SharedFilesystem;
 use Silex\Application;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -17,6 +18,6 @@ class SharingFileController extends AbstractFileController
             throw new NotFoundHttpException('error.sharingNotFound');
         }
 
-        return new SharedFilesystem($app, $sharing);
+        return new SharedFilesystem($app['torrent_manager']($sharing->getUser()), $app['user'], $sharing);
     }
 }
