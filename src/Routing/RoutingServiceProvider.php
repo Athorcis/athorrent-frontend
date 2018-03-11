@@ -25,8 +25,6 @@ class RoutingServiceProvider implements ServiceProviderInterface, EventListenerP
 
     public function subscribe(Container $app, EventDispatcherInterface $dispatcher)
     {
-        $dispatcher->addSubscriber(new RoutingListener($app['request_context'], function () use ($app) {
-            return $app['ajax_route_descriptors'];
-        }));
+        $dispatcher->addSubscriber(new RoutingListener($app['cache'], $app['request_context']));
     }
 }

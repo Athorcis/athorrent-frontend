@@ -25,7 +25,7 @@ use Athorrent\View\TwigServiceProvider;
 use Athorrent\View\View;
 use Silex\Application;
 use Silex\Application\UrlGeneratorTrait;
-use Silex\Provider\LocaleServiceProvider;
+use Silex\Provider\Locale\LocaleListener;
 use Silex\Provider\RememberMeServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -50,10 +50,6 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
             return $this['torrent_manager.provider']->get($user);
         });
 
-//        $this['fs'] = function () {
-//            return new Filesystem();
-//        };
-
         $this['user.fs'] = function (Application $app) {
             return new TorrentFilesystem($app['torrent_manager']($app['user']), $app['user']);
         };
@@ -65,19 +61,14 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
             'twig.options' => ['cache' => CACHE_DIR . DIRECTORY_SEPARATOR . 'twig']
         ]);
 
-//        $this->register(new \Silex\Provider\HttpFragmentServiceProvider());
-//        $this->register(new \Silex\Provider\ServiceControllerServiceProvider());
-//        $this->register(new  \Silex\Provider\WebProfilerServiceProvider(), array(
-//            'profiler.cache_dir' => __DIR__.'/../cache/profiler',
-//            'profiler.mount_prefix' => '/_profiler', // this is the default
-//        ));
         $this->register(new SessionServiceProvider());
         $this->register(new RememberMeServiceProvider());
         $this->register(new CsrfServiceProvider());
 
         $this->register(new RoutingServiceProvider());
-        $this->register(new LocaleServiceProvider());
 
+        $localeListener = new LocaleListener($this, $this['locale'], $this['request_stack'], $this['request_context']);
+        $this['dispatcher']->addSubscriber($localeListener);
 
         $notificationListener = new NotificationListener($this['url_generator']);
         $this['dispatcher']->addSubscriber($this);

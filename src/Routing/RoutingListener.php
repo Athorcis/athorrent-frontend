@@ -3,7 +3,9 @@
 namespace Athorrent\Routing;
 
 use Athorrent\View\View;
+use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -11,14 +13,16 @@ use Symfony\Component\Routing\RequestContext;
 
 class RoutingListener implements EventSubscriberInterface
 {
+    private $cache;
+
     private $requestContext;
 
-    private $routeDescriptorsProvider;
+    private $routeDescriptors;
 
-    public function __construct(RequestContext $requestContext, $routeDescriptorsProvider)
+    public function __construct(CacheInterface $cache, RequestContext $requestContext)
     {
+        $this->cache = $cache;
         $this->requestContext = $requestContext;
-        $this->routeDescriptorsProvider = $routeDescriptorsProvider;
     }
 
     public static function getSubscribedEvents()
@@ -31,7 +35,10 @@ class RoutingListener implements EventSubscriberInterface
 
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $attributes = $event->getRequest()->attributes;
+        $request = $event->getRequest();
+        $this->initAjaxRouteDescriptors($request);
+
+        $attributes = $request->attributes;
 
         $this->requestContext->setParameter('_prefixId', $attributes->get('_prefixId'));
 
@@ -42,13 +49,45 @@ class RoutingListener implements EventSubscriberInterface
         }
     }
 
+    protected function initAjaxRouteDescriptors(Request $request)
+    {
+        $locale = $request->getLocale();
+        $ajaxRouteDescriptorsKey = 'ajax_route_descriptors_' . $locale;
+
+        if ($this->cache->has($ajaxRouteDescriptorsKey)) {
+            $ajaxRouteDescriptors = $this->cache->get($ajaxRouteDescriptorsKey);
+        } else {
+            $ajaxRouteDescriptors = [];
+
+            foreach ($this->cache->get('routes') as $route) {
+                if ($route->hasDefault('_action')) {
+                    $action = $route->getDefault('_action');
+                    $prefixId = $route->getDefault('_prefixId');
+
+                    if ($route->getDefault('_ajax')) {
+                        if ($route->getDefault('_locale') === $locale) {
+                            $ajaxRouteDescriptors[$action][$prefixId] = [
+                                $route->getMethods()[0],
+                                $route->getPath()
+                            ];
+                        }
+                    }
+                }
+            }
+
+            $this->cache->set($ajaxRouteDescriptorsKey, $ajaxRouteDescriptors);
+        }
+
+        $this->routeDescriptors = $ajaxRouteDescriptors;
+    }
+
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $result = $event->getControllerResult();
         $request = $event->getRequest();
 
         if ($result instanceof View && !$request->attributes->get('_ajax')) {
-            $result->setJsVar('routes', ($this->routeDescriptorsProvider)());
+            $result->setJsVar('routes', $this->routeDescriptors);
         }
     }
 }
