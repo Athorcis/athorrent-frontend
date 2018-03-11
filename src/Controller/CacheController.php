@@ -13,10 +13,10 @@ class CacheController extends AbstractController
         return [
             ['GET', '/', 'handleCache'],
 
-            ['POST', '/clear/apc', 'clearApc', 'ajax'],
-            ['POST', '/clear/twig', 'clearTwig', 'ajax'],
-            ['POST', '/clear/translations', 'clearTranslations', 'ajax'],
-            ['POST', '/clear', 'clearAll', 'ajax']
+            ['DELETE', '/apc', 'clearApc', 'ajax'],
+            ['DELETE', '/twig', 'clearTwig', 'ajax'],
+            ['DELETE', '/translations', 'clearTranslations', 'ajax'],
+            ['DELETE', '/', 'clearAll', 'ajax']
         ];
     }
 

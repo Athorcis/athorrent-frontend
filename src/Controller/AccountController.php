@@ -15,7 +15,7 @@ class AccountController extends AbstractController
     {
         return [
             ['GET', '/', 'editAccount'],
-            ['POST', '/', 'saveAccount']
+            ['PATCH', '/', 'saveAccount']
         ];
     }
 

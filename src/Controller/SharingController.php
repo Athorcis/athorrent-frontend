@@ -32,7 +32,7 @@ class SharingController extends AbstractController
             ['GET', '/', 'listSharings'],
 
             ['POST', '/', 'addSharing', 'ajax'],
-            ['POST', '/{token}', 'removeSharing', 'ajax']
+            ['DELETE', '/{token}', 'removeSharing', 'ajax']
         ];
     }
 

@@ -24,7 +24,7 @@ abstract class AbstractFileController extends AbstractController
             ['GET', '/open', 'openFile'],
             ['GET', '/download', 'downloadFile'],
 
-            ['POST', '/remove', 'removeFile', 'ajax']
+            ['DELETE', '/', 'removeFile', 'ajax']
         ];
     }
 
