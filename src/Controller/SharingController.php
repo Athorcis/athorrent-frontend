@@ -4,6 +4,8 @@ namespace Athorrent\Controller;
 
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Filesystem\FilesystemAwareTrait;
+use Athorrent\Filesystem\FilesystemInterface;
+use Athorrent\Filesystem\TorrentFilesystem;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\PaginatedView;
 use Silex\Application;
@@ -15,7 +17,11 @@ class SharingController extends AbstractController
 {
     use FilesystemAwareTrait;
 
-    public function getFilesystem(Application $app)
+    /**
+     * @param Application $app
+     * @return TorrentFilesystem
+     */
+    protected function getFilesystem(Application $app): FilesystemInterface
     {
         return $app['user.fs'];
     }

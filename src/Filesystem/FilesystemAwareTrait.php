@@ -13,7 +13,7 @@ trait FilesystemAwareTrait
      * @param Application $app
      * @return Filesystem
      */
-    abstract protected function getFilesystem(Application $app): Filesystem;
+    abstract protected function getFilesystem(Application $app): FilesystemInterface;
 
     /**
      * @param Request $request
@@ -21,7 +21,7 @@ trait FilesystemAwareTrait
      * @param array $requirements
      * @return FilesystemEntry
      */
-    protected function getEntry(Request $request, Application $app, array $requirements = []): FilesystemEntry
+    protected function getEntry(Request $request, Application $app, array $requirements = []): FilesystemEntryInterface
     {
         static $defaultRequirements = [
             'path' => false,
