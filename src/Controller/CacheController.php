@@ -8,7 +8,7 @@ use Silex\Application;
 
 class CacheController extends AbstractController
 {
-    protected function getRouteDescriptors()
+    public function getRouteDescriptors()
     {
         return [
             ['GET', '/', 'handleCache'],

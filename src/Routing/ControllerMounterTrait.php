@@ -2,23 +2,64 @@
 
 namespace Athorrent\Routing;
 
-use Silex\Api\ControllerProviderInterface;
-use Silex\ControllerCollection;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 trait ControllerMounterTrait
 {
-    abstract public function mountControllers();
+    abstract public function getControllers();
+
+    protected function buildRouteCollection(RouteCollection $routes)
+    {
+        $controllerDescriptors = $this->getControllers();
+
+        foreach ($controllerDescriptors as $controllerDescriptor) {
+            list($prefix, $controller, $prefixId) = $controllerDescriptor;
+
+            foreach ($controller->getRouteDescriptors() as $descriptor) {
+                list($method, $pattern, $action) = $descriptor;
+                $type = isset($descriptor[3]) ? $descriptor[3] : '';
+
+                $path = rtrim($prefix . $pattern, '/');
+                $name = $prefixId . '.' . $action;
+
+                if ($type === 'ajax') {
+                    $path = '/ajax' . $pattern;
+                    $name = 'ajax|' . $name;
+                }
+
+                $route = new Route($path, [
+                    '_action' => $action,
+                    '_ajax' => $type === 'ajax',
+                    '_controller' => get_class($controller) . '::' . $action,
+                    '_prefixId' => $prefixId
+                ]);
+
+
+                $route->setMethods($method);
+
+                $i18nRoute = clone $route;
+
+                $i18nRoute->setPath('/{_locale}' . $path);
+                $routes->add('i18n|' . $name, $i18nRoute);
+
+                $route->setDefault('_locale', 'fr');
+                $routes->add($name, $route);
+            }
+        }
+
+        return $routes;
+    }
 
     public function flush()
     {
         $cache = $this['cache'];
-        $locale = $this['locale'];
 
         if ($cache->has('routes')) {
             $routes = $cache->get('routes');
         } else {
-            $this->mountControllers();
             $routes = $this['controllers']->flush();
+            $this->buildRouteCollection($routes);
 
             $cache->set('routes', $routes);
             $this['request_matcher_cache']->storeRequestMatcher($routes);
@@ -49,24 +90,5 @@ trait ControllerMounterTrait
         }
 
         $this['url_generator']->setActionMap($actionMap);
-    }
-
-    public function mount($prefix, $controllers, $prefixId = null)
-    {
-        if ($controllers instanceof ControllerProviderInterface) {
-            $connectedControllers = $controllers->connect($this);
-
-            if (!$connectedControllers instanceof ControllerCollection) {
-                throw new \LogicException(sprintf('The method "%s::connect" must return a "ControllerCollection" instance. Got: "%s"', get_class($controllers), is_object($connectedControllers) ? get_class($connectedControllers) : gettype($connectedControllers)));
-            }
-
-            $controllers = $connectedControllers;
-        } elseif (!$controllers instanceof ControllerCollection && !is_callable($controllers)) {
-            throw new \LogicException('The "mount" method takes either a "ControllerCollection" instance, "ControllerProviderInterface" instance, or a callable.');
-        }
-
-        $this['controllers']->mount($prefix, $controllers, $prefixId);
-
-        return $this;
     }
 }

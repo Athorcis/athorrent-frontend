@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
 {
-    protected function getRouteDescriptors()
+    public function getRouteDescriptors()
     {
         return [
             ['GET', '/', 'listUsers'],

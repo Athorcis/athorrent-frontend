@@ -16,10 +16,6 @@ class RoutingServiceProvider implements ServiceProviderInterface, EventListenerP
             return new UrlGenerator($app['default_locale'], $app['routes'], $app['request_context']);
         };
 
-        $app['controllers_factory'] = $app->factory(function (Application $app) {
-            return new ControllerCollection($app['route_factory'], $app['default_locale'], $app['locales']);
-        });
-
         $app['request_matcher_cache'] = new RequestMatcherCache($app['request_context']);
     }
 

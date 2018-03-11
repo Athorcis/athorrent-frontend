@@ -14,7 +14,7 @@ abstract class AbstractFileController extends AbstractController
 {
     use FilesystemAwareTrait;
 
-    protected function getRouteDescriptors()
+    public function getRouteDescriptors()
     {
         return [
             ['GET', '/', 'listFiles', 'both'],
