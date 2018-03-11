@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SearchController extends AbstractController
 {
-    protected function getRouteDescriptors()
+    public function getRouteDescriptors()
     {
         return [['GET', '/', 'showSearch']];
     }

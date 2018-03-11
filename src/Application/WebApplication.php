@@ -142,22 +142,22 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
         }
     }
 
-    public function mountControllers()
+    public function getControllers(): array
     {
-        $this->mount('/', new DefaultController(), '');
+        return [
+            ['/', new DefaultController(), ''],
+            ['/search', new SearchController(), 'search'],
+            ['/user/files', new FileController(), 'files'],
+            ['/user/torrents', new TorrentController(), 'torrents'],
+            ['/user/account', new AccountController(), 'account'],
 
-        $this->mount('/search', new SearchController(), 'search');
+            ['/user/sharings', new SharingController(), 'sharings'],
+            ['/sharings/{token}/files', new SharingFileController(), 'sharings'],
 
-        $this->mount('/user/files', new FileController(), 'files');
-        $this->mount('/user/torrents', new TorrentController(), 'torrents');
-        $this->mount('/user/account', new AccountController(), 'account');
-
-        $this->mount('/user/sharings', new SharingController(), 'sharings');
-        $this->mount('/sharings/{token}/files', new SharingFileController(), 'sharings');
-
-        $this->mount('/administration', new AdministrationController(), 'administration');
-        $this->mount('/administration/users', new UserController(), 'users');
-        $this->mount('/administration/cache', new CacheController(), 'cache');
+            ['/administration', new AdministrationController(), 'administration'],
+            ['/administration/users', new UserController(), 'users'],
+            ['/administration/cache', new CacheController(), 'cache']
+        ];
     }
 
     public function redirect($url, $status = 302)

@@ -7,7 +7,7 @@ use Athorrent\View\View;
 
 class DefaultController extends AbstractController
 {
-    protected function getRouteDescriptors()
+    public function getRouteDescriptors()
     {
         return [['GET', '/', 'home']];
     }

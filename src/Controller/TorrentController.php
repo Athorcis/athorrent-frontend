@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TorrentController extends AbstractController
 {
-    protected function getRouteDescriptors()
+    public function getRouteDescriptors()
     {
         return [
             ['GET', '/', 'listTorrents', 'both'],

@@ -26,7 +26,7 @@ class SharingController extends AbstractController
         return $app['user.fs'];
     }
 
-    protected function getRouteDescriptors()
+    public function getRouteDescriptors()
     {
         return [
             ['GET', '/', 'listSharings'],
