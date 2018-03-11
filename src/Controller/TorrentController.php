@@ -17,14 +17,14 @@ class TorrentController extends AbstractController
             ['GET', '/', 'listTorrents', 'both'],
             ['GET', '/magnet', 'addMagnet'],
 
-            ['GET', '/trackers/{hash}', 'listTrackers', 'ajax'],
+            ['GET', '/{hash}/trackers', 'listTrackers', 'ajax'],
 
             ['POST', '/files', 'uploadTorrent', 'ajax'],
             ['POST', '/', 'addTorrents', 'ajax'],
 
-            ['POST', '/pause/{hash}', 'pauseTorrent', 'ajax'],
-            ['POST', '/resume/{hash}', 'resumeTorrent', 'ajax'],
-            ['POST', '/remove/{hash}', 'removeTorrent', 'ajax']
+            ['POST', '/{hash}/pause', 'pauseTorrent', 'ajax'],
+            ['POST', '/{hash}/resume', 'resumeTorrent', 'ajax'],
+            ['DELETE', '/{hash}', 'removeTorrent', 'ajax']
         ];
     }
 

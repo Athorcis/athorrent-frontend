@@ -19,9 +19,9 @@ class UserController extends AbstractController
             ['GET', '/', 'listUsers'],
 
             ['GET', '/add', 'addUser'],
-            ['POST', '/add', 'saveUser'],
+            ['POST', '/', 'saveUser'],
 
-            ['POST', '/remove', 'removeUser', 'ajax']
+            ['DELETE', '/', 'removeUser', 'ajax']
         ];
     }
 
