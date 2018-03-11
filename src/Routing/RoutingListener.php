@@ -65,11 +65,20 @@ class RoutingListener implements EventSubscriberInterface
                     $prefixId = $route->getDefault('_prefixId');
 
                     if ($route->getDefault('_ajax')) {
-                        if ($route->getDefault('_locale') === $locale) {
-                            $ajaxRouteDescriptors[$action][$prefixId] = [
-                                $route->getMethods()[0],
-                                $route->getPath()
-                            ];
+                        if ($locale === 'fr') {
+                            if ($route->getDefault('_locale')) {
+                                $ajaxRouteDescriptors[$action][$prefixId] = [
+                                    $route->getMethods()[0],
+                                    $route->getPath()
+                                ];
+                            }
+                        } else {
+                            if (!$route->getDefault('_locale')) {
+                                $ajaxRouteDescriptors[$action][$prefixId] = [
+                                    $route->getMethods()[0],
+                                    $route->getPath()
+                                ];
+                            }
                         }
                     }
                 }
@@ -87,6 +96,7 @@ class RoutingListener implements EventSubscriberInterface
         $request = $event->getRequest();
 
         if ($result instanceof View && !$request->attributes->get('_ajax')) {
+            $result->setJsVar('routeParameters', $request->attributes->get('_route_params'));
             $result->setJsVar('routes', $this->routeDescriptors);
         }
     }

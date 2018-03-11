@@ -29,7 +29,7 @@ Object.assign(athorrent, {
             parameters.csrfToken = athorrent.csrfToken;
         }
 
-        let url = pattern.replace(/{([a-z]+)}/g, (match, p1) => {
+        let url = pattern.replace(/{(_?[a-z]+)}/g, (match, p1) => {
             let result;
 
             if (parameters.hasOwnProperty(p1)) {
@@ -41,6 +41,12 @@ Object.assign(athorrent, {
 
             return result;
         });
+
+        for (let key in parameters) {
+            if (key[0] === '_') {
+                delete parameters[key];
+            }
+        }
 
         options = Object.assign({
             type: method,
@@ -72,7 +78,7 @@ Object.assign(athorrent, {
             let request, method, pattern;
 
             if (!actionPrefix) {
-                ({ actionPrefix } = athorrent);
+                actionPrefix = athorrent.routeParameters._prefixId;
             }
 
             if (requests.hasOwnProperty(actionPrefix)) {
@@ -91,7 +97,7 @@ Object.assign(athorrent, {
                 [method, pattern] = request;
             }
 
-            if (actionPrefix === athorrent.actionPrefix) {
+            if (actionPrefix === athorrent.routeParameters._prefixId) {
                 if (action === athorrent.action) {
                     parameters = Object.assign({}, athorrent.routeParameters, athorrent.queryParameters, parameters);
                 } else {
