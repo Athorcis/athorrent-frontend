@@ -17,4 +17,9 @@ class SharedFilesystem extends TorrentFilesystem
     {
         return new SharedFilesystemEntry($this, $path);
     }
+
+    public function isWritable(): bool
+    {
+        return false;
+    }
 }
