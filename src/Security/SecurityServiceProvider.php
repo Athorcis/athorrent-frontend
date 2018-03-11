@@ -58,18 +58,7 @@ class SecurityServiceProvider extends BaseSecurityServiceProvider
             'ROLE_ADMIN' => ['ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH'],
         ];
 
-        $nonDefaultLocales = $app['locales'];
-        $defaultLocaleKey = array_search($app['default_locale'], $nonDefaultLocales);
-
-        if ($defaultLocaleKey !== false) {
-            unset($nonDefaultLocales[$defaultLocaleKey]);
-        }
-
-        if (count($nonDefaultLocales)) {
-            $localesPrefix = '((' . implode('|', $nonDefaultLocales) . ')/)?';
-        } else {
-            $localesPrefix = '';
-        }
+        $localesPrefix = '((' . implode('|', $app['locales']) . ')/)?';
 
         $app['security.access_rules'] = [
             ['^/' . $localesPrefix . '(ajax/)?administration', 'ROLE_ADMIN'],
