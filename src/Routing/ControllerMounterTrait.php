@@ -26,29 +26,17 @@ trait ControllerMounterTrait
 
         $this['routes']->addCollection($routes);
 
-        $ajaxRouteDescriptorsKey = 'ajax_route_descriptors_' . $locale;
-
-        if ($cache->has($ajaxRouteDescriptorsKey) && $cache->has('action_map')) {
-            $this['ajax_route_descriptors'] = $cache->get($ajaxRouteDescriptorsKey);
-            $this['url_generator']->setActionMap($cache->get('action_map'));
+         if ($cache->has('action_map')) {
+             $actionMap = $cache->get('action_map');
         } else {
-            $ajaxRouteDescriptors = [];
             $actionMap = [];
 
             foreach ($routes as $route) {
                 if ($route->hasDefault('_action')) {
                     $action = $route->getDefault('_action');
-                    $prefixId = $route->getDefault('_prefixId');
 
-                    if ($route->getDefault('_ajax')) {
-                        if ($route->getDefault('_locale') === $locale) {
-                            $ajaxRouteDescriptors[$action][$prefixId] = [
-                                $route->getMethods()[0],
-                                $route->getPath()
-                            ];
-                        }
-                    } else {
-                        $actionMap[$action][] = $prefixId;
+                    if (!$route->getDefault('_ajax')) {
+                        $actionMap[$action][] = $route->getDefault('_prefixId');
                     }
                 }
             }
@@ -57,12 +45,10 @@ trait ControllerMounterTrait
                 $prefixIds = array_unique($prefixIds);
             }
 
-            $this['ajax_route_descriptors'] = $ajaxRouteDescriptors;
-            $this['url_generator']->setActionMap($actionMap);
-
-            $cache->set($ajaxRouteDescriptorsKey, $ajaxRouteDescriptors);
             $cache->set('action_map', $actionMap);
         }
+
+        $this['url_generator']->setActionMap($actionMap);
     }
 
     public function mount($prefix, $controllers, $prefixId = null)
