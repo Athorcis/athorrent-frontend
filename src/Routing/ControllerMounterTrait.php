@@ -9,6 +9,41 @@ trait ControllerMounterTrait
 {
     abstract public function getControllers();
 
+    protected function addRoute(RouteCollection $routes, $prefix, $controller, $prefixId, $method, $pattern, $action, $type)
+    {
+        if ($type === 'both') {
+            $this->addRoute($routes, $prefix, $controller, $prefixId, $method, $pattern, $action, 'ajax');
+        }
+
+        $path = rtrim($prefix . $pattern, '/');
+        $name = $prefixId . '.' . $action;
+
+        if ($type === 'ajax') {
+            $path = '/ajax' . $path;
+            $name = 'ajax|' . $name;
+        }
+
+        $route = new Route($path, [
+            '_action' => $action,
+            '_ajax' => $type === 'ajax',
+            '_controller' => get_class($controller) . '::' . $action,
+            '_prefixId' => $prefixId
+        ]);
+
+
+        $route->setMethods($method);
+
+        $i18nRoute = clone $route;
+
+        $i18nRoute->setPath('/{_locale}' . $path);
+        $i18nRoute->setRequirement('_locale', 'en|fr');
+
+        $routes->add('i18n|' . $name, $i18nRoute);
+
+        $route->setDefault('_locale', 'fr');
+        $routes->add($name, $route);
+    }
+
     protected function buildRouteCollection(RouteCollection $routes)
     {
         $controllerDescriptors = $this->getControllers();
@@ -20,31 +55,7 @@ trait ControllerMounterTrait
                 list($method, $pattern, $action) = $descriptor;
                 $type = isset($descriptor[3]) ? $descriptor[3] : '';
 
-                $path = rtrim($prefix . $pattern, '/');
-                $name = $prefixId . '.' . $action;
-
-                if ($type === 'ajax') {
-                    $path = '/ajax' . $pattern;
-                    $name = 'ajax|' . $name;
-                }
-
-                $route = new Route($path, [
-                    '_action' => $action,
-                    '_ajax' => $type === 'ajax',
-                    '_controller' => get_class($controller) . '::' . $action,
-                    '_prefixId' => $prefixId
-                ]);
-
-
-                $route->setMethods($method);
-
-                $i18nRoute = clone $route;
-
-                $i18nRoute->setPath('/{_locale}' . $path);
-                $routes->add('i18n|' . $name, $i18nRoute);
-
-                $route->setDefault('_locale', 'fr');
-                $routes->add($name, $route);
+                $this->addRoute($routes, $prefix, $controller, $prefixId, $method, $pattern, $action, $type);
             }
         }
 
