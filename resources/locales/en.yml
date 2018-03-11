@@ -76,7 +76,6 @@ files:
     download: Download
     display: Display
     play: Play
-    directLink: Direct link
     sharingLink: Sharing link
     removeSharing: Remove sharing
     share: Share

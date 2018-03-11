@@ -61,16 +61,6 @@ Object.assign(athorrent, {
                 this.getItem('file', target).remove();
             }, this));
         }
-    },
-
-    onFileDirectLink(event) {
-        let { target } = event;
-
-        this.ajax.getDirectLink({
-            path: this.getFilePath(target)
-        }, (link) => {
-            athorrent.showModal(athorrent.trans('files.directLink'), `<a href="${link}">${link}</a>`);
-        });
     }
 });
 
@@ -78,4 +68,3 @@ $(document).on('click', '.add-sharing', athorrent.onSharingAdd.bind(athorrent));
 $(document).on('click', '.sharing-remove', athorrent.onSharingRemove.bind(athorrent));
 $(document).on('click', '.sharing-link', athorrent.onSharingLink.bind(athorrent));
 $(document).on('click', '.file-remove', athorrent.onFileRemove.bind(athorrent));
-$(document).on('click', '.file-direct-link', athorrent.onFileDirectLink.bind(athorrent));

@@ -75,7 +75,6 @@ files:
     download: Télécharger
     display: Afficher
     play: Lire
-    directLink: Lien direct
     sharingLink: Lien de partage
     removeSharing: Supprimer le partage
     share: Partager
