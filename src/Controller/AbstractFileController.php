@@ -24,9 +24,7 @@ abstract class AbstractFileController extends AbstractController
             ['GET', '/open', 'openFile'],
             ['GET', '/download', 'downloadFile'],
 
-            ['POST', '/remove', 'removeFile', 'ajax'],
-
-            ['GET', '/direct', 'getDirectLink', 'ajax']
+            ['POST', '/remove', 'removeFile', 'ajax']
         ];
     }
 
@@ -64,7 +62,6 @@ abstract class AbstractFileController extends AbstractController
             'breadcrumb' => $breadcrumb,
             'files' => $entries,
             '_strings' => [
-                'files.directLink',
                 'files.sharingLink'
             ]
         ], 'listFiles');
@@ -161,44 +158,5 @@ abstract class AbstractFileController extends AbstractController
         $app['orm.repo.sharing']->deleteByUserAndRoot($fileEntry->getOwner(), $fileEntry->getPath());
 
         return [];
-    }
-
-    public function getDirectLink(Application $app)
-    {
-        $fs = $this->getFilesystem($app);
-        $path = $this->getRelativeFilePath($app, $fs);
-
-        if (!$fs->isWritable()) {
-            throw new \Exception('filesystem is not writable');
-        }
-
-        list($parentPath) = explode('/', $path);
-
-        $sharings = $app['orm.repo.sharing']->findByUserAndRoot($fs->getUser(), $parentPath);
-
-        if (count($sharings) > 0) {
-            $sharing = $sharings[0];
-        } else {
-            $sharing = new Sharing(null, $fileManager->getOwnerId(), $relativePath);
-            $sharing->save();
-        }
-
-        $sharingPath = $sharing->getPath();
-
-        if (is_file($fileManager->getAbsolutePath($sharingPath))) {
-            $sharingPath = dirname($sharingPath);
-
-            if ($sharingPath === '.') {
-                $sharingPath = '';
-            }
-        }
-
-        $finalPath = str_replace($sharingPath, '', $relativePath);
-
-        return $app->url('openFile', [
-            '_prefixId' => 'sharings',
-            'token' => $sharing->getToken(),
-            'path' => $finalPath
-        ]);
     }
 }

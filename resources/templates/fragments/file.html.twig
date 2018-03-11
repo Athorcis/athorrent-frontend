@@ -51,13 +51,6 @@
                                 </a>
                             </li>
                         {% endif %}
-                        {% if file.isSharable %}
-                            <li>
-                                <a href="#" class="file-direct-link">
-                                    <span class="fa fa-fw fa-external-link"></span>{{ 'files.directLink'|trans }}
-                                </a>
-                            </li>
-                        {% endif %}
                     {% endif %}
                     {% if file.isSharable %}
                         {% if file.isShared %}
