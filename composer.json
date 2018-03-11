@@ -21,7 +21,7 @@
         "symfony/css-selector": "~4.0.6",
         "guzzlehttp/guzzle": "~6.3.0",
         "phpFastCache/phpFastCache": "~6.1.0",
-        "doctrine/orm": "~2.5.14",
+        "doctrine/orm": "~2.6.1",
         "knplabs/console-service-provider": "~2.2.0"
     },
 
