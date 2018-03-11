@@ -2,7 +2,7 @@
 
 namespace Athorrent\Cache;
 
-use Athorrent\Filesystem\FileUtils;
+use Athorrent\Filesystem\Filesystem;
 use Psr\SimpleCache\CacheInterface;
 
 class CacheCleaner
@@ -11,10 +11,13 @@ class CacheCleaner
 
     private $cacheDir;
 
+    private $filesystem;
+
     public function __construct(CacheInterface $cache, $cacheDir)
     {
         $this->cache = $cache;
         $this->cacheDir = $cacheDir;
+        $this->filesystem = new Filesystem('/');
     }
 
     public function clearApplicationCache()
@@ -27,7 +30,7 @@ class CacheCleaner
         $path = $this->cacheDir . DIRECTORY_SEPARATOR . $subdir;
 
         if (is_dir($path)) {
-            return FileUtils::rrmdir($path);
+            $this->filesystem->remove($path);
         }
 
         return true;
