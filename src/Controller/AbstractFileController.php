@@ -2,7 +2,6 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Database\Entity\Sharing;
 use Athorrent\Filesystem\FilesystemAwareTrait;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
