@@ -3,29 +3,16 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Filesystem\FilesystemAwareTrait;
-use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
-abstract class AbstractFileController extends AbstractController
+abstract class AbstractFileController
 {
     use FilesystemAwareTrait;
-
-    public function getRouteDescriptors()
-    {
-        return [
-            ['GET', '/', 'listFiles', 'both'],
-            ['GET', '/play', 'playFile'],
-            ['GET', '/display', 'displayFile'],
-
-            ['GET', '/open', 'openFile'],
-            ['GET', '/download', 'downloadFile'],
-
-            ['DELETE', '/', 'removeFile', 'ajax']
-        ];
-    }
 
     protected function getBreadcrumb(Application $app, $path)
     {
@@ -43,6 +30,10 @@ abstract class AbstractFileController extends AbstractController
         return $breadcrumb;
     }
 
+    /**
+     * @Method("GET")
+     * @Route("/", options={"expose"=true})
+     */
     public function listFiles(Application $app, Request $request)
     {
         $dirEntry = $this->getEntry($request, $app);
@@ -83,16 +74,28 @@ abstract class AbstractFileController extends AbstractController
         return $response;
     }
 
+    /**
+     * @Method("GET")
+     * @Route("/open")
+     */
     public function openFile(Application $app, Request $request)
     {
         return $this->sendFile($app, $request, 'inline');
     }
 
+    /**
+     * @Method("GET")
+     * @Route("/download")
+     */
     public function downloadFile(Application $app, Request $request)
     {
         return $this->sendFile($app, $request, 'attachment');
     }
 
+    /**
+     * @Method("GET")
+     * @Route("/play")
+     */
     public function playFile(Request $request, Application $app)
     {
         $fileEntry = $this->getEntry($request, $app, ['path' => true, 'file' => true]);
@@ -119,6 +122,10 @@ abstract class AbstractFileController extends AbstractController
         ]);
     }
 
+    /**
+     * @Method("GET")
+     * @Route("/display")
+     */
     public function displayFile(Request $request, Application $app)
     {
         $fileEntry = $this->getEntry($request, $app, ['path' => true, 'file' => true]);
@@ -144,6 +151,10 @@ abstract class AbstractFileController extends AbstractController
         return new View($data);
     }
 
+    /**
+     * @Method("DELETE")
+     * @Route("/", options={"expose"=true})
+     */
     public function removeFile(Application $app, Request $request)
     {
         $fileEntry = $this->getEntry($request, $app, ['path' => true]);

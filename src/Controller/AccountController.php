@@ -6,24 +6,29 @@ use Athorrent\Notification\ErrorNotification;
 use Athorrent\Notification\SuccessNotification;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class AccountController extends AbstractController
+/**
+ * @Route("/user/account", name="account")
+ */
+class AccountController
 {
-    public function getRouteDescriptors()
-    {
-        return [
-            ['GET', '/', 'editAccount'],
-            ['PATCH', '/', 'saveAccount']
-        ];
-    }
-
+    /**
+     * @Method("GET")
+     * @Route("/")
+     */
     public function editAccount()
     {
         return new View();
     }
 
+    /**
+     * @Method("PUT")
+     * @Route("/")
+     */
     public function saveAccount(Application $app, Request $request)
     {
         $user = $app['user'];

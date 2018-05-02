@@ -31,7 +31,7 @@ class ViewListener implements EventSubscriberInterface
 
     public function onEarlyKernelView(GetResponseForControllerResultEvent $event)
     {
-        $xhr = $event->getRequest()->attributes->get('_ajax');
+        $xhr = $event->getRequest()->isXmlHttpRequest();
 
         if (!$xhr) {
             return;

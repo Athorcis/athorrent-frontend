@@ -12,8 +12,12 @@ class RoutingServiceProvider implements ServiceProviderInterface, EventListenerP
 {
     public function register(Container $app)
     {
+        $app['action_map'] = function (Application $app) {
+            return new ActionMap($app['routes']);
+        };
+
         $app['url_generator'] = function (Application $app) {
-            return new UrlGenerator($app['default_locale'], $app['routes'], $app['request_context']);
+            return new UrlGenerator($app['default_locale'], $app['action_map'], $app['routes'], $app['request_context']);
         };
 
         $app['request_matcher_cache'] = new RequestMatcherCache($app['request_context']);
