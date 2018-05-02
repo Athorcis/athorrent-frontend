@@ -41,7 +41,7 @@ class Renderer
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request->attributes->get('_ajax')) {
+        if ($request->isXmlHttpRequest()) {
             $html = $this->renderFragment($name, $parameters);
         } else {
             $html = $this->renderPage($name, $parameters);

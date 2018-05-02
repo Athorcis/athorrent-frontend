@@ -2,29 +2,26 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Silex\Application;
+use Symfony\Component\Routing\Annotation\Route;
 
-class CacheController extends AbstractController
+class CacheController
 {
-    public function getRouteDescriptors()
-    {
-        return [
-            ['GET', '/', 'handleCache'],
-
-            ['DELETE', '/apc', 'clearApc', 'ajax'],
-            ['DELETE', '/twig', 'clearTwig', 'ajax'],
-            ['DELETE', '/translations', 'clearTranslations', 'ajax'],
-            ['DELETE', '/', 'clearAll', 'ajax']
-        ];
-    }
-
+    /**
+     * @Method("GET")
+     * @Route("/")
+     */
     public function handleCache()
     {
         return new View([], 'cache');
     }
 
+    /**
+     * @Method("DELETE")
+     * @Route("/apc", options={"expose"=true})
+     */
     public function clearApc(Application $app)
     {
         if (!$app['cache.cleaner']->clearApplicationCache()) {
@@ -34,6 +31,10 @@ class CacheController extends AbstractController
         return [];
     }
 
+    /**
+     * @Method("DELETE")
+     * @Route("/twig", options={"expose"=true})
+     */
     public function clearTwig(Application $app)
     {
         if (!$app['cache.cleaner']->clearTwigCache()) {
@@ -43,6 +44,10 @@ class CacheController extends AbstractController
         return [];
     }
 
+    /**
+     * @Method("DELETE")
+     * @Route("/translations", options={"expose"=true})
+     */
     public function clearTranslations(Application $app)
     {
         if (!$app['cache.cleaner']->clearTranslationsCache()) {
@@ -52,6 +57,10 @@ class CacheController extends AbstractController
         return [];
     }
 
+    /**
+     * @Method("DELETE")
+     * @Route("/", options={"expose"=true})
+     */
     public function clearAll(Application $app)
     {
         $this->clearApc($app);

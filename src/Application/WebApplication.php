@@ -2,16 +2,6 @@
 
 namespace Athorrent\Application;
 
-use Athorrent\Controller\AccountController;
-use Athorrent\Controller\AdministrationController;
-use Athorrent\Controller\CacheController;
-use Athorrent\Controller\DefaultController;
-use Athorrent\Controller\FileController;
-use Athorrent\Controller\SearchController;
-use Athorrent\Controller\SharingController;
-use Athorrent\Controller\SharingFileController;
-use Athorrent\Controller\TorrentController;
-use Athorrent\Controller\UserController;
 use Athorrent\Database\Entity\User;
 use Athorrent\Filesystem\TorrentFilesystem;
 use Athorrent\Notification\NotificationListener;
@@ -23,6 +13,7 @@ use Athorrent\Security\SecurityServiceProvider;
 use Athorrent\Utils\TorrentManagerProvider;
 use Athorrent\View\TwigServiceProvider;
 use Athorrent\View\View;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Silex\Application;
 use Silex\Application\UrlGeneratorTrait;
 use Silex\Provider\Locale\LocaleListener;
@@ -41,6 +32,8 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
     public function __construct()
     {
         parent::__construct();
+
+        AnnotationRegistry::registerLoader('class_exists');
 
         $this['torrent_manager.provider'] = function () {
             return new TorrentManagerProvider();
@@ -100,7 +93,7 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
         if ($result instanceof View) {
             $request = $event->getRequest();
 
-            if (!$request->attributes->get('_ajax')) {
+            if (!$request->isXmlHttpRequest()) {
                 $result->addTemplate('modal');
 
                 $vars = [
@@ -140,24 +133,6 @@ class WebApplication extends BaseApplication implements EventSubscriberInterface
             $response->headers->set('X-Frame-Options', 'DENY');
             $response->headers->set('X-XSS-Protection', '1; mode=block');
         }
-    }
-
-    public function getControllers(): array
-    {
-        return [
-            ['/', new DefaultController(), ''],
-            ['/search', new SearchController(), 'search'],
-            ['/user/files', new FileController(), 'files'],
-            ['/user/torrents', new TorrentController(), 'torrents'],
-            ['/user/account', new AccountController(), 'account'],
-
-            ['/user/sharings', new SharingController(), 'sharings'],
-            ['/sharings/{token}/files', new SharingFileController(), 'sharings'],
-
-            ['/administration', new AdministrationController(), 'administration'],
-            ['/administration/users', new UserController(), 'users'],
-            ['/administration/cache', new CacheController(), 'cache']
-        ];
     }
 
     public function redirect($url, $status = 302)

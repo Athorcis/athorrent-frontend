@@ -14,27 +14,19 @@ class UrlGenerator extends BaseUrlGenerator
 
     protected $actionMap = [];
 
-    public function __construct($defaultLocale, RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null)
+    public function __construct($defaultLocale, ActionMap $actionMap, RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null)
     {
         parent::__construct($routes, $context, $logger);
         $this->defaultLocale = $defaultLocale;
-    }
-
-    public function setActionMap(array $actionMap)
-    {
         $this->actionMap = $actionMap;
     }
 
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        if ($name[0] !== '_' && isset($this->actionMap[$name])) {
-            if (isset($parameters['_locale'])) {
-                $locale = $parameters['_locale'];
-            } elseif ($this->context->hasParameter('_locale')) {
-                $locale = $this->context->getParameter('_locale');
-            } else {
-                $locale = $this->defaultLocale;
-            }
+        if (null === $this->routes->get($name)) {
+            $locale = $parameters['_locale']
+                ?? $this->context->getParameter('_locale')
+                ?: $this->defaultLocale;
 
             if (isset($parameters['_prefixId'])) {
                 $prefixId = $parameters['_prefixId'];
@@ -42,26 +34,21 @@ class UrlGenerator extends BaseUrlGenerator
                 $currentPrefixId = $this->context->getParameter('_prefixId');
 
                 foreach ($this->actionMap[$name] as $prefixId) {
-                    if ($prefixId === $currentPrefixId) {
+                    if ($currentPrefixId === $prefixId) {
                         break;
                     }
                 }
             }
 
-            try {
-                if ($locale === $this->defaultLocale) {
-                    return parent::generate($prefixId . '.' . $name, $parameters, $referenceType);
-                }
-
+            if ($locale === $this->defaultLocale) {
+                $name = $prefixId . $name;
+                unset($parameters['_locale']);
+            } else {
+                $name = $prefixId . $name . '|i18n';
                 $parameters['_locale'] = $locale;
-
-                return parent::generate('i18n|' . $prefixId . '.' . $name, $parameters, $referenceType);
-            } catch (RouteNotFoundException $ex) {
-                // fallback to default behavior
             }
         }
 
-        // use the default behavior if no localized route exists
         return parent::generate($name, $parameters, $referenceType);
     }
 }

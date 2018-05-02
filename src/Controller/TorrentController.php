@@ -2,32 +2,19 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\ServiceUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class TorrentController extends AbstractController
+/**
+ * @Route("/user/torrents", name="torrents")
+ */
+class TorrentController
 {
-    public function getRouteDescriptors()
-    {
-        return [
-            ['GET', '/', 'listTorrents', 'both'],
-            ['GET', '/magnet', 'addMagnet'],
-
-            ['GET', '/{hash}/trackers', 'listTrackers', 'ajax'],
-
-            ['POST', '/files', 'uploadTorrent', 'ajax'],
-            ['POST', '/', 'addTorrents', 'ajax'],
-
-            ['POST', '/{hash}/pause', 'pauseTorrent', 'ajax'],
-            ['POST', '/{hash}/resume', 'resumeTorrent', 'ajax'],
-            ['DELETE', '/{hash}', 'removeTorrent', 'ajax']
-        ];
-    }
-
     /**
      * @param Application $app
      * @return TorrentManager
@@ -37,6 +24,10 @@ class TorrentController extends AbstractController
         return $app['torrent_manager']($app['user']);
     }
 
+    /**
+     * @Method("GET")
+     * @Route("/", options={"expose"=true})
+     */
     public function listTorrents(Application $app)
     {
         $torrentManager = $this->getTorrentManager($app);
@@ -63,6 +54,10 @@ class TorrentController extends AbstractController
         ]);
     }
 
+    /**
+     * @Method("GET")
+     * @Route("/{hash}/trackers", options={"expose"=true})
+     */
     public function listTrackers(Application $app, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
@@ -71,6 +66,10 @@ class TorrentController extends AbstractController
         return new View(['trackers' => $trackers]);
     }
 
+    /**
+     * @Method("POST")
+     * @Route("/files", options={"expose"=true})
+     */
     public function uploadTorrent(Application $app, Request $request)
     {
         $torrentManager = $this->getTorrentManager($app);
@@ -89,6 +88,10 @@ class TorrentController extends AbstractController
         throw new \Exception('error.fileTooBig');
     }
 
+    /**
+     * @Method("GET")
+     * @Route("/magnet")
+     */
     public function addMagnet(Application $app, Request $request)
     {
         $torrentManager = $this->getTorrentManager($app);
@@ -101,6 +104,10 @@ class TorrentController extends AbstractController
         return $app->redirect('listTorrents');
     }
 
+    /**
+     * @Method("POST")
+     * @Route("/", options={"expose"=true})
+     */
     public function addTorrents(Application $app, Request $request)
     {
         $torrentManager = $this->getTorrentManager($app);
@@ -129,6 +136,10 @@ class TorrentController extends AbstractController
         return [];
     }
 
+    /**
+     * @Method("PUT")
+     * @Route("/{hash}/pause", options={"expose"=true})
+     */
     public function pauseTorrent(Application $app, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
@@ -136,6 +147,10 @@ class TorrentController extends AbstractController
         return [];
     }
 
+    /**
+     * @Method("PUT")
+     * @Route("/{hash}/resume", options={"expose"=true})
+     */
     public function resumeTorrent(Application $app, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);
@@ -143,6 +158,10 @@ class TorrentController extends AbstractController
         return [];
     }
 
+    /**
+     * @Method("DELETE")
+     * @Route("/{hash}", options={"expose"=true})
+     */
     public function removeTorrent(Application $app, $hash)
     {
         $torrentManager = $this->getTorrentManager($app);

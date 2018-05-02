@@ -22,7 +22,8 @@
         "guzzlehttp/guzzle": "~6.3.0",
         "phpFastCache/phpFastCache": "~6.1.0",
         "doctrine/orm": "~2.6.1",
-        "knplabs/console-service-provider": "~2.2.0"
+        "knplabs/console-service-provider": "~2.2.0",
+        "sensio/framework-extra-bundle": "^5.1"
     },
 
     "autoload": {

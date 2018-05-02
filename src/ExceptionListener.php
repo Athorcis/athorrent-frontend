@@ -62,7 +62,7 @@ class ExceptionListener implements EventSubscriberInterface
 
         $request = $event->getRequest();
 
-        if ($request->attributes->get('_ajax')) {
+        if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse([
                 'status' => 'error',
                 'error' => $error

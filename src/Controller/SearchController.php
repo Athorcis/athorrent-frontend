@@ -2,18 +2,21 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Routing\AbstractController;
 use Athorrent\Utils\Search\TorrentSearcher;
 use Athorrent\View\View;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class SearchController extends AbstractController
+/**
+ * @Route("/search", name="search")
+ */
+class SearchController
 {
-    public function getRouteDescriptors()
-    {
-        return [['GET', '/', 'showSearch']];
-    }
-
+    /**
+     * @Method("GET")
+     * @Route("/")
+     */
     public function showSearch(Request $request)
     {
         $query = $request->query->get('q');

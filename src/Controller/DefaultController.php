@@ -2,16 +2,16 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
-class DefaultController extends AbstractController
+class DefaultController
 {
-    public function getRouteDescriptors()
-    {
-        return [['GET', '/', 'home']];
-    }
-
+    /**
+     * @Method("GET")
+     * @Route("/")
+     */
     public function home()
     {
         return new View();

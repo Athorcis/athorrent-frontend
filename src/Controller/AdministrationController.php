@@ -4,14 +4,18 @@ namespace Athorrent\Controller;
 
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 
-class AdministrationController extends AbstractController
+/**
+ * @Route("/administration", name="administration")
+ */
+class AdministrationController
 {
-    public function getRouteDescriptors()
-    {
-        return [['GET', '/', 'listAdministrationModules']];
-    }
-
+    /**
+     * @Method("GET")
+     * @Route("/")
+     */
     public function listAdministrationModules()
     {
         return new View([], 'administration');

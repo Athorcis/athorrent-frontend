@@ -8,12 +8,17 @@ use Athorrent\Filesystem\FilesystemInterface;
 use Athorrent\Filesystem\TorrentFilesystem;
 use Athorrent\Routing\AbstractController;
 use Athorrent\View\PaginatedView;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Silex\Application;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
-class SharingController extends AbstractController
+/**
+ * @Route("/user/sharings", name="sharings")
+ */
+class SharingController
 {
     use FilesystemAwareTrait;
 
@@ -26,21 +31,19 @@ class SharingController extends AbstractController
         return $app['user.fs'];
     }
 
-    public function getRouteDescriptors()
-    {
-        return [
-            ['GET', '/', 'listSharings'],
-
-            ['POST', '/', 'addSharing', 'ajax'],
-            ['DELETE', '/{token}', 'removeSharing', 'ajax']
-        ];
-    }
-
+    /**
+     * @Method("GET")
+     * @Route("/")
+     */
     public function listSharings(Application $app, Request $request)
     {
         return new PaginatedView($request, $app['orm.repo.sharing'], 10, ['user', $app['user']]);
     }
 
+    /**
+     * @Method("POST")
+     * @Route("/", options={"expose"=true})
+     */
     public function addSharing(Application $app, Request $request)
     {
         if (!$request->request->has('path')) {
@@ -60,6 +63,10 @@ class SharingController extends AbstractController
         return [$app->url('listFiles', ['token' => $sharing->getToken(), '_prefixId' => 'sharings'])];
     }
 
+    /**
+     * @Method("DELETE")
+     * @Route("/{token}", options={"expose"=true})
+     */
     public function removeSharing(Application $app, $token)
     {
         $app['orm.repo.sharing']->delete($token);
