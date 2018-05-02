@@ -3,6 +3,13 @@
 namespace Athorrent\Database\Entity;
 
 use DateTime;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -79,7 +86,7 @@ class User implements UserInterface
     {
         $this->username = $username;
     }
-    
+
     public function getPassword()
     {
         return $this->password;
