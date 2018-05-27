@@ -27,15 +27,15 @@
         </div>
         <div class="torrent-info">
             <h3 class="torrent-info-key">{{ 'torrents.size'|trans }}:</h3>
-            <span class="torrent-info-value">{{ torrent.size|readable_filesize }}</span>
+            <span class="torrent-info-value">{{ format_bytes(torrent.size) }}</span>
         </div>
         <div class="torrent-info">
             <h3 class="torrent-info-key">{{ 'torrents.dl'|trans }}:</h3>
-            <span class="torrent-info-value">{{ torrent.download_payload_rate|readable_filesize }}/s</span>
+            <span class="torrent-info-value">{{ format_bytes(torrent.download_payload_rate) }}/s</span>
         </div>
         <div class="torrent-info">
             <h3 class="torrent-info-key">{{ 'torrents.ul'|trans }}:</h3>
-            <span class="torrent-info-value">{{ torrent.upload_payload_rate|readable_filesize }}/s</span>
+            <span class="torrent-info-value">{{ format_bytes(torrent.upload_payload_rate) }}/s</span>
         </div>
         <div class="torrent-info">
             <h3 class="torrent-info-key">{{ 'torrents.ratio'|trans }}:</h3>

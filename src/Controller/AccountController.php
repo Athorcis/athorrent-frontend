@@ -4,18 +4,29 @@ namespace Athorrent\Controller;
 
 use Athorrent\Notification\ErrorNotification;
 use Athorrent\Notification\SuccessNotification;
-use Athorrent\Routing\AbstractController;
+use Athorrent\Security\UserManager;
 use Athorrent\View\View;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Silex\Application;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/user/account", name="account")
  */
-class AccountController
+class AccountController extends Controller
 {
+    protected $userManager;
+
+    protected $entityManager;
+
+    public function __construct(UserManager $userManager, EntityManagerInterface $entityManager)
+    {
+        $this->userManager = $userManager;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Method("GET")
      * @Route("/")
@@ -29,9 +40,9 @@ class AccountController
      * @Method("PUT")
      * @Route("/")
      */
-    public function saveAccount(Application $app, Request $request)
+    public function saveAccount(Request $request)
     {
-        $user = $app['user'];
+        $user = $this->getUser();
 
         $username = $request->request->get('username');
         $currentPassword = $request->request->get('current_password');
@@ -40,12 +51,12 @@ class AccountController
             return new ErrorNotification('error.usernameOrPasswordEmpty');
         }
 
-        if (!$app['user_manager']->checkUserPassword($user, $currentPassword)) {
+        if (!$this->userManager->checkUserPassword($user, $currentPassword)) {
             return new ErrorNotification('error.passwordInvalid');
         }
 
         if ($user->getUsername() !== $username) {
-            if ($app['user_manager']->userExists($username)) {
+            if ($this->userManager->userExists($username)) {
                 return new ErrorNotification('error.usernameAlreadyUsed');
             }
 
@@ -60,11 +71,12 @@ class AccountController
                 return new ErrorNotification('error.passwordsDiffer');
             }
 
-            $app['user_manager']->setUserPassword($user, $newPassword);
+            $user->setPlainPassword($newPassword);
+            $this->userManager->setUserPassword($user, $newPassword);
         }
 
-        $app['orm.em']->persist($user);
-        $app['orm.em']->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return new SuccessNotification('account updated successfully');
     }

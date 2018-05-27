@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-{% cache 'administration' app.locale %}
+{% cache 'administration' app.request.locale %}
 <h1>{{ 'administration.title'|trans }}</h1>
 <hr />
 

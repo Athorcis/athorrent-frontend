@@ -2,21 +2,33 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Filesystem\FilesystemAwareTrait;
+use Athorrent\Database\Repository\SharingRepository;
+use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Silex\Application;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
-abstract class AbstractFileController
+abstract class AbstractFileController extends Controller
 {
-    use FilesystemAwareTrait;
+    protected $translator;
 
-    protected function getBreadcrumb(Application $app, $path)
+    protected $sharingRepository;
+
+    public function __construct(TranslatorInterface $translator, SharingRepository $sharingRepository)
     {
-        $breadcrumb = [$app['translator']->trans('files.root') => ''];
+        $this->translator = $translator;
+        $this->sharingRepository = $sharingRepository;
+    }
+
+    protected function getBreadcrumb(string $path)
+    {
+        $breadcrumb = [$this->translator->trans('files.root') => ''];
 
         $parts = explode('/', $path);
         $currentPath = '';
@@ -33,18 +45,17 @@ abstract class AbstractFileController
     /**
      * @Method("GET")
      * @Route("/", options={"expose"=true})
+     * @ParamConverter("dirEntry")
      */
-    public function listFiles(Application $app, Request $request)
+    public function listFiles(UserFilesystemEntry $dirEntry)
     {
-        $dirEntry = $this->getEntry($request, $app);
-
         if ($dirEntry->isRoot() && $this instanceof FileController) {
-            $title = $app['translator']->trans('files.title');
+            $title = $this->translator->trans('files.title');
         } else {
             $title = $dirEntry->getName();
         }
 
-        $breadcrumb = $this->getBreadcrumb($app, $dirEntry->getPath());
+        $breadcrumb = $this->getBreadcrumb($dirEntry->getPath());
         $entries = $dirEntry->readDirectory(!$dirEntry->isRoot());
 
         return new View([
@@ -57,10 +68,8 @@ abstract class AbstractFileController
         ], 'listFiles');
     }
 
-    protected function sendFile(Application $app, Request $request, $contentDisposition)
+    protected function sendFile(Request $request, UserFilesystemEntry $entry, $contentDisposition)
     {
-        $entry = $this->getEntry($request, $app, ['path' => true, 'file' => true]);
-
         $response = $entry->toBinaryFileResponse();
 
         $response->setPrivate();
@@ -77,47 +86,48 @@ abstract class AbstractFileController
     /**
      * @Method("GET")
      * @Route("/open")
+     * @ParamConverter("entry", options={"path": true, "file": true})
      */
-    public function openFile(Application $app, Request $request)
+    public function openFile(Request $request, UserFilesystemEntry $entry)
     {
-        return $this->sendFile($app, $request, 'inline');
+        return $this->sendFile($request, $entry, 'inline');
     }
 
     /**
      * @Method("GET")
      * @Route("/download")
+     * @ParamConverter("entry", options={"path": true, "file": true})
      */
-    public function downloadFile(Application $app, Request $request)
+    public function downloadFile(Request $request, UserFilesystemEntry $entry)
     {
-        return $this->sendFile($app, $request, 'attachment');
+        return $this->sendFile($request, $entry,'attachment');
     }
 
     /**
      * @Method("GET")
      * @Route("/play")
+     * @ParamConverter("entry", options={"path": true, "file": true})
      */
-    public function playFile(Request $request, Application $app)
+    public function playFile(UserFilesystemEntry $entry)
     {
-        $fileEntry = $this->getEntry($request, $app, ['path' => true, 'file' => true]);
-
-        if (!$fileEntry->isPlayable()) {
-            throw new \Exception('error.notPlayable');
+        if (!$entry->isPlayable()) {
+            throw new UnsupportedMediaTypeHttpException('error.notPlayable');
         }
 
-        $relativePath = $fileEntry->getPath();
-        $breadcrumb = self::getBreadcrumb($app, $relativePath);
+        $relativePath = $entry->getPath();
+        $breadcrumb = self::getBreadcrumb($relativePath);
 
-        if ($fileEntry->isAudio()) {
+        if ($entry->isAudio()) {
             $mediaTag = 'audio';
-        } elseif ($fileEntry->isVideo()) {
+        } elseif ($entry->isVideo()) {
             $mediaTag = 'video';
         }
 
         return new View([
-            'name' => $fileEntry->getName(),
+            'name' => $entry->getName(),
             'breadcrumb' => $breadcrumb,
             'mediaTag' => $mediaTag,
-            'type' => $fileEntry->getMimeType(),
+            'type' => $entry->getMimeType(),
             'src' => $relativePath
         ]);
     }
@@ -125,26 +135,25 @@ abstract class AbstractFileController
     /**
      * @Method("GET")
      * @Route("/display")
+     * @ParamConverter("entry", options={"path": true, "file": true})
      */
-    public function displayFile(Request $request, Application $app)
+    public function displayFile(UserFilesystemEntry $entry)
     {
-        $fileEntry = $this->getEntry($request, $app, ['path' => true, 'file' => true]);
-
-        if (!$fileEntry->isDisplayable()) {
-            throw new \Exception('error.notDisplayable');
+        if (!$entry->isDisplayable()) {
+            throw new UnsupportedMediaTypeHttpException('error.notDisplayable');
         }
 
-        $relativePath = $fileEntry->getPath();
-        $breadcrumb = self::getBreadcrumb($app, $relativePath);
+        $relativePath = $entry->getPath();
+        $breadcrumb = self::getBreadcrumb($relativePath);
 
         $data = [
-            'name' => $fileEntry->getName(),
+            'name' => $entry->getName(),
             'breadcrumb' => $breadcrumb
         ];
 
-        if ($fileEntry->isText()) {
-            $data['text'] = $fileEntry->readFile();
-        } elseif ($fileEntry->isImage()) {
+        if ($entry->isText()) {
+            $data['text'] = $entry->readFile();
+        } elseif ($entry->isImage()) {
             $data['src'] = $relativePath;
         }
 
@@ -154,18 +163,17 @@ abstract class AbstractFileController
     /**
      * @Method("DELETE")
      * @Route("/", options={"expose"=true})
+     * @ParamConverter("entry", options={"path": true})
      */
-    public function removeFile(Application $app, Request $request)
+    public function removeFile(UserFilesystemEntry $entry)
     {
-        $fileEntry = $this->getEntry($request, $app, ['path' => true]);
-
-        if ($fileEntry->isRoot()) {
+        if ($entry->isRoot()) {
             throw new NotFoundHttpException();
         }
 
-        $fileEntry->remove();
+        $entry->remove();
 
-        $app['orm.repo.sharing']->deleteByUserAndRoot($fileEntry->getOwner(), $fileEntry->getPath());
+        $this->sharingRepository->deleteByUserAndRoot($entry->getOwner(), $entry->getPath());
 
         return [];
     }

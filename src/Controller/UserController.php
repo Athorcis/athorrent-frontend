@@ -2,13 +2,14 @@
 
 namespace Athorrent\Controller;
 
+use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
 use Athorrent\Notification\ErrorNotification;
 use Athorrent\Notification\SuccessNotification;
+use Athorrent\Security\UserManager;
 use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,13 +18,23 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserController
 {
+    protected $userManager;
+
+    protected $userRepository;
+
+    public function __construct(UserManager $userManager, UserRepository $userRepository)
+    {
+        $this->userManager = $userManager;
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * @Method("GET")
      * @Route("/")
      */
-    public function listUsers(Application $app, Request $request)
+    public function listUsers(Request $request)
     {
-        return new PaginatedView($request, $app['orm.repo.user'], 10);
+        return new PaginatedView($request, $this->userRepository, 10);
     }
 
     /**
@@ -39,7 +50,7 @@ class UserController
      * @Method("POST")
      * @Route("/")
      */
-    public function saveUser(Application $app, Request $request)
+    public function saveUser(Request $request)
     {
         $username = $request->request->get('username');
         $password = $request->request->get('password');
@@ -49,11 +60,11 @@ class UserController
             return new ErrorNotification('error.usernameOrPasswordEmpty');
         }
 
-        if ($app['user_manager']->userExists($username)) {
+        if ($this->userManager->userExists($username)) {
             return new ErrorNotification('error.usernameAlreadyUsed');
         }
 
-        $app['user_manager']->createUser($username, $password, $role);
+        $this->userManager->createUser($username, $password, $role);
 
         return new SuccessNotification('user successfully updated', 'listUsers');
     }
@@ -62,9 +73,9 @@ class UserController
      * @Method("DELETE")
      * @Route("/{userId}", requirements={"userId"="\d+"}, options={"expose"=true})
      */
-    public function removeUser(Application $app, Request $request, $userId)
+    public function removeUser($userId)
     {
-        if ($app['user_manager']->deleteUserById($userId)) {
+        if ($this->userManager->deleteUserById($userId)) {
             return [];
         }
 

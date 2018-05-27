@@ -2,7 +2,6 @@
 
 namespace Athorrent\Database\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -30,6 +29,8 @@ class User implements UserInterface
      */
     private $username;
 
+    private $plainPassword;
+
     /**
      *  @Column(type="string", length=88, nullable=false, options={"collation": "utf8_bin", "fixed": true})
      */
@@ -41,12 +42,14 @@ class User implements UserInterface
     private $salt;
 
     /**
-     *  @Column(type="datetime", nullable=false)
+     * @var \DateTime
+     * @Column(type="datetime", nullable=false)
      */
     private $creationDateTime;
 
     /**
-     *  @Column(type="datetime", nullable=true)
+     * @var \DateTime
+     * @Column(type="datetime", nullable=true)
      */
     private $connectionDateTime;
 
@@ -60,12 +63,12 @@ class User implements UserInterface
      */
     private $sharings;
 
-    public function __construct($username, $password, $salt, array $roles)
+    public function __construct($username, $plainPassword, $salt, array $roles)
     {
         $this->username = $username;
-        $this->password = $password;
+        $this->plainPassword = $plainPassword;
         $this->salt = $salt;
-        $this->creationDateTime = new DateTime();
+        $this->creationDateTime = new \DateTime();
 
         $this->hasRoles = array_map(function ($role) {
             return new UserHasRole($this, $role);
@@ -85,6 +88,16 @@ class User implements UserInterface
     public function setUsername($username)
     {
         $this->username = $username;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
     }
 
     public function getPassword()
@@ -116,7 +129,7 @@ class User implements UserInterface
         return $this->connectionDateTime->getTimestamp();
     }
 
-    public function setConnectionDateTime(DateTime $dateTime)
+    public function setConnectionDateTime(\DateTime $dateTime)
     {
         $this->connectionDateTime = $dateTime;
     }
@@ -144,5 +157,6 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {
+        $this->plainPassword = null;
     }
 }

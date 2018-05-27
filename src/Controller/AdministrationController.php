@@ -2,7 +2,6 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Routing\AbstractController;
 use Athorrent\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;

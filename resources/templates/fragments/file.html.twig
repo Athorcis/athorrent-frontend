@@ -17,7 +17,7 @@
     </td>
     <td class="file-size">
         {% if file.isFile %}
-            {{ file.size|readable_filesize }}
+            {{ format_bytes(file.size) }}
         {% endif %}
     </td>
     <td class="file-buttons">

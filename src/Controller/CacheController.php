@@ -2,13 +2,23 @@
 
 namespace Athorrent\Controller;
 
+use Athorrent\Cache\CacheCleaner;
 use Athorrent\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Silex\Application;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/administration/cache", name="cache")
+ */
 class CacheController
 {
+    protected $cacheCleaner;
+
+    public function __construct(CacheCleaner $cacheCleaner)
+    {
+        $this->cacheCleaner = $cacheCleaner;
+    }
+
     /**
      * @Method("GET")
      * @Route("/")
@@ -22,9 +32,9 @@ class CacheController
      * @Method("DELETE")
      * @Route("/apc", options={"expose"=true})
      */
-    public function clearApc(Application $app)
+    public function clearApc()
     {
-        if (!$app['cache.cleaner']->clearApplicationCache()) {
+        if (!$this->cacheCleaner->clearApplicationCache()) {
             throw new \Exception('unable to clear application cache');
         }
 
@@ -35,9 +45,9 @@ class CacheController
      * @Method("DELETE")
      * @Route("/twig", options={"expose"=true})
      */
-    public function clearTwig(Application $app)
+    public function clearTwig()
     {
-        if (!$app['cache.cleaner']->clearTwigCache()) {
+        if (!$this->cacheCleaner->clearTwigCache()) {
             throw new \Exception('unable to clear twig cache');
         }
 
@@ -48,9 +58,9 @@ class CacheController
      * @Method("DELETE")
      * @Route("/translations", options={"expose"=true})
      */
-    public function clearTranslations(Application $app)
+    public function clearTranslations()
     {
-        if (!$app['cache.cleaner']->clearTranslationsCache()) {
+        if (!$this->cacheCleaner->clearTranslationsCache()) {
             throw new \Exception('unable to clear translation cache');
         }
 
@@ -61,13 +71,13 @@ class CacheController
      * @Method("DELETE")
      * @Route("/", options={"expose"=true})
      */
-    public function clearAll(Application $app)
+    public function clearAll()
     {
-        $this->clearApc($app);
+        $this->clearApc();
 
-        $this->clearTwig($app);
+        $this->clearTwig();
 
-        $this->clearTranslations($app);
+        $this->clearTranslations();
 
         return [];
     }

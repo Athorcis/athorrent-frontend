@@ -4,7 +4,7 @@ namespace Athorrent\Utils;
 
 use Athorrent\Database\Entity\User;
 
-class TorrentManagerProvider
+class TorrentManagerFactory
 {
     private $instances;
 
@@ -13,7 +13,7 @@ class TorrentManagerProvider
         $this->instances = [];
     }
 
-    public function get(User $user)
+    public function create(User $user)
     {
         $userId = $user->getId();
 

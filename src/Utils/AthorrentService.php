@@ -2,7 +2,7 @@
 
 namespace Athorrent\Utils;
 
-use Athorrent\IPC\JsonService;
+use Athorrent\Ipc\JsonService;
 
 class AthorrentService extends JsonService
 {
@@ -20,7 +20,7 @@ class AthorrentService extends JsonService
                 break;
 
             default:
-                throw new \Exception('unsuported system: ' . PHP_OS);
+                throw new \RuntimeException('unsuported system: ' . PHP_OS);
         }
 
         parent::__construct('Athorrent\\Ipc\\Socket\\' . $socketType . 'Client', self::getPath($userId));
@@ -111,6 +111,9 @@ class AthorrentService extends JsonService
                 break;
 
             case 'winnt':
+                // If directory path contains slashes instead of antislashes
+                // then it doesn't work
+                $cwd = str_replace('/', '\\', $cwd);
                 $cmd = 'start /D ' . $cwd . ' /B ' . $cmd . ' > ' . $logPath;
                 break;
         }

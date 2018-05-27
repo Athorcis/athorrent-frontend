@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\IPC;
+namespace Athorrent\Ipc;
 
 class JsonRequest
 {

@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouterInterface;
 
 class RoutingListener implements EventSubscriberInterface
 {
@@ -19,10 +20,13 @@ class RoutingListener implements EventSubscriberInterface
 
     private $routeDescriptors;
 
-    public function __construct(CacheInterface $cache, RequestContext $requestContext)
+    private $router;
+
+    public function __construct(CacheInterface $cache, RequestContext $requestContext, RouterInterface $router)
     {
         $this->cache = $cache;
         $this->requestContext = $requestContext;
+        $this->router = $router;
     }
 
     public static function getSubscribedEvents()
@@ -42,7 +46,7 @@ class RoutingListener implements EventSubscriberInterface
 
         $this->requestContext->setParameter('_prefixId', $attributes->get('_prefixId'));
 
-        foreach ($attributes->get('_route_params') as $key => $value) {
+        foreach ($attributes->get('_route_params', []) as $key => $value) {
             if ($key[0] !== '_') {
                 $this->requestContext->setParameter($key, $value);
             }
@@ -59,12 +63,12 @@ class RoutingListener implements EventSubscriberInterface
         } else {
             $ajaxRouteDescriptors = [];
 
-            foreach ($this->cache->get('routes') as $route) {
+            foreach ($this->router->getRouteCollection() as $route) {
                 if ($route->hasDefault('_action')) {
                     $action = $route->getDefault('_action');
                     $prefixId = $route->getDefault('_prefixId');
 
-                    if ($route->getOptions('expose')) {
+                    if ($route->getOption('expose')) {
                         if ($locale === 'fr') {
                             if ($route->getDefault('_locale')) {
                                 $ajaxRouteDescriptors[$action][$prefixId] = [

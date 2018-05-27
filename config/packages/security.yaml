@@ -1,0 +1,42 @@
+security:
+    encoders:
+        Athorrent\Database\Entity\User: sha512
+
+    providers:
+        default:
+            entity:
+                class: Athorrent\Database\Entity\User
+                property: username
+
+    firewalls:
+        general:
+            anonymous: true
+            pattern: ^/
+            provider: default
+
+            form_login:
+                login_path: /
+                check_path: login_check
+                default_target_path: /user/files/
+                always_use_default_target_path: false
+
+            logout:
+                path: /logout
+                target: /
+
+            switch_user:
+                parameter: _switch_user
+                role: ROLE_ALLOWED_TO_SWITCH
+
+            remember_me:
+                secret: '%kernel.secret%'
+                name: REMEMBER_ME_KEY
+                always_remember_me: true
+                secure: true
+
+    access_control:
+        - { path: '^/(?:[a-z]{2}/)?administration', roles: ROLE_ADMIN }
+        - { path: '^/(?:[a-z]{2}/)?(?:search|user)', roles: ROLE_USER }
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER, ROLE_ALLOWED_TO_SWITCH]

@@ -137,7 +137,7 @@ EOF;
             } else {
                 $currentPrefixId = $this->context->getParameter('_prefixId');
                 
-                foreach ($this->actionMap[$name] as $prefixId) {
+                foreach (self::$actionMap[$name] as $prefixId) {
                     if ($currentPrefixId === $prefixId) {
                         break;
                     }
@@ -146,7 +146,7 @@ EOF;
 
             if ($locale === $this->defaultLocale) {
                 $name = $prefixId . $name;
-                unset($parameters['_locale'] = $locale;
+                unset($parameters['_locale']);
             } else {
                 $name = $prefixId . $name . '|i18n';
                 $parameters['_locale'] = $locale;

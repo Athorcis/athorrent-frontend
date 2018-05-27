@@ -6,32 +6,23 @@ use Athorrent\Utils\ServiceUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Silex\Application;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/user/torrents", name="torrents")
  */
-class TorrentController
+class TorrentController extends Controller
 {
-    /**
-     * @param Application $app
-     * @return TorrentManager
-     */
-    protected function getTorrentManager(Application $app)
-    {
-        return $app['torrent_manager']($app['user']);
-    }
-
     /**
      * @Method("GET")
      * @Route("/", options={"expose"=true})
      */
-    public function listTorrents(Application $app)
+    public function listTorrents(TorrentManager $torrentManager)
     {
-        $torrentManager = $this->getTorrentManager($app);
-
         try {
             $torrents = $torrentManager->getTorrents();
             $clientUpdating = false;
@@ -58,9 +49,8 @@ class TorrentController
      * @Method("GET")
      * @Route("/{hash}/trackers", options={"expose"=true})
      */
-    public function listTrackers(Application $app, $hash)
+    public function listTrackers(TorrentManager $torrentManager, $hash)
     {
-        $torrentManager = $this->getTorrentManager($app);
         $trackers = $torrentManager->listTrackers($hash);
 
         return new View(['trackers' => $trackers]);
@@ -70,9 +60,8 @@ class TorrentController
      * @Method("POST")
      * @Route("/files", options={"expose"=true})
      */
-    public function uploadTorrent(Application $app, Request $request)
+    public function uploadTorrent(Request $request, TorrentManager $torrentManager)
     {
-        $torrentManager = $this->getTorrentManager($app);
         $file = $request->files->get('upload-torrent-file');
 
         if ($file && $file->getClientSize() <= 1048576) {
@@ -92,26 +81,23 @@ class TorrentController
      * @Method("GET")
      * @Route("/magnet")
      */
-    public function addMagnet(Application $app, Request $request)
+    public function addMagnet(Request $request, TorrentManager $torrentManager)
     {
-        $torrentManager = $this->getTorrentManager($app);
         $magnet = $request->query->get('magnet');
 
         if ($magnet) {
             $torrentManager->addTorrentFromMagnet($magnet);
         }
 
-        return $app->redirect('listTorrents');
+        return new RedirectResponse($this->generateUrl('listTorrents', UrlGeneratorInterface::RELATIVE_PATH));
     }
 
     /**
      * @Method("POST")
      * @Route("/", options={"expose"=true})
      */
-    public function addTorrents(Application $app, Request $request)
+    public function addTorrents(Request $request, TorrentManager $torrentManager)
     {
-        $torrentManager = $this->getTorrentManager($app);
-
         $files = $request->request->get('add-torrent-files');
         $magnets = $request->request->get('add-torrent-magnets');
 
@@ -140,9 +126,8 @@ class TorrentController
      * @Method("PUT")
      * @Route("/{hash}/pause", options={"expose"=true})
      */
-    public function pauseTorrent(Application $app, $hash)
+    public function pauseTorrent(TorrentManager $torrentManager, $hash)
     {
-        $torrentManager = $this->getTorrentManager($app);
         $torrentManager->pauseTorrent($hash);
         return [];
     }
@@ -151,9 +136,8 @@ class TorrentController
      * @Method("PUT")
      * @Route("/{hash}/resume", options={"expose"=true})
      */
-    public function resumeTorrent(Application $app, $hash)
+    public function resumeTorrent(TorrentManager $torrentManager, $hash)
     {
-        $torrentManager = $this->getTorrentManager($app);
         $torrentManager->resumeTorrent($hash);
         return [];
     }
@@ -162,9 +146,8 @@ class TorrentController
      * @Method("DELETE")
      * @Route("/{hash}", options={"expose"=true})
      */
-    public function removeTorrent(Application $app, $hash)
+    public function removeTorrent(TorrentManager $torrentManager, $hash)
     {
-        $torrentManager = $this->getTorrentManager($app);
         $torrentManager->removeTorrent($hash);
         return [];
     }
