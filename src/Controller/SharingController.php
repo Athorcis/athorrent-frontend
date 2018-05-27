@@ -3,73 +3,68 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Database\Entity\Sharing;
-use Athorrent\Filesystem\FilesystemAwareTrait;
-use Athorrent\Filesystem\FilesystemInterface;
-use Athorrent\Filesystem\TorrentFilesystem;
-use Athorrent\Routing\AbstractController;
+use Athorrent\Database\Repository\SharingRepository;
+use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\PaginatedView;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Silex\Application;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/user/sharings", name="sharings")
  */
-class SharingController
+class SharingController extends Controller
 {
-    use FilesystemAwareTrait;
+    protected $entityManager;
 
-    /**
-     * @param Application $app
-     * @return TorrentFilesystem
-     */
-    protected function getFilesystem(Application $app): FilesystemInterface
+    protected $sharingRepository;
+
+    public function __construct(EntityManagerInterface $entityManager, SharingRepository $sharingRepository)
     {
-        return $app['user.fs'];
+        $this->entityManager = $entityManager;
+        $this->sharingRepository = $sharingRepository;
     }
 
     /**
      * @Method("GET")
      * @Route("/")
      */
-    public function listSharings(Application $app, Request $request)
+    public function listSharings(Request $request)
     {
-        return new PaginatedView($request, $app['orm.repo.sharing'], 10, ['user', $app['user']]);
+        return new PaginatedView($request, $this->sharingRepository, 10, ['user', $this->getUser()]);
     }
 
     /**
      * @Method("POST")
      * @Route("/", options={"expose"=true})
+     * @ParamConverter("entry", options={"path": true})
+     * @param UserFilesystemEntry $entry
+     * @return array
      */
-    public function addSharing(Application $app, Request $request)
+    public function addSharing(UserFilesystemEntry $entry)
     {
-        if (!$request->request->has('path')) {
-            throw new BadRequestHttpException();
-        }
-
-        $entry = $this->getEntry($request, $app, ['path' => true]);
-
         if (!$entry->exists()) {
             throw new FileNotFoundException();
         }
 
-        $sharing = new Sharing($app['user'], $entry->getPath());
-        $app['orm.em']->persist($sharing);
-        $app['orm.em']->flush();
+        $sharing = new Sharing($this->getUser(), $entry->getPath());
+        $this->entityManager->persist($sharing);
+        $this->entityManager->flush();
 
-        return [$app->url('listFiles', ['token' => $sharing->getToken(), '_prefixId' => 'sharings'])];
+        return [$this->generateUrl('listFiles', ['token' => $sharing->getToken(), '_prefixId' => 'sharings'])];
     }
 
     /**
      * @Method("DELETE")
      * @Route("/{token}", options={"expose"=true})
      */
-    public function removeSharing(Application $app, $token)
+    public function removeSharing($token)
     {
-        $app['orm.repo.sharing']->delete($token);
+        $this->sharingRepository->delete($token);
         return [];
     }
 }

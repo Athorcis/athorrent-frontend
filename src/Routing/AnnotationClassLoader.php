@@ -6,7 +6,7 @@ use Doctrine\Common\Annotations\Reader;
 use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
 use Symfony\Component\Routing\RouteCollection;
 
-class RouteLoader extends AnnotatedRouteControllerLoader
+class AnnotationClassLoader extends AnnotatedRouteControllerLoader
 {
     private $locales;
 
@@ -47,9 +47,8 @@ class RouteLoader extends AnnotatedRouteControllerLoader
     {
         $annot->setName($annot->getName() . '|i18n');
 
-        $annot->setRequirements(array_replace($annot->getRequirements(), [
-            '_locale' => implode('|', $this->locales)
-        ]));
+        $globals['path'] = '/{_locale}' . $globals['path'];
+        $globals['requirements']['_locale'] = implode('|', $this->locales);
 
         parent::addRoute($collection, $annot, $globals, $class, $method);
     }

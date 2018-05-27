@@ -2,10 +2,11 @@
 
 namespace Athorrent\Cache\Twig;
 
-use Asm89\Twig\CacheExtension\CacheStrategy\KeyGeneratorInterface;
 use Athorrent\Cache\CachableInterface;
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Database\Entity\User;
+use Psr\Log\InvalidArgumentException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
@@ -13,9 +14,13 @@ class KeyGenerator implements KeyGeneratorInterface
 {
     private $locale;
 
-    public function __construct($locale)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->locale = $locale;
+        $request = $requestStack->getCurrentRequest();
+
+        if ($request) {
+            $this->locale = $request->attributes->get('_locale');
+        }
     }
 
     public function generateKey($value)
@@ -43,8 +48,12 @@ class KeyGenerator implements KeyGeneratorInterface
             $key = $value->getToken();
         } elseif ($value instanceof User) {
             $key = $value->getId() . $value->getConnectionTimestamp();
+        } elseif (is_array($value)) {
+            $key = implode(',', $value);
         } elseif (is_string($value)) {
             $key = $value;
+        } else {
+            throw new InvalidArgumentException(sprintf('unable to convert object of type %s to cache key', get_class($value)));
         }
 
         return $key . $this->locale;

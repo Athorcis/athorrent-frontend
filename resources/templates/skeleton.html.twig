@@ -1,7 +1,7 @@
 {% spaceless %}
 <!doctype html>
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ app.locale }}"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ app.locale }}"> <!--<![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ app.request.locale }}"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ app.request.locale }}"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
         <title>{% block title %}{% endblock %}</title>
@@ -10,12 +10,12 @@
 
         <link rel="icon" type="image/x-icon" href="{{ asset_url('favicon.ico') }}" />
 
-        {% set route = app.request_stack.currentRequest.attributes.get('_route') %}
+        {% set route = app.request.attributes.get('_route') %}
 
         {% if route is not empty %}
             {% cache 'head' route %}
-                {% for locale in app.locales %}
-                    <link rel="alternate" href="{{ url(global.request.attributes.get('_action'), { _locale: locale }) }}" hreflang="{{ locale }}" />
+                {% for locale in locales %}
+                    <link rel="alternate" href="{{ url(app.request.attributes.get('_action'), { _locale: locale }) }}" hreflang="{{ locale }}" />
                 {% endfor %}
             {% endcache %}
         {% endif %}

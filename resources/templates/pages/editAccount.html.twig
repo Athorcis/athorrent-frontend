@@ -11,7 +11,7 @@
         <div class="alert alert-danger" role="alert">{{ error|trans }}</div>
     {% endif %}
 
-    <form method="post" action="{{ path('saveAccount') }}" class="form-horizontal">
+    <form method="post" action="{{ path('saveAccount', { _method: 'PUT' }) }}" class="form-horizontal">
         {% set user = app.user %}
 
         <div class="form-group">
@@ -45,7 +45,7 @@
         <div class="form-group">
             <label for="role" class="col-sm-3 control-label">{{ 'users.role'|trans }}</label>
             <div class="col-sm-9">
-                <input type="text" name="role" class="form-control" id="role" value="{{ user.roles[0]|trans }}" readonly="true" />
+                <input type="text" name="role" class="form-control" id="role" value="{{ user.roles[0]|trans }}" readonly />
             </div>
         </div>
 

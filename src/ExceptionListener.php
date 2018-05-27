@@ -2,7 +2,6 @@
 
 namespace Athorrent;
 
-use Athorrent\Application\WebApplication;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +17,10 @@ class ExceptionListener implements EventSubscriberInterface
 
     private $twig;
 
-    private $app;
-
-    public function __construct(TranslatorInterface $translator, \Twig_Environment $twig, WebApplication $app)
+    public function __construct(TranslatorInterface $translator, \Twig_Environment $twig)
     {
         $this->translator = $translator;
         $this->twig = $twig;
-        $this->app = $app;
     }
 
     public static function getSubscribedEvents()

@@ -1,0 +1,7 @@
+twig:
+    paths: ['%kernel.project_dir%/resources/templates']
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        locales: '%app.locales%'
+        token_storage: '@security.token_storage'

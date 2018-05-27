@@ -1,7 +1,7 @@
 {% spaceless %}
 {% for file in files %}
     {% if file.isCachable %}
-        {% cache ('file_' ~ app.locale) file %}
+        {% cache ('file_' ~ app.request.locale) file %}
             {% include 'fragments/file.html.twig' %}
         {% endcache %}
     {% else %}

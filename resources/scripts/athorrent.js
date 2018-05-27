@@ -29,7 +29,7 @@ Object.assign(athorrent, {
             parameters.csrfToken = athorrent.csrfToken;
         }
 
-        let url = pattern.replace(/{(_?[a-z]+)}/g, (match, p1) => {
+        let url = pattern.replace(/{(_?[A-Za-z]+)}/g, (match, p1) => {
             let result;
 
             if (parameters.hasOwnProperty(p1)) {

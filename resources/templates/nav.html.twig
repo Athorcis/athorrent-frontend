@@ -1,8 +1,8 @@
-{% cache ('nav_' ~ app.locale) app['security.token_storage'].token %}
+{% cache ('nav_' ~ app.request.locale) app.user.roles|default(null) %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                {% if app['security.token_storage'].token %}
+                {% if token_storage.token %}
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -11,7 +11,7 @@
                 {% endif %}
                 <a class="navbar-brand" href="{{ path('home') }}">{{ 'app.name'|trans }}</a>
             </div>
-            {% if app['security.token_storage'].token %}
+            {% if token_storage.token %}
                 <div id="navbar" class="navbar-collapse collapse">
                     {% if is_granted('ROLE_USER') %}
                         <ul class="nav navbar-nav">
@@ -43,14 +43,14 @@
                                         <span class="fa fa-sign-out"></span>
                                     </a>
                                 {% else %}
-                                    <a href="{{ path('_logout') }}" class="btn btn-danger" title="{{ 'nav.logout'|trans }}">
+                                    <a href="{{ path('logout') }}" class="btn btn-danger" title="{{ 'nav.logout'|trans }}">
                                         <span class="fa fa-sign-out"></span>
                                     </a>
                                 {% endif %}
                             </span>
                         </div>
                     {% else %}
-                        <form class="navbar-form navbar-right" action="{{ path('_login_check') }}" method="post">
+                        <form class="navbar-form navbar-right" action="{{ path('login_check') }}" method="post">
                             <div class="form-group">
                                 <input type="text" placeholder="{{ 'nav.nickname'|trans }}" class="form-control" name="_username" />
                             </div>

@@ -6,6 +6,6 @@
 /vendor/
 /web/*
 
-!/bin/athorrent-frontend
+!/bin/console
 !/web/index.php
 !/web/robots.txt

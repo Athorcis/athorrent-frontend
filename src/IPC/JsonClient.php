@@ -1,9 +1,12 @@
 <?php
 
-namespace Athorrent\IPC;
+namespace Athorrent\Ipc;
+
+use Athorrent\Ipc\Socket\ClientSocketInterface;
 
 class JsonClient
 {
+    /** @var ClientSocketInterface */
     private $clientSocket;
 
     public function __construct($clientSocketType, $address)

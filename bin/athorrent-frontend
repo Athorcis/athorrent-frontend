@@ -1,8 +1,0 @@
-#!/usr/bin/env php
-<?php
-
-require __DIR__ . '/../config/config.php';
-require VENDOR_DIR . '/autoload.php';
-
-$app = new \Athorrent\Application\ConsoleApplication();
-$app->run();

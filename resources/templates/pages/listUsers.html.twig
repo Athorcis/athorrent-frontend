@@ -33,7 +33,7 @@
         </thead>
         <tbody>
             {% for user in pagination.entities %}
-                {% cache ('user_' ~ app.locale) user %}
+                {% cache ('user_' ~ app.request.locale) user %}
                 <tr class="user" id="user-{{ user.id }}">
                     <td>{{ user.id }}</td>
                     <td class="user-name">{{ user.username }}</td>

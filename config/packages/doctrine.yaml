@@ -1,0 +1,19 @@
+doctrine:
+    dbal:
+        dbname: '%env(DB_NAME)%'
+        user: '%env(DB_USERNAME)%'
+        password: '%env(DB_PASSWORD)%'
+
+        types:
+            UserRole: Athorrent\Database\Type\UserRole
+
+    orm:
+        auto_mapping: false
+        metadata_cache_driver: apcu
+        query_cache_driver: apcu
+        mappings:
+            Athorrent:
+                type: annotation
+                dir: '%kernel.project_dir%/src/Database/Entity'
+                prefix: Athorrent\Database\Entity
+                is_bundle: false
