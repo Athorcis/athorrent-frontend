@@ -6,6 +6,7 @@ use Athorrent\View\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -40,19 +41,33 @@ class NotificationListener implements EventSubscriberInterface
         }
     }
 
+    protected function getFlashBag(Request $request)
+    {
+        $session = $request->getSession();
+
+        if ($session instanceof Session) {
+            return $session->getFlashBag();
+        }
+
+        return null;
+    }
+
     public function handleView(View $view, Request $request)
     {
-        $flashBag = $request->getSession()->getFlashBag();
+        $flashBag = $this->getFlashBag($request);
 
-        if ($flashBag->has('notifications')) {
+        if ($flashBag && $flashBag->has('notifications')) {
             $view->set('notifications', $flashBag->get('notifications'));
         }
     }
 
     public function handleNotification(Notification $notification, Request $request)
     {
-        $flashBag = $request->getSession()->getFlashBag();
-        $flashBag->add('notifications', $notification);
+        $flashBag = $this->getFlashBag($request);
+
+        if ($flashBag) {
+            $flashBag->add('notifications', $notification);
+        }
 
         $action = $notification->getAction();
 
