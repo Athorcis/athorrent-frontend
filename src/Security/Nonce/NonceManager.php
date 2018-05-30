@@ -2,8 +2,6 @@
 
 namespace Athorrent\Security\Nonce;
 
-use Symfony\Bundle\WebProfilerBundle\Csp\NonceGenerator;
-
 class NonceManager extends \Twig_Extension
 {
     private $nonce;
