@@ -1,27 +1,26 @@
 <?php
 
 namespace Athorrent\Database\Entity;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
+
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- *  @Entity
+ * @ORM\Entity
  */
 class UserHasRole
 {
     /**
-     *  @Id
-     *  @ManyToOne(targetEntity="User", inversedBy="hasRoles")
-     *  @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var User
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="hasRoles")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 
     /**
-     *  @Id
-     *  @Column(type="UserRole", nullable=false, options={"collation":"utf8_bin"})
+     * @var string
+     * @ORM\Id
+     * @ORM\Column(type="UserRole", nullable=false, options={"collation": "utf8_bin"})
      */
     private $role;
 

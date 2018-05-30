@@ -2,64 +2,67 @@
 
 namespace Athorrent\Database\Entity;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\UniqueConstraint;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- *  @Entity(repositoryClass="Athorrent\Database\Repository\UserRepository")
- *  @Table(uniqueConstraints={@UniqueConstraint(name="username", columns={"username"})})
+ * @ORM\Entity(repositoryClass="Athorrent\Database\Repository\UserRepository")
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="username", columns={"username"})})
  */
 class User implements UserInterface
 {
     /**
-     *  @Id
-     *  @Column(type="integer", nullable=false, options={"unsigned": true})
-     *  @GeneratedValue(strategy="IDENTITY")
+     * @var int
+     * @ORM\Id
+     * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     *  @Column(type="string", length=32, nullable=false, options={"collation": "utf8_bin"})
+     * @var string
+     * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8_bin"})
      */
     private $username;
 
+    /**
+     * @var string
+     */
     private $plainPassword;
 
     /**
-     *  @Column(type="string", length=88, nullable=false, options={"collation": "utf8_bin", "fixed": true})
+     * @var string
+     * @ORM\Column(type="string", length=88, nullable=false, options={"collation": "utf8_bin", "fixed": true})
      */
     private $password;
 
     /**
-     *  @Column(type="string", length=32, nullable=false, options={"collation": "utf8_bin", "fixed": true})
+     * @var string
+     * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8_bin", "fixed": true})
      */
     private $salt;
 
     /**
      * @var \DateTime
-     * @Column(type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $creationDateTime;
 
     /**
      * @var \DateTime
-     * @Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $connectionDateTime;
 
     /**
-     *  @OneToMany(targetEntity="UserHasRole", mappedBy="user")
+     * @var UserHasRole[]
+     * @ORM\OneToMany(targetEntity="UserHasRole", mappedBy="user")
      */
     private $hasRoles;
 
     /**
-     *  @OneToMany(targetEntity="Sharing", mappedBy="user", indexBy="token")
+     * @var Sharing[]
+     * @ORM\OneToMany(targetEntity="Sharing", mappedBy="user", indexBy="token")
      */
     private $sharings;
 

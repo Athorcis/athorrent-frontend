@@ -2,40 +2,37 @@
 
 namespace Athorrent\Database\Entity;
 
-use DateTime;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Index;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- *  @Entity(repositoryClass="Athorrent\Database\Repository\SharingRepository")
- *  @Table(indexes={@Index(columns={"creationDateTime"})})
+ * @ORM\Entity(repositoryClass="Athorrent\Database\Repository\SharingRepository")
+ * @ORM\Table(indexes={@ORM\Index(columns={"creationDateTime"})})
  */
 class Sharing
 {
     /**
-     *  @Id
-     *  @Column(type="string", length=32, options={"collation": "utf8_bin", "fixed": true})
+     * @var string
+     * @ORM\Id
+     * @ORM\Column(type="string", length=32, options={"collation": "utf8_bin", "fixed": true})
      */
     private $token;
 
     /**
-     *  @ManyToOne(targetEntity="User", inversedBy="sharings")
-     *  @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var User
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="sharings")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 
     /**
-     *  @Column(type="text", options={"collation": "utf8_bin"})
+     * @var string
+     * @ORM\Column(type="text", options={"collation": "utf8_bin"})
      */
     private $path;
 
     /**
-     *  @Column(type="datetime")
+     * @var \DateTime
+     * @ORM\Column(type="datetime")
      */
     private $creationDateTime;
 
@@ -45,7 +42,7 @@ class Sharing
             $this->token = self::generateToken($user, $path);
             $this->user = $user;
             $this->path = $path;
-            $this->creationDateTime = new DateTime();
+            $this->creationDateTime = new \DateTime();
         }
     }
 
