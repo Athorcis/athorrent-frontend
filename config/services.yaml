@@ -66,6 +66,9 @@ services:
 
     Athorrent\Security\UserManager:
 
+    Athorrent\Security\Csrf\CsrfListener:
+        tags: [kernel.event_subscriber]
+
     Athorrent\Utils\TorrentManagerFactory:
 
     Athorrent\View\Renderer:

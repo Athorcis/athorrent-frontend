@@ -25,7 +25,7 @@ Object.assign(athorrent, {
 
         parameters = Object.assign({}, parameters);
 
-        if (method === 'POST') {
+        if (['GET', 'HEAD', 'OPTIONS', 'TRACE'].indexOf(method) < 0) {
             parameters.csrfToken = athorrent.csrfToken;
         }
 
@@ -64,7 +64,7 @@ Object.assign(athorrent, {
 
         let jqXhr = $.ajax(url, options);
 
-        if (method === 'POST') {
+        if (['GET', 'HEAD', 'OPTIONS', 'TRACE'].indexOf(method) < 0) {
             jqXhr.done((data) => {
                 athorrent.csrfToken = data.csrfToken;
             });
