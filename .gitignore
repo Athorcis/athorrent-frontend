@@ -5,6 +5,7 @@
 /var/
 /vendor/
 /web/*
+/.env
 
 !/bin/console
 !/web/index.php
