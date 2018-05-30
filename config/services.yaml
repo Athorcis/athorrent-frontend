@@ -17,7 +17,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     Athorrent\:
         resource: '../src/*'
-        exclude: '../src/{Cache,Command,Entity,Filesystem,Ipc,Migrations,Notification,Routing,Security,Tests,Tools,Utils,View,ExceptionListener.php,Kernel.php}'
+        exclude: '../src/{Cache,Entity,Filesystem,Ipc,Migrations,Notification,Routing,Security,Tests,Tools,Utils,View,ExceptionListener.php,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
