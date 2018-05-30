@@ -7,10 +7,10 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 
-class UserRepository extends EntityRepository
+class UserRepository extends EntityRepository implements DeletableRepositoryInterface, PaginableRepositoryInterface
 {
-    use DeletableTrait;
-    use PaginableTrait {
+    use DeletableRepositoryTrait;
+    use PaginableRepositoryTrait {
         paginateQueryBuilder as paginateQueryBuilderOriginal;
     }
 

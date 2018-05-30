@@ -2,13 +2,13 @@
 
 namespace Athorrent\View;
 
-use Doctrine\ORM\EntityRepository;
+use Athorrent\Database\Repository\PaginableRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PaginatedView extends View
 {
-    public function __construct(Request $request, EntityRepository $entityRepository, $countPerPage, array $criteria = null)
+    public function __construct(Request $request, PaginableRepositoryInterface $entityRepository, $countPerPage, array $criteria = null)
     {
         if ($request->query->has('page')) {
             $page = $request->query->get('page');
