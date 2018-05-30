@@ -2,14 +2,21 @@
 
 namespace Athorrent\Command;
 
-use Athorrent\Security\SecurityServiceProvider;
-use Knp\Command\Command;
+use Athorrent\Security\UserManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateUserCommand extends Command
+class CreateUserCommand extends \Symfony\Component\Console\Command\Command
 {
+    protected $userManager;
+
+    public function __construct(UserManager $userManager)
+    {
+        parent::__construct();
+        $this->userManager = $userManager;
+    }
+
     protected function configure()
     {
         $this
@@ -31,16 +38,10 @@ class CreateUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app = $this->getSilexApplication();
-
-        if (!isset($app['user_manager'])) {
-            $app->register(new SecurityServiceProvider());
-        }
-
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
         $role = $input->getArgument('role');
 
-        $app['user_manager']->createUser($username, $password, $role);
+        $this->userManager->createUser($username, $password, $role);
     }
 }
