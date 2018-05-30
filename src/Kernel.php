@@ -4,7 +4,9 @@ namespace Athorrent;
 
 use Athorrent\Routing\RoutingCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\Config\Exception\FileLoaderLoadException;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -18,12 +20,17 @@ class Kernel extends BaseKernel
 
     public function getCacheDir()
     {
-        return $this->getProjectDir().'/var/cache/'.$this->environment;
+        return $this->getProjectDir() . '/var/cache/' . $this->environment;
+    }
+
+    protected function getConfDir()
+    {
+        return $this->getProjectDir() . '/config';
     }
 
     public function getLogDir()
     {
-        return $this->getProjectDir().'/var/log';
+        return $this->getProjectDir() . '/var/log';
     }
 
     public function boot()
@@ -45,7 +52,8 @@ class Kernel extends BaseKernel
      */
     public function registerBundles()
     {
-        $contents = require $this->getProjectDir().'/config/bundles.php';
+        $contents = require $this->getConfDir() . '/bundles.php';
+
         foreach ($contents as $class => $envs) {
             if (isset($envs['all']) || isset($envs[$this->environment])) {
                 yield new $class();
@@ -54,45 +62,33 @@ class Kernel extends BaseKernel
     }
 
     /**
-     * Add or import routes into your application.
-     *
-     *     $routes->import('config/routing.yml');
-     *     $routes->add('/admin', 'AppBundle:Admin:dashboard', 'admin_dashboard');
-     *
      * @param RouteCollectionBuilder $routes
+     *
+     * @throws FileLoaderLoadException
      */
     protected function configureRoutes(RouteCollectionBuilder $routes)
     {
-        $confDir = $this->getProjectDir().'/config';
+        $confDir = $this->getConfDir();
 
         $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir . '/{routes}_' . $this->environment . self::CONFIG_EXTS, '/', 'glob');
     }
 
     /**
-     * Configures the container.
-     *
-     * You can register extensions:
-     *
-     * $c->loadFromExtension('framework', array(
-     *     'secret' => '%secret%'
-     * ));
-     *
-     * Or services:
-     *
-     * $c->register('halloween', 'FooBundle\HalloweenProvider');
-     *
-     * Or parameters:
-     *
-     * $c->setParameter('halloween', 'lot of fun');
-     *
-     * @param ContainerBuilder $c
+     * @param ContainerBuilder $container
      * @param LoaderInterface $loader
+     *
+     * @throws \Exception
      */
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
     {
-        $confDir = $this->getProjectDir().'/config';
+        $confDir = $this->getConfDir();
+
+        $container->addResource(new FileResource($confDir . '/bundles.php'));
+        $container->setParameter('container.dumper.inline_class_loader', true);
 
         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{packages}/' . $this->environment.'/**/*' . self::CONFIG_EXTS, 'glob');
         $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
     }
 
