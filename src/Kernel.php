@@ -32,7 +32,9 @@ class Kernel extends BaseKernel
 
         if (!defined('BIN_DIR')) {
             define('BIN_DIR', $this->getProjectDir() . DIRECTORY_SEPARATOR . 'bin');
+            define('VAR_DIR', $this->getProjectDir() . DIRECTORY_SEPARATOR . 'var');
             define('FILES_DIR', BIN_DIR . DIRECTORY_SEPARATOR . 'files');
+            define('TORRENTS_DIR', VAR_DIR . DIRECTORY_SEPARATOR . 'torrents');
         }
     }
 
