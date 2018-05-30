@@ -63,12 +63,12 @@
 
         {% block late_scripts %}
             {% if js_vars %}
-                <script type="text/javascript">
+                <script type="text/javascript" nonce="{{ csp_nonce() }}">
                     var athorrent = {{ js_vars|json_encode|raw }};
                 </script>
             {% endif %}
 
-            <script type="text/javascript">
+            <script type="text/javascript" nonce="{{ csp_nonce() }}">
                 window.Promise || document.write('<script src="{{ asset_url('scripts/promise.js') }}"><\/script>');
             </script>
 

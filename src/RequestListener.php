@@ -2,6 +2,7 @@
 
 namespace Athorrent;
 
+use Athorrent\Security\Nonce\NonceManager;
 use Athorrent\View\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -10,6 +11,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class RequestListener implements EventSubscriberInterface
 {
+    private $nonceManager;
+
+    public function __construct(NonceManager $nonceManager)
+    {
+        $this->nonceManager = $nonceManager;
+    }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -61,8 +69,16 @@ class RequestListener implements EventSubscriberInterface
 
         $request = $event->getRequest();
 
-        if (strpos($request->get('_route'), ':ajax') === false) {
-            $response->headers->set('Content-Security-Policy', "script-src 'unsafe-inline' " . $request->getScheme() . '://' . $_ENV['STATIC_HOST']);
+        if (!$request->isXmlHttpRequest()) {
+            $cspScriptSrc = "'strict-dynamic' 'nonce-" . $this->nonceManager->getNonce() . "'";
+
+            // Symfony 4.1 doesn't add the 'unsafe-eval
+            // required by the web profiler to work
+            if ($GLOBALS['debug']) {
+                $cspScriptSrc .= " 'unsafe-eval'";
+            }
+
+            $response->headers->set('Content-Security-Policy', 'script-src ' . $cspScriptSrc);
             $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
             $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubdomains');
             $response->headers->set('X-Frame-Options', 'DENY');
