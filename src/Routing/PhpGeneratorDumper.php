@@ -92,7 +92,6 @@ EOF;
             $properties[] = $route->getSchemes();
 
             $routes .= sprintf("        '%s' => %s,\n", $name, var_export($properties, true));
-//            $routes .= sprintf("        '%s' => %s,\n", $name, PhpMatcherDumper::export($properties));
         }
 
         $routes .= '    ]';
@@ -106,7 +105,6 @@ EOF;
 
         foreach ($this->actionMap as $action => $prefixIds) {
             $actionMap .= sprintf("        '%s' => %s,\n", $action, var_export($prefixIds, true));
-//            $actionMap .= sprintf("        '%s' => %s,\n", $action, PhpMatcherDumper::export($prefixIds));
         }
 
         $actionMap .= '    ]';
