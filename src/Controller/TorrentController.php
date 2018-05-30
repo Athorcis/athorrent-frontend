@@ -20,6 +20,11 @@ class TorrentController extends Controller
     /**
      * @Method("GET")
      * @Route("/", options={"expose"=true})
+     *
+     * @param TorrentManager $torrentManager
+     * @return View
+     *
+     * @throws \Exception
      */
     public function listTorrents(TorrentManager $torrentManager)
     {
@@ -48,8 +53,14 @@ class TorrentController extends Controller
     /**
      * @Method("GET")
      * @Route("/{hash}/trackers", options={"expose"=true})
+     *
+     * @param TorrentManager $torrentManager
+     * @param string $hash
+     * @return View
+     *
+     * @throws \Exception
      */
-    public function listTrackers(TorrentManager $torrentManager, $hash)
+    public function listTrackers(TorrentManager $torrentManager, string $hash)
     {
         $trackers = $torrentManager->listTrackers($hash);
 
@@ -59,6 +70,12 @@ class TorrentController extends Controller
     /**
      * @Method("POST")
      * @Route("/files", options={"expose"=true})
+     *
+     * @param Request $request
+     * @param TorrentManager $torrentManager
+     * @return array
+     *
+     * @throws \Exception
      */
     public function uploadTorrent(Request $request, TorrentManager $torrentManager)
     {
@@ -80,6 +97,12 @@ class TorrentController extends Controller
     /**
      * @Method("GET")
      * @Route("/magnet")
+     *
+     * @param Request $request
+     * @param TorrentManager $torrentManager
+     * @return RedirectResponse
+     *
+     * @throws \Exception
      */
     public function addMagnet(Request $request, TorrentManager $torrentManager)
     {
@@ -95,6 +118,12 @@ class TorrentController extends Controller
     /**
      * @Method("POST")
      * @Route("/", options={"expose"=true})
+     *
+     * @param Request $request
+     * @param TorrentManager $torrentManager
+     * @return array
+     *
+     * @throws \Exception
      */
     public function addTorrents(Request $request, TorrentManager $torrentManager)
     {
@@ -125,8 +154,14 @@ class TorrentController extends Controller
     /**
      * @Method("PUT")
      * @Route("/{hash}/pause", options={"expose"=true})
+     *
+     * @param TorrentManager $torrentManager
+     * @param string $hash
+     * @return array
+     *
+     * @throws \Exception
      */
-    public function pauseTorrent(TorrentManager $torrentManager, $hash)
+    public function pauseTorrent(TorrentManager $torrentManager, string $hash)
     {
         $torrentManager->pauseTorrent($hash);
         return [];
@@ -135,8 +170,14 @@ class TorrentController extends Controller
     /**
      * @Method("PUT")
      * @Route("/{hash}/resume", options={"expose"=true})
+     *
+     * @param TorrentManager $torrentManager
+     * @param string $hash
+     * @return array
+     *
+     * @throws \Exception
      */
-    public function resumeTorrent(TorrentManager $torrentManager, $hash)
+    public function resumeTorrent(TorrentManager $torrentManager, string $hash)
     {
         $torrentManager->resumeTorrent($hash);
         return [];
@@ -145,8 +186,14 @@ class TorrentController extends Controller
     /**
      * @Method("DELETE")
      * @Route("/{hash}", options={"expose"=true})
+     *
+     * @param TorrentManager $torrentManager
+     * @param string $hash
+     * @return array
+     *
+     * @throws \Exception
      */
-    public function removeTorrent(TorrentManager $torrentManager, $hash)
+    public function removeTorrent(TorrentManager $torrentManager, string $hash)
     {
         $torrentManager->removeTorrent($hash);
         return [];

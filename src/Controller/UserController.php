@@ -31,6 +31,9 @@ class UserController
     /**
      * @Method("GET")
      * @Route("/")
+     *
+     * @param Request $request
+     * @return PaginatedView
      */
     public function listUsers(Request $request)
     {
@@ -49,6 +52,11 @@ class UserController
     /**
      * @Method("POST")
      * @Route("/")
+     *
+     * @param Request $request
+     * @return ErrorNotification|SuccessNotification
+     *
+     * @throws \Exception
      */
     public function saveUser(Request $request)
     {
@@ -72,8 +80,13 @@ class UserController
     /**
      * @Method("DELETE")
      * @Route("/{userId}", requirements={"userId"="\d+"}, options={"expose"=true})
+     *
+     * @param int $userId
+     * @return array
+     *
+     * @throws \Exception
      */
-    public function removeUser($userId)
+    public function removeUser(int $userId)
     {
         if ($this->userManager->deleteUserById($userId)) {
             return [];

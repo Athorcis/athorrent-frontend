@@ -36,6 +36,10 @@ class UserFilesystem extends SubFilesystem
         return $root;
     }
 
+    /**
+     * @param string $path
+     * @return UserFilesystemEntry
+     */
     public function getEntry(string $path): FilesystemEntryInterface
     {
         return new UserFilesystemEntry($this, $path);

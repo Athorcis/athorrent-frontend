@@ -39,6 +39,9 @@ class AccountController extends Controller
     /**
      * @Method("PUT")
      * @Route("/")
+     *
+     * @param Request $request
+     * @return ErrorNotification|SuccessNotification
      */
     public function saveAccount(Request $request)
     {

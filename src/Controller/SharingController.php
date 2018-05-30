@@ -32,6 +32,9 @@ class SharingController extends Controller
     /**
      * @Method("GET")
      * @Route("/")
+     *
+     * @param Request $request
+     * @return PaginatedView
      */
     public function listSharings(Request $request)
     {
@@ -42,6 +45,7 @@ class SharingController extends Controller
      * @Method("POST")
      * @Route("/", options={"expose"=true})
      * @ParamConverter("entry", options={"path": true})
+     *
      * @param UserFilesystemEntry $entry
      * @return array
      */
@@ -61,8 +65,13 @@ class SharingController extends Controller
     /**
      * @Method("DELETE")
      * @Route("/{token}", options={"expose"=true})
+     *
+     * @param string $token
+     * @return array
+     *
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function removeSharing($token)
+    public function removeSharing(string $token)
     {
         $this->sharingRepository->delete($token);
         return [];

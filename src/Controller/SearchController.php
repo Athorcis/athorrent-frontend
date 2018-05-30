@@ -16,6 +16,9 @@ class SearchController
     /**
      * @Method("GET")
      * @Route("/")
+     *
+     * @param Request $request
+     * @return View
      */
     public function showSearch(Request $request)
     {

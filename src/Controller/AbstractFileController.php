@@ -8,6 +8,7 @@ use Athorrent\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
@@ -46,6 +47,9 @@ abstract class AbstractFileController extends Controller
      * @Method("GET")
      * @Route("/", options={"expose"=true})
      * @ParamConverter("dirEntry")
+     *
+     * @param UserFilesystemEntry $dirEntry
+     * @return View
      */
     public function listFiles(UserFilesystemEntry $dirEntry)
     {
@@ -87,6 +91,10 @@ abstract class AbstractFileController extends Controller
      * @Method("GET")
      * @Route("/open")
      * @ParamConverter("entry", options={"path": true, "file": true})
+     *
+     * @param Request $request
+     * @param UserFilesystemEntry $entry
+     * @return View
      */
     public function openFile(Request $request, UserFilesystemEntry $entry)
     {
@@ -97,6 +105,10 @@ abstract class AbstractFileController extends Controller
      * @Method("GET")
      * @Route("/download")
      * @ParamConverter("entry", options={"path": true, "file": true})
+     *
+     * @param Request $request
+     * @param UserFilesystemEntry $entry
+     * @return BinaryFileResponse
      */
     public function downloadFile(Request $request, UserFilesystemEntry $entry)
     {
@@ -107,6 +119,9 @@ abstract class AbstractFileController extends Controller
      * @Method("GET")
      * @Route("/play")
      * @ParamConverter("entry", options={"path": true, "file": true})
+     *
+     * @param UserFilesystemEntry $entry
+     * @return View
      */
     public function playFile(UserFilesystemEntry $entry)
     {
@@ -136,6 +151,9 @@ abstract class AbstractFileController extends Controller
      * @Method("GET")
      * @Route("/display")
      * @ParamConverter("entry", options={"path": true, "file": true})
+     *
+     * @param UserFilesystemEntry $entry
+     * @return View
      */
     public function displayFile(UserFilesystemEntry $entry)
     {
@@ -164,6 +182,9 @@ abstract class AbstractFileController extends Controller
      * @Method("DELETE")
      * @Route("/", options={"expose"=true})
      * @ParamConverter("entry", options={"path": true})
+     *
+     * @param UserFilesystemEntry $entry
+     * @return array
      */
     public function removeFile(UserFilesystemEntry $entry)
     {
