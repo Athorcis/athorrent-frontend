@@ -3,6 +3,7 @@
 namespace Athorrent\View;
 
 use Athorrent\Filesystem\UserFilesystemEntry;
+use Athorrent\Security\Nonce\NonceManager;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 
@@ -12,12 +13,15 @@ class TwigHelperExtension extends AbstractExtension
 
     private $translator;
 
+    private $nonceManager;
+
     private $manifest;
 
-    public function __construct(string $publicDir, TranslatorInterface $translator)
+    public function __construct(string $publicDir, TranslatorInterface $translator, NonceManager $nonceManager)
     {
         $this->publicDir = $publicDir;
         $this->translator = $translator;
+        $this->nonceManager = $nonceManager;
         $this->manifest = json_decode(file_get_contents($publicDir . '/manifest.json'), true);
     }
 
@@ -120,10 +124,10 @@ class TwigHelperExtension extends AbstractExtension
         $result = $this->includeResource('scripts/' . $path . '.js', $inline);
 
         if (isset($result['content'])) {
-            return '<script type="text/javascript">' . $result['content'] . '</script>';
+            return '<script type="text/javascript" nonce="' . $this->nonceManager->getNonce() . '">' . $result['content'] . '</script>';
         }
 
-        return '<script type="text/javascript" src="' . $result['path'] . '"></script>';
+        return '<script type="text/javascript" src="' . $result['path'] . '" nonce="' . $this->nonceManager->getNonce() . '"></script>';
     }
 
     public function formatAge($age)
@@ -147,6 +151,8 @@ class TwigHelperExtension extends AbstractExtension
 
             $previousLimit = $limit;
         }
+
+        return null;
     }
 
     public function formatBytes($value)
