@@ -13,6 +13,7 @@ class RoutingCompilerPass implements CompilerPassInterface
 
         $router->setClass(Router::class);
         $options = $router->getArgument(2);
+        $options['generator_base_class'] = UrlGenerator::class;
         $options['generator_dumper_class'] = PhpGeneratorDumper::class;
         $router->replaceArgument(2, $options);
     }
