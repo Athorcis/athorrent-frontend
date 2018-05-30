@@ -7,10 +7,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
-class SharingRepository extends EntityRepository
+class SharingRepository extends EntityRepository implements DeletableRepositoryInterface, PaginableRepositoryInterface
 {
-    use DeletableTrait;
-    use PaginableTrait;
+    use DeletableRepositoryTrait;
+    use PaginableRepositoryTrait;
 
     public function __construct(EntityManagerInterface $em, ClassMetadata $class)
     {
