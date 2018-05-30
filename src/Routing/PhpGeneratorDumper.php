@@ -49,20 +49,20 @@ class {$options['class']} extends {$options['base_class']}
 {
     private static \$declaredRoutes;
     
-    private static \$actionMap;
-    
-    private \$defaultLocale;
+    private static \$declaredActionMap;
     
     public function __construct(RequestContext \$context, LoggerInterface \$logger = null, string \$defaultLocale = null)
     {
-        \$this->context = \$context;
-        \$this->logger = \$logger;
-        \$this->defaultLocale = \$defaultLocale;
-        
         if (null === self::\$declaredRoutes) {
             self::\$declaredRoutes = {$this->generateDeclaredRoutes()};
-            self::\$actionMap = {$this->generateActionMap()};
+            self::\$declaredActionMap = {$this->generateActionMap()};
         }
+        
+        \$this->context = \$context;
+        \$this->logger = \$logger;
+        
+        \$this->defaultLocale = \$defaultLocale;
+        \$this->actionMap = self::\$declaredActionMap;
     }
     
 {$this->generateGenerateMethod()}
@@ -130,17 +130,7 @@ EOF;
             unset($parameters['_locale']);
             $name .= '.' . $locale;
         } elseif (!isset(self::$declaredRoutes[$name])) {
-            if (isset($parameters['_prefixId'])) {
-                $prefixId = $parameters['_prefixId'];
-            } else {
-                $currentPrefixId = $this->context->getParameter('_prefixId');
-                
-                foreach (self::$actionMap[$name] as $prefixId) {
-                    if ($currentPrefixId === $prefixId) {
-                        break;
-                    }
-                }
-            }
+            $prefixId = $this->getPrefixId($name, $parameters);
 
             if ($locale === $this->defaultLocale) {
                 $name = $prefixId . $name;

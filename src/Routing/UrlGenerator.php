@@ -20,6 +20,23 @@ class UrlGenerator extends BaseUrlGenerator
         $this->actionMap = $actionMap;
     }
 
+    protected function getPrefixId($name, array $parameters)
+    {
+        if (isset($parameters['_prefixId'])) {
+            $prefixId = $parameters['_prefixId'];
+        } else {
+            $currentPrefixId = $this->context->getParameter('_prefixId');
+
+            foreach ($this->actionMap[$name] as $prefixId) {
+                if ($currentPrefixId === $prefixId) {
+                    break;
+                }
+            }
+        }
+
+        return $prefixId;
+    }
+
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
         if (null === $this->routes->get($name)) {
@@ -27,17 +44,7 @@ class UrlGenerator extends BaseUrlGenerator
                 ?? $this->context->getParameter('_locale')
                 ?: $this->defaultLocale;
 
-            if (isset($parameters['_prefixId'])) {
-                $prefixId = $parameters['_prefixId'];
-            } else {
-                $currentPrefixId = $this->context->getParameter('_prefixId');
-
-                foreach ($this->actionMap[$name] as $prefixId) {
-                    if ($currentPrefixId === $prefixId) {
-                        break;
-                    }
-                }
-            }
+            $prefixId = $this->getPrefixId($name, $parameters);
 
             if ($locale === $this->defaultLocale) {
                 $name = $prefixId . $name;
