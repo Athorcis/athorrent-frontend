@@ -40,7 +40,6 @@ services:
         arguments: [Athorrent\Database\Entity\User]
 
     Athorrent\Filesystem\FilesystemFactory:
-        arguments:
 
     Athorrent\Filesystem\FilesystemConverter:
         lazy: true
