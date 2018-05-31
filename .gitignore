@@ -6,6 +6,6 @@
 /web/*
 /.env
 
-!/bin/console
+!/bin/athorrent-cli
 !/web/index.php
 !/web/robots.txt
