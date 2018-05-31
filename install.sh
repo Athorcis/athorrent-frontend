@@ -92,10 +92,10 @@ echo
 echo "Create database"
 echo
 
-"$PHP" bin/athorrent-frontend orm:schema-tool:create
+"$PHP" bin/athorrent-cli orm:schema-tool:create
 
 echo
 echo "Create user"
 echo
 
-"$PHP" bin/athorrent-frontend user:create $SEEDBOX_USERNAME $SEEDBOX_PASSWORD ROLE_ADMIN
+"$PHP" bin/athorrent-cli user:create $SEEDBOX_USERNAME $SEEDBOX_PASSWORD ROLE_ADMIN
