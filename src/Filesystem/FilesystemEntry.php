@@ -4,6 +4,12 @@ namespace Athorrent\Filesystem;
 
 class FilesystemEntry extends AbstractFilesystemEntry
 {
+    protected $isDir;
+
+    protected $isFile;
+
+    protected $mimeType;
+
     public function __construct(Filesystem $filesystem, string $path)
     {
         parent::__construct($filesystem, $path);
@@ -16,12 +22,20 @@ class FilesystemEntry extends AbstractFilesystemEntry
 
     public function isDirectory(): bool
     {
-        return is_dir($this->path);
+        if ($this->isDir === null) {
+            $this->isDir = is_dir($this->path);
+        }
+
+        return $this->isDir;
     }
 
     public function isFile(): bool
     {
-        return is_file($this->path);
+        if ($this->isFile === null) {
+            $this->isFile = is_file($this->path);
+        }
+
+        return $this->isFile;
     }
 
     public function getModificationTimestamp(): int
@@ -36,8 +50,12 @@ class FilesystemEntry extends AbstractFilesystemEntry
 
     public function getMimeType(): string
     {
-        $finfo = new \finfo(FILEINFO_MIME);
-        return $finfo->file($this->path);
+        if ($this->mimeType === null) {
+            $finfo = new \finfo(FILEINFO_MIME);
+            $this->mimeType = $finfo->file($this->path);
+        }
+
+        return $this->mimeType;
     }
 
     public function readFile(): string
