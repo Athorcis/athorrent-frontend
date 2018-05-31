@@ -43,10 +43,12 @@ services:
         arguments:
 
     Athorrent\Filesystem\FilesystemConverter:
+        lazy: true
         tags:
-            - { name: request.param_converter, priority: -2 }
+            - { name: request.param_converter, priority: 0 }
 
     Athorrent\Utils\TorrentManagerConverter:
+        lazy: true
         tags:
             - { name: request.param_converter, priority: 0 }
 
