@@ -2,6 +2,7 @@
 
 namespace Athorrent;
 
+use Athorrent\Cache\CacheCompilerPass;
 use Athorrent\Routing\RoutingCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Exception\FileLoaderLoadException;
@@ -94,6 +95,7 @@ class Kernel extends BaseKernel
 
     protected function build(ContainerBuilder $container)
     {
+        $container->addCompilerPass(new CacheCompilerPass());
         $container->addCompilerPass(new RoutingCompilerPass());
     }
 }
