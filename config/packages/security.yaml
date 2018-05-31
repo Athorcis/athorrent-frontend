@@ -30,7 +30,7 @@ security:
 
             remember_me:
                 secret: '%kernel.secret%'
-                name: REMEMBER_ME_KEY
+                name: REMEMBER_ME
                 always_remember_me: true
                 secure: true
 
