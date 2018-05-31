@@ -33,7 +33,7 @@ class UserManager
         $rolesDiff = array_diff($roles, UserRole::$values);
 
         if (count($rolesDiff) > 0) {
-            throw new \Exception(sprintf('%s is not a valid role', $rolesDiff[0]));
+            throw new \InvalidArgumentException(sprintf('%s is not a valid role', $rolesDiff[0]));
         }
 
         $salt = base64_encode(random_bytes(22));
