@@ -3,6 +3,7 @@ doctrine:
         dbname: '%env(DB_NAME)%'
         user: '%env(DB_USERNAME)%'
         password: '%env(DB_PASSWORD)%'
+        charset: utf8
 
         types:
             UserRole: Athorrent\Database\Type\UserRole
