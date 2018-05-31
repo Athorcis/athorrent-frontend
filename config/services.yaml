@@ -80,7 +80,7 @@ services:
         arguments: ['%app.public_dir%']
         tags: [twig.extension]
 
-    Phpfastcache\Bundle\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy:
+    twig.cache.strategy:
         class: Athorrent\Cache\Twig\GenerationalCacheStrategy
         arguments:
             - '@Phpfastcache\Bundle\Twig\CacheExtension\CacheProvider\PsrCacheAdapter'
@@ -93,11 +93,11 @@ services:
     cache_driver:
         class: Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface
         factory: ['@Phpfastcache\Bundle\Service\Phpfastcache', 'get']
-        arguments: ['filecache']
+        arguments: ['default']
 
     simple_cache:
         class: Phpfastcache\Helper\Psr16Adapter
-        arguments: ['Files']
+        arguments: ['@cache_driver']
 
     app.doctrine.hash_password_listener:
         class: Athorrent\Security\HashPasswordListener

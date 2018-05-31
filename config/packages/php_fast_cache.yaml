@@ -1,9 +1,8 @@
 phpfastcache:
-    twig_driver: "filecache" # This option must be a valid declared driver, in our example: "filecache"
+    twig_driver: 'default' # This option must be a valid declared driver, in our example: "filecache"
     twig_block_debug: false # This option will wrap CACHE/ENDCACHE blocks with block debug as HTML comment
 
     drivers:
-        filecache:
-            type: Files
+        default:
+            type: Apcu
             parameters:
-                path: "%kernel.cache_dir%/phpfastcache/"
