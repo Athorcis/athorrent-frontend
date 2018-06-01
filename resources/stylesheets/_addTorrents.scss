@@ -43,16 +43,16 @@
     width: 100%;
 }
 
-.dz-started {
-    > .dz-message {
-        display: none;
-    }
-}
-
 .dz-message {
     font-size: 1.5em;
     padding: 43px 0;
     text-align: center;
+}
+
+.dz-started {
+    > .dz-message {
+        display: none;
+    }
 }
 
 .dz-progress {
