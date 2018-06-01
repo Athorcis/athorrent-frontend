@@ -19,6 +19,7 @@
         "sensio/framework-extra-bundle": "~5.1.0",
         "symfony/css-selector": "~4.1.0",
         "symfony/dom-crawler": "~4.1.0",
+        "symfony/proxy-manager-bridge": "~4.1.0",
         "symfony/translation": "~4.1.0",
         "symfony/yaml": "~4.1.0",
         "symfony/security-bundle": "~4.1.0",
