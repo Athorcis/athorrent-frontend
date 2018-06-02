@@ -122,25 +122,27 @@ abstract class AbstractFileController extends Controller
      */
     public function playFile(UserFilesystemEntry $entry)
     {
-        if (!$entry->isPlayable()) {
+        if ($entry->isPlayable()) {
+            if ($entry->isAudio()) {
+                $mediaTag = 'audio';
+            } elseif ($entry->isVideo()) {
+                $mediaTag = 'video';
+            }
+        }
+
+        if (!isset($mediaTag)) {
             throw new UnsupportedMediaTypeHttpException('error.notPlayable');
         }
 
-        $relativePath = $entry->getPath();
-        $breadcrumb = self::getBreadcrumb($relativePath);
-
-        if ($entry->isAudio()) {
-            $mediaTag = 'audio';
-        } elseif ($entry->isVideo()) {
-            $mediaTag = 'video';
-        }
+        $path = $entry->getPath();
+        $breadcrumb = self::getBreadcrumb($path);
 
         return new View([
             'name' => $entry->getName(),
             'breadcrumb' => $breadcrumb,
             'mediaTag' => $mediaTag,
             'type' => $entry->getMimeType(),
-            'src' => $relativePath
+            'src' => $path
         ]);
     }
 
