@@ -18,6 +18,7 @@ security:
                 login_path: /
                 check_path: login_check
                 default_target_path: /user/files/
+                failure_handler: Athorrent\Security\AuthenticationFailureHandler
                 always_use_default_target_path: false
 
             logout:
