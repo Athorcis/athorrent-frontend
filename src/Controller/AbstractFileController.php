@@ -19,12 +19,9 @@ abstract class AbstractFileController extends Controller
 {
     protected $translator;
 
-    protected $sharingRepository;
-
-    public function __construct(TranslatorInterface $translator, SharingRepository $sharingRepository)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
-        $this->sharingRepository = $sharingRepository;
     }
 
     protected function getBreadcrumb(string $path)
@@ -184,9 +181,10 @@ abstract class AbstractFileController extends Controller
      * @ParamConverter("entry", options={"path": true})
      *
      * @param UserFilesystemEntry $entry
+     * @param SharingRepository $sharingRepository
      * @return array
      */
-    public function removeFile(UserFilesystemEntry $entry)
+    public function removeFile(UserFilesystemEntry $entry, SharingRepository $sharingRepository)
     {
         if ($entry->isRoot()) {
             throw new NotFoundHttpException();
@@ -194,7 +192,7 @@ abstract class AbstractFileController extends Controller
 
         $entry->remove();
 
-        $this->sharingRepository->deleteByUserAndRoot($entry->getOwner(), $entry->getPath());
+        $sharingRepository->deleteByUserAndRoot($entry->getOwner(), $entry->getPath());
 
         return [];
     }
