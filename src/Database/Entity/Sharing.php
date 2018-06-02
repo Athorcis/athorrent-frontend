@@ -20,7 +20,7 @@ class Sharing
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="User", inversedBy="sharings")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $user;
 

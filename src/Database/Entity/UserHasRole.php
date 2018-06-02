@@ -13,7 +13,7 @@ class UserHasRole
      * @var User
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="User", inversedBy="hasRoles")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $user;
 
