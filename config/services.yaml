@@ -17,7 +17,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     Athorrent\:
         resource: '../src/*'
-        exclude: '../src/{Cache,Entity,Filesystem,Ipc,Migrations,Notification,Routing,Tests,Tools,Utils,View,ExceptionListener.php,Kernel.php}'
+        exclude: '../src/{Cache,Entity,Filesystem,Ipc,Migrations,Routing,Tests,Tools,Utils,ExceptionListener.php,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -60,20 +60,10 @@ services:
             $defaultLocale: '%kernel.default_locale%'
 
     Athorrent\Routing\RoutingListener:
-        arguments:
-            - '@simple_cache'
-
+        arguments: ['@simple_cache']
         tags: [kernel.event_subscriber]
 
     Athorrent\Utils\TorrentManagerFactory:
-
-    Athorrent\View\Renderer:
-
-    Athorrent\Notification\NotificationListener:
-        tags: [kernel.event_subscriber]
-
-    Athorrent\View\ViewListener:
-        tags: [kernel.event_subscriber]
 
     Athorrent\View\TwigHelperExtension:
         arguments: ['%app.public_dir%']
@@ -102,13 +92,3 @@ services:
         class: Athorrent\Security\HashPasswordListener
         tags:
             - { name: doctrine.event_subscriber }
-
-    app.login_listener:
-        class: Athorrent\Security\LoginListener
-        tags:
-            - { name: kernel.event_subscriber }
-
-    app.request_listener:
-        class: Athorrent\RequestListener
-        tags:
-            - { name: kernel.event_subscriber }
