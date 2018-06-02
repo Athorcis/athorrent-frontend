@@ -56,7 +56,7 @@ class User implements UserInterface
 
     /**
      * @var UserHasRole[]
-     * @ORM\OneToMany(targetEntity="UserHasRole", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="UserHasRole", mappedBy="user", cascade={"persist"})
      */
     private $hasRoles;
 

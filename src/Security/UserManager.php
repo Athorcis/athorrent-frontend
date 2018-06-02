@@ -41,10 +41,6 @@ class UserManager
 
         $this->entityManager->persist($user);
 
-        foreach ($user->getHasRoles() as $userRole) {
-            $this->entityManager->persist($userRole);
-        }
-
         $this->entityManager->flush();
     }
 
