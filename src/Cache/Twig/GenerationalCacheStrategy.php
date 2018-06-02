@@ -28,15 +28,11 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
      */
     private $cacheCollector;
 
+    /**
+     * @var KeyGeneratorInterface
+     */
     private $keyGenerator;
 
-    /**
-     * LifetimeCacheStrategy constructor.
-     * @param CacheProviderInterface $cache
-     * @param CacheCollector $cacheCollector
-     * @param array $config
-     * @param KeyGeneratorInterface $keyGenerator
-     */
     public function __construct(CacheProviderInterface $cache, CacheCollector $cacheCollector = null, $config, KeyGeneratorInterface $keyGenerator)
     {
         $this->cache = $cache;
@@ -48,7 +44,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
     /**
      * {@inheritDoc}
      */
-    public function fetchBlock($key, \Twig_Source $sourceContex)
+    public function fetchBlock($key, \Twig_Source $sourceContext)
     {
         $generationTimeMc = microtime(true);
         $cacheData = $this->cache->fetch($key);
@@ -60,7 +56,9 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
                 'cacheHit' => $cacheData !== null,
                 'cacheTtl' => 0,
                 'cacheSize' => mb_strlen((string) $cacheData),
-                'cacheGenTime' => $generationTime
+                'cacheGenTime' => $generationTime,
+                'cacheFileName' => $sourceContext->getName(),
+                'cacheFilePath' => $sourceContext->getPath(),
             ]);
         }
 
@@ -91,7 +89,9 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
                 'cacheHit' => false,
                 'cacheTtl' => 0,
                 'cacheSize' => mb_strlen((string) $block),
-                'cacheGenTime' => $generationTime
+                'cacheGenTime' => $generationTime,
+                'cacheFileName' => $sourceContext->getName(),
+                'cacheFilePath' => $sourceContext->getPath(),
             ]);
         }
 
