@@ -1,0 +1,10 @@
+monolog:
+    handlers:
+        debug_log:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+
+        error_log:
+            type: syslog
+            level: error
