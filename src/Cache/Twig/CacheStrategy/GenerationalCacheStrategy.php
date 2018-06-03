@@ -1,7 +1,8 @@
 <?php
 
-namespace Athorrent\Cache\Twig;
+namespace Athorrent\Cache\Twig\CacheStrategy;
 
+use Athorrent\Cache\KeyGenerator\KeyGeneratorInterface;
 use Phpfastcache\Bundle\DataCollector\CacheCollector;
 use Phpfastcache\Bundle\Twig\CacheExtension\CacheProviderInterface;
 use Phpfastcache\Bundle\Twig\CacheExtension\CacheStrategyInterface;
@@ -11,7 +12,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
     /**
      * @var string
      */
-    private $keyPrefix = '_Twig_GCS_';
+    private $keyPrefix = 'twig_gcs_';
 
     /**
      * @var array

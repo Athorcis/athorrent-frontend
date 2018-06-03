@@ -1,4 +1,4 @@
-{% cache ('nav_' ~ app.request.locale) app.user.roles|default(null) %}
+{% cache 'nav' app.user.roles|default([]) %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">

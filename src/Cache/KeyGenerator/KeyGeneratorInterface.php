@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\Cache\Twig;
+namespace Athorrent\Cache\KeyGenerator;
 
 /**
  * Generates a key for a given value.
@@ -12,5 +12,5 @@ interface KeyGeneratorInterface
      * @param mixed $value
      * @return string
      */
-    public function generateKey($value);
+    public function generateKey($value): string;
 }
