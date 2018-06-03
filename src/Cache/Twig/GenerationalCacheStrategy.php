@@ -11,7 +11,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
     /**
      * @var string
      */
-    private $twigCachePrefix = '_TwigCacheLCS_';
+    private $keyPrefix = '_Twig_GCS_';
 
     /**
      * @var array
@@ -49,7 +49,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
         $generationTimeMc = microtime(true);
         $cacheData = $this->cache->fetch($key);
         $generationTime = microtime(true) - $generationTimeMc;
-        $unprefixedKey = substr($key, strlen($this->twigCachePrefix));
+        $unprefixedKey = substr($key, strlen($this->keyPrefix));
 
         if ($this->cacheCollector instanceof CacheCollector) {
             $this->cacheCollector->setTwigCacheBlock($unprefixedKey, [
@@ -74,7 +74,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
      */
     public function generateKey($annotation, $value)
     {
-        return $annotation . '|' . $this->keyGenerator->generateKey($value);
+        return $this->keyPrefix . $annotation . '|' . $this->keyGenerator->generateKey($value);
     }
 
     /**
@@ -82,7 +82,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
      */
     public function saveBlock($key, $block, $generationTime, \Twig_Source $sourceContext)
     {
-        $unprefixedKey = substr($key, strlen($this->twigCachePrefix));
+        $unprefixedKey = substr($key, strlen($this->keyPrefix));
 
         if ($this->cacheCollector instanceof CacheCollector) {
             $this->cacheCollector->setTwigCacheBlock($unprefixedKey, [
