@@ -70,14 +70,15 @@ services:
         tags: [twig.extension]
 
     twig.cache.strategy:
-        class: Athorrent\Cache\Twig\GenerationalCacheStrategy
+        class: Athorrent\Cache\Twig\CacheStrategy\GenerationalCacheStrategy
         arguments:
             - '@Phpfastcache\Bundle\Twig\CacheExtension\CacheProvider\PsrCacheAdapter'
             - '@?Phpfastcache\Bundle\DataCollector\CacheCollector'
             - '%phpfastcache%'
-            - '@Athorrent\Cache\Twig\KeyGenerator'
+            - '@app.cache.key_generator'
 
-    Athorrent\Cache\Twig\KeyGenerator:
+    app.cache.key_generator:
+        class: Athorrent\Cache\KeyGenerator\LocalizedKeyGenerator
 
     cache_driver:
         class: Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface

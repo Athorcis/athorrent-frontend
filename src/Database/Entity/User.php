@@ -2,6 +2,7 @@
 
 namespace Athorrent\Database\Entity;
 
+use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -9,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass="Athorrent\Database\Repository\UserRepository")
  * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="username", columns={"username"})})
  */
-class User implements UserInterface
+class User implements UserInterface, CacheKeyGetterInterface
 {
     /**
      * @var int
@@ -161,5 +162,10 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         $this->plainPassword = null;
+    }
+
+    public function getCacheKey(): string
+    {
+        return (string)$this->id;
     }
 }

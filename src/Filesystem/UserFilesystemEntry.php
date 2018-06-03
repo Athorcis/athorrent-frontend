@@ -2,12 +2,12 @@
 
 namespace Athorrent\Filesystem;
 
-use Athorrent\Cache\CachableInterface;
+use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Database\Entity\User;
 
 /** @property UserFilesystem $filesystem */
-class UserFilesystemEntry extends SubFilesystemEntry implements CachableInterface
+class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterInterface
 {
     /** @var string */
     private $sharingToken;
@@ -15,11 +15,6 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CachableInterfac
     public function __construct(UserFilesystem $filesystem, string $path, FilesystemEntry $internalEnty = null)
     {
         parent::__construct($filesystem, $path, $internalEnty);
-    }
-
-    public function getCacheKey(): string
-    {
-        return base64_encode($this->internalEntry->path . $this->getModificationTimestamp() . ($this->isSharable() ? 0 : 1));
     }
 
     /**
@@ -78,5 +73,10 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CachableInterfac
     public function isShared()
     {
         return isset($this->getOwner()->getSharings()[$this->getSharingToken()]);
+    }
+
+    public function getCacheKey(): string
+    {
+        return base64_encode($this->internalEntry->path . $this->getModificationTimestamp() . ($this->isSharable() ? 0 : 1));
     }
 }

@@ -2,13 +2,14 @@
 
 namespace Athorrent\Database\Entity;
 
+use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Athorrent\Database\Repository\SharingRepository")
  * @ORM\Table(indexes={@ORM\Index(columns={"creationDateTime"})})
  */
-class Sharing
+class Sharing implements CacheKeyGetterInterface
 {
     /**
      * @var string
@@ -64,5 +65,10 @@ class Sharing
     public static function generateToken(User $user, $path)
     {
         return md5($user->getId() . '/' . $path);
+    }
+
+    public function getCacheKey(): string
+    {
+        return $this->token;
     }
 }
