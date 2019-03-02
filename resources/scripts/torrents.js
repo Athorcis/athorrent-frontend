@@ -548,7 +548,9 @@ require(['jquery', 'athorrent', 'dropzone'], function ($, athorrent, Dropzone) {
         }
     });
 
-    navigator.registerProtocolHandler('magnet', location.origin + '/user/torrents/magnet?magnet=%s', 'Athorrent');
+    if (navigator.registerProtocolHandler) {
+        navigator.registerProtocolHandler('magnet', location.origin + '/user/torrents/magnet?magnet=%s', 'Athorrent');
+    }
 
     athorrent.initializeTorrentsList();
     athorrent.initializeTorrentPanel();
