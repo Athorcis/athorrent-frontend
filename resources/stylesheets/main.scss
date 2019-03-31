@@ -1,8 +1,10 @@
 
+$bootstrap-sass-asset-helper: true;
+
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap/theme';
 
-@import '~font-awesome/css/font-awesome';
+@import '~font-awesome/css/font-awesome.css';
 
 html {
     height: 100%;

@@ -5,7 +5,9 @@ namespace Athorrent\Controllers;
 use Athorrent\Entity\Sharing;
 use Athorrent\Entity\User;
 use Athorrent\Entity\UserRole;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends AbstractController
 {
@@ -29,6 +31,7 @@ class UserController extends AbstractController
     {
         $routes = parent::buildAjaxRoutes();
 
+        $routes[] = array('POST', '/password/reset', 'resetUserPassword');
         $routes[] = array('POST', '/remove', 'removeUser');
 
         return $routes;
@@ -36,6 +39,8 @@ class UserController extends AbstractController
 
     protected function listUsers(Request $request)
     {
+        global $app;
+
         if ($request->query->has('page')) {
             $page = $request->query->get('page');
 
@@ -103,6 +108,30 @@ class UserController extends AbstractController
         }
 
         return $this->redirect('listUsers');
+    }
+
+    protected function resetUserPassword(Request $request)
+    {
+        $userId = $request->request->get('userId');
+
+        if (!$userId) {
+            throw new InvalidArgumentException('missing parameter userId');
+        }
+
+        $user = User::loadById($userId);
+
+        if (!$user) {
+            throw new NotFoundHttpException('user not found');
+        }
+
+        $password = bin2hex(random_bytes(8));
+
+        $user->setRawPassword($password);
+        $user->save();
+
+        return $this->success([
+            'password' => $password
+        ]);
     }
 
     protected function removeUser(Request $request)
