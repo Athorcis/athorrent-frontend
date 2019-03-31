@@ -23,5 +23,18 @@ require(['jquery', 'athorrent'], function ($, athorrent) {
         }
     }
 
+    function onResetUserPassword(event) {
+        var target = event.target;
+
+        if (window.confirm('Êtes-vous sur de vouloir réinitialiser le mot de passe de l\'utilisateur ' + getUserName(target) + '?')) {
+            athorrent.ajax.resetUserPassword({
+                userId: getUserId(target)
+            }, function (data) {
+                athorrent.showModal('Nouveau mot de passe', data.password);
+            }, 'json');
+        }
+    }
+
+    $(document).on('click', '.user-reset-password', onResetUserPassword);
     $(document).on('click', '.user-remove', onRemoveUser);
 });

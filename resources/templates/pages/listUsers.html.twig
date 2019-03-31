@@ -46,6 +46,10 @@
                         {% endif %}
                     </td>
                     <td class="text-right user-buttons">
+                        <button class="btn btn-xs btn-default user-reset-password">
+                            <span class="fa fa-undo"></span>
+                        </button>
+
                         {% if user.userId != userId %}
                         <a class="btn btn-xs btn-default" href="{{ path('listFiles', { _switch_user: user.username }, 'files') }}">
                             <span class="fa fa-exchange"></span>

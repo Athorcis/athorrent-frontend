@@ -2,6 +2,7 @@
 
 namespace Athorrent\Entity;
 
+use PDOStatement;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
@@ -190,6 +191,24 @@ class User implements UserInterface
         }
 
         return new self($row['userId'], $username, $row['password'], $row['salt'], $row['creationTimestamp'], $row['connectionTimestamp'], $row['usedDiskSpace'], $row['totalDiskSpace']);
+    }
+
+    public static function loadById($userId)
+    {
+        global $app;
+
+        /** @var PDOStatement $sth */
+        $sth = $app['pdo']->prepare('SELECT userId, username, password, salt, creationTimestamp, connectionTimestamp, usedDiskSpace, totalDiskSpace FROM user WHERE userId = :userId');
+        $sth->bindValue('userId', $userId, \PDO::PARAM_INT);
+        $sth->execute();
+
+        $row = $sth->fetch();
+
+        if ($row) {
+            return new self($row['userId'], $row['username'], $row['password'], $row['salt'], $row['creationTimestamp'], $row['connectionTimestamp'], $row['usedDiskSpace'], $row['totalDiskSpace']);
+        }
+
+        return null;
     }
 
     public static function loadAll($offset, $limit, &$total)

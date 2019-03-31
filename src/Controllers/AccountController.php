@@ -30,6 +30,7 @@ class AccountController extends AbstractController
     {
         global $app;
 
+        /** @var User $user */
         $user = $app['security']->getToken()->getUser();
 
         $username = $request->request->get('username');
