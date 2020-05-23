@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 <!doctype html>
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ app.request.locale }}"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="{{ app.request.locale }}"> <!--<![endif]-->
@@ -72,7 +72,7 @@
                 window.Promise || document.write('<script src="{{ asset_url('scripts/promise.js') }}"><\/script>');
             </script>
 
-            {{ script('runtime', true)|raw }}
+{#            {{ script('runtime', true)|raw }}#}
 
             {% block main_script %}
                 {{ script('athorrent')|raw }}
@@ -80,4 +80,4 @@
         {% endblock %}
     </body>
 </html>
-{% endspaceless %}
+{% endapply %}

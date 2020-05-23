@@ -12,14 +12,14 @@ trait PaginableRepositoryTrait
      * @param string $indexBy
      * @return QueryBuilder
      */
-    abstract function createQueryBuilder($alias, $indexBy = null);
+    abstract public function createQueryBuilder($alias, $indexBy = null);
 
-    protected function getQueryBuilderForPagination()
+    protected function getQueryBuilderForPagination(): QueryBuilder
     {
-        return $this->createQueryBuilder('e');
+        return $this->createQueryBuilder($this->getEntityAlias());
     }
 
-    protected function paginateQueryBuilder(QueryBuilder $qb, $limit, $offset)
+    protected function paginateQueryBuilder(QueryBuilder $qb, $limit, $offset): Paginator
     {
         $qb->setMaxResults($limit);
         $qb->setFirstResult($offset);
@@ -27,17 +27,17 @@ trait PaginableRepositoryTrait
         return new Paginator($qb->getQuery());
     }
 
-    public function paginate(int $limit, int $offset)
+    public function paginate(int $limit, int $offset): Paginator
     {
         $qb = $this->getQueryBuilderForPagination();
         return $this->paginateQueryBuilder($qb, $limit, $offset);
     }
 
-    public function paginateBy(array $criteria, int $limit, int $offset)
+    public function paginateBy(array $criteria, int $limit, int $offset): Paginator
     {
         $qb = $this->getQueryBuilderForPagination();
 
-        $qb->where('e.' . $criteria[0] . ' = :' . $criteria[0]);
+        $qb->where($this->getEntityAlias() . '.' . $criteria[0] . ' = :' . $criteria[0]);
         $qb->setParameter($criteria[0], $criteria[1]);
 
         return $this->paginateQueryBuilder($qb, $limit, $offset);

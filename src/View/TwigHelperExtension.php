@@ -4,8 +4,9 @@ namespace Athorrent\View;
 
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\Security\Nonce\NonceManager;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
@@ -22,25 +23,25 @@ class TwigHelperExtension extends AbstractExtension
         $this->publicDir = $publicDir;
         $this->translator = $translator;
         $this->nonceManager = $nonceManager;
-        $this->manifest = json_decode(file_get_contents($publicDir . '/manifest.json'), true);
+        $this->manifest = json_decode(file_get_contents($publicDir.'/manifest.json'), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function getFunctions()
     {
         return [
-            new \Twig_Function('torrentStateToClass', [$this, 'torrentStateToClass']),
-            new \Twig_Function('asset_path', [$this, 'getAssetPath']),
-            new \Twig_Function('asset_url', [$this, 'getAssetUrl']),
-            new \Twig_Function('stylesheet', [$this, 'includeStylesheet']),
-            new \Twig_Function('script', [$this, 'includeScript']),
-            new \Twig_Function('format_age', [$this, 'formatAge']),
-            new \Twig_Function('icon', [$this, 'getIcon']),
-            new \Twig_Function('base64_encode', 'base64_encode'),
-            new \Twig_Function('format_bytes', [$this, 'formatBytes'])
+            new TwigFunction('torrentStateToClass', [$this, 'torrentStateToClass']),
+            new TwigFunction('asset_path', [$this, 'getAssetPath']),
+            new TwigFunction('asset_url', [$this, 'getAssetUrl']),
+            new TwigFunction('stylesheet', [$this, 'includeStylesheet']),
+            new TwigFunction('script', [$this, 'includeScript']),
+            new TwigFunction('format_age', [$this, 'formatAge']),
+            new TwigFunction('icon', [$this, 'getIcon']),
+            new TwigFunction('base64_encode', 'base64_encode'),
+            new TwigFunction('format_bytes', [$this, 'formatBytes'])
         ];
     }
 
-    public function getIcon($value)
+    public function getIcon($value): string
     {
         if ($value instanceof UserFilesystemEntry) {
             if ($value->isDirectory()) {
@@ -65,7 +66,7 @@ class TwigHelperExtension extends AbstractExtension
         return '';
     }
 
-    public function torrentStateToClass($torrent)
+    public function torrentStateToClass($torrent): string
     {
         $state = $torrent['state'];
 
@@ -84,14 +85,10 @@ class TwigHelperExtension extends AbstractExtension
 
     public function getAssetPath($assetId)
     {
-        if (isset($this->manifest[$assetId])) {
-            return $this->manifest[$assetId];
-        }
-
-        return '/' . $assetId;
+        return $this->manifest[$assetId] ?? ('/'.$assetId);
     }
 
-    public function getAssetUrl($assetId)
+    public function getAssetUrl($assetId): string
     {
         return '//' . $_ENV['STATIC_HOST'] . $this->getAssetPath($assetId);
     }
@@ -108,7 +105,7 @@ class TwigHelperExtension extends AbstractExtension
         return ['path' => '//' . $_ENV['STATIC_HOST'] . $relativePath];
     }
 
-    public function includeStylesheet($path, $inline = false)
+    public function includeStylesheet($path, $inline = false): string
     {
         $result = $this->includeResource('stylesheets/' . $path . '.css', $inline);
 
@@ -119,7 +116,7 @@ class TwigHelperExtension extends AbstractExtension
         return '<link rel="stylesheet" type="text/css" href="' . $result['path'] . '" />';
     }
 
-    public function includeScript($path, $inline = false)
+    public function includeScript($path, $inline = false): string
     {
         $result = $this->includeResource('scripts/' . $path . '.js', $inline);
 
@@ -146,7 +143,7 @@ class TwigHelperExtension extends AbstractExtension
         foreach ($steps as $magnitude => $limit) {
             if ($age < $limit) {
                 $n = floor($age / $previousLimit);
-                return $n . ' ' . $this->translator->transChoice('search.age.' . $magnitude, $n);
+                return $n . ' ' . $this->translator->trans('search.age.' . $magnitude, ['count' => $n]);
             }
 
             $previousLimit = $limit;
@@ -155,7 +152,7 @@ class TwigHelperExtension extends AbstractExtension
         return null;
     }
 
-    public function formatBytes($value)
+    public function formatBytes($value): string
     {
         return \ByteUnits\Metric::bytes($value)->format();
     }

@@ -32,10 +32,10 @@ class FileUtils extends \Symfony\Component\Filesystem\Filesystem
 
     private function toIterable($files): iterable
     {
-        return is_array($files) || $files instanceof \Traversable ? $files : array($files);
+        return \is_iterable($files) ? $files : array($files);
     }
 
-    public static function encodeFilename(string $path)
+    public static function encodeFilename(string $path): string
     {
         $parts = pathinfo($path);
         return $parts['dirname'] . DIRECTORY_SEPARATOR . base64_encode($parts['filename']) . '.' . $parts['extension'];

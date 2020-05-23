@@ -4,7 +4,7 @@ namespace Athorrent\Ipc\Socket;
 
 interface SocketInterface
 {
-    public function shutdown();
+    public function shutdown(): void;
 
-    public function close();
+    public function close(): void;
 }

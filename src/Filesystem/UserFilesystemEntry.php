@@ -52,7 +52,7 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
     /**
      * @return string
      */
-    public function getSharingToken()
+    public function getSharingToken(): string
     {
         if ($this->sharingToken === null) {
             $path = $this->path;
@@ -70,7 +70,7 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
     /**
      * @return bool
      */
-    public function isShared()
+    public function isShared(): bool
     {
         return isset($this->getOwner()->getSharings()[$this->getSharingToken()]);
     }

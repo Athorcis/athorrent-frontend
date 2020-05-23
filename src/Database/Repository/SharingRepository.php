@@ -3,26 +3,19 @@
 namespace Athorrent\Database\Repository;
 
 use Athorrent\Database\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 class SharingRepository extends EntityRepository implements DeletableRepositoryInterface, PaginableRepositoryInterface
 {
     use DeletableRepositoryTrait;
     use PaginableRepositoryTrait;
 
-    public function __construct(EntityManagerInterface $em, ClassMetadata $class)
-    {
-        parent::__construct($em, $class);
-    }
-
-    protected function getEntityAlias()
+    protected function getEntityAlias(): string
     {
         return 's';
     }
 
-    protected function createQueryBuilderByUserAndRoot(User $user, $root)
+    protected function createQueryBuilderByUserAndRoot(User $user, $root): \Doctrine\ORM\QueryBuilder
     {
         $qb = $this->createQueryBuilder($this->getEntityAlias());
 

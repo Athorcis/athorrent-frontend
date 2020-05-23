@@ -8,7 +8,7 @@ class NamedPipeClient extends NamedPipe implements ClientSocketInterface
 {
     public function __construct($path)
     {
-        $this->namedPipe = @fopen($path, 'r+');
+        $this->namedPipe = @fopen($path, 'rb+');
 
         if (!$this->namedPipe) {
             throw new ServiceUnavailableException('SERVICE_NOT_RUNNING');

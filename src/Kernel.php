@@ -3,9 +3,8 @@
 namespace Athorrent;
 
 use Athorrent\Cache\CacheCompilerPass;
-use Athorrent\Routing\RoutingCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\Config\Exception\FileLoaderLoadException;
+use Symfony\Component\Config\Exception\LoaderLoadException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -24,7 +23,7 @@ class Kernel extends BaseKernel
         return $this->getProjectDir() . '/var/cache/' . $this->environment;
     }
 
-    protected function getConfDir()
+    protected function getConfDir(): string
     {
         return $this->getProjectDir() . '/config';
     }
@@ -64,10 +63,9 @@ class Kernel extends BaseKernel
 
     /**
      * @param RouteCollectionBuilder $routes
-     *
-     * @throws FileLoaderLoadException
+     * @throws LoaderLoadException
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
         $confDir = $this->getConfDir();
 
@@ -81,7 +79,7 @@ class Kernel extends BaseKernel
      *
      * @throws \Exception
      */
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $confDir = $this->getConfDir();
 
@@ -96,6 +94,5 @@ class Kernel extends BaseKernel
     protected function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new CacheCompilerPass());
-        $container->addCompilerPass(new RoutingCompilerPass());
     }
 }

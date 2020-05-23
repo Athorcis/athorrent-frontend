@@ -2,9 +2,7 @@
 
 namespace Athorrent\Database\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 
 class UserRepository extends EntityRepository implements DeletableRepositoryInterface, PaginableRepositoryInterface
@@ -14,17 +12,12 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
         paginateQueryBuilder as paginateQueryBuilderOriginal;
     }
 
-    public function __construct(EntityManagerInterface $em, ClassMetadata $class)
-    {
-        parent::__construct($em, $class);
-    }
-
-    protected function getEntityAlias()
+    protected function getEntityAlias(): string
     {
         return 'u';
     }
 
-    protected function paginateQueryBuilder(QueryBuilder $queryBuilder, $limit, $offset)
+    protected function paginateQueryBuilder(QueryBuilder $queryBuilder, $limit, $offset): \Doctrine\ORM\Tools\Pagination\Paginator
     {
         $queryBuilder->addSelect('uhr');
         $queryBuilder->join('u.hasRoles', 'uhr');

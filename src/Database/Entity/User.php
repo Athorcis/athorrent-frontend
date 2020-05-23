@@ -3,6 +3,7 @@
 namespace Athorrent\Database\Entity;
 
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -79,9 +80,9 @@ class User implements UserInterface, CacheKeyGetterInterface
         }, $roles);
     }
 
-    public function getId()
+    public function getId(): int
     {
-        return intval($this->id);
+        return (int)$this->id;
     }
 
     public function getUsername()
@@ -89,7 +90,7 @@ class User implements UserInterface, CacheKeyGetterInterface
         return $this->username;
     }
 
-    public function setUsername($username)
+    public function setUsername($username): void
     {
         $this->username = $username;
     }
@@ -99,7 +100,7 @@ class User implements UserInterface, CacheKeyGetterInterface
         return $this->plainPassword;
     }
 
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword($plainPassword): void
     {
         $this->plainPassword = $plainPassword;
     }
@@ -109,7 +110,7 @@ class User implements UserInterface, CacheKeyGetterInterface
         return $this->password;
     }
 
-    public function setPassword($password)
+    public function setPassword($password): void
     {
         $this->password = $password;
     }
@@ -119,12 +120,12 @@ class User implements UserInterface, CacheKeyGetterInterface
         return $this->salt;
     }
 
-    public function getCreationTimestamp()
+    public function getCreationTimestamp(): int
     {
         return $this->creationDateTime->getTimestamp();
     }
 
-    public function getConnectionTimestamp()
+    public function getConnectionTimestamp(): int
     {
         if ($this->connectionDateTime === null) {
             return 0;
@@ -133,7 +134,7 @@ class User implements UserInterface, CacheKeyGetterInterface
         return $this->connectionDateTime->getTimestamp();
     }
 
-    public function setConnectionDateTime(\DateTime $dateTime)
+    public function setConnectionDateTime(\DateTime $dateTime): void
     {
         $this->connectionDateTime = $dateTime;
     }
@@ -154,6 +155,9 @@ class User implements UserInterface, CacheKeyGetterInterface
         return $roles;
     }
 
+    /**
+     * @return Sharing[]|ArrayCollection
+     */
     public function getSharings()
     {
         return $this->sharings;

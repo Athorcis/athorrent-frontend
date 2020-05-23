@@ -52,7 +52,7 @@ class Sharing implements CacheKeyGetterInterface
         return $this->token;
     }
 
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }

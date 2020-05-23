@@ -14,13 +14,13 @@ class JsonClient
         $this->clientSocket = new $clientSocketType($address);
     }
 
-    public function disconnect()
+    public function disconnect(): void
     {
         $this->clientSocket->shutdown();
         $this->clientSocket->close();
     }
 
-    public function recv()
+    public function recv(): ?JsonResponse
     {
         $rawResponse = '';
 
@@ -32,7 +32,7 @@ class JsonClient
             } else {
                 break;
             }
-        } while ($rawResponse[strlen($rawResponse) - 1] != '\n');
+        } while ($rawResponse[strlen($rawResponse) - 1] !== '\n');
 
         if ($rawResponse) {
             return JsonResponse::parse($rawResponse);
@@ -41,7 +41,7 @@ class JsonClient
         return null;
     }
 
-    public function send(JsonRequest $request)
+    public function send(JsonRequest $request): void
     {
         $rawRequest = $request->toRawRequest();
         $length = strlen($rawRequest);

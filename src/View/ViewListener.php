@@ -5,9 +5,9 @@ namespace Athorrent\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ViewListener implements EventSubscriberInterface
 {
@@ -29,7 +29,7 @@ class ViewListener implements EventSubscriberInterface
         ]];
     }
 
-    public function onEarlyKernelView(GetResponseForControllerResultEvent $event)
+    public function onEarlyKernelView(ViewEvent $event): void
     {
         $xhr = $event->getRequest()->isXmlHttpRequest();
 
@@ -53,7 +53,7 @@ class ViewListener implements EventSubscriberInterface
         ]);
     }
 
-    public function onLateKernelView(GetResponseForControllerResultEvent $event)
+    public function onLateKernelView(ViewEvent $event): void
     {
         $result = $event->getControllerResult();
 

@@ -2,6 +2,7 @@
 
 namespace Athorrent\Filesystem;
 
+use Athorrent\Database\Entity\Sharing;
 use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Utils\TorrentManagerFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -22,8 +23,9 @@ class FilesystemFactory
         $this->sharingRepository = $sharingRepository;
     }
 
-    public function createSharedFilesystem(string $token)
+    public function createSharedFilesystem(string $token): SharedFilesystem
     {
+        /** @var Sharing $sharing */
         $sharing = $this->sharingRepository->findOneBy(['token' => $token]);
 
         if ($sharing === null) {
@@ -36,7 +38,7 @@ class FilesystemFactory
         return new SharedFilesystem($torrentManager, $user, $sharing);
     }
 
-    public function createTorrentFilesystem()
+    public function createTorrentFilesystem(): TorrentFilesystem
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $torrentManager = $this->torrentManagerFactory->create($user);

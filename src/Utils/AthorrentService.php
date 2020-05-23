@@ -3,28 +3,24 @@
 namespace Athorrent\Utils;
 
 use Athorrent\Ipc\JsonService;
+use Athorrent\Ipc\Socket\NamedPipeClient;
+use Athorrent\Ipc\Socket\UnixSocketClient;
+use Symfony\Component\Filesystem\Filesystem;
+use const DIRECTORY_SEPARATOR;
 
 class AthorrentService extends JsonService
 {
+    private $fs;
+
     private $userId;
 
-    public function __construct($userId)
+    public function __construct(Filesystem $fs, $userId)
     {
-        switch (strtolower(PHP_OS)) {
-            case 'unix':
-                $socketType = 'UnixSocket';
-                break;
+        $clientSocketClass = DIRECTORY_SEPARATOR === '\\' ? NamedPipeClient::class : UnixSocketClient::class;
 
-            case 'winnt':
-                $socketType = 'NamedPipe';
-                break;
+        parent::__construct($clientSocketClass, self::getPath($userId));
 
-            default:
-                throw new \RuntimeException('unsuported system: ' . PHP_OS);
-        }
-
-        parent::__construct('Athorrent\\Ipc\\Socket\\' . $socketType . 'Client', self::getPath($userId));
-
+        $this->fs = $fs;
         $this->userId = $userId;
         $this->ensureRunning();
     }
@@ -34,7 +30,7 @@ class AthorrentService extends JsonService
         return is_file(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->userId, $flag]));
     }
 
-    private function setFlag($flag)
+    private function setFlag($flag): void
     {
         touch(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->userId, $flag]));
     }
@@ -59,7 +55,7 @@ class AthorrentService extends JsonService
         return self::isUpdating();
     }
 
-    private function ensureRunning()
+    private function ensureRunning(): void
     {
         if ($this->isRunning()) {
             return;
@@ -76,66 +72,23 @@ class AthorrentService extends JsonService
         } while (!$this->isRunning());
     }
 
-    private function start()
+    private function start(): void
     {
         $logDir = implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'logs', $this->userId]);
         $logPath = $logDir . DIRECTORY_SEPARATOR . 'athorrentd.txt';
 
-        if (!file_exists($logDir)) {
-            mkdir($logDir, 0755, true);
-        }
+        $this->fs->mkdir($logDir, 0755);
 
-        if (is_file($logPath)) {
-            $nbLogs = count(scandir($logDir)) - 2;
-
-            if ($nbLogs) {
-                if (!@rename($logPath, $logDir . DIRECTORY_SEPARATOR . 'athorrentd.' . $nbLogs . '.txt')) {
-                    try {
-                        if ($this->call('ping') === 'pong') {
-                            $this->setFlag('running');
-                            return;
-                        }
-                    } catch (ServiceUnavailableException $exception) {
-                        exit('log file appears to be locked');
-                    }
-                }
-            }
-        }
-
-        $cwd = BIN_DIR;
-        $cmd = 'athorrent-backend --user ' . $this->userId;
-
-        switch (strtolower(PHP_OS)) {
-            case 'linux':
-                $cmd = '(cd ' . $cwd . ' && ./' . $cmd . ') > ' . $logPath . ' 2>&1 &';
-                break;
-
-            case 'winnt':
-                // If directory path contains slashes instead of antislashes
-                // then it doesn't work
-                $cwd = str_replace('/', '\\', $cwd);
-                $cmd = 'start /D ' . $cwd . ' /B ' . $cmd . ' > ' . $logPath;
-                break;
-        }
-
-        exec($cmd);
+        $process = Process::daemon(['athorrent-backend', '--user', $this->userId], BIN_DIR);
+        $process->start();
     }
 
-    private static function getPath($userId)
+    private static function getPath($userId): string
     {
-        switch (strtolower(PHP_OS)) {
-            case 'linux':
-                $path = BIN_DIR . '/sockets/' . $userId . '.sck';
-                break;
-
-            case 'winnt':
-                $path = '\\\\.\\pipe\\athorrentd\\sockets\\' . $userId . '.sck';
-                break;
-
-            default:
-                $path = null;
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            return '\\\\.\\pipe\\athorrentd\\sockets\\' . $userId . '.sck';
         }
 
-        return $path;
+        return BIN_DIR . '/sockets/' . $userId . '.sck';
     }
 }

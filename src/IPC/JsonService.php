@@ -2,6 +2,8 @@
 
 namespace Athorrent\Ipc;
 
+use RuntimeException;
+
 class JsonService
 {
     private $clientSocketType;
@@ -30,9 +32,9 @@ class JsonService
                 return $response->getData();
             }
 
-            throw new \Exception($response->getData());
+            throw new RuntimeException($response->getData());
         }
 
-        throw new \Exception('no response');
+        throw new RuntimeException('no response');
     }
 }

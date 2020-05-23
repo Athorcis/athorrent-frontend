@@ -20,12 +20,12 @@ class CacheCleaner
         $this->filesystem = new Filesystem('/');
     }
 
-    public function clearApplicationCache()
+    public function clearApplicationCache(): bool
     {
         return $this->cache->clear();
     }
 
-    protected function clearCacheDir($subdir)
+    protected function clearCacheDir($subdir): bool
     {
         $path = $this->cacheDir . DIRECTORY_SEPARATOR . $subdir;
 
@@ -36,12 +36,12 @@ class CacheCleaner
         return true;
     }
 
-    public function clearTwigCache()
+    public function clearTwigCache(): bool
     {
         return $this->clearCacheDir('twig');
     }
 
-    public function clearTranslationsCache()
+    public function clearTranslationsCache(): bool
     {
         return $this->clearCacheDir('translator');
     }

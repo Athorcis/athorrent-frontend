@@ -130,12 +130,12 @@ search:
         size: Taille
         age: Age
     age:
-        seconds: seconde|secondes
-        minutes: minute|minutes
-        hours: heure|heures
-        days: jour|jours
+        seconds: '{count, plural, one{seconde} other{secondes}}'
+        minutes: '{count, plural, one{minute} other{minutes}}'
+        hours: '{count, plural, one{heure} other{heures}}'
+        days: '{count, plural, one{jour} other{jours}}'
         months: mois
-        years: an|ans
+        years: '{count, plural, one{an} other{ans}}'
 
 sharings:
     title: Partages

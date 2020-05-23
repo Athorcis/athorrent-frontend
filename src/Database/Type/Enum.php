@@ -14,11 +14,6 @@ abstract class Enum extends Type
         return "ENUM('" . implode("', '", $this->getValues()) . "')";
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform)
-    {
-        return $value;
-    }
-
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (!in_array($value, $this->getValues())) {

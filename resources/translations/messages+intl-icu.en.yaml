@@ -131,12 +131,12 @@ search:
         size: Size
         age: Age
     age:
-        seconds: second|seconds
-        minutes: minute|minutes
-        hours: hour|hours
-        days: day|days
-        months: month|months
-        years: year|years
+        seconds: '{count, plural, one{second} other{seconds}}'
+        minutes: '{count, plural, one{minute} other{minutes}}'
+        hours: '{count, plural, one{hour} other{hours}}'
+        days: '{count, plural, one{day} other{days}}'
+        months: '{count, plural, one{month} other{months}}'
+        years: '{count, plural, one{year} other{years}}'
 
 sharings:
     title: Sharings

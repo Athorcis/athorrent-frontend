@@ -2,6 +2,7 @@
 
 namespace Athorrent\Utils;
 
+use Athorrent\Database\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +22,16 @@ class TorrentManagerConverter implements ParamConverterInterface
 
     public function apply(Request $request, ParamConverter $configuration)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $torrentManager = $this->torrentManagerFactory->create($user);
+        $token = $this->tokenStorage->getToken();
 
-        $request->attributes->set($configuration->getName(), $torrentManager);
+        if ($token) {
+            $user = $token->getUser();
+
+            if ($user instanceof User) {
+                $torrentManager = $this->torrentManagerFactory->create($user);
+                $request->attributes->set($configuration->getName(), $torrentManager);
+            }
+        }
     }
 
     public function supports(ParamConverter $configuration)
