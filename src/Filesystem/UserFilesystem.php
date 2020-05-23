@@ -25,11 +25,11 @@ class UserFilesystem extends SubFilesystem
      * @param string $path
      * @return string
      */
-    protected function buildRoot(User $owner, string $path)
+    protected function buildRoot(User $owner, string $path): string
     {
         $root = FILES_DIR . DIRECTORY_SEPARATOR . $owner->getId();
 
-        if (strlen($path) > 0) {
+        if ($path !== '') {
             $root .= DIRECTORY_SEPARATOR . $path;
         }
 

@@ -10,8 +10,12 @@ doctrine:
 
     orm:
         auto_mapping: false
-        metadata_cache_driver: apcu
-        query_cache_driver: apcu
+        metadata_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
+        query_cache_driver:
+            type: pool
+            pool: doctrine.system_cache_pool
         mappings:
             Athorrent:
                 type: annotation

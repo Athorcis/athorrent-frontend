@@ -4,7 +4,6 @@ namespace Athorrent\Controller;
 
 use Athorrent\Utils\Search\TorrentSearcher;
 use Athorrent\View\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,13 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class SearchController
 {
     /**
-     * @Method("GET")
-     * @Route("/")
+     * @Route("/", methods="GET")
      *
      * @param Request $request
      * @return View
      */
-    public function showSearch(Request $request)
+    public function showSearch(Request $request): View
     {
         $query = $request->query->get('q');
         $source = $request->query->get('source');

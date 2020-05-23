@@ -3,11 +3,12 @@
 namespace Athorrent\Command;
 
 use Athorrent\Security\UserManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateUserCommand extends \Symfony\Component\Console\Command\Command
+class CreateUserCommand extends Command
 {
     protected $userManager;
 

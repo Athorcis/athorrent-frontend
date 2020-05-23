@@ -3,16 +3,14 @@
 namespace Athorrent\Controller;
 
 use Athorrent\View\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController
 {
     /**
-     * @Method("GET")
-     * @Route("/")
+     * @Route("/", methods="GET")
      */
-    public function home()
+    public function home(): View
     {
         return new View();
     }

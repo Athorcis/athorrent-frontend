@@ -5,17 +5,16 @@ namespace Athorrent\Controller;
 use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-abstract class AbstractFileController extends Controller
+abstract class AbstractFileController extends AbstractController
 {
     protected $translator;
 
@@ -24,7 +23,7 @@ abstract class AbstractFileController extends Controller
         $this->translator = $translator;
     }
 
-    protected function getBreadcrumb(string $path)
+    protected function getBreadcrumb(string $path): array
     {
         $breadcrumb = [$this->translator->trans('files.root') => ''];
 
@@ -41,16 +40,15 @@ abstract class AbstractFileController extends Controller
     }
 
     /**
-     * @Method("GET")
-     * @Route("/", options={"expose"=true})
+     * @Route("/", methods="GET", options={"expose"=true})
      * @ParamConverter("dirEntry")
      *
      * @param UserFilesystemEntry $dirEntry
      * @return View
      */
-    public function listFiles(UserFilesystemEntry $dirEntry)
+    public function listFiles(UserFilesystemEntry $dirEntry): View
     {
-        if ($dirEntry->isRoot() && $this instanceof FileController) {
+        if ($this instanceof FileController && $dirEntry->isRoot()) {
             $title = $this->translator->trans('files.title');
         } else {
             $title = $dirEntry->getName();
@@ -69,7 +67,7 @@ abstract class AbstractFileController extends Controller
         ], 'listFiles');
     }
 
-    protected function sendFile(Request $request, UserFilesystemEntry $entry, $contentDisposition)
+    protected function sendFile(Request $request, UserFilesystemEntry $entry, $contentDisposition): BinaryFileResponse
     {
         $response = $entry->toBinaryFileResponse();
 
@@ -85,42 +83,39 @@ abstract class AbstractFileController extends Controller
     }
 
     /**
-     * @Method("GET")
-     * @Route("/open")
-     * @ParamConverter("entry", options={"path": true, "file": true})
-     *
-     * @param Request $request
-     * @param UserFilesystemEntry $entry
-     * @return View
-     */
-    public function openFile(Request $request, UserFilesystemEntry $entry)
-    {
-        return $this->sendFile($request, $entry, 'inline');
-    }
-
-    /**
-     * @Method("GET")
-     * @Route("/download")
+     * @Route("/open", methods="GET")
      * @ParamConverter("entry", options={"path": true, "file": true})
      *
      * @param Request $request
      * @param UserFilesystemEntry $entry
      * @return BinaryFileResponse
      */
-    public function downloadFile(Request $request, UserFilesystemEntry $entry)
+    public function openFile(Request $request, UserFilesystemEntry $entry): BinaryFileResponse
+    {
+        return $this->sendFile($request, $entry, 'inline');
+    }
+
+    /**
+     * @Route("/download", methods="GET")
+     * @ParamConverter("entry", options={"path": true, "file": true})
+     *
+     * @param Request $request
+     * @param UserFilesystemEntry $entry
+     * @return BinaryFileResponse
+     */
+    public function downloadFile(Request $request, UserFilesystemEntry $entry): BinaryFileResponse
     {
         return $this->sendFile($request, $entry,'attachment');
     }
 
     /**
-     * @Method("GET")
-     * @Route("/play")
+     * @Route("/play", methods="GET")
      * @ParamConverter("entry", options={"path": true, "file": true})
      *
      * @param UserFilesystemEntry $entry
      * @return View
      */
-    public function playFile(UserFilesystemEntry $entry)
+    public function playFile(UserFilesystemEntry $entry): View
     {
         if ($entry->isPlayable()) {
             if ($entry->isAudio()) {
@@ -135,7 +130,7 @@ abstract class AbstractFileController extends Controller
         }
 
         $path = $entry->getPath();
-        $breadcrumb = self::getBreadcrumb($path);
+        $breadcrumb = $this->getBreadcrumb($path);
 
         return new View([
             'name' => $entry->getName(),
@@ -147,21 +142,20 @@ abstract class AbstractFileController extends Controller
     }
 
     /**
-     * @Method("GET")
-     * @Route("/display")
+     * @Route("/display", methods="GET")
      * @ParamConverter("entry", options={"path": true, "file": true})
      *
      * @param UserFilesystemEntry $entry
      * @return View
      */
-    public function displayFile(UserFilesystemEntry $entry)
+    public function displayFile(UserFilesystemEntry $entry): View
     {
         if (!$entry->isDisplayable()) {
             throw new UnsupportedMediaTypeHttpException('error.notDisplayable');
         }
 
         $relativePath = $entry->getPath();
-        $breadcrumb = self::getBreadcrumb($relativePath);
+        $breadcrumb = $this->getBreadcrumb($relativePath);
 
         $data = [
             'name' => $entry->getName(),
@@ -178,15 +172,14 @@ abstract class AbstractFileController extends Controller
     }
 
     /**
-     * @Method("DELETE")
-     * @Route("/", options={"expose"=true})
+     * @Route("/", methods="DELETE", options={"expose"=true})
      * @ParamConverter("entry", options={"path": true})
      *
      * @param UserFilesystemEntry $entry
      * @param SharingRepository $sharingRepository
      * @return array
      */
-    public function removeFile(UserFilesystemEntry $entry, SharingRepository $sharingRepository)
+    public function removeFile(UserFilesystemEntry $entry, SharingRepository $sharingRepository): array
     {
         if ($entry->isRoot()) {
             throw new NotFoundHttpException();

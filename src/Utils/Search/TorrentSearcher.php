@@ -7,7 +7,7 @@ use GuzzleHttp\Promise;
 
 class TorrentSearcher
 {
-    private function getCrawlers($source)
+    private function getCrawlers($source): array
     {
         $crawlers = [
             'tpb' => new ThePirateBayCrawler('tpb'),
@@ -17,14 +17,16 @@ class TorrentSearcher
 
         if ($source === 'all') {
             return $crawlers;
-        } elseif (isset($crawlers[$source])) {
+        }
+
+        if (isset($crawlers[$source])) {
             return [$crawlers[$source]];
         }
 
         return [];
     }
 
-    public function search($query, $source)
+    public function search($query, $source): array
     {
         $client = new Client();
         $crawlers = $this->getCrawlers($source);

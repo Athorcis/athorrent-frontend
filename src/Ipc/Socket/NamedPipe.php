@@ -6,11 +6,11 @@ abstract class NamedPipe implements SocketInterface
 {
     protected $namedPipe;
 
-    public function shutdown()
+    public function shutdown(): void
     {
     }
 
-    public function close()
+    public function close(): void
     {
         fclose($this->namedPipe);
     }

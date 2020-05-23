@@ -3,7 +3,10 @@
 namespace Athorrent\Routing;
 
 use Doctrine\Common\Annotations\Reader;
-use Sensio\Bundle\FrameworkExtraBundle\Routing\AnnotatedRouteControllerLoader;
+use ReflectionClass;
+use ReflectionMethod;
+use Symfony\Bundle\FrameworkBundle\Routing\AnnotatedRouteControllerLoader;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class AnnotationClassLoader extends AnnotatedRouteControllerLoader
@@ -22,12 +25,12 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
 
     /**
      * @param RouteCollection $collection
-     * @param \Symfony\Component\Routing\Annotation\Route $annot
+     * @param Route $annot
      * @param array $globals
-     * @param \ReflectionClass $class
-     * @param \ReflectionMethod $method
+     * @param ReflectionClass $class
+     * @param ReflectionMethod $method
      */
-    protected function addRouteWithoutLocale(RouteCollection $collection, $annot, $globals, \ReflectionClass $class, \ReflectionMethod $method)
+    protected function addRouteWithoutLocale(RouteCollection $collection, $annot, $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $annot->setDefaults(array_replace($annot->getDefaults(), [
             '_locale' => $this->defaultLocale
@@ -38,12 +41,12 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
 
     /**
      * @param RouteCollection $collection
-     * @param \Symfony\Component\Routing\Annotation\Route $annot
+     * @param Route $annot
      * @param array $globals
-     * @param \ReflectionClass $class
-     * @param \ReflectionMethod $method
+     * @param ReflectionClass $class
+     * @param ReflectionMethod $method
      */
-    protected function addRouteWithLocale(RouteCollection $collection, $annot, $globals, \ReflectionClass $class, \ReflectionMethod $method)
+    protected function addRouteWithLocale(RouteCollection $collection, $annot, $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $annot->setName($annot->getName() . '|i18n');
 
@@ -55,12 +58,12 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
 
     /**
      * @param RouteCollection $collection
-     * @param \Symfony\Component\Routing\Annotation\Route $annot
+     * @param Route $annot
      * @param array $globals
-     * @param \ReflectionClass $class
-     * @param \ReflectionMethod $method
+     * @param ReflectionClass $class
+     * @param ReflectionMethod $method
      */
-    protected function addRoute(RouteCollection $collection, $annot, $globals, \ReflectionClass $class, \ReflectionMethod $method)
+    protected function addRoute(RouteCollection $collection, $annot, $globals, ReflectionClass $class, ReflectionMethod $method)
     {
         if ($annot->getName() === null) {
             $annot->setName($this->getDefaultRouteName($class, $method));
@@ -75,7 +78,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
         $this->addRouteWithoutLocale($collection, $annot, $globals, $class, $method);
     }
 
-    protected function getDefaultRouteName(\ReflectionClass $class, \ReflectionMethod $method)
+    protected function getDefaultRouteName(ReflectionClass $class, ReflectionMethod $method)
     {
         return $method->getName();
     }

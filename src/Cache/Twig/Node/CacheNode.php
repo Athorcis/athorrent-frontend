@@ -3,12 +3,17 @@
 namespace Athorrent\Cache\Twig\Node;
 
 use Athorrent\Cache\Twig\CacheExtension;
+use Twig\Compiler;
+use Twig\Environment;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Node;
+use function version_compare;
 
-class CacheNode extends \Twig_Node
+class CacheNode extends Node
 {
     private static $cacheCount = 1;
 
-    public function __construct(\Twig_Node_Expression $annotation, \Twig_Node_Expression $keyInfo, \Twig_Node $body, $lineno, $tag = null)
+    public function __construct(AbstractExpression $annotation, AbstractExpression $keyInfo, Node $body, $lineno, $tag = null)
     {
         parent::__construct([
             'key_info' => $keyInfo,
@@ -20,11 +25,11 @@ class CacheNode extends \Twig_Node
     /**
      * {@inheritDoc}
      */
-    public function compile(\Twig_Compiler $compiler)
+    public function compile(Compiler $compiler)
     {
         $i = self::$cacheCount++;
 
-        if (\version_compare(\Twig_Environment::VERSION, '1.26.0', '>=')) {
+        if (version_compare(Environment::VERSION, '1.26.0', '>=')) {
             $extension = CacheExtension::class;
         } else {
             $extension = 'phpfastcache_cache';

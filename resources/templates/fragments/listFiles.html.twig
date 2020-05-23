@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 {% for file in files %}
     {% if file.isCachable %}
         {% cache 'file' file %}
@@ -14,4 +14,4 @@
         </td>
     </tr>
 {% endfor %}
-{% endspaceless %}
+{% endapply %}

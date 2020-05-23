@@ -7,30 +7,41 @@
 
     "type": "project",
 
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Athorcis/phpfastcache-bundle"
+        }
+    ],
+
     "require": {
-        "php": "~7.1",
-        "twig/twig": "~2.4.0",
-        "doctrine/orm": "~2.6.0",
-        "doctrine/doctrine-bundle": "~1.9.0",
+        "php": "~7.3",
+        "ext-fileinfo": "*",
+        "ext-json": "*",
+        "ext-sockets": "*",
+        "doctrine/orm": "~2.7.2",
+        "doctrine/doctrine-bundle": "~2.0.8",
         "gabrielelana/byte-units": "~0.5.0",
-        "guzzlehttp/guzzle": "~6.3.0",
-        "phpfastcache/phpfastcache": "~7.0.0",
-        "phpfastcache/phpfastcache-bundle": "~3.0.0",
-        "sensio/framework-extra-bundle": "~5.1.0",
-        "symfony/css-selector": "~4.1.0",
-        "symfony/dom-crawler": "~4.1.0",
-        "symfony/proxy-manager-bridge": "~4.1.0",
-        "symfony/translation": "~4.1.0",
-        "symfony/yaml": "~4.1.0",
-        "symfony/monolog-bundle": "~3.2.0",
-        "symfony/security-bundle": "~4.1.0",
-        "symfony/twig-bundle": "~4.1.0"
+        "guzzlehttp/guzzle": "~6.5.3",
+        "phpfastcache/phpfastcache": "~7.1.1",
+        "effiana/phpfastcache-bundle": "~3.0.3",
+        "sensio/framework-extra-bundle": "~5.5.5",
+        "symfony/css-selector": "~5.0.8",
+        "symfony/dom-crawler": "~5.0.8",
+        "symfony/process": "~5.0.8",
+        "symfony/translation": "~5.0.8",
+        "symfony/yaml": "~5.0.8",
+        "symfony/monolog-bundle": "~3.5.0",
+        "symfony/security-bundle": "~5.0.8",
+        "symfony/twig-bundle": "~5.0.8",
+        "twig/twig": "~3.0.3"
     },
 
     "require-dev": {
-        "symfony/dotenv": "~4.1.0",
-        "symfony/stopwatch": "~4.1.0",
-        "symfony/web-profiler-bundle": "~4.1.0"
+        "roave/security-advisories": "dev-master",
+        "symfony/dotenv": "~5.0.8",
+        "symfony/stopwatch": "~5.0.8",
+        "symfony/web-profiler-bundle": "~5.0.8"
     },
 
     "autoload": {

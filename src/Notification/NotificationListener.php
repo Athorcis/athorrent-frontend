@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -25,7 +25,7 @@ class NotificationListener implements EventSubscriberInterface
         return [KernelEvents::VIEW => 'onKernelView'];
     }
 
-    public function onKernelView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(ViewEvent $event): void
     {
         $request = $event->getRequest();
         $result = $event->getControllerResult();
@@ -61,7 +61,7 @@ class NotificationListener implements EventSubscriberInterface
         }
     }
 
-    public function handleNotification(Notification $notification, Request $request)
+    public function handleNotification(Notification $notification, Request $request): RedirectResponse
     {
         $flashBag = $this->getFlashBag($request);
 

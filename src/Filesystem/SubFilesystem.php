@@ -79,8 +79,7 @@ class SubFilesystem extends AbstractFilesystem
      */
     public function getPath(string $internalPath): string
     {
-        $path = str_replace($this->root, '', $internalPath);
-        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+        $path = str_replace([$this->root, DIRECTORY_SEPARATOR], ['', '/'], $internalPath);
 
         return ltrim($path, '/');
     }

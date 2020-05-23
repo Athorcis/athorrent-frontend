@@ -2,7 +2,8 @@
 
 namespace Athorrent\View;
 
-use Symfony\Component\Translation\TranslatorInterface;
+
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class View
 {
@@ -16,39 +17,39 @@ class View
         $this->data = $data;
     }
 
-    public function has($key)
+    public function has($key): bool
     {
         return isset($this->data[$key]);
     }
 
-    public function set($key, $value)
+    public function set($key, $value): void
     {
         $this->data[$key] = $value;
     }
 
-    public function setJsVar($key, $value)
+    public function setJsVar($key, $value): void
     {
         $this->data['js_vars'][$key] = $value;
     }
 
-    public function setJsVars($vars)
+    public function setJsVars($vars): void
     {
         foreach ($vars as $key => $value) {
             $this->data['js_vars'][$key] = $value;
         }
     }
 
-    public function addString($id)
+    public function addString($id): void
     {
         $this->data['_strings'][] = $id;
     }
 
-    public function addTemplate($name)
+    public function addTemplate($name): void
     {
         $this->data['_templates'][] = $name;
     }
 
-    public function render(TranslatorInterface $translator, Renderer $renderer)
+    public function render(TranslatorInterface $translator, Renderer $renderer): string
     {
         $name = $this->name;
 

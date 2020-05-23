@@ -2,7 +2,10 @@
 
 namespace Athorrent\Security\Nonce;
 
-class NonceManager extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+
+class NonceManager extends AbstractExtension
 {
     private $nonce;
 
@@ -23,7 +26,7 @@ class NonceManager extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('csp_nonce', [$this, 'getNonce']),
+            new TwigFunction('csp_nonce', [$this, 'getNonce']),
         ];
     }
 }

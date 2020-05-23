@@ -5,11 +5,12 @@ namespace Athorrent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class ExceptionListener implements EventSubscriberInterface
 {
@@ -17,7 +18,7 @@ class ExceptionListener implements EventSubscriberInterface
 
     private $twig;
 
-    public function __construct(TranslatorInterface $translator, \Twig_Environment $twig)
+    public function __construct(TranslatorInterface $translator, Environment $twig)
     {
         $this->translator = $translator;
         $this->twig = $twig;
@@ -28,13 +29,13 @@ class ExceptionListener implements EventSubscriberInterface
         return [KernelEvents::EXCEPTION => 'onKernelException'];
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event): void
     {
         if ($GLOBALS['debug']) {
             return;
         }
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getStatusCode();

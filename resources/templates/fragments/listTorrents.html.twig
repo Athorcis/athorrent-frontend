@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 {% for torrent in torrents %}
     <div class="torrent {% if loop.index is odd %}torrent-odd{% else %}torrent-even{% endif %}" id="torrent-{{ torrent.hash }}">
         <h2 class="torrent-header">
@@ -64,4 +64,4 @@
     <div class="alert alert-info" role="alert">{{ 'torrents.none'|trans }}</div>
     {% endif %}
 {% endfor %}
-{% endspaceless %}
+{% endapply %}

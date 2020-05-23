@@ -7,9 +7,8 @@ use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\PaginatedView;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/user/sharings", name="sharings")
  */
-class SharingController extends Controller
+class SharingController extends AbstractController
 {
     protected $entityManager;
 
@@ -30,26 +29,24 @@ class SharingController extends Controller
     }
 
     /**
-     * @Method("GET")
-     * @Route("/")
+     * @Route("/", methods="GET")
      *
      * @param Request $request
      * @return PaginatedView
      */
-    public function listSharings(Request $request)
+    public function listSharings(Request $request): PaginatedView
     {
         return new PaginatedView($request, $this->sharingRepository, 10, ['user', $this->getUser()]);
     }
 
     /**
-     * @Method("POST")
-     * @Route("/", options={"expose"=true})
+     * @Route("/", methods="POST", options={"expose"=true})
      * @ParamConverter("entry", options={"path": true})
      *
      * @param UserFilesystemEntry $entry
      * @return array
      */
-    public function addSharing(UserFilesystemEntry $entry)
+    public function addSharing(UserFilesystemEntry $entry): array
     {
         if (!$entry->exists()) {
             throw new FileNotFoundException();
@@ -63,15 +60,14 @@ class SharingController extends Controller
     }
 
     /**
-     * @Method("DELETE")
-     * @Route("/{token}", options={"expose"=true})
+     * @Route("/{token}", methods="DELETE", options={"expose"=true})
      *
      * @param string $token
      * @return array
      *
      * @throws \Doctrine\ORM\ORMException
      */
-    public function removeSharing(string $token)
+    public function removeSharing(string $token): array
     {
         $this->sharingRepository->delete($token);
         return [];

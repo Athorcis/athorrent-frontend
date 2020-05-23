@@ -16,7 +16,7 @@ class LoginListener implements EventSubscriberInterface
         $this->entityManager = $entityManager;
     }
 
-    public function onInteractiveLogin(InteractiveLoginEvent $event)
+    public function onInteractiveLogin(InteractiveLoginEvent $event): void
     {
         $user = $event->getAuthenticationToken()->getUser();
         $user->setConnectionDateTime(new \DateTime());

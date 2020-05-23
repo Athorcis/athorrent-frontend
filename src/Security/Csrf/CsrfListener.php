@@ -5,8 +5,8 @@ namespace Athorrent\Security\Csrf;
 use Athorrent\Notification\Notification;
 use Athorrent\View\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -21,11 +21,11 @@ class CsrfListener implements EventSubscriberInterface
         $this->tokenManager = $tokenManager;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
-        if ($request->isMethodSafe(false)) {
+        if ($request->isMethodSafe()) {
             $csrfToken = $this->tokenManager->getToken('main');
         } else {
             $previousCsrfToken = new CsrfToken('main', $request->get('csrfToken'));
@@ -40,7 +40,7 @@ class CsrfListener implements EventSubscriberInterface
         $request->attributes->set('_csrfToken', $csrfToken);
     }
 
-    public function onKernelView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(ViewEvent $event): void
     {
         $result = $event->getControllerResult();
 
@@ -55,7 +55,7 @@ class CsrfListener implements EventSubscriberInterface
             $result->setJsVar('csrfToken', $csrfToken->getValue());
         } elseif ($result instanceof Notification) {
             return;
-        } elseif (!$request->isMethodSafe(false)) {
+        } elseif (!$request->isMethodSafe()) {
             $result['csrfToken'] = $csrfToken->getValue();
         }
 

@@ -3,7 +3,7 @@
 namespace Athorrent\View;
 
 use Symfony\Component\HttpFoundation\RequestStack;
-use Twig_Environment;
+use Twig\Environment;
 
 class Renderer
 {
@@ -11,7 +11,7 @@ class Renderer
 
     private $requestStack;
 
-    public function __construct(Twig_Environment $twig, RequestStack $requestStack)
+    public function __construct(Environment $twig, RequestStack $requestStack)
     {
         $this->twig = $twig;
         $this->requestStack = $requestStack;
@@ -22,22 +22,22 @@ class Renderer
         return $this->requestStack->getCurrentRequest()->attributes->get('_action');
     }
 
-    protected function renderTemplate($id, array $parameters)
+    protected function renderTemplate($id, array $parameters): string
     {
         return $this->twig->render($id . '.html.twig', $parameters);
     }
 
-    public function renderFragment($name, array $parameters = [])
+    public function renderFragment($name, array $parameters = []): string
     {
         return $this->renderTemplate('fragments/' . $name, $parameters);
     }
 
-    public function renderPage($name, array $parameters = [])
+    public function renderPage($name, array $parameters = []): string
     {
         return $this->renderTemplate('pages/' . $name, $parameters);
     }
 
-    public function render($name, array $parameters = [])
+    public function render($name, array $parameters = []): string
     {
         $request = $this->requestStack->getCurrentRequest();
 

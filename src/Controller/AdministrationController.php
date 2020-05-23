@@ -3,7 +3,6 @@
 namespace Athorrent\Controller;
 
 use Athorrent\View\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -12,10 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdministrationController
 {
     /**
-     * @Method("GET")
-     * @Route("/")
+     * @Route("/", methods="GET")
      */
-    public function listAdministrationModules()
+    public function listAdministrationModules(): View
     {
         return new View([], 'administration');
     }

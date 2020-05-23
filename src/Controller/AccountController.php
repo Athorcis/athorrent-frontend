@@ -2,20 +2,20 @@
 
 namespace Athorrent\Controller;
 
+use Athorrent\Database\Entity\User;
 use Athorrent\Notification\ErrorNotification;
 use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
 use Athorrent\View\View;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/user/account", name="account")
  */
-class AccountController extends Controller
+class AccountController extends AbstractController
 {
     protected $userManager;
 
@@ -28,23 +28,22 @@ class AccountController extends Controller
     }
 
     /**
-     * @Method("GET")
-     * @Route("/")
+     * @Route("/", methods="GET")
      */
-    public function editAccount()
+    public function editAccount(): View
     {
         return new View();
     }
 
     /**
-     * @Method("PUT")
-     * @Route("/")
+     * @Route("/", methods="PUT")
      *
      * @param Request $request
      * @return ErrorNotification|SuccessNotification
      */
     public function saveAccount(Request $request)
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         $username = $request->request->get('username');

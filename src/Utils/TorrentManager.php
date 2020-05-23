@@ -4,6 +4,7 @@ namespace Athorrent\Utils;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Filesystem\FileUtils;
+use Symfony\Component\Filesystem\Filesystem;
 
 class TorrentManager
 {
@@ -16,18 +17,18 @@ class TorrentManager
      * @param User $user
      * @throws \Exception
      */
-    public function __construct(User $user)
+    public function __construct(Filesystem $fs, User $user)
     {
         $this->user = $user;
-        $this->service = new AthorrentService($user->getId());
+        $this->service = new AthorrentService($fs, $user->getId());
     }
 
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function getTorrentsDirectory()
+    public function getTorrentsDirectory(): string
     {
         return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->user->getId();
     }
@@ -92,8 +93,8 @@ class TorrentManager
         $paths = $this->service->call('getPaths');
 
         if (DIRECTORY_SEPARATOR !== '/') {
-            for ($i = 0, $size = count($paths); $i < $size; ++$i) {
-                $paths[$i] = str_replace('/', DIRECTORY_SEPARATOR, $paths[$i]);
+            foreach ($paths as $index => $path) {
+                $paths[$index] = str_replace('/', DIRECTORY_SEPARATOR, $path);
             }
         }
 

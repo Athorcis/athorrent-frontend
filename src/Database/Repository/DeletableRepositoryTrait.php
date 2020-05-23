@@ -9,18 +9,18 @@ trait DeletableRepositoryTrait
     /**
      * @return EntityManagerInterface
      */
-    abstract function getEntityManager();
+    abstract protected function getEntityManager();
 
     /**
      * @return string
      */
-    abstract function getEntityName();
+    abstract protected function getEntityName();
 
     /**
      * @param mixed $id
      * @throws \Doctrine\ORM\ORMException
      */
-    public function delete($id)
+    public function delete($id): void
     {
         $em = $this->getEntityManager();
         $entity = $em->getReference($this->getEntityName(), $id);

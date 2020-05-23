@@ -4,9 +4,9 @@ namespace Athorrent\Notification;
 
 class Notification
 {
-    const SUCCESS = 'success';
-    const WARNING = 'warning';
-    const ERROR = 'error';
+    public const SUCCESS = 'success';
+    public const WARNING = 'warning';
+    public const ERROR = 'error';
 
     private $type;
 

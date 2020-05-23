@@ -9,7 +9,7 @@ use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
 use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,29 +29,26 @@ class UserController
     }
 
     /**
-     * @Method("GET")
-     * @Route("/")
+     * @Route("/", methods="GET")
      *
      * @param Request $request
      * @return PaginatedView
      */
-    public function listUsers(Request $request)
+    public function listUsers(Request $request): PaginatedView
     {
         return new PaginatedView($request, $this->userRepository, 10);
     }
 
     /**
-     * @Method("GET")
-     * @Route("/add")
+     * @Route("/add", methods="GET")
      */
-    public function addUser()
+    public function addUser(): View
     {
         return new View(['roleList' => UserRole::$values]);
     }
 
     /**
-     * @Method("POST")
-     * @Route("/")
+     * @Route("/", methods="POST")
      *
      * @param Request $request
      * @return ErrorNotification|SuccessNotification
@@ -78,20 +75,19 @@ class UserController
     }
 
     /**
-     * @Method("DELETE")
-     * @Route("/{userId}", requirements={"userId"="\d+"}, options={"expose"=true})
+     * @Route("/{userId}", methods="DELETE", requirements={"userId"="\d+"}, options={"expose"=true})
      *
      * @param int $userId
      * @return array
      *
      * @throws \Exception
      */
-    public function removeUser(int $userId)
+    public function removeUser(int $userId): array
     {
         if ($this->userManager->deleteUserById($userId)) {
             return [];
         }
 
-        throw new \Exception('error.cannotRemoveUser');
+        throw new RuntimeException('error.cannotRemoveUser');
     }
 }

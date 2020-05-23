@@ -6,6 +6,7 @@ use Athorrent\Cache\KeyGenerator\KeyGeneratorInterface;
 use Phpfastcache\Bundle\DataCollector\CacheCollector;
 use Phpfastcache\Bundle\Twig\CacheExtension\CacheProviderInterface;
 use Phpfastcache\Bundle\Twig\CacheExtension\CacheStrategyInterface;
+use Twig\Source;
 
 class GenerationalCacheStrategy implements CacheStrategyInterface
 {
@@ -17,7 +18,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
     /**
      * @var array
      */
-    private $config = [];
+    private $config;
 
     /**
      * @var CacheProviderInterface
@@ -45,7 +46,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
     /**
      * {@inheritDoc}
      */
-    public function fetchBlock($key, \Twig_Source $sourceContext)
+    public function fetchBlock($key, Source $sourceContext)
     {
         $generationTimeMc = microtime(true);
         $cacheData = $this->cache->fetch($key);
@@ -81,7 +82,7 @@ class GenerationalCacheStrategy implements CacheStrategyInterface
     /**
      * {@inheritDoc}
      */
-    public function saveBlock($key, $block, $generationTime, \Twig_Source $sourceContext)
+    public function saveBlock($key, $block, $generationTime, Source $sourceContext)
     {
         $unprefixedKey = substr($key, strlen($this->keyPrefix));
 

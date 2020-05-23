@@ -6,8 +6,8 @@ use Athorrent\View\View;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
@@ -37,7 +37,7 @@ class RoutingListener implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
         $this->initAjaxRouteDescriptors($request);
@@ -53,7 +53,7 @@ class RoutingListener implements EventSubscriberInterface
         }
     }
 
-    protected function initAjaxRouteDescriptors(Request $request)
+    protected function initAjaxRouteDescriptors(Request $request): void
     {
         $locale = $request->getLocale();
         $ajaxRouteDescriptorsKey = 'ajax_route_descriptors_' . $locale;
@@ -94,7 +94,7 @@ class RoutingListener implements EventSubscriberInterface
         $this->routeDescriptors = $ajaxRouteDescriptors;
     }
 
-    public function onKernelView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(ViewEvent $event): void
     {
         $result = $event->getControllerResult();
         $request = $event->getRequest();

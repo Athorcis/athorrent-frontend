@@ -30,12 +30,12 @@ class UserHasRole
         $this->role = $role;
     }
 
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function getRole()
+    public function getRole(): string
     {
         return $this->role;
     }

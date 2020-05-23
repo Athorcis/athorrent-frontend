@@ -14,8 +14,11 @@ class JsonRequest
         $this->parameters = $parameters;
     }
 
-    public function toRawRequest()
+    public function toRawRequest(): string
     {
-        return json_encode(array('action' => $this->action, 'parameters' => $this->parameters), JSON_FORCE_OBJECT) . "\n";
+        return json_encode(
+                ['action' => $this->action, 'parameters' => $this->parameters],
+                JSON_THROW_ON_ERROR | JSON_FORCE_OBJECT
+            ). "\n";
     }
 }
