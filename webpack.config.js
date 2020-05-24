@@ -3,7 +3,7 @@
 const { resolve } = require('path');
 const yargs = require('yargs');
 const webpack = require('webpack');
-const CleanPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SuppressChunksPlugin = require('suppress-chunks-webpack-plugin').default;
@@ -39,7 +39,9 @@ function buildWebpackConfig(config) {
         publicPath: '/'
     }));
 
-    plugins.push(new CleanPlugin(['web'], { exclude: ['index.php', 'robots.txt']}));
+    plugins.push(new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: ['**/*', '!index.php', '!robots.txt']
+    }));
 
     plugins.push(new StyleLintPlugin({ context: 'resources/stylesheets' }));
 
