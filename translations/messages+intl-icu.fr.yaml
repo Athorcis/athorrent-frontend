@@ -65,7 +65,7 @@ home:
     openSource:
         title: Logiciel libre
         content: |
-            Vous aimez le logiciel libre? Nous aussi, c'est pour cette raison que nous avons décidé de publier le code source d'Athorrent sur %a_start%GitHub%a_end%, pour que vous puissiez l'utiliser sur votre propre serveur ou même tout simplement contribuer au projet.
+            Vous aimez le logiciel libre? Nous aussi, c'est pour cette raison que nous avons décidé de publier le code source d'Athorrent sur {a_start}GitHub{a_end}, pour que vous puissiez l'utiliser sur votre propre serveur ou même tout simplement contribuer au projet.
 
 files:
     title: Fichiers

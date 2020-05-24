@@ -65,7 +65,7 @@ home:
     openSource:
         title: Open source
         content: |
-            Do you like open source? So do we, that's why we decided to publish the source code of Athorrent on %a_start%GitHub%a_end%,
+            Do you like open source? So do we, that's why we decided to publish the source code of Athorrent on {a_start}GitHub{a_end},
             so that you can use it on your own server or just contribute to the project.
 
 files:

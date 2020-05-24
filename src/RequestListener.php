@@ -40,7 +40,7 @@ class RequestListener implements EventSubscriberInterface
                 $result->addTemplate('modal');
 
                 $vars = [
-                    'debug' => $GLOBALS['debug'],
+                    'debug' => (bool)$_SERVER['APP_DEBUG'],
                     'staticHost' => $_ENV['STATIC_HOST']
                 ];
 
@@ -74,7 +74,7 @@ class RequestListener implements EventSubscriberInterface
 
             // Symfony 4.1 doesn't add the 'unsafe-eval
             // required by the web profiler to work
-            if ($GLOBALS['debug']) {
+            if ($_SERVER['APP_DEBUG']) {
                 $cspScriptSrc .= " 'unsafe-eval'";
             }
 

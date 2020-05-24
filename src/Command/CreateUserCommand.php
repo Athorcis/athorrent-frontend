@@ -44,5 +44,7 @@ class CreateUserCommand extends Command
         $role = $input->getArgument('role');
 
         $this->userManager->createUser($username, $password, $role);
+
+        return 0;
     }
 }
