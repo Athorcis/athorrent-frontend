@@ -19,6 +19,10 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        if ($_SERVER['APP_DEBUG']) {
+            dump($exception);
+            exit(0);
+        }
         $notification = new ErrorNotification('error.loginFailure');
         return $this->notificationListener->handleNotification($notification, $request);
     }

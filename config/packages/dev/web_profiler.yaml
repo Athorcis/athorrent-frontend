@@ -1,4 +1,6 @@
 web_profiler:
-    toolbar:              true
-    intercept_redirects:  false
-    excluded_ajax_paths:  ^/(app(_[\\w]+)?\\.php/)?_wdt
+    toolbar: true
+    intercept_redirects: false
+
+framework:
+    profiler: { only_exceptions: false }

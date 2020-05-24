@@ -31,7 +31,7 @@ class ExceptionListener implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        if ($GLOBALS['debug']) {
+        if ($_SERVER['APP_DEBUG']) {
             return;
         }
 

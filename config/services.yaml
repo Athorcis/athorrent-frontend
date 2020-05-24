@@ -1,8 +1,11 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.locales: [fr, en]
-    app.public_dir: '%kernel.project_dir%/web'
+    app.public_dir: '%kernel.project_dir%/public'
 
 services:
     # default configuration for services in *this* file
@@ -10,9 +13,26 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         public: false       # Allows optimizing the container by removing unused services; this also means
-                            # fetching services directly from the container via $container->get() won't work.
-                            # The best practice is to be explicit about your dependencies anyway.
+        # fetching services directly from the container via $container->get() won't work.
+        # The best practice is to be explicit about your dependencies anyway.
 
+        bind:
+            $publicDir: '%app.public_dir%'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    Athorrent\:
+        resource: '../src/*'
+        exclude: '../src/{Cache,Database/Entity,DependencyInjection,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    Athorrent\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
     Athorrent\Routing\Router:
         decorates: router
         arguments:
@@ -29,21 +49,6 @@ services:
             $parameters: null
             $defaultLocale: '%kernel.default_locale%'
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    Athorrent\:
-        resource: '../src/*'
-        exclude: '../src/{Cache,Entity,Filesystem,Ipc,Migrations,Routing,Tests,Tools,Utils,ExceptionListener.php,Kernel.php}'
-
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    Athorrent\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-
     Athorrent\Cache\CacheCleaner:
         arguments: ['@simple_cache', '%kernel.cache_dir%']
 
@@ -54,18 +59,6 @@ services:
     Athorrent\Database\Repository\UserRepository:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments: [Athorrent\Database\Entity\User]
-
-    Athorrent\Filesystem\FilesystemFactory:
-
-    Athorrent\Filesystem\FilesystemConverter:
-        lazy: true
-        tags:
-            - { name: request.param_converter, priority: 0 }
-
-    Athorrent\Utils\TorrentManagerConverter:
-        lazy: true
-        tags:
-            - { name: request.param_converter, priority: 0 }
 
     Athorrent\Routing\AnnotationDirectoryLoader:
         tags: [routing.loader]
@@ -78,12 +71,6 @@ services:
     Athorrent\Routing\RoutingListener:
         arguments: ['@simple_cache']
         tags: [kernel.event_subscriber]
-
-    Athorrent\Utils\TorrentManagerFactory:
-
-    Athorrent\View\TwigHelperExtension:
-        arguments: ['%app.public_dir%']
-        tags: [twig.extension]
 
     twig.cache.strategy:
         class: Athorrent\Cache\Twig\CacheStrategy\GenerationalCacheStrategy

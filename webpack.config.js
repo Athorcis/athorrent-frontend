@@ -49,7 +49,7 @@ function buildWebpackConfig(config) {
         entry: config.entries,
 
         output: {
-            path: resolve(__dirname, 'web'),
+            path: resolve(__dirname, 'public'),
             publicPath: '/',
 
             filename: dev ? '[name].js' : '[name].[chunkhash].js'
