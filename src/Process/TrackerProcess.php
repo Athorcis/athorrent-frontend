@@ -5,6 +5,7 @@ namespace Athorrent\Process;
 use Athorrent\Process\Command\TrackProcessCommand;
 use RuntimeException;
 use function array_merge;
+use function array_shift;
 use function json_encode;
 use function preg_match;
 use const JSON_THROW_ON_ERROR;
@@ -62,9 +63,16 @@ class TrackerProcess extends CommandProcess
             throw new RuntimeException('cannot track an already started process');
         }
 
-        $method = $process->isDaemon() ? 'daemon' : 'create';
+        $isDaemon = $process->isDaemon();
+        $method = $isDaemon? 'daemon' : 'create';
+        $commandLine = $process->getCommandLineArray();
 
-        $tracker = static::$method($process->getCommandLineArray(), $process->getWorkingDirectory(), $process->getEnv());
+        // It's useless to use nohup twice
+        if ($isDaemon && $commandLine[0] === 'nohup') {
+            array_shift($commandLine);
+        }
+
+        $tracker = static::$method($commandLine, $process->getWorkingDirectory(), $process->getEnv());
         $tracker->setTimeout($process->getTimeout());
 
         return $tracker;
