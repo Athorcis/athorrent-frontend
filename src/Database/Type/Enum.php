@@ -16,7 +16,7 @@ abstract class Enum extends Type
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (!in_array($value, $this->getValues())) {
+        if (!in_array($value, $this->getValues(), true)) {
             throw new \InvalidArgumentException('Invalid status');
         }
 

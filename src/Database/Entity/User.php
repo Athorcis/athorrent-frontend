@@ -23,7 +23,7 @@ class User implements UserInterface, CacheKeyGetterInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8_bin"})
+     * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8mb4_bin"})
      */
     private $username;
 
@@ -34,13 +34,13 @@ class User implements UserInterface, CacheKeyGetterInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=88, nullable=false, options={"collation": "utf8_bin", "fixed": true})
+     * @ORM\Column(type="string", length=88, nullable=false, options={"collation": "utf8mb4_bin", "fixed": true})
      */
     private $password;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8_bin", "fixed": true})
+     * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8mb4_bin", "fixed": true})
      */
     private $salt;
 

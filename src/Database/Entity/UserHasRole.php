@@ -20,7 +20,7 @@ class UserHasRole
     /**
      * @var string
      * @ORM\Id
-     * @ORM\Column(type="UserRole", nullable=false, options={"collation": "utf8_bin"})
+     * @ORM\Column(type="UserRole", nullable=false, options={"collation": "utf8mb4_bin"})
      */
     private $role;
 
