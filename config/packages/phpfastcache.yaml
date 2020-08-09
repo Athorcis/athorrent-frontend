@@ -3,9 +3,8 @@ phpfastcache:
     twig_block_debug: false # This option will wrap CACHE/ENDCACHE blocks with block debug as HTML comment
     drivers:
         default:
-            type: Files
+            type: Apcu
             parameters:
-                path: "%kernel.cache_dir%/phpfastcache/"
 
 # Define your drivers here. The example below connects to database 0 of the default Redis server.
 #
