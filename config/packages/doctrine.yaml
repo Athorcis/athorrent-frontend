@@ -23,3 +23,8 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Database/Entity'
                 prefix: 'Athorrent\Database\Entity'
                 alias: Athorrent
+            Athorrent/Process:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Process/Entity'
+                prefix: 'Athorrent\Process\Entity'

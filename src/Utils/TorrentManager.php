@@ -4,6 +4,7 @@ namespace Athorrent\Utils;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Filesystem\FileUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class TorrentManager
@@ -17,10 +18,10 @@ class TorrentManager
      * @param User $user
      * @throws \Exception
      */
-    public function __construct(Filesystem $fs, User $user)
+    public function __construct(EntityManagerInterface $em, Filesystem $fs, User $user)
     {
         $this->user = $user;
-        $this->service = new AthorrentService($fs, $user->getId());
+        $this->service = new AthorrentService($em, $fs, $user);
     }
 
     public function getUser(): User
