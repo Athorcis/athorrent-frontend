@@ -6,7 +6,7 @@ RENAME TABLE user_role TO user_has_role;
 ALTER TABLE user
 CHANGE userId id INT UNSIGNED AUTO_INCREMENT NOT NULL,
 CHANGE username username VARCHAR(32) NOT NULL COLLATE utf8mb4_bin,
-CHANGE password password CHAR(88) NOT NULL COLLATE utf8mb4_bin,
+CHANGE password password LONGTEXT NOT NULL COLLATE utf8mb4_bin,
 CHANGE salt salt CHAR(32) NOT NULL COLLATE utf8mb4_bin,
 CHANGE creationTimestamp creation_date_time DATETIME NOT NULL,
 CHANGE connectionTimestamp connection_date_time DATETIME DEFAULT NULL,

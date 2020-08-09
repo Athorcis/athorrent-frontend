@@ -35,7 +35,7 @@ class User implements UserInterface, CacheKeyGetterInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=88, nullable=false, options={"collation": "utf8mb4_bin", "fixed": true})
+     * @ORM\Column(type="text", nullable=false, options={"collation": "utf8mb4_bin"})
      */
     private $password;
 
