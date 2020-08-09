@@ -72,7 +72,7 @@ abstract class AbstractFileController extends AbstractController
         $response = $entry->toBinaryFileResponse();
 
         $response->setPrivate();
-        $response->headers->set('Content-Disposition', $contentDisposition . '; filename="' . $entry->getName() . '"');
+        $response->setContentDisposition($contentDisposition, $entry->getName());
 
         if (!$response->isNotModified($request)) {
             set_time_limit(0);
