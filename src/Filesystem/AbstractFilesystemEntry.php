@@ -33,6 +33,10 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
         return basename($this->path);
     }
 
+    /**
+     * @param bool $includeParentDirectory
+     * @return static[]
+     */
     public function readDirectory(bool $includeParentDirectory = false): array
     {
         $entries = [];
@@ -56,5 +60,16 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
     public function toBinaryFileResponse(): BinaryFileResponse
     {
         return new BinaryFileResponse($this->path);
+    }
+
+    public static function compare(FilesystemEntryInterface $a, FilesystemEntryInterface $b): int
+    {
+        $cmp = $a->isFile() <=> $b->isFile();
+
+        if ($cmp === 0) {
+            $cmp = $a->getName() <=> $b->getName();
+        }
+
+        return $cmp;
     }
 }

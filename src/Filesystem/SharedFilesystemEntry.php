@@ -14,6 +14,10 @@ class SharedFilesystemEntry extends TorrentFilesystemEntry
         return basename($this->internalEntry->path);
     }
 
+    /**
+     * @param bool $includeParentDirectory
+     * @return static[]
+     */
     public function readDirectory(bool $includeParentDirectory = false): array
     {
         if ($this->isFile()) {
