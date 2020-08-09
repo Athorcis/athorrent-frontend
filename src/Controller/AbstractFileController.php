@@ -72,7 +72,6 @@ abstract class AbstractFileController extends AbstractController
         $response = $entry->toBinaryFileResponse();
 
         $response->setPrivate();
-        $response->setAutoEtag();
         $response->headers->set('Content-Disposition', $contentDisposition . '; filename="' . $entry->getName() . '"');
 
         if (!$response->isNotModified($request)) {
