@@ -1,0 +1,72 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}{{ 'users.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('users')|raw }}
+{% endblock %}
+
+{% block main_script %}
+    {{ script('users')|raw }}
+{% endblock %}
+
+{% set userId = app.user.id %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>
+            {{ 'users.title'|trans }}
+            <a class="btn btn-default pull-right" href="{{ path('addUser') }}">{{ 'users.add.title'|trans }}</a>
+        </h1>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{{ 'users.username'|trans }}</th>
+                <th>{{ 'users.role'|trans }}</th>
+                <th>{{ 'users.lastConnection'|trans }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in pagination.entities %}
+                {% cache 'user' user %}
+                <tr class="user" id="user-{{ user.id }}">
+                    <td>{{ user.id }}</td>
+                    <td class="user-name">{{ user.username }}</td>
+                    <td>{{ user.roles[0]|trans }}</td>
+                    <td>
+                        {% if user.connectionTimestamp %}
+                            {{ user.connectionTimestamp|date('d/m/Y H:i:s') }}
+                        {% else %}
+                            {{ 'users.lastConnectionNone'|trans }}
+                        {% endif %}
+                    </td>
+                    <td class="text-right user-buttons">
+                        <button class="btn btn-xs btn-default user-reset-password">
+                            <span class="fa fa-undo"></span>
+                        </button>
+
+                        {% if user.id != userId %}
+                        <a class="btn btn-xs btn-default" href="{{ path('listFiles', { _switch_user: user.username, _prefixId: 'files' }) }}">
+                            <span class="fa fa-exchange"></span>
+                        </a>
+                            {% if user.id != 1 %}
+                        <button class="btn btn-xs btn-danger user-remove">
+                            <span class="fa fa-remove"></span>
+                        </button>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endcache %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% include "fragments/pagination.html.twig" %}
+
+{% endblock %}

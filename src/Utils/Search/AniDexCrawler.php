@@ -3,6 +3,7 @@
 namespace Athorrent\Utils\Search;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -38,7 +39,7 @@ class AniDexCrawler
         return $matches[1] * $magnitudes[$matches[2]];
     }
 
-    public function initializeRequest(Client $client, $query)
+    public function initializeRequest(Client $client, $query): PromiseInterface
     {
         $promise = $client->getAsync('https://' . $this->domain . '/?q=' . urlencode($query), [
             'headers' => ['X-Requested-With' => 'XMLHttpRequest']
@@ -49,9 +50,9 @@ class AniDexCrawler
         });
     }
 
-    public function parseResponse(ResponseInterface $response)
+    public function parseResponse(ResponseInterface $response): array
     {
-        $crawler = new Crawler(strval($response->getBody()));
+        $crawler = new Crawler((string)$response->getBody());
         $rows = $crawler->filter('tbody > tr');
 
         $torrents = [];
@@ -65,8 +66,8 @@ class AniDexCrawler
                 'age' => $this->getAge($cells->eq(7)->text()),
                 'magnet' => $cells->eq(5)->filter('a')->attr('href'),
                 'size' => preg_replace('/^([KMG])B$/', '$1iB', $cells->eq(6)->text()),
-                'seeders' => intval($cells->eq(8)->text()),
-                'leechers' => intval($cells->eq(9)->text())
+                'seeders' => (int)$cells->eq(8)->text(),
+                'leechers' => (int)$cells->eq(9)->text()
             ];
         }
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace Athorrent\IPC;
+namespace Athorrent\Ipc;
+
+use RuntimeException;
 
 class JsonService
 {
@@ -28,13 +30,11 @@ class JsonService
         if ($response) {
             if ($response->isSuccess()) {
                 return $response->getData();
-            } else {
-                throw new \Exception($response->getData());
             }
-        } else {
-            throw new \Exception('no response');
+
+            throw new RuntimeException($response->getData());
         }
 
-        return null;
+        throw new RuntimeException('no response');
     }
 }

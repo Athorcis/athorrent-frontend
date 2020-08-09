@@ -1,0 +1,3 @@
+#index:
+#    path: /
+#    controller: Athorrent\Controller\DefaultController::index

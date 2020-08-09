@@ -1,9 +1,12 @@
 <?php
 
-namespace Athorrent\IPC;
+namespace Athorrent\Ipc;
+
+use Athorrent\Ipc\Socket\ClientSocketInterface;
 
 class JsonClient
 {
+    /** @var ClientSocketInterface */
     private $clientSocket;
 
     public function __construct($clientSocketType, $address)
@@ -11,13 +14,13 @@ class JsonClient
         $this->clientSocket = new $clientSocketType($address);
     }
 
-    public function disconnect()
+    public function disconnect(): void
     {
         $this->clientSocket->shutdown();
         $this->clientSocket->close();
     }
 
-    public function recv()
+    public function recv(): ?JsonResponse
     {
         $rawResponse = '';
 
@@ -29,7 +32,7 @@ class JsonClient
             } else {
                 break;
             }
-        } while ($rawResponse[strlen($rawResponse) - 1] != '\n');
+        } while ($rawResponse[strlen($rawResponse) - 1] !== '\n');
 
         if ($rawResponse) {
             return JsonResponse::parse($rawResponse);
@@ -38,7 +41,7 @@ class JsonClient
         return null;
     }
 
-    public function send(JsonRequest $request)
+    public function send(JsonRequest $request): void
     {
         $rawRequest = $request->toRawRequest();
         $length = strlen($rawRequest);

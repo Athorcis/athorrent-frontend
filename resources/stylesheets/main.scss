@@ -1,10 +1,9 @@
 
-$bootstrap-sass-asset-helper: true;
-
+$icon-font-path: '../../fonts/bootstrap/';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap/theme';
 
-@import '~font-awesome/css/font-awesome.css';
+@import '~font-awesome/css/font-awesome';
 
 html {
     height: 100%;
