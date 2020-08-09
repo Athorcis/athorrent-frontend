@@ -3,6 +3,7 @@
 namespace Athorrent;
 
 use Athorrent\Cache\CacheCompilerPass;
+use Athorrent\Process\CommandProcess;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -25,6 +26,8 @@ class Kernel extends BaseKernel
             define('VAR_DIR', $this->getProjectDir() . DIRECTORY_SEPARATOR . 'var');
             define('FILES_DIR', BIN_DIR . DIRECTORY_SEPARATOR . 'files');
             define('TORRENTS_DIR', VAR_DIR . DIRECTORY_SEPARATOR . 'torrents');
+
+            CommandProcess::setConsolePath(BIN_DIR . DIRECTORY_SEPARATOR . 'console');
         }
     }
 

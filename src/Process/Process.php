@@ -1,10 +1,13 @@
 <?php
 
-namespace Athorrent\Utils;
+namespace Athorrent\Process;
 
+use Closure;
 use RuntimeException;
 use Symfony\Component\Process\Process as BaseProcess;
 use function array_unshift;
+use function count;
+use function strtolower;
 
 class Process extends BaseProcess
 {
@@ -41,6 +44,29 @@ class Process extends BaseProcess
     public function isDaemon(): bool
     {
         return $this->daemon;
+    }
+
+    protected function getPrivateAttribute(string $name)
+    {
+        return Closure::bind(function () use ($name) {
+            return $this->$name;
+        }, $this, BaseProcess::class)->__invoke();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCommandLineArray(): array
+    {
+        return $this->getPrivateAttribute('commandline');
+    }
+
+    /**
+     * @return float
+     */
+    public function getStartTime(): float
+    {
+        return $this->getPrivateAttribute('starttime');
     }
 
     /**

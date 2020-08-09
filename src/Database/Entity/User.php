@@ -3,6 +3,7 @@
 namespace Athorrent\Database\Entity;
 
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
+use Athorrent\Process\Entity\TrackedProcess;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -67,6 +68,12 @@ class User implements UserInterface, CacheKeyGetterInterface
      * @ORM\OneToMany(targetEntity="Sharing", mappedBy="user", indexBy="token")
      */
     private $sharings;
+
+    /**
+     * @var TrackedProcess
+     * @ORM\OneToOne(targetEntity="Athorrent\Process\Entity\TrackedProcess", fetch="LAZY")
+     */
+    private $athorrentProcess;
 
     public function __construct($username, $plainPassword, $salt, array $roles)
     {
@@ -161,6 +168,22 @@ class User implements UserInterface, CacheKeyGetterInterface
     public function getSharings()
     {
         return $this->sharings;
+    }
+
+    /**
+     * @return TrackedProcess
+     */
+    public function getAthorrentProcess(): ?TrackedProcess
+    {
+        return $this->athorrentProcess;
+    }
+
+    /**
+     * @param TrackedProcess|null $process
+     */
+    public function setAthorrentProcess(?TrackedProcess $process): void
+    {
+        $this->athorrentProcess = $process;
     }
 
     public function eraseCredentials()
