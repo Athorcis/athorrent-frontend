@@ -86,7 +86,7 @@ class AthorrentService extends JsonService
 
         $this->fs->mkdir($logDir, 0755);
 
-        $process = TrackerProcess::track(Process::daemon(['athorrent-backend', '--user', $this->user->getId()], BIN_DIR));
+        $process = TrackerProcess::track(Process::daemon(['./athorrent-backend', '--user', $this->user->getId()], BIN_DIR));
         $process->start();
 
         $processEntity = $this->em->find(TrackedProcess::class,  $process->getTrackedId());
