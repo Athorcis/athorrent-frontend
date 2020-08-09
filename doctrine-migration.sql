@@ -5,9 +5,9 @@ RENAME TABLE user_role TO user_has_role;
 
 ALTER TABLE user
 CHANGE userId id INT UNSIGNED AUTO_INCREMENT NOT NULL,
-CHANGE username username VARCHAR(32) NOT NULL COLLATE utf8_bin,
-CHANGE password password CHAR(88) NOT NULL COLLATE utf8_bin,
-CHANGE salt salt CHAR(32) NOT NULL COLLATE utf8_bin,
+CHANGE username username VARCHAR(32) NOT NULL COLLATE utf8mb4_bin,
+CHANGE password password CHAR(88) NOT NULL COLLATE utf8mb4_bin,
+CHANGE salt salt CHAR(32) NOT NULL COLLATE utf8mb4_bin,
 CHANGE creationTimestamp creation_date_time DATETIME NOT NULL,
 CHANGE connectionTimestamp connection_date_time DATETIME DEFAULT NULL,
 DROP usedDiskSpace,
@@ -15,12 +15,12 @@ DROP totalDiskSpace;
 
 ALTER TABLE user_has_role
 CHANGE userId user_id INT UNSIGNED NOT NULL,
-CHANGE role role ENUM('ROLE_USER', 'ROLE_ADMIN') NOT NULL COLLATE utf8_bin;
+CHANGE role role ENUM('ROLE_USER', 'ROLE_ADMIN') NOT NULL COLLATE utf8mb4_bin;
 
 ALTER TABLE sharing
-CHANGE token token CHAR(32) NOT NULL COLLATE utf8_bin,
+CHANGE token token CHAR(32) NOT NULL COLLATE utf8mb4_bin,
 CHANGE userId user_id INT UNSIGNED DEFAULT NULL,
-CHANGE path path LONGTEXT NOT NULL COLLATE utf8_bin,
+CHANGE path path LONGTEXT NOT NULL COLLATE utf8mb4_bin,
 CHANGE creationTimestamp  creation_date_time DATETIME NOT NULL;
 
 ALTER TABLE user ENGINE=InnoDB;

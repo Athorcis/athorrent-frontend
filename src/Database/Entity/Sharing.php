@@ -7,14 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Athorrent\Database\Repository\SharingRepository")
- * @ORM\Table(indexes={@ORM\Index(columns={"creationDateTime"})})
+ * @ORM\Table(indexes={@ORM\Index(columns={"creation_date_time"})})
  */
 class Sharing implements CacheKeyGetterInterface
 {
     /**
      * @var string
      * @ORM\Id
-     * @ORM\Column(type="string", length=32, options={"collation": "utf8_bin", "fixed": true})
+     * @ORM\Column(type="string", length=32, options={"collation": "utf8mb4_bin", "fixed": true})
      */
     private $token;
 
@@ -27,7 +27,7 @@ class Sharing implements CacheKeyGetterInterface
 
     /**
      * @var string
-     * @ORM\Column(type="text", options={"collation": "utf8_bin"})
+     * @ORM\Column(type="text", options={"collation": "utf8mb4_bin"})
      */
     private $path;
 
