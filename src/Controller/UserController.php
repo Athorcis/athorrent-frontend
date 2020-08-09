@@ -2,6 +2,7 @@
 
 namespace Athorrent\Controller;
 
+use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
 use Athorrent\Notification\ErrorNotification;
@@ -9,9 +10,13 @@ use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
 use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use RuntimeException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/administration/users", name="users")
@@ -53,7 +58,7 @@ class UserController
      * @param Request $request
      * @return ErrorNotification|SuccessNotification
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function saveUser(Request $request)
     {
@@ -75,12 +80,32 @@ class UserController
     }
 
     /**
+     * @Route("/{id}", methods="POST", options={"expose"=true})
+     * @ParamConverter("user")
+     *
+     * @param User $user
+     * @param UserPasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $em
+     * @return array
+     * @throws Exception
+     */
+    public function resetUserPassword(User $user, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em): array
+    {
+        $password = bin2hex(random_bytes(8));
+
+        $user->setPassword($encoder->encodePassword($user, $password));
+        $em->flush($user);
+
+        return ['password' => $password];
+    }
+
+    /**
      * @Route("/{userId}", methods="DELETE", requirements={"userId"="\d+"}, options={"expose"=true})
      *
      * @param int $userId
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeUser(int $userId): array
     {

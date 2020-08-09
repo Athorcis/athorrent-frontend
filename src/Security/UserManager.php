@@ -24,7 +24,7 @@ class UserManager
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function createUser($username, $password, $roles): void
+    public function createUser(string $username, string $password, $roles): void
     {
         if (is_string($roles)) {
             $roles = [$roles];
@@ -44,22 +44,22 @@ class UserManager
         $this->entityManager->flush();
     }
 
-    public function userExists($username): bool
+    public function userExists(string $username): bool
     {
         return $this->userRepository->findOneBy(['username' => $username]) !== null;
     }
 
-    public function checkUserPassword(User $user, $password): bool
+    public function checkUserPassword(User $user, string $password): bool
     {
         return $this->passwordEncoder->encodePassword($user, $password) === $user->getPassword();
     }
 
-    public function setUserPassword(User $user, $password): void
+    public function setUserPassword(User $user, string $password): void
     {
-        $user->setPassword($this->passwordEncoder->encodePassword($password, $user->getSalt()));
+        $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
     }
 
-    public function deleteUserById($id): bool
+    public function deleteUserById(int $id): bool
     {
         try {
             $this->userRepository->delete($id);
