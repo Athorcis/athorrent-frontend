@@ -1,14 +1,14 @@
 #!/bin/bash
 
 function installComposer {
-    echo 
+    echo
     echo "install composer"
     echo
-    
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    php -r "if (hash_file('SHA384', 'composer-setup.php') === '070854512ef404f16bac87071a6db9fd9721da1684cd4589b1196c3faf71b9a2682e2311b36a5079825e155ac7ce150d') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-    php composer-setup.php
-    php -r "unlink('composer-setup.php');"
+
+    "$PHP" -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    "$PHP" -r "if (hash_file('SHA384', 'composer-setup.php') === '070854512ef404f16bac87071a6db9fd9721da1684cd4589b1196c3faf71b9a2682e2311b36a5079825e155ac7ce150d') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    "$PHP" composer-setup.php
+    "$PHP" -r "unlink('composer-setup.php');"
 }
 
 function randomString {
@@ -42,8 +42,8 @@ then
     then
         installComposer
     fi
-    
-    COMPOSER="php composer.phar"
+
+    COMPOSER="$PHP composer.phar"
 fi
 
 YARN=$(type -p yarn)
@@ -68,12 +68,6 @@ echo
 "$YARN" run prod
 
 echo
-echo "Create database"
-echo
-
-mysql -h 127.0.0.1 -u $DB_USERNAME -p$DB_PASSWORD < utils/athorrent.sql
-
-echo
 echo "Create config file"
 echo
 
@@ -86,16 +80,22 @@ define('DB_PASSWORD', '$DB_PASSWORD');
 define('DB_NAME', 'athorrent');
 
 define('REMEMBER_ME_KEY', '$(randomString)');
-    
+
 define('CSRF_SALT','$(randomString)');
 
 if (isset(\$_SERVER['HTTP_HOST'])) {
     define('STATIC_HOST', \$_SERVER['HTTP_HOST']);
 }
-" > app/config.php
+" > config/env.php
+
+echo
+echo "Create database"
+echo
+
+"$PHP" bin/athorrent-cli orm:schema-tool:create
 
 echo
 echo "Create user"
 echo
 
-"$PHP" utils/create-admin.php $SEEDBOX_USERNAME $SEEDBOX_PASSWORD
+"$PHP" bin/athorrent-cli user:create $SEEDBOX_USERNAME $SEEDBOX_PASSWORD ROLE_ADMIN

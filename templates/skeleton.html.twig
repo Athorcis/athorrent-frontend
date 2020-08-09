@@ -1,0 +1,83 @@
+{% apply spaceless %}
+<!doctype html>
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ app.request.locale }}"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ app.request.locale }}"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="description" content="{{ 'app.description'|trans }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="{{ asset_url('favicon.ico') }}" />
+
+        {% set route = app.request.attributes.get('_route') %}
+
+        {% if route is not empty %}
+            {% cache 'head' route %}
+                {% for locale in locales %}
+                    <link rel="alternate" href="{{ url(app.request.attributes.get('_action'), { _locale: locale }) }}" hreflang="{{ locale }}" />
+                {% endfor %}
+            {% endcache %}
+        {% endif %}
+
+        {% block stylesheets %}
+            {{ stylesheet('main')|raw }}
+        {% endblock %}
+
+        {% block early_scripts %}
+            <!--[if lt IE 9]>
+                {{ script('html5shiv')|raw }}
+            <![endif]-->
+        {% endblock %}
+    </head>
+    <body>
+        {% include 'nav.html.twig' %}
+
+        <div class="container">
+            {% if notifications is defined %}
+                <div class="alert-stack">
+                    {% for notification in notifications %}
+                        {% if notification.type == "error" %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <span class="fa fa-warning" aria-hidden="true"></span>
+                                <span class="sr-only">Error:</span>
+                                {{ notification.message|trans }}
+                            </div>
+                        {%  elseif notification.type == "success" %}
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                {{ notification.message|trans }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+
+        {% block late_scripts %}
+            {% if js_vars %}
+                <script type="text/javascript" nonce="{{ csp_nonce() }}">
+                    var athorrent = {{ js_vars|json_encode|raw }};
+                </script>
+            {% endif %}
+
+            <script type="text/javascript" nonce="{{ csp_nonce() }}">
+                window.Promise || document.write('<script src="{{ asset_url('scripts/promise.js') }}"><\/script>');
+            </script>
+
+{#            {{ script('runtime', true)|raw }}#}
+
+            {% block main_script %}
+                {{ script('athorrent')|raw }}
+            {% endblock %}
+        {% endblock %}
+    </body>
+</html>
+{% endapply %}

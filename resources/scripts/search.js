@@ -1,10 +1,9 @@
-/* eslint-env amd */
+/* eslint-env browser */
 
-require(['jquery', 'athorrent'], function ($) {
-    'use strict';
+import $ from 'jquery';
+import athorrent from 'athorrent';
 
-    $('.nav-tabs a').click(function (event) {
-        event.preventDefault();
-        $(this).tab('show');
-    });
+$('.nav-tabs a').click(function (event) {
+    event.preventDefault();
+    $(this).tab('show');
 });

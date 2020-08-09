@@ -1,0 +1,34 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}{{ 'cache.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('cache')|raw }}
+{% endblock %}
+
+{% block content %}
+{% cache 'cache' %}
+<h1>{{ 'cache.title'|trans }}</h1>
+<hr />
+
+<div class="cache-btn-group">
+    <button data-ajax-action="clearApc" data-ajax-spinner="true" class="btn btn-default">
+        {{ 'cache.clearApc'|trans }}
+    </button>
+
+    <button data-ajax-action="clearTwig" data-ajax-spinner="true" class="btn btn-default">
+        {{ 'cache.clearTwig'|trans }}
+    </button>
+
+    <button data-ajax-action="clearTranslations" data-ajax-spinner="true" class="btn btn-default">
+        {{ 'cache.clearTranslations'|trans }}
+    </button>
+
+    <button data-ajax-action="clearAll" data-ajax-spinner="true" class="btn btn-default">
+        {{ 'cache.clearAll'|trans }}
+    </button>
+</div>
+
+{% endcache %}
+{% endblock %}

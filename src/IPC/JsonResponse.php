@@ -1,6 +1,6 @@
 <?php
 
-namespace Athorrent\IPC;
+namespace Athorrent\Ipc;
 
 class JsonResponse
 {
@@ -14,7 +14,7 @@ class JsonResponse
         $this->success = $success;
     }
 
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return $this->success;
     }
@@ -24,9 +24,9 @@ class JsonResponse
         return $this->data;
     }
 
-    public static function parse($rawResponse)
+    public static function parse($rawResponse): ?JsonResponse
     {
-        $array = json_decode($rawResponse, true);
+        $array = json_decode($rawResponse, true, 512, JSON_THROW_ON_ERROR);
 
         if (!isset($array['status'])) {
             return null;
@@ -34,7 +34,7 @@ class JsonResponse
 
         $status = $array['status'];
 
-        if ($status != 'success' && $status != 'error') {
+        if ($status !== 'success' && $status !== 'error') {
             return null;
         }
 
@@ -44,6 +44,6 @@ class JsonResponse
             return null;
         }
 
-        return new JsonResponse($array['data'], $success);
+        return new self($array['data'], $success);
     }
 }

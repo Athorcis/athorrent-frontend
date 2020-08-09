@@ -1,10 +1,20 @@
+
 /.idea/
-/bin/
+/bin/*
+/composer.phar
 /node_modules/
+/public/*
+
+!/bin/console
+!/public/index.php
+!/public/robots.txt
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
 /var/
 /vendor/
-/app/config.php
-
-/web/*
-!/web/index.php
-!/web/robots.txt
+###< symfony/framework-bundle ###

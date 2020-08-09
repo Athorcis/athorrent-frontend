@@ -2,38 +2,54 @@
 
 namespace Athorrent\Utils;
 
-use Athorrent\IPC\JsonService;
+use Athorrent\Database\Entity\User;
+use Athorrent\Ipc\JsonService;
+use Athorrent\Ipc\Socket\NamedPipeClient;
+use Athorrent\Ipc\Socket\UnixSocketClient;
+use Athorrent\Process\Entity\TrackedProcess;
+use Athorrent\Process\Process;
+use Athorrent\Process\TrackerProcess;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use const DIRECTORY_SEPARATOR;
 
 class AthorrentService extends JsonService
 {
-    private $userId;
+    private $fs;
 
-    public function __construct($userId)
+    private $user;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em, Filesystem $fs, User $user)
     {
-        parent::__construct('Athorrent\IPC\LocalClientSocket_' . strtolower(PHP_OS), self::getPath($userId));
+        $clientSocketClass = DIRECTORY_SEPARATOR === '\\' ? NamedPipeClient::class : UnixSocketClient::class;
 
-        $this->userId = $userId;
+        parent::__construct($clientSocketClass, self::getPath($user->getId()));
+
+        $this->em = $em;
+        $this->fs = $fs;
+        $this->user = $user;
+
         $this->ensureRunning();
     }
 
     private function hasFlag($flag)
     {
-        return is_file(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->userId, $flag]));
+        return is_file(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->user->getId(), $flag]));
     }
 
-    private function setFlag($flag)
+    private function setFlag($flag): void
     {
-        touch(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->userId, $flag]));
+        touch(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->user->getId(), $flag]));
     }
 
     private static function hasGlobalFlag($flag)
     {
         return is_file(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $flag]));
-    }
-
-    private function isRunning()
-    {
-        return $this->hasFlag('running');
     }
 
     private static function isUpdating()
@@ -46,80 +62,46 @@ class AthorrentService extends JsonService
         return self::isUpdating();
     }
 
-    private function ensureRunning()
+    private function ensureRunning(): void
     {
-        if ($this->isRunning()) {
-            return;
-        }
+        $process = $this->user->getAthorrentProcess();
 
-        if ($this->isBusy()) {
-            throw ServiceUnvailableException('SERVICE_UPDATING');
-        }
-
-        $this->start();
-
-        do {
-            usleep(100000);
-        } while (!$this->isRunning());
-    }
-
-    private function start()
-    {
-        $logDir = implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'logs', $this->userId]);
-        $logPath = $logDir . DIRECTORY_SEPARATOR . 'athorrentd.txt';
-
-        if (!file_exists($logDir)) {
-            mkdir($logDir, 0755, true);
-        }
-
-        if (is_file($logPath)) {
-            $nbLogs = count(scandir($logDir)) - 2;
-
-            if ($nbLogs) {
-                if (!@rename($logPath, $logDir . DIRECTORY_SEPARATOR . 'athorrentd.' . $nbLogs . '.txt')) {
-                    try {
-                        if ($this->call('ping') === 'pong') {
-                            $this->setFlag('running');
-                            return;
-                        }
-                    } catch (ServiceUnavailableException $exception) {
-                        exit('log file appears to be locked');
-                    }
-                }
+        if ($process) {
+            if ($process->isRunning()) {
+                return;
             }
         }
 
-        $cwd = BIN_DIR;
-        $cmd = 'athorrent-backend --user ' . $this->userId;
-
-        switch (strtolower(PHP_OS)) {
-            case 'linux':
-                $cmd = '(cd ' . $cwd . ' && ./' . $cmd . ') > ' . $logPath . ' 2>&1 &';
-                break;
-
-            case 'winnt':
-                $cmd = 'start /D ' . $cwd . ' /B ' . $cmd . ' > ' . $logPath;
-                break;
+        if ($this->isBusy()) {
+            throw new ServiceUnavailableException('SERVICE_UPDATING');
         }
 
-        exec($cmd);
+        $this->start();
     }
 
-    private static function getPath($userId)
+    private function start(): void
     {
-        switch (strtolower(PHP_OS)) {
-            case 'linux':
-                $path = BIN_DIR . '/sockets/' . $userId . '.sck';
-                break;
+        $logDir = implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'logs', $this->user->getId()]);
+        $logPath = $logDir . DIRECTORY_SEPARATOR . 'athorrentd.txt';
 
-            case 'winnt':
-                $path = '\\\\.\\pipe\\athorrentd\\sockets\\' . $userId . '.sck';
-                break;
+        $this->fs->mkdir($logDir, 0755);
 
-            default:
-                $path = null;
+        $process = TrackerProcess::track(Process::daemon(['athorrent-backend', '--user', $this->user->getId()], BIN_DIR));
+        $process->start();
+
+        $processEntity = $this->em->find(TrackedProcess::class,  $process->getTrackedId());
+        dump($process->getTrackedId(), $processEntity);
+
+        $this->user->setAthorrentProcess($processEntity);
+        $this->em->flush();
+    }
+
+    private static function getPath($userId): string
+    {
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            return '\\\\.\\pipe\\athorrentd\\sockets\\' . $userId . '.sck';
         }
 
-        return $path;
+        return BIN_DIR . '/sockets/' . $userId . '.sck';
     }
 }

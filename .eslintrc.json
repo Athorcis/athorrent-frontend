@@ -1,6 +1,14 @@
 {
     "root": true,
 
+    "env": {
+        "es6": true
+    },
+
+    "parserOptions": {
+        "sourceType": "module"
+    },
+
     "extends": "eslint:all",
 
     "rules": {
@@ -14,6 +22,7 @@
         "init-declarations": "off",
 
         "array-element-newline": "off",
+        "function-call-argument-newline": ["warn", "consistent"],
         "func-names": ["warn", "never"],
         "func-style": "off",
         "id-length": ["warn", { "exceptions": ["$", "i"] }],
@@ -37,14 +46,8 @@
         "sort-keys": "off",
         "sort-vars": "off",
         "space-before-function-paren": ["error", { "anonymous": "always", "named": "never" }],
+        "template-curly-spacing": "off",
 
-        "no-var": "off",
-        "object-shorthand": "off",
-        "prefer-arrow-callback": "off",
-        "prefer-destructuring": "off",
-        "prefer-reflect": "off",
-        "prefer-rest-params": "off",
-        "prefer-spread": "off",
-        "prefer-template": "off"
+        "prefer-const": "off"
     }
 }

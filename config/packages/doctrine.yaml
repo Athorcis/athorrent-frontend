@@ -1,0 +1,30 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '5.7'
+
+        types:
+            UserRole: Athorrent\Database\Type\UserRole
+
+        mapping_types:
+            enum: string
+
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        mappings:
+            Athorrent:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Database/Entity'
+                prefix: 'Athorrent\Database\Entity'
+                alias: Athorrent
+            Athorrent/Process:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Process/Entity'
+                prefix: 'Athorrent\Process\Entity'

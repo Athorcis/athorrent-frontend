@@ -1,31 +1,87 @@
 {
     "name": "athorcis/athorrent-frontend",
-
     "description": "A lightweight seedbox frontend",
-
-    "license": "MIT",
-
     "type": "project",
-
+    "license": "Apache-2.0",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Athorcis/phpfastcache-bundle"
+        }
+    ],
     "require": {
-        "silex/silex": "~1.3.6",
-        "twig/twig": "~2.4.3",
-        "spe/filesize-extension-bundle": "~1.0.0",
-        "symfony/security": "~2.8.28",
-        "symfony/twig-bridge": "~3.3.9",
-        "asm89/twig-cache-extension": "~1.3.2",
-        "symfony/translation": "^2.8.20",
-        "symfony/yaml": "~3.3.9",
-        "symfony/config": "~3.3.9",
-        "jenyak/i18n-routing-service-provider": "~1.0",
-        "symfony/dom-crawler": "~3.3.9",
-        "symfony/css-selector": "~3.3.9",
-        "guzzlehttp/guzzle": "~6.2.3"
+        "php": "^7.3",
+        "ext-ctype": "*",
+        "ext-fileinfo": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-sockets": "*",
+        "gabrielelana/byte-units": "^0.5",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "phpfastcache/phpfastcache-bundle": "^3.0",
+        "sensio/framework-extra-bundle": "^5.1",
+        "symfony/console": "5.1.*",
+        "symfony/css-selector": "5.1.*",
+        "symfony/dom-crawler": "5.1.*",
+        "symfony/dotenv": "5.1.*",
+        "symfony/flex": "^1.3.1",
+        "symfony/framework-bundle": "5.1.*",
+        "symfony/monolog-bundle": "^3.1",
+        "symfony/orm-pack": "*",
+        "symfony/process": "5.1.*",
+        "symfony/security-bundle": "5.1.*",
+        "symfony/translation": "5.1.*",
+        "symfony/twig-pack": "*",
+        "symfony/yaml": "5.1.*"
     },
-
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "symfony/debug-pack": "*"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
             "Athorrent\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Athorrent\\Tests\\": "tests/"
+        }
+    },
+    "replace": {
+        "paragonie/random_compat": "2.*",
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php56": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": true,
+            "require": "5.1.*"
         }
     }
 }

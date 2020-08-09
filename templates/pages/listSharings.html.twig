@@ -1,0 +1,47 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}{{ 'sharings.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
+
+{% block main_script %}
+    {{ script('sharings')|raw }}
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>{{ 'sharings.title'|trans }}</h1>
+    </div>
+
+    {% set sharings = pagination.entities %}
+
+    {% if sharings|length == 0 %}
+        <div class="alert alert-info" role="alert">{{ 'sharings.none'|trans }}</div>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{{ 'sharings.path'|trans }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sharing in sharings %}
+                    {% cache 'sharing' sharing %}
+                    <tr class="sharing" id="sharing-{{ sharing.token }}">
+                        <td class="user-name">
+                            <a href="{{ path('listFiles', { token: sharing.token, _prefixId: 'sharings' }) }}">{{ sharing.path }}</a>
+                        </td>
+                        <td class="text-right">
+                            <button class="btn btn-xs btn-danger sharing-remove">
+                                <span class="fa fa-remove"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endcache %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% include "fragments/pagination.html.twig" %}
+
+{% endblock %}

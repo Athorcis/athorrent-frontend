@@ -1,0 +1,26 @@
+
+{% set lastPage = pagination.lastPage %}
+
+{% if lastPage > 1 %}
+    {% set page = pagination.page %}
+
+    <div class="text-center">
+        <ul class="pagination">
+        {% set startPage = max(1, page - 2) %}
+        {% set endPage = min(lastPage, startPage + 4) %}
+        {% set startPage = max(1, endPage - 4) %}
+
+        {% if page > 1 %}
+            <li><a href="{{ path(action, { page: page - 1 }) }}">&laquo;</a></li>
+        {% endif %}
+
+        {% for i in startPage .. endPage %}
+            <li{% if i == page %} class="active"{% endif %}><a href="{{ path(action, { page: i }) }}">{{ i }}</a></li>
+        {% endfor %}
+
+        {% if page < lastPage %}
+            <li><a href="{{ path(action, { page: page + 1 }) }}">&raquo;</a></li>
+        {% endif %}
+        </ul>
+    </div>
+{% endif %}

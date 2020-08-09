@@ -1,0 +1,27 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}{{ 'administration.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ stylesheet('administration')|raw }}
+{% endblock %}
+
+{% block content %}
+{% cache 'administration' %}
+<h1>{{ 'administration.title'|trans }}</h1>
+<hr />
+
+<div>
+    <a class="btn btn-default administration-tile" href="{{ path('listUsers') }}">
+        <span class="fa fa-fw fa-user"></span>
+        {{ 'administration.handleUsers'|trans }}
+    </a>
+    <a class="btn btn-default administration-tile" href="{{ path('handleCache') }}">
+        <span class="fa fa-fw fa-cog"></span>
+        {{ 'administration.handleCache'|trans }}
+    </a>
+</div>
+
+{% endcache %}
+{% endblock %}

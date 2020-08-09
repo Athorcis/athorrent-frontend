@@ -1,0 +1,176 @@
+ROLE_USER: User
+ROLE_ADMIN: Administrator
+
+error:
+    title: Error
+    pageNotFound: Page not found
+    sharingNotFound: Sharing not found
+    notATorrent: This file is not a torrent
+    fileTooBig: This file is too big
+    badRequest: Bad request
+    fileNotFound: File not found
+    notPlayable: This file is neither an audio file nor a video file
+    notDisplayble: This file is neither an image nor a text file
+    cannotRemoveFile: Unable to remove this file
+    usernameAlreadyUsed: This username is already used
+    roleNotSpecified: Undefined role
+    cannotRemoveUser: Unable to remove this user
+    errorUnknown: Unknown error
+    loginFailure: Username or password invalid
+    usernameOrPasswordEmpty: Username or pasword empty
+    passwordInvalid: Password invalid
+    passwordsDiffer: Passwords differ
+
+app:
+    name: Athorrent
+    logo: Logo of Athorrent
+    description: Download torrents and share your files where your want, when you want and safely. Use a seedbox has never been easier.
+
+nav:
+    files: Files
+    torrents: Torrents
+    sharings: Sharings
+    search: Search
+    administration: Administration
+
+    nickname: Nickname
+    password: Password
+    account: My account
+    login: Login
+    logout: Logout
+    exit: Exit
+
+home:
+    title: Use a seedbox has never been easier
+    welcome: Welcome to Athorrent
+    description: |
+        Athorrent the seedbox which does Brrrrrrrrrraaaaaaaaaaaa.
+        Download torrents and share your files where your want, when you want and safely. Use a seedbox has never been easier.
+    accessibility:
+        title: Accessibility
+        content: |
+            You can access your torrents and share all your files from your computer, your tablet or your smartphone. There is no  application to install, you only need your favorite web browser.
+    sharing:
+        title: Sharing
+        content: |
+            You want share with your friends all files on your seedbox? Nothing simpler, you only have to click once to get share link.
+    security:
+        title: Security
+        content: |
+            The use of our seedbox allow you to download torrents anonymously. Moreover each request executed on our website is encrypted via HTTPS technology to guarantee you the best possible security.
+    performance:
+        title: Performance
+        content: |
+            You dream of downloading and seeding your torrents at full speed, this website is perfect for you. It uses the latest web technologies availables, it was specifically designed to be as efficient as possible, in order to offer you a pleasant experience.
+    openSource:
+        title: Open source
+        content: |
+            Do you like open source? So do we, that's why we decided to publish the source code of Athorrent on {a_start}GitHub{a_end},
+            so that you can use it on your own server or just contribute to the project.
+
+files:
+    title: Files
+    root: Root
+    parentDirectory: Parent directory
+    open: Open
+    download: Download
+    display: Display
+    play: Play
+    sharingLink: Sharing link
+    removeSharing: Remove sharing
+    share: Share
+    none: no files to display
+
+torrents:
+    title: Torrents
+    dropzone: Drop files here or click to select them
+    add: Add
+    size: Size
+    dl: DL
+    ul: UL
+    ratio: Ratio
+    seeders: Seeders
+    leechers: Leechers
+    managerUpdating: The torrent manager is neing updating
+    none: no torrents to display
+
+    state:
+        allocating: Allocating
+        queued_for_checking: Queued for checking
+        checking_files: Checking files
+        checking_resume_data: Checking resume data
+        downloading_metadata: Downloading metadata
+        downloading: Downloading
+        paused: Paused
+        finished: Finished
+        seeding: Seeding
+        disabled: Disabled
+
+    tabMain:
+        title: Main
+
+    tabTrackers:
+        title: Trackers
+        url: URL
+        state: State
+        peers: Peers
+        message: Message
+
+    tabPeers:
+        title: Peers
+
+search:
+    title: Search
+    all-sources: All sources
+    keywords: Input one or more keywords
+    submit: Search
+    no-results: There is no results matching your search
+    torrents:
+        type: Type
+        name: Name
+        size: Size
+        age: Age
+    age:
+        seconds: '{count, plural, one{second} other{seconds}}'
+        minutes: '{count, plural, one{minute} other{minutes}}'
+        hours: '{count, plural, one{hour} other{hours}}'
+        days: '{count, plural, one{day} other{days}}'
+        months: '{count, plural, one{month} other{months}}'
+        years: '{count, plural, one{year} other{years}}'
+
+sharings:
+    title: Sharings
+    none: no sharings to display
+    path: Path
+
+users:
+    title: User management
+    username: Username
+    password: Password
+    role: Role
+    lastConnection: Last connection
+    lastConnectionNone: None
+
+    add:
+        title: Add a new user
+        submit: Add
+
+administration:
+    title: Administration
+    handleUsers: Manage users
+    handleCache: Manage cache
+
+cache:
+    title: Manage cache
+    clearApc: Clear application cache
+    clearTwig: Clear Twig cache
+    clearTranslations: Clear translations cache
+    clearAll: Clear everything
+
+account:
+    edit:
+        title: Edit my account
+        submit: Save
+        current_password: Current password
+        new_password: New password
+        password_confirm: Password confirmation

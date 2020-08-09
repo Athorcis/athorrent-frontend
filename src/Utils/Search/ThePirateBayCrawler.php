@@ -49,7 +49,7 @@ class ThePirateBayCrawler
         return time() - $this->parseDate($date);
     }
 
-    public function initializeRequest(Client $client, $query)
+    public function initializeRequest(Client $client, $query): \GuzzleHttp\Promise\PromiseInterface
     {
         $cookieJar = CookieJar::fromArray([
             'lw' => 's'
@@ -62,9 +62,9 @@ class ThePirateBayCrawler
         });
     }
 
-    public function parseResponse(ResponseInterface $response)
+    public function parseResponse(ResponseInterface $response): array
     {
-        $crawler = new Crawler(strval($response->getBody()));
+        $crawler = new Crawler((string)$response->getBody());
         $rows = $crawler->filter('#searchResult > tr');
 
         $torrents = [];
@@ -73,13 +73,13 @@ class ThePirateBayCrawler
             $cells = (new Crawler($row))->filter('td');
 
             $torrents[] = [
-                'name' => str_replace('Details for ', '' ,$cells->eq(1)->filter('a')->attr('title')),
+                'name' => str_replace('Details for ', '', $cells->eq(1)->filter('a')->attr('title')),
                 'href' => 'https://' . $this->domain . $cells->eq(1)->filter('a')->attr('href'),
                 'age' => $this->getAge($cells->eq(2)->text()),
                 'magnet' => $cells->eq(3)->filter('a')->eq(0)->attr('href'),
                 'size' => $cells->eq(4)->text(),
-                'seeders' => intval($cells->eq(5)->text()),
-                'leechers' => intval($cells->eq(6)->text())
+                'seeders' => (int)$cells->eq(5)->text(),
+                'leechers' => (int)$cells->eq(6)->text()
             ];
         }
 

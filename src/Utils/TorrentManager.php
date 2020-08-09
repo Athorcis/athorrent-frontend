@@ -2,33 +2,58 @@
 
 namespace Athorrent\Utils;
 
-use Athorrent\Utils\FileUtils;
+use Athorrent\Database\Entity\User;
+use Athorrent\Filesystem\FileUtils;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class TorrentManager
 {
-    private $userId;
-    
-    private function __construct($userId)
+    private $user;
+
+    private $service;
+
+    /**
+     * TorrentManager constructor.
+     * @param User $user
+     * @throws \Exception
+     */
+    public function __construct(EntityManagerInterface $em, Filesystem $fs, User $user)
     {
-        $this->userId = $userId;
-        $this->service = new AthorrentService($userId);
+        $this->user = $user;
+        $this->service = new AthorrentService($em, $fs, $user);
     }
 
-    public function getTorrentsDirectory()
+    public function getUser(): User
     {
-        return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->userId;
+        return $this->user;
     }
-    
-    public function addTorrentFromUrl($url)
+
+    public function getTorrentsDirectory(): string
+    {
+        return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->user->getId();
+    }
+
+    /**
+     * @param string $url
+     * @return mixed
+     * @throws \Exception
+     */
+    public function addTorrentFromUrl(string $url)
     {
         $path = $this->getTorrentsDirectory() . DIRECTORY_SEPARATOR . md5($url) . '.torrent';
-        
+
         file_put_contents($path, file_get_contents($url));
-        
-        $this->addTorrentFromFile($path);
+
+        return $this->addTorrentFromFile($path);
     }
-    
-    public function addTorrentFromFile($path)
+
+    /**
+     * @param string $path
+     * @return mixed
+     * @throws \Exception
+     */
+    public function addTorrentFromFile(string $path)
     {
         $oldFile = realpath($path);
         $newFile = FileUtils::encodeFilename($oldFile);
@@ -41,57 +66,79 @@ class TorrentManager
         return $result;
     }
 
-    public function addTorrentFromMagnet($magnet)
+    /**
+     * @param string $magnet
+     * @return mixed
+     * @throws \Exception
+     */
+    public function addTorrentFromMagnet(string $magnet)
     {
         return $this->service->call('addTorrentFromMagnet', ['magnet' => $magnet]);
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function getTorrents()
     {
         return $this->service->call('getTorrents');
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function getPaths()
     {
-        $paths =  $this->service->call('getPaths');
+        $paths = $this->service->call('getPaths');
 
         if (DIRECTORY_SEPARATOR !== '/') {
-            for ($i = 0, $size = count($paths); $i < $size; ++$i) {
-                $paths[$i] = str_replace('/', DIRECTORY_SEPARATOR, $paths[$i]);
+            foreach ($paths as $index => $path) {
+                $paths[$index] = str_replace('/', DIRECTORY_SEPARATOR, $path);
             }
         }
 
         return $paths;
     }
 
-    public function pauseTorrent($hash)
+    /**
+     * @param string $hash
+     * @return mixed
+     * @throws \Exception
+     */
+    public function pauseTorrent(string $hash)
     {
         return $this->service->call('pauseTorrent', ['hash' => $hash]);
     }
 
-    public function resumeTorrent($hash)
+    /**
+     * @param string $hash
+     * @return mixed
+     * @throws \Exception
+     */
+    public function resumeTorrent(string $hash)
     {
         return $this->service->call('resumeTorrent', ['hash' => $hash]);
     }
 
-    public function removeTorrent($hash)
+    /**
+     * @param string $hash
+     * @return mixed
+     * @throws \Exception
+     */
+    public function removeTorrent(string $hash)
     {
         return $this->service->call('removeTorrent', ['hash' => $hash]);
     }
 
-    public function listTrackers($hash)
+    /**
+     * @param string $hash
+     * @return mixed
+     * @throws \Exception
+     */
+    public function listTrackers(string $hash)
     {
         return $this->service->call('listTrackers', ['hash' => $hash]);
-    }
-
-    private static $instance;
-
-    public static function getInstance($userId)
-    {
-        if (!self::$instance) {
-            self::$instance = new TorrentManager($userId);
-        }
-
-        return self::$instance;
     }
 }

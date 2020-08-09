@@ -1,102 +1,101 @@
+/* eslint-env node */
 
-const resolve = require('path').resolve;
+const { resolve } = require('path');
+const yargs = require('yargs');
 const webpack = require('webpack');
-const ChunkHashPlugin = require('webpack-chunk-hash');
-const CleanPlugin = require('clean-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SuppressChunksPlugin = require('suppress-chunks-webpack-plugin').default;
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const RuntimePublicPathPlugin = require('webpack-runtime-public-path-plugin');
 
 function buildWebpackConfig(config) {
-    let extractSass = new ExtractTextPlugin('[name].[contenthash].css');
+    let dev = yargs.argv.mode === 'development';
 
-    let production = process.env.NODE_ENV === 'production';
+    let { entries } = config;
+
     let nonScriptEntries = {};
 
-    for (var key in config.entries) {
-        if (!key.match(/^scripts\//)) {
-            nonScriptEntries[key] = config.entries[key];
+    for (let key in entries) {
+        if (entries.hasOwnProperty(key) && !key.match(/^scripts\//)) {
+            nonScriptEntries[key] = entries[key];
         }
     }
 
     let plugins = config.plugins || [];
 
-    plugins.push(extractSass);
+    plugins.push(new MiniCssExtractPlugin({
+        filename: dev ? '[name].css' : '[name].[contenthash].css',
+        publicPath: '../'
+    }));
 
-    plugins.push(new SuppressChunksPlugin(Object.keys(nonScriptEntries), { filter: /\.js(\.map)?$/ }));
+    plugins.push(new SuppressChunksPlugin(Object.keys(nonScriptEntries), {
+        filter: /\.js(\.map)?$/
+    }));
 
     plugins.push(new ManifestPlugin({
         fileName: 'manifest.json',
         publicPath: '/'
     }));
 
-    plugins.push(new ChunkHashPlugin());
-
-    if (production) {
-        plugins.push(new webpack.HashedModuleIdsPlugin());
-    } else {
-        plugins.push(new webpack.NamedModulesPlugin());
-    }
-
-    plugins.push(new CleanPlugin(['web'], { exclude: ['index.php', 'robots.txt']}));
-
-    plugins.push(new webpack.optimize.CommonsChunkPlugin({ name: 'scripts/runtime' }));
+    plugins.push(new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: ['**/*', '!index.php', '!robots.txt']
+    }));
 
     plugins.push(new StyleLintPlugin({ context: 'resources/stylesheets' }));
-
-    plugins.push(new CopyPlugin([{
-        from: 'node_modules/es6-promise/dist/es6-promise.auto.js',
-        to: 'scripts/promise.js'
-    }]));
 
     return {
         entry: config.entries,
 
         output: {
-            path: resolve(__dirname, 'web'),
+            path: resolve(__dirname, 'public'),
             publicPath: '/',
 
-            filename: '[name].[chunkhash].js',
-            chunkFilename: 'scripts/[name].[chunkhash].js'
+            filename: dev ? '[name].js' : '[name].[chunkhash].js'
         },
 
         module: {
             rules: [{
                 test: /\.js$/,
                 include: resolve(__dirname, 'resources/scripts'),
-                loader: 'eslint-loader'
+                loader: 'babel-loader'
             }, {
                 test: /\.css$/,
-                use: extractSass.extract([
-                    'css-loader'
-                ])
+                use: [{
+                    loader: MiniCssExtractPlugin.loader,
+                    options: { publicPath: '../' }
+                }, 'css-loader']
             }, {
                 test: /\.scss$/,
-                use: extractSass.extract([
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: { publicPath: '../' }
+                    },
                     'css-loader',
-                    'resolve-url-loader', {
+                    {
                         loader: 'postcss-loader',
                         options: { sourceMap: true }
-                    }, {
+                    },
+                    'resolve-url-loader',
+                    {
                         loader: 'sass-loader',
                         options: { sourceMap: true }
                     }
-                ])
+                ]
             }, {
                 test: /\.ico$/,
                 loader: 'file-loader',
-                options: { name: '[name].[hash:8].[ext]' }
+                options: { name: dev ? '[name].[ext]' : '[name].[hash:8].[ext]' }
             }, {
                 test: /\.(png|jpe?g|gif|svg)$/,
                 loader: 'file-loader',
-                options: { name: 'images/[name].[hash:8].[ext]' }
+                options: { name: dev ? 'images/[name].[ext]' : 'images/[name].[hash:8].[ext]' }
             }, {
                 test: /\.(woff2?|[ot]tf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: 'file-loader',
-                options: { name: 'fonts/[name].[hash:8].[ext]' }
+                options: { name: dev ? 'fonts/[name].[ext]' : 'fonts/[name].[hash:8].[ext]' }
             }]
         },
 
@@ -106,9 +105,9 @@ function buildWebpackConfig(config) {
             alias: config.aliases
         },
 
-        plugins: plugins,
+        plugins,
 
-        devtool: production ? false : 'source-map'
+        devtool: dev ? 'source-map' : false
     };
 }
 
