@@ -220,8 +220,6 @@ class TrackedProcess
             // Impossible d'utiliser posix_kill car cette fonction fait
             // le kill sur le host et non pas dans le conteneur
             exec($killCommand, $output, $exitCode);
-
-            dump(gethostname(), $output, $exitCode);
         }
     }
 

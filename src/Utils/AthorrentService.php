@@ -90,8 +90,6 @@ class AthorrentService extends JsonService
         $process->start();
 
         $processEntity = $this->em->find(TrackedProcess::class,  $process->getTrackedId());
-        dump($process->getTrackedId(), $processEntity);
-
         $this->user->setAthorrentProcess($processEntity);
         $this->em->flush();
     }

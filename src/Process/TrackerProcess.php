@@ -28,7 +28,6 @@ class TrackerProcess extends CommandProcess
 
         $this->waitUntil(
             function ($type, $message) {
-                dump($message);
                 if ($type === self::OUT && preg_match('/^id:(\d+)$/', $message, $matches)) {
                     $this->trackedId = (int)$matches[1];
                 }
