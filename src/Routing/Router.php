@@ -8,7 +8,9 @@ use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
 use Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper;
-use Symfony\Component\Routing\Matcher\Dumper\CompiledUrlMatcherDumper;
+use function function_exists;
+use function in_array;
+use const PHP_SAPI;
 
 class Router extends BaseRouter
 {
@@ -20,17 +22,6 @@ class Router extends BaseRouter
     private $configCacheFactory;
 
     private static $cache = [];
-
-    private function generateActionMapEntries($actionMap): string
-    {
-        $routes = '';
-
-        foreach ($actionMap as $name => $properties) {
-            $routes .= sprintf("\n    '%s' => %s,", $name, CompiledUrlMatcherDumper::export($properties));
-        }
-
-        return $routes;
-    }
 
     public function getActionMap(): array
     {
@@ -101,7 +92,8 @@ class Router extends BaseRouter
 
     private static function readCache(string $path): array
     {
-        if ([] === self::$cache && \function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN) && (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOLEAN))) {
+        if ([] === self::$cache && function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN) && (!in_array(
+                    PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOLEAN))) {
             self::$cache = null;
         }
 
