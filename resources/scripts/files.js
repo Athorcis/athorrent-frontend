@@ -2,11 +2,11 @@
 
 import $ from 'jquery';
 import athorrent from 'athorrent';
-import base64 from 'base64';
+import {atob} from 'base64';
 
 Object.assign(athorrent, {
     getFilePath(element) {
-        return base64.Base64.decode(this.getItemId('file', element));
+        return atob(this.getItemId('file', element));
     },
 
     getSharingToken(element, selector) {
