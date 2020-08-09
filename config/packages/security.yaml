@@ -1,13 +1,14 @@
 security:
     encoders:
-        Athorrent\Database\Entity\User: sha512
+        Athorrent\Database\Entity\User:
+            algorithm: auto
+            cost: 14
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         default:
             entity:
                 class: Athorrent\Database\Entity\User
-                property: username
 
     firewalls:
         dev:
