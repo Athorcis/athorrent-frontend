@@ -59,6 +59,10 @@ class SubFilesystemEntry extends AbstractFilesystemEntry
         return $this->internalEntry->getMimeType();
     }
 
+    /**
+     * @param bool $includeParentDirectory
+     * @return static[]
+     */
     public function readDirectory(bool $includeParentDirectory = false): array
     {
         $entries = [];

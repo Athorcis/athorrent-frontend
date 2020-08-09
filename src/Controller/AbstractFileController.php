@@ -3,6 +3,7 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Database\Repository\SharingRepository;
+use Athorrent\Filesystem\AbstractFilesystemEntry;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -56,6 +57,8 @@ abstract class AbstractFileController extends AbstractController
 
         $breadcrumb = $this->getBreadcrumb($dirEntry->getPath());
         $entries = $dirEntry->readDirectory(!$dirEntry->isRoot());
+
+        usort($entries, [AbstractFilesystemEntry::class, 'compare']);
 
         return new View([
             'title' => $title,
