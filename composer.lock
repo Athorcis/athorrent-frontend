@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "92f088bc8cd05fe80aaabe23557e1d3d",
+    "content-hash": "62cc6cd8c78ccc5e6ecf9cc836717d08",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -2068,28 +2068,31 @@
         },
         {
             "name": "phpfastcache/phpfastcache",
-            "version": "7.1.1",
+            "version": "8.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPSocialNetwork/phpfastcache.git",
-                "reference": "43586728fae8660d5ffc5b0d105502872ee8c17c"
+                "reference": "980e9f5d30f56f52e76ab48fd6b4218463d2a628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPSocialNetwork/phpfastcache/zipball/43586728fae8660d5ffc5b0d105502872ee8c17c",
-                "reference": "43586728fae8660d5ffc5b0d105502872ee8c17c",
+                "url": "https://api.github.com/repos/PHPSocialNetwork/phpfastcache/zipball/980e9f5d30f56f52e76ab48fd6b4218463d2a628",
+                "reference": "980e9f5d30f56f52e76ab48fd6b4218463d2a628",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "php": ">=7.0",
+                "php": ">=7.3",
                 "psr/cache": "~1.0.0",
                 "psr/simple-cache": "~1.0.0"
             },
             "conflict": {
                 "basho/riak": "*",
                 "doctrine/couchdb": "*"
+            },
+            "require-dev": {
+                "league/climate": "^3.5"
             },
             "suggest": {
                 "ext-apc": "*",
@@ -2174,27 +2177,27 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-04-24T21:51:24+00:00"
+            "time": "2020-04-24T22:22:11+00:00"
         },
         {
             "name": "phpfastcache/phpfastcache-bundle",
-            "version": "3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Athorcis/phpfastcache-bundle.git",
-                "reference": "63beaf005a1cedf375e1e32ad5009ca200df1fc8"
+                "reference": "216b8f5ac776e0561093316c5f6976bd2f232119"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Athorcis/phpfastcache-bundle/zipball/63beaf005a1cedf375e1e32ad5009ca200df1fc8",
-                "reference": "63beaf005a1cedf375e1e32ad5009ca200df1fc8",
+                "url": "https://api.github.com/repos/Athorcis/phpfastcache-bundle/zipball/216b8f5ac776e0561093316c5f6976bd2f232119",
+                "reference": "216b8f5ac776e0561093316c5f6976bd2f232119",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "php": "^7.2",
-                "phpfastcache/phpfastcache": "^7.0",
+                "phpfastcache/phpfastcache": "^8.0",
                 "symfony/console": "^3.4 | ^4.0 || ^5.0",
                 "symfony/dependency-injection": "^3.4 | ^4.0 | ^5.0",
                 "symfony/framework-bundle": "^3.4 | ^4.0 | ^5.0",
@@ -2257,9 +2260,9 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/Athorcis/phpfastcache-bundle/tree/3.0.5"
+                "source": "https://github.com/Athorcis/phpfastcache-bundle/tree/v3.0.6"
             },
-            "time": "2020-05-24T20:03:09+00:00"
+            "time": "2020-08-09T17:25:29+00:00"
         },
         {
             "name": "psr/cache",
@@ -7227,6 +7230,7 @@
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-sockets": "*"
     },
