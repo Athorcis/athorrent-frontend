@@ -77,6 +77,14 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
 
     public function getCacheKey(): string
     {
-        return base64_encode($this->internalEntry->path . $this->getModificationTimestamp() . ($this->isSharable() ? 0 : 1));
+        $sharable = $this->isSharable();
+
+        $rawKey = $this->internalEntry->path . $this->getModificationTimestamp() . (int)$sharable;
+
+        if ($sharable) {
+            $rawKey .= (int)$this->isShared();
+        }
+
+        return base64_encode($rawKey);
     }
 }
