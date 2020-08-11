@@ -17,7 +17,7 @@ class TorrentFilesystem extends UserFilesystem
     /** @var bool[] */
     protected $torrentsMap;
 
-    public function __construct(TorrentManager $torrentManager, User $accessor, string $path = '')
+    public function __construct(TorrentManager $torrentManager, ?User $accessor, string $path = '')
     {
         parent::__construct($torrentManager->getUser(), $accessor, $path);
         $this->torrentManager = $torrentManager;
