@@ -23,20 +23,26 @@ class Router extends BaseRouter
 
     private static $cache = [];
 
+    protected function getActionMapDumperInstance()
+    {
+        return new ActionMapDumper($this->getRouteCollection());
+    }
+
     public function getActionMap(): array
     {
         if (null !== $this->actionMap) {
             return $this->actionMap;
         }
 
-        $dumper = new ActionMapDumper($this->getRouteCollection());
-
         if (null === $this->options['cache_dir']) {
+            $dumper = $this->getActionMapDumperInstance();
             $this->actionMap = $dumper->generateActionMap();
         }
         else {
             $cache = $this->getConfigCacheFactory()->cache($this->options['cache_dir'].'/action-map.php',
-                function (ConfigCacheInterface $cache) use ($dumper) {
+                function (ConfigCacheInterface $cache) {
+                    $dumper = $this->getActionMapDumperInstance();
+
                     $cache->write($dumper->dump(), $this->getRouteCollection()->getResources());
                 }
             );
