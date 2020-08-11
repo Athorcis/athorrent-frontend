@@ -39,6 +39,7 @@ class PaginatedView extends View
 
         parent::__construct([
             'pagination' => [
+                'action' => $request->attributes->get('_action'),
                 'entities' => $entities,
                 'lastPage' => $lastPage,
                 'page' => $page
