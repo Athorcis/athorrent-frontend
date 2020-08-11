@@ -2,9 +2,11 @@
 
 namespace Athorrent\Filesystem;
 
+use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Utils\TorrentManagerFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FilesystemFactory
@@ -22,6 +24,17 @@ class FilesystemFactory
         $this->sharingRepository = $sharingRepository;
     }
 
+    protected function getUser(): ?User
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if ($token instanceof AnonymousToken) {
+            return null;
+        }
+
+        return $token->getUser();
+    }
+
     public function createSharedFilesystem(string $token): SharedFilesystem
     {
         $sharing = $this->sharingRepository->findOneBy(['token' => $token]);
@@ -30,15 +43,14 @@ class FilesystemFactory
             throw new NotFoundHttpException('error.sharingNotFound');
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
         $torrentManager = $this->torrentManagerFactory->create($sharing->getUser());
 
-        return new SharedFilesystem($torrentManager, $user, $sharing);
+        return new SharedFilesystem($torrentManager, $this->getUser(), $sharing);
     }
 
     public function createTorrentFilesystem(): TorrentFilesystem
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->getUser();
         $torrentManager = $this->torrentManagerFactory->create($user);
 
         return new TorrentFilesystem($torrentManager, $user);

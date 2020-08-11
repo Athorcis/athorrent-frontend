@@ -12,7 +12,7 @@ class UserFilesystem extends SubFilesystem
     /** @var User */
     protected $accessor;
 
-    public function __construct(User $owner, User $accessor, string $path = '')
+    public function __construct(User $owner, ?User $accessor, string $path = '')
     {
         parent::__construct($this->buildRoot($owner, $path));
 

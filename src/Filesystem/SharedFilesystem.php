@@ -8,7 +8,7 @@ use Athorrent\Utils\TorrentManager;
 
 class SharedFilesystem extends TorrentFilesystem
 {
-    public function __construct(TorrentManager $torrentManager, User $accessor, Sharing $sharing)
+    public function __construct(TorrentManager $torrentManager, ?User $accessor, Sharing $sharing)
     {
         parent::__construct($torrentManager, $accessor, $sharing->getPath());
     }
