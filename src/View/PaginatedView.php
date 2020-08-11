@@ -38,8 +38,8 @@ class PaginatedView extends View
         $lastPage = ceil($count / $countPerPage);
 
         parent::__construct([
+            'action' => $request->attributes->get('_action'),
             'pagination' => [
-                'action' => $request->attributes->get('_action'),
                 'entities' => $entities,
                 'lastPage' => $lastPage,
                 'page' => $page
