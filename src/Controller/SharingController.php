@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/user/sharings", name="sharings")
@@ -56,7 +57,7 @@ class SharingController extends AbstractController
         $this->entityManager->persist($sharing);
         $this->entityManager->flush();
 
-        return [$this->generateUrl('listFiles', ['token' => $sharing->getToken(), '_prefixId' => 'sharings'])];
+        return [$this->generateUrl('listFiles', ['token' => $sharing->getToken(), '_prefixId' => 'sharings'], UrlGeneratorInterface::ABSOLUTE_URL)];
     }
 
     /**
