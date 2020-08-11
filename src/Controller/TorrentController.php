@@ -6,6 +6,7 @@ use Athorrent\Utils\ServiceUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -76,9 +77,10 @@ class TorrentController extends AbstractController
      */
     public function uploadTorrent(Request $request, TorrentManager $torrentManager): array
     {
+        /** @var UploadedFile $file */
         $file = $request->files->get('upload-torrent-file');
 
-        if ($file && $file->getClientSize() <= 1048576) {
+        if ($file && $file->getSize() <= 1048576) {
             if ($file->getMimeType() === 'application/x-bittorrent') {
                 $file->move($torrentManager->getTorrentsDirectory(), $file->getClientOriginalName());
 
