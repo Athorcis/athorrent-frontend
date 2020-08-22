@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ stylesheet('home')|raw }}
+    {{ encore_entry_link_tags('home') }}
 {% endblock %}
 
 {% block content %}
@@ -15,8 +15,8 @@
 {% cache 'home' %}
     <div class="jumbotron">
         <picture>
-            <source srcset="{{ asset_url('images/logo-narrow.png') }}" media="(max-width: 767px)" />
-            <img class="logo" src="{{ asset_url('images/logo-wide.png') }}" alt="{{ 'app.logo'|trans }}" />
+            <source srcset="{{ asset('build/logo-narrow.png') }}" media="(max-width: 767px)" />
+            <img class="logo" src="{{ asset('build/logo-wide.png') }}" alt="{{ 'app.logo'|trans }}" />
         </picture>
         <div class="jumbotron-text">
             <h1>{{ 'home.welcome'|trans }}</h1>

@@ -2,7 +2,6 @@
 
 namespace Athorrent;
 
-use Athorrent\Security\Nonce\NonceManager;
 use Athorrent\View\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -11,13 +10,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class RequestListener implements EventSubscriberInterface
 {
-    private $nonceManager;
-
-    public function __construct(NonceManager $nonceManager)
-    {
-        $this->nonceManager = $nonceManager;
-    }
-
     public static function getSubscribedEvents()
     {
         return [
@@ -41,7 +33,7 @@ class RequestListener implements EventSubscriberInterface
 
                 $vars = [
                     'debug' => (bool)$_SERVER['APP_DEBUG'],
-                    'staticHost' => $_ENV['STATIC_HOST']
+                    'assetsOrigin' => $_ENV['ASSETS_ORIGIN']
                 ];
 
                 $result->setJsVars($vars);
@@ -70,7 +62,7 @@ class RequestListener implements EventSubscriberInterface
         $request = $event->getRequest();
 
         if (!$request->isXmlHttpRequest()) {
-            $cspScriptSrc = "'strict-dynamic' 'nonce-" . $this->nonceManager->getNonce() . "'";
+            $cspScriptSrc = "'self' 'unsafe-inline'";
 
             // Symfony 4.1 doesn't add the 'unsafe-eval
             // required by the web profiler to work

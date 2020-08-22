@@ -1,8 +1,9 @@
 /* eslint-env browser */
 
 import $ from 'jquery';
-import athorrent from 'athorrent';
-import {decode} from 'base64';
+import athorrent from './athorrent';
+import {decode} from 'js-base64';
+import '../css/files.scss';
 
 Object.assign(athorrent, {
     getFilePath(element) {

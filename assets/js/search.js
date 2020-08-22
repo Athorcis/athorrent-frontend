@@ -1,7 +1,8 @@
 /* eslint-env browser */
 
 import $ from 'jquery';
-import athorrent from 'athorrent';
+import './athorrent';
+import '../css/search.scss';
 
 $('.nav-tabs a').click(function (event) {
     event.preventDefault();

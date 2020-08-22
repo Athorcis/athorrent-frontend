@@ -3,37 +3,23 @@
 namespace Athorrent\View;
 
 use Athorrent\Filesystem\UserFilesystemEntry;
-use Athorrent\Security\Nonce\NonceManager;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
-    private $publicDir;
-
     private $translator;
 
-    private $nonceManager;
-
-    private $manifest;
-
-    public function __construct(string $publicDir, TranslatorInterface $translator, NonceManager $nonceManager)
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->publicDir = $publicDir;
         $this->translator = $translator;
-        $this->nonceManager = $nonceManager;
-        $this->manifest = json_decode(file_get_contents($publicDir.'/manifest.json'), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function getFunctions()
     {
         return [
             new TwigFunction('torrentStateToClass', [$this, 'torrentStateToClass']),
-            new TwigFunction('asset_path', [$this, 'getAssetPath']),
-            new TwigFunction('asset_url', [$this, 'getAssetUrl']),
-            new TwigFunction('stylesheet', [$this, 'includeStylesheet']),
-            new TwigFunction('script', [$this, 'includeScript']),
             new TwigFunction('format_age', [$this, 'formatAge']),
             new TwigFunction('icon', [$this, 'getIcon']),
             new TwigFunction('base64_encode', 'base64_encode'),
@@ -81,50 +67,6 @@ class TwigHelperExtension extends AbstractExtension
         }
 
         return $class;
-    }
-
-    public function getAssetPath($assetId)
-    {
-        return $this->manifest[$assetId] ?? ('/'.$assetId);
-    }
-
-    public function getAssetUrl($assetId): string
-    {
-        return '//' . $_ENV['STATIC_HOST'] . $this->getAssetPath($assetId);
-    }
-
-    protected function includeResource($assetId, $inline)
-    {
-        $relativePath = $this->getAssetPath($assetId);
-        $absolutePath = $this->publicDir . $relativePath;
-
-        if ($_ENV['APP_ENV'] !== 'dev' && ($inline === true || ($inline === null && filesize($absolutePath) < 1024))) {
-            return ['content' => file_get_contents($absolutePath)];
-        }
-
-        return ['path' => '//' . $_ENV['STATIC_HOST'] . $relativePath];
-    }
-
-    public function includeStylesheet($path, $inline = false): string
-    {
-        $result = $this->includeResource('stylesheets/' . $path . '.css', $inline);
-
-        if (isset($result['content'])) {
-            return '<style type="text/css">' . $result['content'] . '</style>';
-        }
-
-        return '<link rel="stylesheet" type="text/css" href="' . $result['path'] . '" />';
-    }
-
-    public function includeScript($path, $inline = false): string
-    {
-        $result = $this->includeResource('scripts/' . $path . '.js', $inline);
-
-        if (isset($result['content'])) {
-            return '<script type="text/javascript" nonce="' . $this->nonceManager->getNonce() . '">' . $result['content'] . '</script>';
-        }
-
-        return '<script type="text/javascript" src="' . $result['path'] . '" nonce="' . $this->nonceManager->getNonce() . '"></script>';
     }
 
     public function formatAge($age)

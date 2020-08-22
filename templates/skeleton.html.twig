@@ -8,7 +8,7 @@
         <meta name="description" content="{{ 'app.description'|trans }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" type="image/x-icon" href="{{ asset_url('favicon.ico') }}" />
+        <link rel="icon" type="image/x-icon" href="{{ asset('build/favicon.ico') }}" />
 
         {% set route = app.request.attributes.get('_route') %}
 
@@ -21,12 +21,12 @@
         {% endif %}
 
         {% block stylesheets %}
-            {{ stylesheet('main')|raw }}
+            {{ encore_entry_link_tags('main') }}
         {% endblock %}
 
         {% block early_scripts %}
             <!--[if lt IE 9]>
-                {{ script('html5shiv')|raw }}
+                {{ encore_entry_script_tags('html5shiv')|raw }}
             <![endif]-->
         {% endblock %}
     </head>
@@ -63,19 +63,13 @@
 
         {% block late_scripts %}
             {% if js_vars %}
-                <script type="text/javascript" nonce="{{ csp_nonce() }}">
+                <script type="text/javascript">
                     var athorrent = {{ js_vars|json_encode|raw }};
                 </script>
             {% endif %}
 
-            <script type="text/javascript" nonce="{{ csp_nonce() }}">
-                window.Promise || document.write('<script src="{{ asset_url('scripts/promise.js') }}"><\/script>');
-            </script>
-
-{#            {{ script('runtime', true)|raw }}#}
-
             {% block main_script %}
-                {{ script('athorrent')|raw }}
+                {{ encore_entry_script_tags('athorrent') }}
             {% endblock %}
         {% endblock %}
     </body>

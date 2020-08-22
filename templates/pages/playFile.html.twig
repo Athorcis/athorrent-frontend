@@ -4,12 +4,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ stylesheet('media')|raw }}
-    {{ stylesheet('media-element-player')|raw }}
+    {{ encore_entry_link_tags('media') }}
 {% endblock %}
 
 {% block main_script %}
-    {{ script('media')|raw }}
+    {{ encore_entry_script_tags('media') }}
 {% endblock %}
 
 {% block content %}

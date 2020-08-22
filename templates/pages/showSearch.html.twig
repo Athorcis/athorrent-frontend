@@ -4,11 +4,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ stylesheet('search')|raw }}
+    {{ encore_entry_link_tags('search') }}
 {% endblock %}
 
 {% block main_script %}
-    {{ script('search')|raw }}
+    {{ encore_entry_script_tags('search') }}
 {% endblock %}
 
 {% block content %}

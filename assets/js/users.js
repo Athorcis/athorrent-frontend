@@ -1,7 +1,8 @@
 /* eslint-env browser */
 
 import $ from 'jquery';
-import athorrent from 'athorrent';
+import athorrent from './athorrent';
+import '../css/users.scss';
 
 function getUserId(element) {
     return athorrent.getItemId('user', element);
