@@ -71,31 +71,24 @@ echo
 echo "Create config file"
 echo
 
-echo "<?php
+echo "
 
-define('DEBUG', false);
+ASSETS_ORIGIN=$(hostname)
 
-define('DB_USERNAME', '$DB_USERNAME');
-define('DB_PASSWORD', '$DB_PASSWORD');
-define('DB_NAME', 'athorrent');
+APP_ENV=prod
+APP_SECRET=$(randomString)
 
-define('REMEMBER_ME_KEY', '$(randomString)');
-
-define('CSRF_SALT','$(randomString)');
-
-if (isset(\$_SERVER['HTTP_HOST'])) {
-    define('STATIC_HOST', \$_SERVER['HTTP_HOST']);
-}
-" > config/env.php
+DATABASE_URL=mysql://$DB_USERNAME:$DB_PASSWORD@127.0.0.1/athorrent?serverVersion=5.7&charset=utf8mb4
+" > .env.local
 
 echo
 echo "Create database"
 echo
 
-"$PHP" bin/athorrent-cli orm:schema-tool:create
+"$PHP" bin/console orm:schema-tool:create
 
 echo
 echo "Create user"
 echo
 
-"$PHP" bin/athorrent-cli user:create $SEEDBOX_USERNAME $SEEDBOX_PASSWORD ROLE_ADMIN
+"$PHP" bin/console user:create $SEEDBOX_USERNAME $SEEDBOX_PASSWORD ROLE_ADMIN
