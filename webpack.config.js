@@ -2,8 +2,8 @@ const dotenv = require('dotenv');
 const Encore = require('@symfony/webpack-encore');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 
-dotenv.config({ path : __dirname + '/.env' });
 dotenv.config({ path : __dirname + '/.env.local' });
+dotenv.config({ path : __dirname + '/.env' });
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
