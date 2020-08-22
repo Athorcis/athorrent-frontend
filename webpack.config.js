@@ -30,7 +30,6 @@ Encore
      */
     .addEntry('athorrent', './assets/js/athorrent.js')
     .addEntry('files', './assets/js/files.js')
-    .addEntry('html5shiv', './node_modules/html5shiv')
     .addEntry('media', './assets/js/media.js')
     .addEntry('search', './assets/js/search.js')
     .addEntry('sharings', './assets/js/sharings.js')
