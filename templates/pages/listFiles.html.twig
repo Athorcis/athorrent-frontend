@@ -4,11 +4,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ stylesheet('files')|raw }}
+    {{ encore_entry_link_tags('files') }}
 {% endblock %}
 
 {% block main_script %}
-    {{ script('files')|raw }}
+    {{ encore_entry_script_tags('files') }}
 {% endblock %}
 
 {% block content %}

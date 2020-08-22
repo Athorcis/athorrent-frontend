@@ -3,7 +3,7 @@
 {% block title %}{{ 'sharings.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
 {% block main_script %}
-    {{ script('sharings')|raw }}
+    {{ encore_entry_script_tags('sharings') }}
 {% endblock %}
 
 {% block content %}

@@ -4,11 +4,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ stylesheet('torrents')|raw }}
+    {{ encore_entry_link_tags('torrents') }}
 {% endblock %}
 
 {% block main_script %}
-    {{ script('torrents')|raw }}
+    {{ encore_entry_script_tags('torrents') }}
 {% endblock %}
 
 {% block content %}

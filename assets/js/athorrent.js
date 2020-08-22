@@ -3,7 +3,7 @@
 import $ from 'jquery';
 import bs from 'bootstrap-sass';
 import pf from 'picturefill';
-import urldecode from 'urldecode';
+import urldecode from 'locutus/php/url/urldecode';
 
 let athorrent = window.athorrent || {};
 

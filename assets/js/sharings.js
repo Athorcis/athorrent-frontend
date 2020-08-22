@@ -1,7 +1,7 @@
 /* eslint-env browser */
 
 import $ from 'jquery';
-import athorrent from 'athorrent';
+import athorrent from './athorrent';
 
 function getSharingToken(element, selector) {
     return athorrent.getItemId('sharing', element, selector);

@@ -2,7 +2,8 @@
 
 import $ from 'jquery';
 import Dropzone from 'dropzone';
-import athorrent from 'athorrent';
+import athorrent from './athorrent';
+import '../css/torrents.scss';
 
 let torrentListTimeout = 2000,
     trackerListTimeout = 5000;

@@ -4,11 +4,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ stylesheet('users')|raw }}
+    {{ encore_entry_link_tags('users') }}
 {% endblock %}
 
 {% block main_script %}
-    {{ script('users')|raw }}
+    {{ encore_entry_script_tags('users') }}
 {% endblock %}
 
 {% set userId = app.user.id %}

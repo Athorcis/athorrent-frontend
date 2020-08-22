@@ -18,31 +18,25 @@
     "url": "https://github.com/athorcis/athorrent-frontend.git"
   },
   "devDependencies": {
-    "@babel/core": "~7.11.1",
-    "@babel/preset-env": "~7.11.0",
-    "babel-loader": "~8.1.0",
-    "clean-webpack-plugin": "~3.0.0",
-    "css-loader": "~4.2.1",
+    "@symfony/webpack-encore": "^0.30.0",
+    "core-js": "^3.0.0",
+    "dotenv": "^8.2.0",
     "eslint": "~7.6.0",
-    "file-loader": "~6.0.0",
-    "mini-css-extract-plugin": "~0.9.0",
-    "postcss-loader": "~3.0.0",
-    "resolve-url-loader": "~3.1.1",
+    "postcss-loader": "^3.0.0",
+    "regenerator-runtime": "^0.13.2",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
     "stylelint": "~13.6.1",
     "stylelint-config-standard": "~20.0.0",
-    "stylelint-webpack-plugin": "~2.1.0",
-    "suppress-chunks-webpack-plugin": "~1.0.6",
-    "url-loader": "~4.1.0",
-    "webpack": "~4.44.1",
-    "webpack-cli": "~3.3.11",
-    "webpack-manifest-plugin": "~2.2.0",
-    "webpack-runtime-public-path-plugin": "~1.1.1",
+    "stylelint-webpack-plugin": "^2.1.0",
+    "webpack-notifier": "^1.6.0",
+    "webpack-runtime-public-path-plugin": "^1.1.2",
     "yargs": "~15.4.1"
   },
   "scripts": {
-    "dev": "webpack --mode development",
-    "build": "webpack --mode production"
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
   }
 }

@@ -2,13 +2,9 @@
 /.idea/
 /bin/*
 /composer.phar
-/node_modules/
 /package-lock.json
-/public/*
 
 !/bin/console
-!/public/index.php
-!/public/robots.txt
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -19,3 +15,10 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###

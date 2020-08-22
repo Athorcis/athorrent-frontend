@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ stylesheet('administration')|raw }}
+    {{ encore_entry_link_tags('administration') }}
 {% endblock %}
 
 {% block content %}

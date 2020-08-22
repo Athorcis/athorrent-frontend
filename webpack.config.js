@@ -1,156 +1,81 @@
-/* eslint-env node */
-
-const { resolve } = require('path');
-const yargs = require('yargs');
-const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
-const SuppressChunksPlugin = require('suppress-chunks-webpack-plugin').default;
+const dotenv = require('dotenv');
+const Encore = require('@symfony/webpack-encore');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
-const RuntimePublicPathPlugin = require('webpack-runtime-public-path-plugin');
 
-function buildWebpackConfig(config) {
-    let dev = yargs.argv.mode === 'development';
+dotenv.config({ path : __dirname + '/.env.local' });
+dotenv.config({ path : __dirname + '/.env' });
 
-    let { entries } = config;
-
-    let nonScriptEntries = {};
-
-    for (let key in entries) {
-        if (entries.hasOwnProperty(key) && !key.match(/^scripts\//)) {
-            nonScriptEntries[key] = entries[key];
-        }
-    }
-
-    let plugins = config.plugins || [];
-
-    plugins.push(new MiniCssExtractPlugin({
-        filename: dev ? '[name].css' : '[name].[contenthash].css',
-        publicPath: '../'
-    }));
-
-    plugins.push(new SuppressChunksPlugin(Object.keys(nonScriptEntries), {
-        filter: /\.js(\.map)?$/
-    }));
-
-    plugins.push(new ManifestPlugin({
-        fileName: 'manifest.json',
-        publicPath: '/'
-    }));
-
-    plugins.push(new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['**/*', '!index.php', '!robots.txt']
-    }));
-
-    plugins.push(new StyleLintPlugin({ context: 'resources/stylesheets' }));
-
-    return {
-        entry: config.entries,
-
-        output: {
-            path: resolve(__dirname, 'public'),
-            publicPath: '/',
-
-            filename: dev ? '[name].js' : '[name].[chunkhash].js'
-        },
-
-        module: {
-            rules: [{
-                test: /\.js$/,
-                include: resolve(__dirname, 'resources/scripts'),
-                loader: 'babel-loader'
-            }, {
-                test: /\.css$/,
-                use: [{
-                    loader: MiniCssExtractPlugin.loader,
-                    options: { publicPath: '../' }
-                }, 'css-loader']
-            }, {
-                test: /\.scss$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: { publicPath: '../' }
-                    },
-                    'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: { sourceMap: true }
-                    },
-                    'resolve-url-loader',
-                    {
-                        loader: 'sass-loader',
-                        options: { sourceMap: true }
-                    }
-                ]
-            }, {
-                test: /\.ico$/,
-                loader: 'file-loader',
-                options: { name: dev ? '[name].[ext]' : '[name].[hash:8].[ext]' }
-            }, {
-                test: /\.(png|jpe?g|gif|svg)$/,
-                loader: 'file-loader',
-                options: { name: dev ? 'images/[name].[ext]' : 'images/[name].[hash:8].[ext]' }
-            }, {
-                test: /\.(woff2?|[ot]tf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'file-loader',
-                options: { name: dev ? 'fonts/[name].[ext]' : 'fonts/[name].[hash:8].[ext]' }
-            }]
-        },
-
-        resolve: {
-            modules: ['node_modules', 'resources/scripts'],
-
-            alias: config.aliases
-        },
-
-        plugins,
-
-        devtool: dev ? 'source-map' : false
-    };
+// Manually configure the runtime environment if not already configured yet by the "encore" command.
+// It's useful when you use tools that rely on webpack.config.js file.
+if (!Encore.isRuntimeEnvironmentConfigured()) {
+    Encore.configureRuntimeEnvironment(process.env.NODE_ENV || process.env.APP_ENV || 'dev');
 }
 
-module.exports = buildWebpackConfig({
-    entries: {
-        'favicon.ico': './resources/images/favicon.ico',
-        'images/logo-narrow': './resources/images/logo-narrow.png',
-        'images/logo-wide': './resources/images/logo-wide.png',
+Encore
+    // directory where compiled assets will be stored
+    .setOutputPath('public/build/')
+    // public path used by the web server to access the output path
+    .setPublicPath(process.env.ASSETS_ORIGIN + '/build/')
+    // only needed for CDN's or sub-directory deploy
+    .setManifestKeyPrefix('build/')
 
-        'scripts/athorrent': 'athorrent',
-        'scripts/files': 'files',
-        'scripts/html5shiv': 'html5shiv',
-        'scripts/media': 'media',
-        'scripts/search': 'search',
-        'scripts/sharings': 'sharings',
-        'scripts/torrents': 'torrents',
-        'scripts/users': 'users',
+    /*
+     * ENTRY CONFIG
+     *
+     * Add 1 entry for each "page" of your app
+     * (including one that's included on every page - e.g. "app")
+     *
+     * Each entry will result in one JavaScript file (e.g. app.js)
+     * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
+     */
+    .addEntry('athorrent', './assets/js/athorrent.js')
+    .addEntry('files', './assets/js/files.js')
+    .addEntry('html5shiv', './node_modules/html5shiv')
+    .addEntry('media', './assets/js/media.js')
+    .addEntry('search', './assets/js/search.js')
+    .addEntry('sharings', './assets/js/sharings.js')
+    .addEntry('torrents', './assets/js/torrents.js')
+    .addEntry('users', './assets/js/users.js')
 
-        'stylesheets/administration': './resources/stylesheets/administration.scss',
-        'stylesheets/cache': './resources/stylesheets/cache.scss',
-        'stylesheets/files': './resources/stylesheets/files.scss',
-        'stylesheets/home': './resources/stylesheets/home.scss',
-        'stylesheets/main': './resources/stylesheets/main.scss',
-        'stylesheets/media': './resources/stylesheets/media.scss',
-        'stylesheets/media-element-player': 'mediaelement/build/mediaelementplayer.css',
-        'stylesheets/search': './resources/stylesheets/search.scss',
-        'stylesheets/torrents': './resources/stylesheets/torrents.scss',
-        'stylesheets/users': './resources/stylesheets/users.scss'
-    },
+    .addStyleEntry('administration', './assets/css/administration.scss')
+    .addStyleEntry('cache', './assets/css/cache.scss')
+    .addStyleEntry('home', './assets/css/home.scss')
+    .addStyleEntry('main', './assets/css/main.scss')
 
-    aliases: {
-        base64: 'js-base64/base64',
-        urldecode: 'locutus/php/url/urldecode'
-    },
+    .copyFiles({
+        from: './assets/images',
+        pattern: /\.(ico|png)$/
+    })
 
-    plugins: [
-        new RuntimePublicPathPlugin({
-            runtimePublicPath: '"//" + athorrent.staticHost + "/"'
-        }),
+    // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
+    .splitEntryChunks()
 
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery'
-        })
-    ]
-});
+    // will require an extra script tag for runtime.js
+    // but, you probably want this, unless you're building a single-page app
+    .enableSingleRuntimeChunk()
+
+    /*
+     * FEATURE CONFIG
+     *
+     * Enable & configure other features below. For a full
+     * list of features, see:
+     * https://symfony.com/doc/current/frontend.html#adding-more-features
+     */
+    .cleanupOutputBeforeBuild()
+    .enableBuildNotifications()
+    .enableSourceMaps(!Encore.isProduction())
+    // enables hashed filenames (e.g. app.abc123.css)
+    .enableVersioning(Encore.isProduction())
+
+    // enables Sass/SCSS support
+    .enableSassLoader()
+
+    .enablePostCssLoader()
+
+    .addPlugin(new StyleLintPlugin({ context: './assets/css' }))
+
+    // uncomment if you're having problems with a jQuery plugin
+    .autoProvidejQuery()
+;
+
+module.exports = Encore.getWebpackConfig();
