@@ -1,7 +1,6 @@
 {% apply spaceless %}
 <!doctype html>
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ app.request.locale }}"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="{{ app.request.locale }}"> <!--<![endif]-->
+<html lang="{{ app.request.locale }}">
     <head>
         <meta charset="utf-8">
         <title>{% block title %}{% endblock %}</title>
@@ -22,12 +21,6 @@
 
         {% block stylesheets %}
             {{ encore_entry_link_tags('main') }}
-        {% endblock %}
-
-        {% block early_scripts %}
-            <!--[if lt IE 9]>
-                {{ encore_entry_script_tags('html5shiv')|raw }}
-            <![endif]-->
         {% endblock %}
     </head>
     <body>
@@ -61,16 +54,14 @@
             {% block content %}{% endblock %}
         </div>
 
-        {% block late_scripts %}
-            {% if js_vars %}
-                <script type="text/javascript">
-                    var athorrent = {{ js_vars|json_encode|raw }};
-                </script>
-            {% endif %}
+        {% if js_vars %}
+            <script type="text/javascript">
+                var athorrent = {{ js_vars|json_encode|raw }};
+            </script>
+        {% endif %}
 
-            {% block main_script %}
-                {{ encore_entry_script_tags('athorrent') }}
-            {% endblock %}
+        {% block main_script %}
+            {{ encore_entry_script_tags('athorrent') }}
         {% endblock %}
     </body>
 </html>
