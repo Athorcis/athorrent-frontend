@@ -4,6 +4,7 @@ namespace Athorrent\Filesystem;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -41,7 +42,12 @@ class FilesystemConverter implements ParamConverterInterface
             $path = '';
         }
 
-        $entry = $filesystem->getEntry($path);
+        try {
+            $entry = $filesystem->getEntry($path);
+        }
+        catch (FileNotFoundException $exception) {
+            throw new NotFoundHttpException($exception->getMessage(), $exception);
+        }
 
         if ($requirements['file'] && !$entry->isFile()) {
             throw new NotFoundHttpException();
