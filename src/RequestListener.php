@@ -62,7 +62,7 @@ class RequestListener implements EventSubscriberInterface
         $request = $event->getRequest();
 
         if (!$request->isXmlHttpRequest()) {
-            $cspScriptSrc = "'self' 'unsafe-inline'";
+            $cspScriptSrc = $_ENV['ASSETS_ORIGIN'] . " 'unsafe-inline'";
 
             // Symfony 4.1 doesn't add the 'unsafe-eval
             // required by the web profiler to work
