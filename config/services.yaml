@@ -92,6 +92,7 @@ services:
         arguments:
             $cache: '@twig.cache.provider'
             $keyGenerator: '@twig.cache.key_generator'
+            $lifetime: null
 
     twig.cache.provider:
         class: Twig\CacheExtension\CacheProvider\PsrCacheAdapter
