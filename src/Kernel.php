@@ -2,7 +2,6 @@
 
 namespace Athorrent;
 
-use Athorrent\Cache\CacheCompilerPass;
 use Athorrent\Process\CommandProcess;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -64,10 +63,5 @@ class Kernel extends BaseKernel
         $routes->import('../config/{routes}/'.$this->environment.'/*.yaml');
         $routes->import('../config/{routes}/*.yaml');
         $routes->import('../config/{routes}.yaml');
-    }
-
-    protected function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new CacheCompilerPass());
     }
 }

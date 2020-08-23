@@ -114,21 +114,6 @@
     "php": {
         "version": "7.4"
     },
-    "phpfastcache/phpfastcache": {
-        "version": "7.1.1"
-    },
-    "phpfastcache/phpfastcache-bundle": {
-        "version": "3.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "3.0",
-            "ref": "02e96b4f3739af1dbfdf799e493bcc8e9bd04025"
-        },
-        "files": [
-            "./config/packages/phpfastcache.yaml"
-        ]
-    },
     "psr/cache": {
         "version": "1.0.1"
     },

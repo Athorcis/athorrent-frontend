@@ -12,7 +12,7 @@
     <div class="alert alert-danger" role="alert">{{ error|trans }}</div>
 {% endif %}
 
-{% cache 'home' %}
+{% cache 'home' {} %}
     <div class="jumbotron">
         <picture>
             <source srcset="{{ asset('build/logo-narrow.png') }}" media="(max-width: 767px)" />

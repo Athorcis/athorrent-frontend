@@ -6,7 +6,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/Athorcis/phpfastcache-bundle"
+            "url": "https://github.com/Athorcis/twig-cache-extension"
         }
     ],
     "require": {
@@ -19,7 +19,7 @@
         "ext-sockets": "*",
         "gabrielelana/byte-units": "^0.5",
         "guzzlehttp/guzzle": "^7.0.1",
-        "phpfastcache/phpfastcache-bundle": "^3.0",
+        "psr/simple-cache": "^1.0.1",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/console": "5.1.*",
         "symfony/css-selector": "5.1.*",
@@ -35,7 +35,8 @@
         "symfony/translation": "5.1.*",
         "symfony/twig-pack": "*",
         "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "5.1.*"
+        "symfony/yaml": "5.1.*",
+        "twig/cache-extension": "^2.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",

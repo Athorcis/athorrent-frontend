@@ -38,7 +38,7 @@
                             <span class="btn-group">
                                 <a href="{{ path('editAccount') }}" class="btn btn-success">{{ 'nav.account'|trans }}</a>
 
-                                {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                                {% if is_granted('IS_IMPERSONATOR') %}
                                     <a href="?_switch_user=_exit" class="btn btn-danger" title="{{ 'nav.exit'|trans }}">
                                         <span class="fa fa-sign-out"></span>
                                     </a>

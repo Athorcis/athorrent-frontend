@@ -2,6 +2,8 @@
 
 namespace Athorrent\Cache\KeyGenerator;
 
+use Twig\CacheExtension\CacheStrategy\KeyGeneratorInterface;
+
 class KeyGenerator implements KeyGeneratorInterface
 {
     public function generateKey($value): string
