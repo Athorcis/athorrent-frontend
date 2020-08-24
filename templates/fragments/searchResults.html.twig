@@ -32,7 +32,7 @@
                             <td>
                                 <a href="{{ result.href }}" target="_blank">{{ result.name }}</a>
                             </td>
-                            <td class="col-size">{{ result.size }}</td>
+                            <td class="col-size">{{ format_bytes(result.size) }}</td>
                             <td class="col-age">{{ format_age(result.age) }}</td>
                             <td class="col-seeders">{{ result.seeders }}</td>
                             <td class="col-leechers">{{ result.leechers }}</td>

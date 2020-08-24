@@ -18,22 +18,19 @@ class SearchController
      * @param Request $request
      * @return View
      */
-    public function showSearch(Request $request): View
+    public function showSearch(Request $request, TorrentSearcher $searcher): View
     {
         $query = $request->query->get('q');
         $source = $request->query->get('source');
 
-        $sources = [
-            'tpb' => 'The Pirate Bay',
-            'nyaa' => 'Nyaa Torrents',
-            'anidex' => 'AniDex'
-        ];
+        $sources = array_map(function ($source) {
+            return $source->getName();
+        }, $searcher->getSources());
 
         if (empty($query)) {
             $results = [];
         } else {
-            $searcher = new TorrentSearcher();
-            $results = $searcher->search($query, $source);
+            $results = $searcher->search($query, $source === 'all' ? null: $source);
         }
 
         return new View([
