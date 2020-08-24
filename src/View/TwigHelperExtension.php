@@ -96,6 +96,6 @@ class TwigHelperExtension extends AbstractExtension
 
     public function formatBytes($value): string
     {
-        return \ByteUnits\Metric::bytes($value)->format();
+        return \ByteUnits\Metric::bytes($value)->format(null, ' ');
     }
 }

@@ -2,46 +2,100 @@
 
 namespace Athorrent\Utils\Search;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
+use Athorrent\Utils\Search\Source\AniDexSource;
+use Athorrent\Utils\Search\Source\MagnetDLSource;
+use Athorrent\Utils\Search\Source\NyaaSource;
+use Athorrent\Utils\Search\Source\ThePirateBaySource;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
+use function array_flip;
+use function array_intersect_key;
 
 class TorrentSearcher
 {
-    private function getCrawlers($source): array
+    /** @var HttpClientInterface */
+    private $http;
+
+    /** @var TorrentSourceInterface[] */
+    private $sources;
+
+    public function __construct(HttpClientInterface $http)
     {
-        $crawlers = [
-            'tpb' => new ThePirateBayCrawler('tpb'),
-            'nyaa' => new NyaaTorrentsCrawler('nyaa'),
-            'anidex' => new AniDexCrawler('anidex')
-        ];
-
-        if ($source === 'all') {
-            return $crawlers;
-        }
-
-        if (isset($crawlers[$source])) {
-            return [$crawlers[$source]];
-        }
-
-        return [];
+        $this->http = $http;
+        $this->sources = $this->mapSources([
+            new ThePirateBaySource(),
+            new NyaaSource(),
+            new AniDexSource(),
+            new MagnetDLSource()
+        ]);
     }
 
-    public function search($query, $source): array
+    /**
+     * @param TorrentSourceInterface[] $sources
+     * @return TorrentSourceInterface[]
+     */
+    private function mapSources(array $sources): array
     {
-        $client = new Client();
-        $crawlers = $this->getCrawlers($source);
+        $keys = array_map(function ($source) {
+            return $source->getId();
+        }, $sources);
 
-        $promises = [];
+        return array_combine($keys, $sources);
+    }
 
-        foreach ($crawlers as $crawler) {
-            $promises[] = $crawler->initializeRequest($client, $query);
+    /**
+     * @param string|string[]|null $sourceIds
+     * @return TorrentSourceInterface[]
+     */
+    public function getSources($sourceIds = null): array
+    {
+        if ($sourceIds === null) {
+            return $this->sources;
         }
+
+        if (is_string($sourceIds)) {
+            $sourceIds = [$sourceIds];
+        }
+
+        return array_intersect_key($this->sources, array_flip($sourceIds));
+    }
+
+    /**
+     * @param string $query
+     * @param TorrentSourceInterface[] $sources
+     * @return ResponseInterface[]
+     * @throws TransportExceptionInterface
+     */
+    protected function sendRequests(string $query, array $sources): array
+    {
+        $responses = [];
+
+        foreach ($sources as $id => $source) {
+            $responses[$source->getId()] = $source->sendRequest($this->http, $query);
+        }
+
+        return $responses;
+    }
+
+    /**
+     * @param string $query
+     * @param string|string[]|null $sourceIds
+     * @return TorrentInfo[][]
+     * @throws TransportExceptionInterface
+     */
+    public function search(string $query, $sourceIds): array
+    {
+        $sources = $this->getSources($sourceIds);
+        $responses = $this->sendRequests($query, $sources);
 
         $results = [];
 
-        foreach (Promise\settle($promises)->wait() as $promise) {
-            if ($promise['state'] === 'fulfilled' && !empty($promise['value']['results'])) {
-                $results[$promise['value']['id']] = $promise['value']['results'];
+        foreach ($this->http->stream($responses) as $response => $chunk) {
+
+            if ($chunk->isLast()) {
+                $sourceId = $response->getInfo('user_data')['sourceId'];
+                $results[$sourceId] = $sources[$sourceId]->parseResponse($response);
             }
         }
 
