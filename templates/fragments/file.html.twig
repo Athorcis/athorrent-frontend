@@ -1,16 +1,16 @@
 {% set isParentDirectory = file.name == '..' %}
 
 {% if isParentDirectory %}
-    {% set icon = 'fa-level-up-alt' %}
+    {% set icon = 'fa fa-level-up-alt' %}
     {% set name = 'files.parentDirectory'|trans %}
 {% else %}
-    {% set icon = icon(file) %}
+    {% set icon = 'far ' ~ icon(file) %}
     {% set name = file.name %}
 {% endif %}
 
 <tr class="file" id="file-{{ base64_encode(file.path) }}">
     <td class="file-icon">
-        <span class="far fa-fw {{ icon }}"></span>
+        <span class="fa-fw {{ icon }}"></span>
     </td>
     <td class="file-name">
         <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.path }) }}" title="{{ name }}">{{ name }}</a>
