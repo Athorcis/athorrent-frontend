@@ -40,11 +40,11 @@
 
                                 {% if is_granted('IS_IMPERSONATOR') %}
                                     <a href="?_switch_user=_exit" class="btn btn-danger" title="{{ 'nav.exit'|trans }}">
-                                        <span class="fa fa-sign-out"></span>
+                                        <span class="fa fa-sign-out-alt"></span>
                                     </a>
                                 {% else %}
                                     <a href="{{ path('logout') }}" class="btn btn-danger" title="{{ 'nav.logout'|trans }}">
-                                        <span class="fa fa-sign-out"></span>
+                                        <span class="fa fa-sign-out-alt"></span>
                                     </a>
                                 {% endif %}
                             </span>

@@ -52,11 +52,11 @@
 
                         {% if user.id != userId %}
                         <a class="btn btn-xs btn-default" href="{{ path('listFiles', { _switch_user: user.username, _prefixId: 'files' }) }}">
-                            <span class="fa fa-exchange"></span>
+                            <span class="fa fa-exchange-alt"></span>
                         </a>
                             {% if user.id != 1 %}
                         <button class="btn btn-xs btn-danger user-remove">
-                            <span class="fa fa-remove"></span>
+                            <span class="fa fa-times"></span>
                         </button>
                             {% endif %}
                         {% endif %}

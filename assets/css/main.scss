@@ -3,7 +3,7 @@ $icon-font-path: '../../fonts/bootstrap/';
 @import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 @import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/theme';
 
-@import '../../node_modules/font-awesome/css/font-awesome.css';
+@import './font-awesome';
 
 html {
     height: 100%;
