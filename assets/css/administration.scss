@@ -1,6 +1,7 @@
 
 .administration-tile {
     margin-left: 20px;
+    width: 175px;
 
     &:first-child {
         margin-left: 0;
@@ -8,7 +9,8 @@
 
     .fa {
         display: block;
-        font-size: 115px;
+        font-size: 95px;
         margin: auto;
+        padding: 10px;
     }
 }

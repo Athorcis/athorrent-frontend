@@ -152,7 +152,7 @@ Object.assign(athorrent, {
                 spinner = Boolean($btn.data('ajax-spinner'));
 
             if (spinner) {
-                $btn.append('<span class="fa fa-refresh fa-spin"></span>');
+                $btn.append('<span class="fa fa-sync-alt fa-spin"></span>');
             }
 
             athorrent.ajax[action]().always(() => {

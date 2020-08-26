@@ -1,5 +1,7 @@
 
 /.idea/
+/assets/fonts/font-awesome/
+/assets/css/font-awesome/_icons.scss
 /bin/*
 /composer.phar
 /package-lock.json

@@ -1,3 +1,4 @@
+const path = require('path');
 const dotenv = require('dotenv');
 const Encore = require('@symfony/webpack-encore');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
@@ -44,6 +45,10 @@ Encore
     .copyFiles({
         from: './assets/images',
         pattern: /\.(ico|png)$/
+    })
+
+    .addAliases({
+        fonts: path.resolve(__dirname, 'assets/fonts')
     })
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

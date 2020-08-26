@@ -38,17 +38,17 @@
 .block {
     overflow: hidden;
 
-    > .fa {
+    > .fa, .fab {
         float: left;
-        margin-right: 10px;
+        margin-right: 15px;
     }
 }
 
 @media (min-width: 768px) {
     .block {
-        > .fa {
-            font-size: 50px;
-            margin-top: 20px;
+        > .fa, .fab {
+            font-size: 40px;
+            margin-top: 25px;
         }
     }
 
@@ -59,9 +59,10 @@
 
 @media (max-width: 767px) {
     .block {
-        > .fa {
-            font-size: 28px;
-            margin-top: 22px;
+        > .fa, .fab {
+            font-size: 23px;
+            margin-top: 24px;
+            margin-right: 10px;
         }
     }
 }

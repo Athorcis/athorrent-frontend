@@ -5,7 +5,6 @@
   "dependencies": {
     "bootstrap-sass": "~3.4.1",
     "dropzone": "~5.7.0",
-    "font-awesome": "~4.7.0",
     "jquery": "~3.5.1",
     "js-base64": "~3.4.5",
     "locutus": "~2.0.9",
@@ -17,10 +16,12 @@
     "url": "https://github.com/athorcis/athorrent-frontend.git"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.14.0",
     "@symfony/webpack-encore": "^0.30.0",
     "core-js": "^3.0.0",
     "dotenv": "^8.2.0",
     "eslint": "~7.6.0",
+    "fontawesome-subset": "^2.0.0",
     "postcss-loader": "^3.0.0",
     "regenerator-runtime": "^0.13.2",
     "sass": "^1.26.10",
@@ -33,9 +34,10 @@
     "yargs": "~15.4.1"
   },
   "scripts": {
-    "dev-server": "encore dev-server",
-    "dev": "encore dev",
-    "watch": "encore dev --watch",
-    "build": "encore production --progress"
+    "font-awesome": "node ./scripts/subset-font-awesome.js",
+    "dev-server": "npm run font-awesome && encore dev-server",
+    "dev": "npm run font-awesome && encore dev",
+    "watch": "npm run font-awesome && encore dev --watch",
+    "build": "npm run font-awesome && encore production --progress"
   }
 }

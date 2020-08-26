@@ -31,22 +31,22 @@ class TwigHelperExtension extends AbstractExtension
     {
         if ($value instanceof UserFilesystemEntry) {
             if ($value->isDirectory()) {
-                return 'fa-folder-open-o';
+                return 'fa-folder-open';
             } elseif ($value->isText()) {
-                return 'fa-file-text-o';
+                return 'fa-file-alt';
             } elseif ($value->isImage()) {
-                return 'fa-file-image-o';
+                return 'fa-file-image';
             } elseif ($value->isAudio()) {
-                return 'fa-file-audio-o';
+                return 'fa-file-audio';
             } elseif ($value->isVideo()) {
-                return 'fa-file-video-o';
+                return 'fa-file-video';
             } elseif ($value->isPdf()) {
-                return 'fa-file-pdf-o';
+                return 'fa-file-pdf';
             } elseif ($value->isArchive()) {
-                return 'fa-file-archive-o';
+                return 'fa-file-archive';
             }
 
-            return 'fa-file-o';
+            return 'fa-file';
         }
 
         return '';
