@@ -7,6 +7,7 @@ use Athorrent\Utils\Search\TorrentInfo;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use function strtolower;
 
 class MagnetDLSource extends AbstractTorrentSource
 {
@@ -18,7 +19,7 @@ class MagnetDLSource extends AbstractTorrentSource
     public function sendRequest(HttpClientInterface $http, string $query): ResponseInterface
     {
         $query = trim(str_replace([' ', '_'], '-', $query));
-        $query = preg_replace('/[^a-zA-Z0-9-]/', '', $query);
+        $query = strtolower(preg_replace('/[^a-zA-Z0-9-]/', '', $query));
 
         return $this->doRequest($http, 'GET', "/{$query[0]}/{$query}/", [
             'headers' => ['Accept' => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"]
