@@ -95,7 +95,11 @@ class TorrentSearcher
 
             if ($chunk->isLast()) {
                 $sourceId = $response->getInfo('user_data')['sourceId'];
-                $results[$sourceId] = $sources[$sourceId]->parseResponse($response);
+                $torrents = $sources[$sourceId]->parseResponse($response);
+
+                if (count($torrents) > 0) {
+                    $results[$sourceId] = $torrents;
+                }
             }
         }
 
