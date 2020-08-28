@@ -80,8 +80,8 @@ class UserController
     }
 
     /**
-     * @Route("/{id}", methods="POST", options={"expose"=true})
-     * @ParamConverter("user")
+     * @Route("/{userId}", methods="POST", options={"expose"=true})
+     * @ParamConverter("user", options={"id": "userId"})
      *
      * @param User $user
      * @param UserPasswordEncoderInterface $encoder
