@@ -58,15 +58,4 @@ class UserManager
     {
         $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
     }
-
-    public function deleteUserById(int $id): bool
-    {
-        try {
-            $this->userRepository->delete($id);
-        } catch (ORMException $exception) {
-            return false;
-        }
-
-        return true;
-    }
 }

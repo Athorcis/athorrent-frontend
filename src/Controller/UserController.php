@@ -11,6 +11,7 @@ use Athorrent\Security\UserManager;
 use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 use Exception;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -109,10 +110,13 @@ class UserController
      */
     public function removeUser(int $userId): array
     {
-        if ($this->userManager->deleteUserById($userId)) {
-            return [];
+        try {
+            $this->userRepository->delete($userId);
+        }
+        catch (ORMException $exception) {
+            throw new RuntimeException('error.cannotRemoveUser', 0, $exception);
         }
 
-        throw new RuntimeException('error.cannotRemoveUser');
+        return [];
     }
 }
