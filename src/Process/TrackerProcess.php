@@ -62,16 +62,9 @@ class TrackerProcess extends CommandProcess
             throw new RuntimeException('cannot track an already started process');
         }
 
-        $isDaemon = $process->isDaemon();
-        $method = $isDaemon? 'daemon' : 'create';
-        $commandLine = $process->getCommandLineArray();
+        $method = $process->isDaemon() ? 'daemon' : 'create';
 
-        // It's useless to use nohup twice
-        if ($isDaemon && $commandLine[0] === 'nohup') {
-            array_shift($commandLine);
-        }
-
-        $tracker = static::$method($commandLine, $process->getWorkingDirectory(), $process->getEnv());
+        $tracker = static::$method($process->getCommandLineArray(), $process->getWorkingDirectory(), $process->getEnv());
         $tracker->setTimeout($process->getTimeout());
 
         return $tracker;
