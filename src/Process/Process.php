@@ -62,14 +62,6 @@ class Process extends BaseProcess
     }
 
     /**
-     * @return float
-     */
-    public function getStartTime(): float
-    {
-        return $this->getPrivateAttribute('starttime');
-    }
-
-    /**
      * @return string[]
      */
     protected static function getCommandPrefixes(): array
