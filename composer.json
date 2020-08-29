@@ -29,18 +29,18 @@
         "symfony/http-client": "5.1.*",
         "symfony/mime": "5.1.*",
         "symfony/monolog-bundle": "^3.1",
-        "symfony/orm-pack": "*",
+        "symfony/orm-pack": "^2.0",
         "symfony/process": "5.1.*",
         "symfony/security-bundle": "5.1.*",
         "symfony/translation": "5.1.*",
-        "symfony/twig-pack": "*",
+        "symfony/twig-pack": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "5.1.*",
         "twig/cache-extension": "^2.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
-        "symfony/debug-pack": "*"
+        "symfony/debug-pack": "^1.0"
     },
     "config": {
         "preferred-install": {
