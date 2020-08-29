@@ -5,7 +5,6 @@ namespace Athorrent\Process;
 use Athorrent\Process\Command\TrackProcessCommand;
 use RuntimeException;
 use function array_merge;
-use function array_shift;
 use function json_encode;
 use function preg_match;
 use const JSON_THROW_ON_ERROR;
@@ -47,9 +46,9 @@ class TrackerProcess extends CommandProcess
         return array_merge(parent::getCommandPrefixes(), [TrackProcessCommand::NAME]);
     }
 
-    public static function prefix(array $command, bool $nohup = false): array
+    public static function prefix(array $command): array
     {
-        return parent::prefix([json_encode($command, JSON_THROW_ON_ERROR)], $nohup);
+        return parent::prefix([json_encode($command, JSON_THROW_ON_ERROR)]);
     }
 
     /**
@@ -63,8 +62,9 @@ class TrackerProcess extends CommandProcess
         }
 
         $method = $process->isDaemon() ? 'daemon' : 'create';
+        $command = $process->getPrivateAttribute('commandline');
 
-        $tracker = static::$method($process->getCommandLineArray(), $process->getWorkingDirectory(), $process->getEnv());
+        $tracker = static::$method($command, $process->getWorkingDirectory(), $process->getEnv());
         $tracker->setTimeout($process->getTimeout());
 
         return $tracker;

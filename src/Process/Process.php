@@ -7,7 +7,8 @@ use RuntimeException;
 use Symfony\Component\Process\Process as BaseProcess;
 use function array_unshift;
 use function count;
-use function strtolower;
+use function is_array;
+use const DIRECTORY_SEPARATOR;
 
 class Process extends BaseProcess
 {
@@ -23,6 +24,22 @@ class Process extends BaseProcess
             // pour laisser le temps au processus de se fermer avant d'envoyer un SIGKILL
             $this->stop();
         }
+    }
+
+    public function start(callable $callback = null, array $env = [])
+    {
+        if ($this->isDaemon() && is_array($this->getPrivateAttribute('commandline'))) {
+
+            $command = $this->getCommandLine();
+
+            if ('\\' !== DIRECTORY_SEPARATOR) {
+                $command = 'nohup exec' . $command;
+            }
+
+            $this->setPrivateAttribute('commandline', $command);
+        }
+
+        parent::start($callback, $env);
     }
 
     /**
@@ -53,12 +70,11 @@ class Process extends BaseProcess
         }, $this, BaseProcess::class)->__invoke();
     }
 
-    /**
-     * @return string[]
-     */
-    public function getCommandLineArray(): array
+    protected function setPrivateAttribute(string $name, $value)
     {
-        return $this->getPrivateAttribute('commandline');
+        return Closure::bind(function () use ($name, $value) {
+            $this->$name = $value;
+        }, $this, BaseProcess::class)->__invoke();
     }
 
     /**
@@ -71,19 +87,14 @@ class Process extends BaseProcess
 
     /**
      * @param string[] $command
-     * @param bool $nohup
      * @return string[]
      */
-    public static function prefix(array $command, bool $nohup = false): array
+    public static function prefix(array $command): array
     {
         $prefixes = static::getCommandPrefixes();
 
         if (count($prefixes) > 0) {
             array_unshift($command, ...$prefixes);
-        }
-
-        if ($nohup && strtolower(PHP_OS) === 'linux') {
-            array_unshift($command, 'nohup');
         }
 
         return $command;
@@ -107,7 +118,7 @@ class Process extends BaseProcess
         ?float $timeout
     ): Process
     {
-        $process = new static(static::prefix($command, $daemon), $cwd, $env, $input, $daemon ? null : $timeout);
+        $process = new static(static::prefix($command), $cwd, $env, $input, $daemon ? null : $timeout);
 
         $process->daemon = $daemon;
 
