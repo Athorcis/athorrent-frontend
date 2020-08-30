@@ -33,7 +33,7 @@ class Process extends BaseProcess
             $command = $this->getCommandLine();
 
             if ('\\' !== DIRECTORY_SEPARATOR) {
-                $command = 'nohup exec' . $command;
+                $command = 'exec nohup ' . $command;
             }
 
             $this->setPrivateAttribute('commandline', $command);
