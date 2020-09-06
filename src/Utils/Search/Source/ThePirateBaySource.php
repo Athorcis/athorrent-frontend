@@ -27,7 +27,7 @@ class ThePirateBaySource extends AbstractTorrentSource
             preg_match('/^Uploaded ([^,]+), Size ([^,]+),.+$/', $details, $matches);
 
             return $this->createTorrentInfo(
-                $cells->eq(1)->filter('.detLink')->attr('title'),
+                preg_replace('/^Details for /', '', $cells->eq(1)->filter('.detLink')->attr('title')),
                 $cells->eq(1)->filter('.detLink')->attr('href'),
                 $this->replaceNonBreakingSpace($matches[1]),
                 $cells->eq(1)->children('a')->attr('href'),
