@@ -6,6 +6,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use function preg_match;
 
 abstract class AbstractTorrentSource implements TorrentSourceInterface
 {
@@ -123,9 +124,16 @@ abstract class AbstractTorrentSource implements TorrentSourceInterface
 
     protected function createTorrentInfo(string $name, string $path, string $age, string $magnet, string $size, string $seeders, string $leechers)
     {
+        if (preg_match('/^https?:\/\//', $path)) {
+            $url = $path;
+        }
+        else {
+            $url = $this->origin . $path;
+        }
+
         return new TorrentInfo(
             trim($name),
-            $this->origin . $path,
+            $url,
             $this->parseAge($age),
             $magnet,
             $this->parseSize($size),
