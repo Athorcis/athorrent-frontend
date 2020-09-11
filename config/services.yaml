@@ -23,9 +23,7 @@ services:
         exclude:
             - '../src/Cache/'
             - '../src/Database/Entity/'
-            - '../src/DependencyInjection/'
             - '../src/Kernel.php'
-            - '../src/Tests/'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class

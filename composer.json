@@ -12,6 +12,7 @@
     "require": {
         "php": "^7.3",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
@@ -51,11 +52,6 @@
     "autoload": {
         "psr-4": {
             "Athorrent\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Athorrent\\Tests\\": "tests/"
         }
     },
     "replace": {
