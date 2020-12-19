@@ -1,4 +1,6 @@
 security:
+    enable_authenticator_manager: true
+
     encoders:
         Athorrent\Database\Entity\User:
             algorithm: auto
@@ -15,7 +17,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
             pattern: ^/
             provider: default
 
@@ -37,6 +38,8 @@ security:
                 name: REMEMBER_ME
                 always_remember_me: true
                 secure: true
+
+            login_throttling: ~
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

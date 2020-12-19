@@ -6,7 +6,6 @@ use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Utils\TorrentManagerFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FilesystemFactory
@@ -28,7 +27,7 @@ class FilesystemFactory
     {
         $token = $this->tokenStorage->getToken();
 
-        if ($token instanceof AnonymousToken) {
+        if ($token === null) {
             return null;
         }
 
