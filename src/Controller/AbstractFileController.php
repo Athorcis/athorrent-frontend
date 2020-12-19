@@ -187,6 +187,10 @@ abstract class AbstractFileController extends AbstractController
             throw new NotFoundHttpException();
         }
 
+        if (!$entry->isWritable()) {
+            $this->createAccessDeniedException();
+        }
+
         $entry->remove();
 
         $sharingRepository->deleteByUserAndRoot($entry->getOwner(), $entry->getPath());
