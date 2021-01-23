@@ -29,13 +29,13 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('athorrent', './assets/js/athorrent.js')
-    .addEntry('files', './assets/js/files.js')
-    .addEntry('media', './assets/js/media.js')
-    .addEntry('search', './assets/js/search.js')
-    .addEntry('sharings', './assets/js/sharings.js')
-    .addEntry('torrents', './assets/js/torrents.js')
-    .addEntry('users', './assets/js/users.js')
+    .addEntry('athorrent', './assets/js/athorrent.ts')
+    .addEntry('files', './assets/js/files.ts')
+    .addEntry('media', './assets/js/media.ts')
+    .addEntry('search', './assets/js/search.ts')
+    .addEntry('sharings', './assets/js/sharings.ts')
+    .addEntry('torrents', './assets/js/torrents.ts')
+    .addEntry('users', './assets/js/users.ts')
 
     .addStyleEntry('administration', './assets/css/administration.scss')
     .addStyleEntry('cache', './assets/css/cache.scss')
@@ -70,6 +70,8 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
+
+    .enableTypeScriptLoader()
 
     // enables Sass/SCSS support
     .enableSassLoader()
