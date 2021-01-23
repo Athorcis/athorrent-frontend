@@ -6,6 +6,7 @@ use Athorrent\Utils\Search\Source\AniDexSource;
 use Athorrent\Utils\Search\Source\MagnetDLSource;
 use Athorrent\Utils\Search\Source\NyaaSource;
 use Athorrent\Utils\Search\Source\ThePirateBaySource;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -93,13 +94,23 @@ class TorrentSearcher
 
         foreach ($this->http->stream($responses) as $response => $chunk) {
 
-            if ($chunk->isLast()) {
-                $sourceId = $response->getInfo('user_data')['sourceId'];
-                $torrents = $sources[$sourceId]->parseResponse($response);
-
-                if (count($torrents) > 0) {
-                    $results[$sourceId] = $torrents;
+            try {
+                // If we don't check the status code ourselves, the stream method will throw when an error happens
+                if ($chunk->isFirst()) {
+                    $response->getStatusCode();
                 }
+                elseif ($chunk->isLast()) {
+                    $sourceId = $response->getInfo('user_data')['sourceId'];
+                    $torrents = $sources[$sourceId]->parseResponse($response);
+
+                    if (count($torrents) > 0) {
+                        $results[$sourceId] = $torrents;
+                    }
+                }
+            }
+            catch (HttpExceptionInterface $exception) {
+                $sourceId = $response->getInfo('user_data')['sourceId'];
+                $results[$sourceId] = $exception;
             }
         }
 
