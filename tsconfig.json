@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "lib": ["dom", "es2016"],
+        "noImplicitAny": true,
+        "target": "es5",
+        "incremental": true,
+        "esModuleInterop": true
+    },
+    "include": [
+        "./assets/js/"
+    ]
+}

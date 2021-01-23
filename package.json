@@ -7,9 +7,10 @@
     "dropzone": "~5.7.0",
     "jquery": "~3.5.1",
     "js-base64": "~3.4.5",
-    "locutus": "~2.0.9",
     "mediaelement": "~4.2.6",
-    "picturefill": "~3.0.2"
+    "picturefill": "~3.0.2",
+    "query-string": "^6.13.8",
+    "typescript-http-client": "^0.10.1"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,9 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@symfony/webpack-encore": "^0.30.0",
+    "@types/bootstrap": "^3.4.0",
+    "@types/dropzone": "^5.7.0",
+    "@types/jquery": "^3.5.1",
     "core-js": "^3.0.0",
     "dotenv": "^8.2.0",
     "eslint": "~7.6.0",
@@ -29,6 +33,8 @@
     "stylelint": "~13.6.1",
     "stylelint-config-standard": "~20.0.0",
     "stylelint-webpack-plugin": "^2.1.0",
+    "ts-loader": "^8.0.3",
+    "typescript": "^4.0.2",
     "webpack-notifier": "^1.6.0",
     "webpack-runtime-public-path-plugin": "^1.1.2",
     "yargs": "~15.4.1"
