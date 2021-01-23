@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "ES5",
+        "incremental": true,
+        "esModuleInterop": true
+    },
+    "include": [
+        "./assets/js/"
+    ]
+}
