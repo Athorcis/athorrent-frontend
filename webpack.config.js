@@ -48,7 +48,8 @@ Encore
     })
 
     .addAliases({
-        fonts: path.resolve(__dirname, 'assets/fonts')
+        fonts: path.resolve(__dirname, 'assets/fonts'),
+        jquery: 'jquery/dist/jquery.slim'
     })
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
