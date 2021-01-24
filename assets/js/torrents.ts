@@ -589,7 +589,7 @@ class TorrentsPage extends AbstractPage {
             this.torrentsUpdater.update();
         });
         // @ts-ignore
-        this.addTorrentFileMode = new AddTorrentFileMode(this.router, this.translator, this.ui, this.router.securityManager, 'add-torrent-files', '#add-torrent-file-drop', '#add-torrent-file', '#add-torrent-file-counter', addTorrentForm);
+        this.addTorrentFileMode = new AddTorrentFileMode(this.router, this.translator, this.ui, this.securityManager, 'add-torrent-files', '#add-torrent-file-drop', '#add-torrent-file', '#add-torrent-file-counter', addTorrentForm);
         this.addTorrentMagnetMode = new AddTorrentMagnetMode('add-torrent-magnets', '#add-torrent-magnet-wrapper', '#add-torrent-magnet', '#add-torrent-magnet-counter', addTorrentForm);
     }
 }

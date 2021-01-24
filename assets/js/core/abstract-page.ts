@@ -2,6 +2,7 @@ import {Translator} from './translator';
 import {Params, Router} from './router';
 import {DataManager} from './data-manager';
 import {UiManager} from './ui-manager';
+import {SecurityManager} from "./security-manager";
 
 export abstract class AbstractPage extends DataManager {
 
@@ -11,8 +12,11 @@ export abstract class AbstractPage extends DataManager {
 
     protected translator: Translator;
 
-    injectServices(router: Router, translator: Translator, ui: UiManager) {
+    protected securityManager: SecurityManager;
+
+    injectServices(router: Router, translator: Translator, ui: UiManager, securityManager: SecurityManager) {
         this.router = router;
+        this.securityManager = securityManager;
         this.translator = translator;
         this.ui = ui;
     }
