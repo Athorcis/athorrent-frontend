@@ -298,7 +298,7 @@ class AddTorrentForm {
             params[this.modes[i].getInputName()] = this.modes[i].getItems();
         }
 
-        this.router.sendRequest('addTorrent', params).then(this.afterSubmit);
+        this.router.sendRequest('addTorrents', params).then(this.afterSubmit);
 
         for (let i = 0, { length } = this.modes; i < length; ++i) {
             this.modes[i].clearItems();
