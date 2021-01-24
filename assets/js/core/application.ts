@@ -35,7 +35,7 @@ export class Application {
 
         if (pageType) {
             const page = new pageType();
-            page.injectServices(this.router, this.translator, this.ui);
+            page.injectServices(this.router, this.translator, this.ui, this.securityManager);
             page.init();
         }
     }
