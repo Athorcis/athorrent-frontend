@@ -311,13 +311,13 @@ class AddTorrentForm {
 
 abstract class AddTorrentMode {
 
-    private enabled: boolean;
+    private enabled: boolean = false;
 
     protected $element: JQuery;
 
     private $btn: JQuery;
 
-    private counter: number;
+    private counter: number = 0;
 
     private $counter: JQuery;
 
