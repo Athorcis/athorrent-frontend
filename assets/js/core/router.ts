@@ -90,7 +90,7 @@ export class Router {
         let url = this.prepareUrl(route, params);
 
         if (Object.keys(params).length > 0) {
-            url += '?' + queryString.stringify(params);
+            url += '?' + queryString.stringify(params, { arrayFormat: 'bracket' });
         }
 
         return url;
@@ -141,11 +141,11 @@ export class Router {
 
         if (method === 'GET') {
             if (Object.keys(params).length > 0) {
-                url += '?' + queryString.stringify(params);
+                url += '?' + queryString.stringify(params, { arrayFormat: 'bracket' });
             }
         }
         else {
-            options.body = queryString.stringify(params);
+            options.body = queryString.stringify(params, { arrayFormat: 'bracket' });
             options.contentType = 'application/x-www-form-urlencoded';
         }
 
