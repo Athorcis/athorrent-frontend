@@ -77,6 +77,10 @@ services:
     Athorrent\Utils\TorrentManagerFactory:
         lazy: true
 
+    simple_cache:
+        class: Symfony\Component\Cache\Psr16Cache
+        arguments: ['@cache.app']
+
     app.doctrine.hash_password_listener:
         class: Athorrent\Security\HashPasswordListener
         tags:
