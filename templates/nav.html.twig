@@ -1,4 +1,10 @@
-{% cache 'nav' app.user.roles|default([]) %}
+{% set roles = app.user.roles|default([]) %}
+
+{% if is_granted('IS_IMPERSONATOR')] %}
+    {% set roles = roles|merge('ROLE_IMPERSONATOR') %}
+{% endif %}
+
+{% cache 'nav' roles %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
