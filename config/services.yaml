@@ -56,6 +56,7 @@ services:
     Athorrent\Database\Repository\SharingRepository:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments: [Athorrent\Database\Entity\Sharing]
+        lazy: true
 
     Athorrent\Database\Repository\UserRepository:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
@@ -73,9 +74,8 @@ services:
         arguments: ['@simple_cache']
         tags: [kernel.event_subscriber]
 
-    simple_cache:
-        class: Symfony\Component\Cache\Psr16Cache
-        arguments: ['@cache.app']
+    Athorrent\Utils\TorrentManagerFactory:
+        lazy: true
 
     app.doctrine.hash_password_listener:
         class: Athorrent\Security\HashPasswordListener
