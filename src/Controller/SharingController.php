@@ -7,6 +7,7 @@ use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\PaginatedView;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -66,7 +67,7 @@ class SharingController extends AbstractController
      * @param string $token
      * @return array
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function removeSharing(string $token): array
     {

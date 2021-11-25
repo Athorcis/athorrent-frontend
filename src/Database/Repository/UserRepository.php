@@ -4,6 +4,7 @@ namespace Athorrent\Database\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,7 +21,7 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
         return 'u';
     }
 
-    protected function paginateQueryBuilder(QueryBuilder $queryBuilder, $limit, $offset): \Doctrine\ORM\Tools\Pagination\Paginator
+    protected function paginateQueryBuilder(QueryBuilder $queryBuilder, $limit, $offset): Paginator
     {
         $queryBuilder->addSelect('uhr');
         $queryBuilder->join('u.hasRoles', 'uhr');
@@ -28,7 +29,7 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
         return $this->paginateQueryBuilderOriginal($queryBuilder, $limit, $offset);
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): ?UserInterface
     {
         return $this->findOneBy(['username' => $username]);
     }

@@ -6,6 +6,7 @@ use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserManager
@@ -32,7 +33,7 @@ class UserManager
         $rolesDiff = array_diff($roles, UserRole::$values);
 
         if (count($rolesDiff) > 0) {
-            throw new \InvalidArgumentException(sprintf('%s is not a valid role', $rolesDiff[0]));
+            throw new InvalidArgumentException(sprintf('%s is not a valid role', $rolesDiff[0]));
         }
 
         $salt = base64_encode(random_bytes(22));

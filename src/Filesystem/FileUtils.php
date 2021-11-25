@@ -2,6 +2,7 @@
 
 namespace Athorrent\Filesystem;
 
+use FilesystemIterator;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 class FileUtils extends \Symfony\Component\Filesystem\Filesystem
@@ -13,7 +14,7 @@ class FileUtils extends \Symfony\Component\Filesystem\Filesystem
 
         foreach ($files as $file) {
             if (is_dir($file)) {
-                $iterator = new \FilesystemIterator($file, \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS);
+                $iterator = new FilesystemIterator($file, FilesystemIterator::CURRENT_AS_PATHNAME | FilesystemIterator::SKIP_DOTS);
                 $size += $this->getSize($iterator);
             } else {
                 $bytes = @filesize($file);

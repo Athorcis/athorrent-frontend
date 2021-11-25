@@ -2,6 +2,8 @@
 
 namespace Athorrent\Filesystem;
 
+use Exception;
+
 /**
  * @property TorrentFilesystem $filesystem
  */
@@ -17,7 +19,7 @@ class TorrentFilesystemEntry extends UserFilesystemEntry
 
     /**
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function isTorrent(): bool
     {
@@ -30,7 +32,7 @@ class TorrentFilesystemEntry extends UserFilesystemEntry
 
     /**
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function isWritable(): bool
     {
@@ -39,7 +41,7 @@ class TorrentFilesystemEntry extends UserFilesystemEntry
 
     /**
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function isCachable(): bool
     {

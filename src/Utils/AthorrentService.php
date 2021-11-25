@@ -66,10 +66,8 @@ class AthorrentService extends JsonService
     {
         $process = $this->user->getAthorrentProcess();
 
-        if ($process) {
-            if ($process->isRunning()) {
-                return;
-            }
+        if ($process && $process->isRunning()) {
+            return;
         }
 
         if ($this->isBusy()) {

@@ -4,6 +4,7 @@ namespace Athorrent\Database\Type;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use InvalidArgumentException;
 
 abstract class Enum extends Type
 {
@@ -17,7 +18,7 @@ abstract class Enum extends Type
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (!in_array($value, $this->getValues(), true)) {
-            throw new \InvalidArgumentException('Invalid status');
+            throw new InvalidArgumentException('Invalid status');
         }
 
         return $value;

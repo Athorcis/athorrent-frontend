@@ -2,6 +2,7 @@
 
 namespace Athorrent\Cache\KeyGenerator;
 
+use InvalidArgumentException;
 use Twig\CacheExtension\CacheStrategy\KeyGeneratorInterface;
 
 class KeyGenerator implements KeyGeneratorInterface
@@ -15,7 +16,7 @@ class KeyGenerator implements KeyGeneratorInterface
         } elseif (is_string($value)) {
             $key = $value;
         } else {
-            throw new \InvalidArgumentException(sprintf('unable to convert object of type %s to cache key', get_class($value)));
+            throw new InvalidArgumentException(sprintf('unable to convert object of type %s to cache key', get_class($value)));
         }
 
         return $key;

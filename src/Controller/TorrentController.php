@@ -5,6 +5,7 @@ namespace Athorrent\Controller;
 use Athorrent\Utils\ServiceUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,7 +25,7 @@ class TorrentController extends AbstractController
      * @param TorrentManager $torrentManager
      * @return View
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function listTorrents(TorrentManager $torrentManager): View
     {
@@ -57,7 +58,7 @@ class TorrentController extends AbstractController
      * @param string $hash
      * @return View
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function listTrackers(TorrentManager $torrentManager, string $hash): View
     {
@@ -73,7 +74,7 @@ class TorrentController extends AbstractController
      * @param TorrentManager $torrentManager
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function uploadTorrent(Request $request, TorrentManager $torrentManager): array
     {
@@ -100,7 +101,7 @@ class TorrentController extends AbstractController
      * @param TorrentManager $torrentManager
      * @return RedirectResponse
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function addMagnet(Request $request, TorrentManager $torrentManager): RedirectResponse
     {
@@ -120,7 +121,7 @@ class TorrentController extends AbstractController
      * @param TorrentManager $torrentManager
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function addTorrents(Request $request, TorrentManager $torrentManager): array
     {
@@ -155,7 +156,7 @@ class TorrentController extends AbstractController
      * @param string $hash
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function pauseTorrent(TorrentManager $torrentManager, string $hash): array
     {
@@ -170,7 +171,7 @@ class TorrentController extends AbstractController
      * @param string $hash
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function resumeTorrent(TorrentManager $torrentManager, string $hash): array
     {
@@ -185,7 +186,7 @@ class TorrentController extends AbstractController
      * @param string $hash
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeTorrent(TorrentManager $torrentManager, string $hash): array
     {

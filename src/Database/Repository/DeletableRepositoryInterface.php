@@ -2,7 +2,7 @@
 
 namespace Athorrent\Database\Repository;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 
 interface DeletableRepositoryInterface
 {

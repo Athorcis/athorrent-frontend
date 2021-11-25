@@ -5,6 +5,7 @@ namespace Athorrent\Filesystem;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Utils\TorrentManager;
+use Exception;
 
 class TorrentFilesystem extends UserFilesystem
 {
@@ -30,7 +31,7 @@ class TorrentFilesystem extends UserFilesystem
 
     /**
      * @return string[]
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getTorrentPaths(): array
     {
@@ -44,7 +45,7 @@ class TorrentFilesystem extends UserFilesystem
     /**
      * @param string $path
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     protected function isTorrentImplementation(string $path): bool
     {
@@ -63,7 +64,7 @@ class TorrentFilesystem extends UserFilesystem
     /**
      * @param string $path
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function isTorrent(string $path): bool
     {

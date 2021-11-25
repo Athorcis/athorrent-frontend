@@ -2,6 +2,8 @@
 
 namespace Athorrent\Filesystem;
 
+use finfo;
+
 class FilesystemEntry extends AbstractFilesystemEntry
 {
     protected $isDir;
@@ -51,7 +53,7 @@ class FilesystemEntry extends AbstractFilesystemEntry
     public function getMimeType(): string
     {
         if ($this->mimeType === null) {
-            $finfo = new \finfo(FILEINFO_MIME);
+            $finfo = new finfo(FILEINFO_MIME);
             $this->mimeType = $finfo->file($this->path);
         }
 
