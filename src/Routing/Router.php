@@ -8,6 +8,7 @@ use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
 use Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function function_exists;
 use function in_array;
 use const PHP_SAPI;
@@ -53,7 +54,7 @@ class Router extends BaseRouter
         return $this->actionMap;
     }
 
-    public function getGenerator()
+    public function getGenerator(): UrlGeneratorInterface
     {
         if (null !== $this->generator) {
             return $this->generator;

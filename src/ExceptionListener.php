@@ -24,7 +24,7 @@ class ExceptionListener implements EventSubscriberInterface
         $this->twig = $twig;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [KernelEvents::EXCEPTION => 'onKernelException'];
     }

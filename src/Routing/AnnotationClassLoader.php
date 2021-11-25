@@ -78,7 +78,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
         $this->addRouteWithoutLocale($collection, $annot, $globals, $class, $method);
     }
 
-    protected function getDefaultRouteName(ReflectionClass $class, ReflectionMethod $method)
+    protected function getDefaultRouteName(ReflectionClass $class, ReflectionMethod $method): string
     {
         return $method->getName();
     }

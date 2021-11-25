@@ -9,7 +9,7 @@ abstract class Enum extends Type
 {
     abstract public function getValues();
 
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         return "ENUM('" . implode("', '", $this->getValues()) . "')";
     }
@@ -23,12 +23,12 @@ abstract class Enum extends Type
         return $value;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return get_class($this);
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }
