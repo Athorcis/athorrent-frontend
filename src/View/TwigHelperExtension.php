@@ -3,6 +3,7 @@
 namespace Athorrent\View;
 
 use Athorrent\Filesystem\UserFilesystemEntry;
+use ByteUnits\Metric;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -16,7 +17,7 @@ class TwigHelperExtension extends AbstractExtension
         $this->translator = $translator;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('torrentStateToClass', [$this, 'torrentStateToClass']),
@@ -96,6 +97,6 @@ class TwigHelperExtension extends AbstractExtension
 
     public function formatBytes($value): string
     {
-        return \ByteUnits\Metric::bytes($value)->format(null, ' ');
+        return Metric::bytes($value)->format(null, ' ');
     }
 }

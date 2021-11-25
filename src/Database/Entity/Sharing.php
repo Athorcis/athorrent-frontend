@@ -3,6 +3,7 @@
 namespace Athorrent\Database\Entity;
 
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,7 +33,7 @@ class Sharing implements CacheKeyGetterInterface
     private $path;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(type="datetime")
      */
     private $creationDateTime;
@@ -43,7 +44,7 @@ class Sharing implements CacheKeyGetterInterface
             $this->token = self::generateToken($user, $path);
             $this->user = $user;
             $this->path = $path;
-            $this->creationDateTime = new \DateTime();
+            $this->creationDateTime = new DateTime();
         }
     }
 

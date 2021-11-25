@@ -2,6 +2,8 @@
 
 namespace Athorrent\Filesystem;
 
+use FilesystemIterator;
+
 class Filesystem extends AbstractFilesystem
 {
     /** @var FileUtils */
@@ -20,7 +22,7 @@ class Filesystem extends AbstractFilesystem
 
     public function readDirectory(string $path): array
     {
-        $iterator = new \FilesystemIterator($path, \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS);
+        $iterator = new FilesystemIterator($path, FilesystemIterator::CURRENT_AS_PATHNAME | FilesystemIterator::SKIP_DOTS);
         return iterator_to_array($iterator);
     }
 

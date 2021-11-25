@@ -69,20 +69,20 @@ class RoutingListener implements EventSubscriberInterface
                     $prefixId = $route->getDefault('_prefixId');
 
                     if ($route->getOption('expose')) {
+                        $defaultLocale = $route->getDefault('_locale');
+
                         if ($locale === 'fr') {
-                            if ($route->getDefault('_locale')) {
+                            if ($defaultLocale) {
                                 $ajaxRouteDescriptors[$action][$prefixId] = [
                                     'method' => $route->getMethods()[0],
                                     'pattern' => $route->getPath()
                                 ];
                             }
-                        } else {
-                            if (!$route->getDefault('_locale')) {
-                                $ajaxRouteDescriptors[$action][$prefixId] = [
-                                    'method' => $route->getMethods()[0],
-                                    'pattern' => $route->getPath()
-                                ];
-                            }
+                        } elseif (!$defaultLocale) {
+                            $ajaxRouteDescriptors[$action][$prefixId] = [
+                                'method' => $route->getMethods()[0],
+                                'pattern' => $route->getPath()
+                            ];
                         }
                     }
                 }

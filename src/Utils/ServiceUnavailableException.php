@@ -2,7 +2,9 @@
 
 namespace Athorrent\Utils;
 
-class ServiceUnavailableException extends \Exception
+use Exception;
+
+class ServiceUnavailableException extends Exception
 {
     private $reason;
 

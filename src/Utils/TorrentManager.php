@@ -5,6 +5,7 @@ namespace Athorrent\Utils;
 use Athorrent\Database\Entity\User;
 use Athorrent\Filesystem\FileUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
 class TorrentManager
@@ -16,7 +17,7 @@ class TorrentManager
     /**
      * TorrentManager constructor.
      * @param User $user
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(EntityManagerInterface $em, Filesystem $fs, User $user)
     {
@@ -37,7 +38,7 @@ class TorrentManager
     /**
      * @param string $url
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function addTorrentFromUrl(string $url)
     {
@@ -51,7 +52,7 @@ class TorrentManager
     /**
      * @param string $path
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function addTorrentFromFile(string $path)
     {
@@ -69,7 +70,7 @@ class TorrentManager
     /**
      * @param string $magnet
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function addTorrentFromMagnet(string $magnet)
     {
@@ -78,7 +79,7 @@ class TorrentManager
 
     /**
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTorrents()
     {
@@ -87,7 +88,7 @@ class TorrentManager
 
     /**
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPaths()
     {
@@ -105,7 +106,7 @@ class TorrentManager
     /**
      * @param string $hash
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function pauseTorrent(string $hash)
     {
@@ -115,7 +116,7 @@ class TorrentManager
     /**
      * @param string $hash
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function resumeTorrent(string $hash)
     {
@@ -125,7 +126,7 @@ class TorrentManager
     /**
      * @param string $hash
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeTorrent(string $hash)
     {
@@ -135,7 +136,7 @@ class TorrentManager
     /**
      * @param string $hash
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function listTrackers(string $hash)
     {

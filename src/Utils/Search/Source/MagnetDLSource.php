@@ -21,7 +21,7 @@ class MagnetDLSource extends AbstractTorrentSource
         $query = trim(str_replace([' ', '_'], '-', $query));
         $query = strtolower(preg_replace('/[^a-zA-Z0-9-]/', '', $query));
 
-        return $this->doRequest($http, 'GET', "/{$query[0]}/{$query}/", [
+        return $this->doRequest($http, 'GET', "/{$query[0]}/$query/", [
             'headers' => ['Accept' => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"]
         ]);
     }
@@ -53,7 +53,7 @@ class MagnetDLSource extends AbstractTorrentSource
             'year' => 31557600
         ];
 
-        preg_match('/^(\d{1,2}) (?:(min|hour|day|month|year)s?)$/', $age, $matches);
+        preg_match('/^(\d{1,2}) (min|hour|day|month|year)s?$/', $age, $matches);
 
         return $matches[1] * $magnitudes[$matches[2]];
     }

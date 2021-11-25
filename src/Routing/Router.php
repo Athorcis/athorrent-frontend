@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
-use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
 use Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function function_exists;
@@ -77,9 +76,7 @@ class Router extends BaseRouter
             $this->generator = new CompiledUrlGenerator($this->getActionMap(), self::readCache($cache->getPath()), $this->context, $this->logger, $this->defaultLocale);
         }
 
-        if ($this->generator instanceof ConfigurableRequirementsInterface) {
-            $this->generator->setStrictRequirements($this->options['strict_requirements']);
-        }
+        $this->generator->setStrictRequirements($this->options['strict_requirements']);
 
         return $this->generator;
     }

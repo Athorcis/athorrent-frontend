@@ -78,7 +78,7 @@ class CompiledUrlGenerator extends BaseUrlGenerator
 
         [$variables, $defaults, $requirements, $tokens, $hostTokens, $requiredSchemes] = $this->compiledRoutes[$name];
 
-        if (isset($defaults['_canonical_route']) && isset($defaults['_locale'])) {
+        if (isset($defaults['_canonical_route'], $defaults['_locale'])) {
             if (!\in_array('_locale', $variables, true)) {
                 unset($parameters['_locale']);
             } elseif (!isset($parameters['_locale'])) {

@@ -3,6 +3,7 @@
 namespace Athorrent\Database\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 
 trait DeletableRepositoryTrait
 {
@@ -18,7 +19,7 @@ trait DeletableRepositoryTrait
 
     /**
      * @param mixed $id
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function delete($id): void
     {

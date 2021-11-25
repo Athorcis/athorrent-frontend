@@ -488,7 +488,7 @@ class AddTorrentMagnetMode extends AddTorrentMode {
     getItems() {
         let magnets = [],
             rmagnet = /^magnet:\?[\x20-\x7E]*/,
-            lines = ($('#add-torrent-magnet-input').val() as string).split(/(?:\r\n)|\r|\n/);
+            lines = ($('#add-torrent-magnet-input').val() as string).split(/\r\n|\r|\n/);
 
         for (let i = 0, { length } = lines; i < length; ++i) {
             if (rmagnet.test(lines[i])) {

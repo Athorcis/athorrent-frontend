@@ -4,6 +4,7 @@ namespace Athorrent\Database\Entity;
 
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Process\Entity\TrackedProcess;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -47,13 +48,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     private $salt;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $creationDateTime;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $connectionDateTime;
@@ -81,7 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->username = $username;
         $this->plainPassword = $plainPassword;
         $this->salt = $salt;
-        $this->creationDateTime = new \DateTime();
+        $this->creationDateTime = new DateTime();
 
         $this->hasRoles = array_map(function ($role) {
             return new UserHasRole($this, $role);
@@ -90,7 +91,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return $this->id;
     }
 
     public function getUserIdentifier(): string
@@ -147,7 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         return $this->connectionDateTime->getTimestamp();
     }
 
-    public function setConnectionDateTime(\DateTime $dateTime): void
+    public function setConnectionDateTime(DateTime $dateTime): void
     {
         $this->connectionDateTime = $dateTime;
     }

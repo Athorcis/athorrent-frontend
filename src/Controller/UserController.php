@@ -11,7 +11,7 @@ use Athorrent\Security\UserManager;
 use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Exception;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
