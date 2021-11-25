@@ -41,7 +41,7 @@ class CompiledUrlGenerator extends BaseUrlGenerator
         return $prefixId;
     }
 
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
         $locale = $parameters['_locale']
             ?? $this->context->getParameter('_locale')

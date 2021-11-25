@@ -16,8 +16,8 @@ use Exception;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/administration/users", name="users")
@@ -85,16 +85,16 @@ class UserController
      * @ParamConverter("user", options={"id": "userId"})
      *
      * @param User $user
-     * @param UserPasswordEncoderInterface $encoder
+     * @param UserPasswordHasherInterface $hasher
      * @param EntityManagerInterface $em
      * @return array
      * @throws Exception
      */
-    public function resetUserPassword(User $user, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em): array
+    public function resetUserPassword(User $user, UserPasswordHasherInterface $hasher, EntityManagerInterface $em): array
     {
         $password = bin2hex(random_bytes(8));
 
-        $user->setPassword($encoder->encodePassword($user, $password));
+        $user->setPassword($hasher->hashPassword($user, $password));
         $em->flush($user);
 
         return ['password' => $password];

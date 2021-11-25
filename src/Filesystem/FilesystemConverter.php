@@ -60,7 +60,7 @@ class FilesystemConverter implements ParamConverterInterface
         return $entry;
     }
 
-    public function apply(Request $request, ParamConverter $configuration)
+    public function apply(Request $request, ParamConverter $configuration): bool
     {
         if ($request->attributes->has('token')) {
             $filesystem = $this->filesystemFactory->createSharedFilesystem($request->attributes->get('token'));
@@ -71,9 +71,11 @@ class FilesystemConverter implements ParamConverterInterface
         $entry = $this->getEntry($filesystem, $request->get('path'), $configuration->getOptions());
 
         $request->attributes->set($configuration->getName(), $entry);
+
+        return true;
     }
 
-    public function supports(ParamConverter $configuration)
+    public function supports(ParamConverter $configuration): bool
     {
         return is_subclass_of($configuration->getClass(), AbstractFilesystemEntry::class);
     }

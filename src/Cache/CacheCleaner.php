@@ -4,6 +4,7 @@ namespace Athorrent\Cache;
 
 use Athorrent\Filesystem\Filesystem;
 use Psr\SimpleCache\CacheInterface;
+use Symfony\Component\Filesystem\Path;
 
 class CacheCleaner
 {

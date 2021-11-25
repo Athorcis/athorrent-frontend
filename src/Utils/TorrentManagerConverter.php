@@ -20,7 +20,7 @@ class TorrentManagerConverter implements ParamConverterInterface
         $this->torrentManagerFactory = $torrentManagerFactory;
     }
 
-    public function apply(Request $request, ParamConverter $configuration)
+    public function apply(Request $request, ParamConverter $configuration): bool
     {
         $token = $this->tokenStorage->getToken();
 
@@ -30,11 +30,15 @@ class TorrentManagerConverter implements ParamConverterInterface
             if ($user instanceof User) {
                 $torrentManager = $this->torrentManagerFactory->create($user);
                 $request->attributes->set($configuration->getName(), $torrentManager);
+
+                return true;
             }
         }
+
+        return false;
     }
 
-    public function supports(ParamConverter $configuration)
+    public function supports(ParamConverter $configuration): bool
     {
         return $configuration->getClass() === TorrentManager::class;
     }

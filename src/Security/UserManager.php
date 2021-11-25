@@ -6,8 +6,7 @@ use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserManager
 {
@@ -15,13 +14,13 @@ class UserManager
 
     private $userRepository;
 
-    private $passwordEncoder;
+    private $passwordHasher;
 
-    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher)
     {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function createUser(string $username, string $password, $roles): void
@@ -51,11 +50,11 @@ class UserManager
 
     public function checkUserPassword(User $user, string $password): bool
     {
-        return $this->passwordEncoder->encodePassword($user, $password) === $user->getPassword();
+        return $this->passwordHasher->hashPassword($user, $password) === $user->getPassword();
     }
 
     public function setUserPassword(User $user, string $password): void
     {
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $password));
     }
 }

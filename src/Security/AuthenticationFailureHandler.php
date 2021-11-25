@@ -5,6 +5,7 @@ namespace Athorrent\Security;
 use Athorrent\Notification\ErrorNotification;
 use Athorrent\Notification\NotificationListener;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
@@ -17,7 +18,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
         $this->notificationListener = $notificationListener;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         if ($_SERVER['APP_DEBUG']) {
             dump($exception);

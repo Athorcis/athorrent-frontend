@@ -12,7 +12,7 @@ class AnnotationDirectoryLoader extends BaseDirectoryLoader
         parent::__construct(new FileLocator(), $classLoader);
     }
 
-    public function supports($resource, string $type = null)
+    public function supports($resource, string $type = null): bool
     {
         return $type === 'extra';
     }

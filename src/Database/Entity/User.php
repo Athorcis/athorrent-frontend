@@ -6,13 +6,14 @@ use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Process\Entity\TrackedProcess;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="Athorrent\Database\Repository\UserRepository")
  * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="username", columns={"username"})})
  */
-class User implements UserInterface, CacheKeyGetterInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface
 {
     /**
      * @var int
@@ -92,7 +93,12 @@ class User implements UserInterface, CacheKeyGetterInterface
         return (int)$this->id;
     }
 
-    public function getUsername()
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
+    }
+
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -112,7 +118,7 @@ class User implements UserInterface, CacheKeyGetterInterface
         $this->plainPassword = $plainPassword;
     }
 
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -122,7 +128,7 @@ class User implements UserInterface, CacheKeyGetterInterface
         $this->password = $password;
     }
 
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return $this->salt;
     }
@@ -151,7 +157,7 @@ class User implements UserInterface, CacheKeyGetterInterface
         return $this->hasRoles;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = [];
 
