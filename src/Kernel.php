@@ -23,8 +23,7 @@ class Kernel extends BaseKernel
         if (!defined('BIN_DIR')) {
             define('BIN_DIR', $this->getProjectDir() . '/bin');
             define('VAR_DIR', $this->getProjectDir() . '/var');
-            define('FILES_DIR', BIN_DIR . '/files');
-            define('TORRENTS_DIR', VAR_DIR . '/torrents');
+            define('USER_DIR', VAR_DIR . '/user');
 
             CommandProcess::setConsolePath(BIN_DIR . '/console');
         }

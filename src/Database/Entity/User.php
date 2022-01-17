@@ -7,6 +7,7 @@ use Athorrent\Process\Entity\TrackedProcess;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -76,6 +77,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
      * @ORM\OneToOne(targetEntity="Athorrent\Process\Entity\TrackedProcess", fetch="LAZY")
      */
     private $athorrentProcess;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    private $port;
 
     public function __construct($username, $plainPassword, $salt, array $roles)
     {
@@ -193,6 +200,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->athorrentProcess = $process;
     }
 
+    /**
+     * @return int
+     */
+    public function getPort(): int
+    {
+        return $this->port;
+    }
+
+    /**
+     * @param int $port
+     */
+    public function setPort(int $port): void
+    {
+        $this->port = $port;
+    }
+
     public function eraseCredentials()
     {
         $this->plainPassword = null;
@@ -201,5 +224,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     public function getCacheKey(): string
     {
         return (string)$this->id;
+    }
+
+    public function getPath(string $path): string
+    {
+        return Path::join(USER_DIR, $this->id, $path);
+    }
+
+    public function getBackendPath(string $path = ''): string
+    {
+        return $this->getPath(Path::join('backend', $path));
     }
 }

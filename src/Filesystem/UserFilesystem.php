@@ -28,7 +28,7 @@ class UserFilesystem extends SubFilesystem
      */
     protected function buildRoot(User $owner, string $path): string
     {
-        $root = Path::join(FILES_DIR, $owner->getId());
+        $root = $owner->getBackendPath('files');
 
         if ($path !== '') {
             $root = Path::join($root, $path);
