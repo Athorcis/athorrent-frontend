@@ -7,6 +7,7 @@ use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -128,11 +129,11 @@ class TorrentController extends AbstractController
         $files = $request->request->get('add-torrent-files');
         $magnets = $request->request->get('add-torrent-magnets');
 
-        $torrentsDir = $torrentManager->getTorrentsDirectory() . DIRECTORY_SEPARATOR;
+        $torrentsDir = $torrentManager->getTorrentsDirectory();
 
         if ($files) {
             foreach ($files as $file) {
-                $torrentPath = $torrentsDir . $file;
+                $torrentPath = Path::join($torrentsDir, $file);
 
                 if (file_exists($torrentPath)) {
                     $torrentManager->addTorrentFromFile($torrentPath);

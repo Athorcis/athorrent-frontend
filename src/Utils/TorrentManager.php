@@ -7,6 +7,7 @@ use Athorrent\Filesystem\FileUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 class TorrentManager
 {
@@ -32,7 +33,7 @@ class TorrentManager
 
     public function getTorrentsDirectory(): string
     {
-        return TORRENTS_DIR . DIRECTORY_SEPARATOR . $this->user->getId();
+        return Path::join(TORRENTS_DIR, $this->user->getId());
     }
 
     /**
@@ -42,7 +43,7 @@ class TorrentManager
      */
     public function addTorrentFromUrl(string $url)
     {
-        $path = $this->getTorrentsDirectory() . DIRECTORY_SEPARATOR . md5($url) . '.torrent';
+        $path = Path::join($this->getTorrentsDirectory(), md5($url) . '.torrent');
 
         file_put_contents($path, file_get_contents($url));
 
@@ -56,7 +57,7 @@ class TorrentManager
      */
     public function addTorrentFromFile(string $path)
     {
-        $oldFile = realpath($path);
+        $oldFile = Path::canonicalize($path);
         $newFile = FileUtils::encodeFilename($oldFile);
 
         rename($oldFile, $newFile);
@@ -94,11 +95,11 @@ class TorrentManager
     {
         $paths = $this->service->call('getPaths');
 
-        if (DIRECTORY_SEPARATOR !== '/') {
+        /*if (DIRECTORY_SEPARATOR !== '/') {
             foreach ($paths as $index => $path) {
                 $paths[$index] = str_replace('/', DIRECTORY_SEPARATOR, $path);
             }
-        }
+        }*/
 
         return $paths;
     }

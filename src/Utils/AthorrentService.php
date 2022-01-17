@@ -11,6 +11,7 @@ use Athorrent\Process\Process;
 use Athorrent\Process\TrackerProcess;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use const DIRECTORY_SEPARATOR;
 
 class AthorrentService extends JsonService
@@ -39,17 +40,17 @@ class AthorrentService extends JsonService
 
     private function hasFlag($flag)
     {
-        return is_file(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->user->getId(), $flag]));
+        return is_file(Path::join(BIN_DIR, 'flags', $this->user->getId(), $flag));
     }
 
     private function setFlag($flag): void
     {
-        touch(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $this->user->getId(), $flag]));
+        touch(Path::join(BIN_DIR, 'flags', $this->user->getId(), $flag));
     }
 
     private static function hasGlobalFlag($flag)
     {
-        return is_file(implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'flags', $flag]));
+        return is_file(Path::join(BIN_DIR, 'flags', $flag));
     }
 
     private static function isUpdating()
@@ -79,8 +80,8 @@ class AthorrentService extends JsonService
 
     private function start(): void
     {
-        $logDir = implode(DIRECTORY_SEPARATOR, [BIN_DIR, 'logs', $this->user->getId()]);
-        $logPath = $logDir . DIRECTORY_SEPARATOR . 'athorrentd.txt';
+        $logDir = Path::join(BIN_DIR, 'logs', $this->user->getId());
+        $logPath = Path::join($logDir, 'athorrentd.txt');
 
         $this->fs->mkdir($logDir, 0755);
 

@@ -21,12 +21,12 @@ class Kernel extends BaseKernel
         parent::boot();
 
         if (!defined('BIN_DIR')) {
-            define('BIN_DIR', $this->getProjectDir() . DIRECTORY_SEPARATOR . 'bin');
-            define('VAR_DIR', $this->getProjectDir() . DIRECTORY_SEPARATOR . 'var');
-            define('FILES_DIR', BIN_DIR . DIRECTORY_SEPARATOR . 'files');
-            define('TORRENTS_DIR', VAR_DIR . DIRECTORY_SEPARATOR . 'torrents');
+            define('BIN_DIR', $this->getProjectDir() . '/bin');
+            define('VAR_DIR', $this->getProjectDir() . '/var');
+            define('FILES_DIR', BIN_DIR . '/files');
+            define('TORRENTS_DIR', VAR_DIR . '/torrents');
 
-            CommandProcess::setConsolePath(BIN_DIR . DIRECTORY_SEPARATOR . 'console');
+            CommandProcess::setConsolePath(BIN_DIR . '/console');
         }
     }
 
@@ -38,11 +38,6 @@ class Kernel extends BaseKernel
                 yield new $class();
             }
         }
-    }
-
-    public function getProjectDir(): string
-    {
-        return \dirname(__DIR__);
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
