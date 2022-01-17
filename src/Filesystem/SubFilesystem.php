@@ -3,6 +3,7 @@
 namespace Athorrent\Filesystem;
 
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\Filesystem\Path;
 
 class SubFilesystem extends AbstractFilesystem
 {
@@ -60,9 +61,9 @@ class SubFilesystem extends AbstractFilesystem
      */
     public function getInternalPath(string $path): string
     {
-        $internalPath = str_replace('/', DIRECTORY_SEPARATOR, realpath($this->root . '/' . $path));
+        $internalPath = Path::makeAbsolute($path, $this->root);
 
-        if (!$internalPath || strrpos($internalPath, $this->root, -strlen($internalPath)) === false) {
+        if (!$internalPath || !Path::isBasePath($this->root, $internalPath)) {
             if (empty($path)) {
                 $internalPath = $this->root;
             } else {
@@ -79,7 +80,7 @@ class SubFilesystem extends AbstractFilesystem
      */
     public function getPath(string $internalPath): string
     {
-        $path = str_replace([$this->root, DIRECTORY_SEPARATOR], ['', '/'], $internalPath);
+        $path = Path::makeRelative($internalPath, $this->root);
 
         return ltrim($path, '/');
     }

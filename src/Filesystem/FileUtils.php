@@ -33,12 +33,12 @@ class FileUtils extends \Symfony\Component\Filesystem\Filesystem
 
     private function toIterable($files): iterable
     {
-        return \is_iterable($files) ? $files : array($files);
+        return is_iterable($files) ? $files : array($files);
     }
 
     public static function encodeFilename(string $path): string
     {
         $parts = pathinfo($path);
-        return $parts['dirname'] . DIRECTORY_SEPARATOR . base64_encode($parts['filename']) . '.' . $parts['extension'];
+        return $parts['dirname'] . '/'. base64_encode($parts['filename']) . '.' . $parts['extension'];
     }
 }

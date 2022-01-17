@@ -3,6 +3,7 @@
 namespace Athorrent\Filesystem;
 
 use Athorrent\Database\Entity\User;
+use Symfony\Component\Filesystem\Path;
 
 class UserFilesystem extends SubFilesystem
 {
@@ -27,10 +28,10 @@ class UserFilesystem extends SubFilesystem
      */
     protected function buildRoot(User $owner, string $path): string
     {
-        $root = FILES_DIR . DIRECTORY_SEPARATOR . $owner->getId();
+        $root = Path::join(FILES_DIR, $owner->getId());
 
         if ($path !== '') {
-            $root .= DIRECTORY_SEPARATOR . $path;
+            $root = Path::join($root, $path);
         }
 
         return $root;

@@ -28,7 +28,7 @@ class CacheCleaner
 
     protected function clearCacheDir($subdir): bool
     {
-        $path = $this->cacheDir . DIRECTORY_SEPARATOR . $subdir;
+        $path = Path::join($this->cacheDir, $subdir);
 
         if (is_dir($path)) {
             $this->filesystem->remove($path);
