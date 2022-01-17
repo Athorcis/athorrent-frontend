@@ -29,38 +29,15 @@ class AthorrentService extends JsonService
     {
         $clientSocketClass = DIRECTORY_SEPARATOR === '\\' ? NamedPipeClient::class : UnixSocketClient::class;
 
-        parent::__construct($clientSocketClass, self::getPath($user->getId()));
+        parent::__construct($clientSocketClass, self::getPath($user));
 
         $this->em = $em;
         $this->fs = $fs;
         $this->user = $user;
 
-        $this->ensureRunning();
-    }
-
-    private function hasFlag($flag)
-    {
-        return is_file(Path::join(BIN_DIR, 'flags', $this->user->getId(), $flag));
-    }
-
-    private function setFlag($flag): void
-    {
-        touch(Path::join(BIN_DIR, 'flags', $this->user->getId(), $flag));
-    }
-
-    private static function hasGlobalFlag($flag)
-    {
-        return is_file(Path::join(BIN_DIR, 'flags', $flag));
-    }
-
-    private static function isUpdating()
-    {
-        return self::hasGlobalFlag('updating');
-    }
-
-    private function isBusy()
-    {
-        return self::isUpdating();
+        if ($_ENV['BACKEND_AUTO_START']) {
+            $this->ensureRunning();
+        }
     }
 
     private function ensureRunning(): void
@@ -71,21 +48,17 @@ class AthorrentService extends JsonService
             return;
         }
 
-        if ($this->isBusy()) {
-            throw new ServiceUnavailableException('SERVICE_UPDATING');
-        }
-
         $this->start();
     }
 
     private function start(): void
     {
-        $logDir = Path::join(BIN_DIR, 'logs', $this->user->getId());
+        $logDir = $this->user->getBackendPath('logs');
         $logPath = Path::join($logDir, 'athorrentd.txt');
 
         $this->fs->mkdir($logDir, 0755);
 
-        $process = TrackerProcess::track(Process::daemon(['./athorrent-backend', '--user', $this->user->getId()], BIN_DIR));
+        $process = TrackerProcess::track(Process::daemon(['./athorrent-backend', '--port', $this->user->getPort()], $this->user->getBackendPath()));
         $process->start();
 
         $processEntity = $this->em->find(TrackedProcess::class,  $process->getTrackedId());
@@ -93,12 +66,12 @@ class AthorrentService extends JsonService
         $this->em->flush();
     }
 
-    private static function getPath($userId): string
+    private static function getPath(User $user): string
     {
         if ('\\' === DIRECTORY_SEPARATOR) {
-            return '\\\\.\\pipe\\athorrentd\\sockets\\' . $userId . '.sck';
+            return '\\\\.\\pipe\\athorrentd\\sockets\\' . $user->getPort() . '.sck';
         }
 
-        return BIN_DIR . '/sockets/' . $userId . '.sck';
+        return $user->getBackendPath('athorrentd.sck');
     }
 }

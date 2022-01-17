@@ -33,7 +33,7 @@ class TorrentManager
 
     public function getTorrentsDirectory(): string
     {
-        return Path::join(TORRENTS_DIR, $this->user->getId());
+        return $this->user->getPath('torrents');
     }
 
     /**
