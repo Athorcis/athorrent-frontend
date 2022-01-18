@@ -10,7 +10,6 @@ import {SecurityManager} from './core/security-manager';
 import ClickEvent = JQuery.ClickEvent;
 import {Translator} from './core/translator';
 import {UiManager} from './core/ui-manager';
-import jqXHR = JQuery.jqXHR;
 
 interface AjaxResponse {
     status: string;
@@ -524,6 +523,7 @@ class TorrentsPage extends AbstractPage {
         this.initializeAddTorrentForm();
 
         if (navigator.registerProtocolHandler) {
+            // @ts-ignore
             navigator.registerProtocolHandler('magnet', `${ location.origin }/user/torrents/magnet?magnet=%s`, 'Athorrent');
         }
     }

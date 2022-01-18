@@ -3,6 +3,7 @@
     "rules": {
         "indentation": 4,
         "at-rule-empty-line-before": null,
+        "no-empty-first-line": null,
         "selector-list-comma-newline-after": "always-multi-line",
         "selector-pseudo-element-colon-notation": null
     }

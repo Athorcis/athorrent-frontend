@@ -1,9 +1,9 @@
 
-$icon-font-path: '../../fonts/bootstrap/';
-@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
-@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/theme';
+$icon-font-path: "../../fonts/bootstrap/";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/theme";
 
-@import './font-awesome';
+@import "./font-awesome";
 
 html {
     height: 100%;
@@ -11,7 +11,6 @@ html {
 
 body {
     min-height: 100%;
-    //padding-bottom: 90px;
     padding-bottom: 20px;
     padding-top: 50px;
     position: relative;
