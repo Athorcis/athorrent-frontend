@@ -5,10 +5,7 @@ export interface Params {
     [name: string]: string|string[];
 }
 
-import { httpclient } from 'typescript-http-client';
-import HttpClient = httpclient.HttpClient;
-import Request = httpclient.Request;
-import newHttpClient = httpclient.newHttpClient;
+import { HttpClient, Request, newHttpClient } from 'typescript-http-client';
 
 interface Abortable { abort(): void; }
 export type AbortablePromise<T> = Promise<T> & Abortable;

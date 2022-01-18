@@ -1,9 +1,5 @@
 import $ from 'jquery';
-import {httpclient} from "typescript-http-client";
-import HttpClient = httpclient.HttpClient;
-import Request = httpclient.Request;
-import Response = httpclient.Response;
-import FilterChain = httpclient.FilterChain;
+import {HttpClient, Request, Response, FilterChain} from "typescript-http-client";
 
 export class SecurityManager {
 

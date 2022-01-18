@@ -1,6 +1,6 @@
 
 const fs = require('fs');
-const fontawesomeSubset = require('fontawesome-subset');
+const {fontawesomeSubset} = require('fontawesome-subset');
 
 const iconsMap = {
     solid: [
