@@ -1,0 +1,14 @@
+.idea
+.git
+.yarn
+assets/fonts/font-awesome
+assets/images/icon.ai
+bin
+!bin/console
+node_modules
+public/build
+var
+vendor
+.env.local
+composer.phar
+yarn.lock
