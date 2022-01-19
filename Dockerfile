@@ -4,7 +4,7 @@ RUN set -ex ;\
     apt-get update ;\
     apt-get install -y --no-install-recommends \
         libicu-dev ;\
-    docker-php-ext-install -j $(nproc) bcmath intl pdo_mysql sockets
+    docker-php-ext-install -j $(nproc) bcmath intl opcache pdo_mysql sockets
 
 RUN set -ex ;\
     pecl install apcu ;\
