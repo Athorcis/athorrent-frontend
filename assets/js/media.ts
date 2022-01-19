@@ -11,7 +11,8 @@ class MediaPage extends AbstractPage {
 
     init() {
         ($('audio, video') as any).mediaelementplayer({
-            stretching: 'responsive'
+            stretching: 'responsive',
+            iconSprite: require('mediaelement/build/mejs-controls.svg')
         });
     }
 }
