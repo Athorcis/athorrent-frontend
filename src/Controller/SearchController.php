@@ -4,13 +4,14 @@ namespace Athorrent\Controller;
 
 use Athorrent\Utils\Search\TorrentSearcher;
 use Athorrent\View\View;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/search", name="search")
  */
-class SearchController
+class SearchController extends AbstractController
 {
     /**
      * @Route("/", methods="GET")

@@ -5,12 +5,13 @@ namespace Athorrent\Controller;
 use Athorrent\Cache\CacheCleaner;
 use Athorrent\View\View;
 use RuntimeException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/administration/cache", name="cache")
  */
-class CacheController
+class CacheController extends AbstractController
 {
     protected $cacheCleaner;
 
