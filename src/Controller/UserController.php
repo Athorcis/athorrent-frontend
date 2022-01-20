@@ -15,6 +15,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Exception;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/administration/users", name="users")
  */
-class UserController
+class UserController extends AbstractController
 {
     protected $userManager;
 

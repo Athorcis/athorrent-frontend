@@ -3,9 +3,10 @@
 namespace Athorrent\Controller;
 
 use Athorrent\View\View;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DefaultController
+class DefaultController extends AbstractController
 {
     /**
      * @Route("/", methods="GET")
