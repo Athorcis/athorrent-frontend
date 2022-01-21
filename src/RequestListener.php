@@ -15,7 +15,6 @@ class RequestListener implements EventSubscriberInterface
         return [
             KernelEvents::VIEW => 'onKernelView',
             KernelEvents::RESPONSE => [
-                ['addHeaders', 0],
                 ['saveSession', -512]
             ]
         ];
@@ -47,34 +46,6 @@ class RequestListener implements EventSubscriberInterface
 
         if ($session && $session->isStarted()) {
             $session->save();
-        }
-    }
-
-    public function addHeaders(ResponseEvent $event): void
-    {
-        $response = $event->getResponse();
-        $response->headers->set('X-Content-Type-Options', 'nosniff');
-
-        if ($response->headers->has('Content-Disposition')) {
-            return;
-        }
-
-        $request = $event->getRequest();
-
-        if (!$request->isXmlHttpRequest()) {
-            $cspScriptSrc = $_ENV['ASSETS_ORIGIN'] . " 'unsafe-inline'";
-
-            // Symfony 4.1 doesn't add the 'unsafe-eval
-            // required by the web profiler to work
-            if ($_SERVER['APP_DEBUG']) {
-                $cspScriptSrc .= " 'unsafe-eval'";
-            }
-
-            $response->headers->set('Content-Security-Policy', 'script-src ' . $cspScriptSrc);
-            $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-            $response->headers->set('Strict-Transport-Security', 'max-age=63072000');
-            $response->headers->set('X-Frame-Options', 'DENY');
-            $response->headers->set('X-XSS-Protection', '1; mode=block');
         }
     }
 }

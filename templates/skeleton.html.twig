@@ -55,7 +55,7 @@
         </div>
 
         {% if js_vars %}
-            <script type="text/javascript">
+            <script type="text/javascript" nonce="{{ csp_nonce('script') }}">
                 var athorrent = {{ js_vars|json_encode|raw }};
             </script>
         {% endif %}
