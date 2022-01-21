@@ -5,7 +5,7 @@ interface Translations {
 
 export class Translator {
 
-    constructor(private strings: {[key: string]: string}) {}
+    constructor(private strings: Translations) {}
 
     translate(key: string): string {
         if (this.strings.hasOwnProperty(key)) {

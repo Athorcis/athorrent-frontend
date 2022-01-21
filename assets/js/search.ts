@@ -1,5 +1,3 @@
-/* eslint-env browser */
-
 import $ from 'jquery';
 import '../css/search.scss';
 import {AbstractPage} from './core/abstract-page';

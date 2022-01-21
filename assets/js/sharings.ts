@@ -1,5 +1,3 @@
-/* eslint-env browser */
-
 import $ from 'jquery';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';

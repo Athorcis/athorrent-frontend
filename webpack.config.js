@@ -1,3 +1,4 @@
+/* eslint-env node */
 const path = require('path');
 const Encore = require('@symfony/webpack-encore');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
@@ -87,6 +88,10 @@ Encore
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
+
+    .enableEslintPlugin({
+        extensions: ['ts']
+    })
 
     // uncomment if you use React
     //.enableReactPreset()

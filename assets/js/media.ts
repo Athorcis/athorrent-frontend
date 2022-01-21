@@ -1,5 +1,3 @@
-/* eslint-env browser */
-
 import $ from 'jquery';
 import 'mediaelement';
 import '../css/media.scss';
@@ -10,7 +8,7 @@ import {Application} from './core/application';
 class MediaPage extends AbstractPage {
 
     init() {
-        ($('audio, video') as any).mediaelementplayer({
+        $('audio, video').mediaelementplayer({
             stretching: 'responsive',
             iconSprite: require('mediaelement/build/mejs-controls.svg')
         });
