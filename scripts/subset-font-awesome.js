@@ -1,4 +1,4 @@
-
+/* eslint-env node */
 const fs = require('fs');
 const {fontawesomeSubset} = require('fontawesome-subset');
 

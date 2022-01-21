@@ -1,5 +1,3 @@
-/* eslint-env browser */
-
 import $ from 'jquery';
 import {decode} from 'js-base64';
 import '../css/files.scss';
@@ -33,15 +31,15 @@ class FilesPage extends AbstractPage {
     }
 
     updateFileList() {
-        this.sendRequest('listFiles').then(data => {
+        this.sendRequest<string>('listFiles').then(data => {
             $('.file-list').html(data);
         });
     }
 
     onSharingAdd(event: ClickEvent) {
-        let { target } = event;
+        const { target } = event;
 
-        this.sendRequest('addSharing',{
+        this.sendRequest<string>('addSharing',{
             path: this.getFilePath(target)
         }).then(data => {
             this.modalSharingLink(data);
@@ -63,7 +61,7 @@ class FilesPage extends AbstractPage {
     }
 
     async onFileRemove(event: ClickEvent) {
-        let { target } = event;
+        const { target } = event;
 
         if (window.confirm(`Êtes-vous sur de vouloir supprimer "${ this.getFileName(target) }" ?`)) {
 

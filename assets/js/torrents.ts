@@ -1,9 +1,9 @@
 /* eslint-env browser */
 
 import $ from 'jquery';
-import Dropzone from 'dropzone';
+import Dropzone, {DropzoneFile} from 'dropzone';
 import '../css/torrents.scss';
-import {AbortablePromise, Params, Router} from './core/router';
+import {AbortablePromise, ApiResponse, Params, Router} from './core/router';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {SecurityManager} from './core/security-manager';
@@ -11,20 +11,14 @@ import ClickEvent = JQuery.ClickEvent;
 import {Translator} from './core/translator';
 import {UiManager} from './core/ui-manager';
 
-interface AjaxResponse {
-    status: string;
-    data: any;
-    csrfToken: string;
-}
-
-let torrentListTimeout = 2000,
+const torrentListTimeout = 2000,
     trackerListTimeout = 5000;
 
 class Updater {
 
     private intervalId = -1;
 
-    private data$: AbortablePromise<any>;
+    private data$: AbortablePromise<unknown>;
 
     constructor(
         private router: Router,
@@ -41,7 +35,7 @@ class Updater {
                 this.intervalCallback();
             }
 
-            this.intervalId = setInterval(this.intervalCallback.bind(this), this.interval) as any;
+            this.intervalId = window.setInterval(this.intervalCallback.bind(this), this.interval);
         }
     }
 
@@ -107,7 +101,7 @@ class TabsPanel {
     }
 
     getCurrentTab() {
-        return this.tabMap[this.$panel.find('.nav-tabs li.active a').attr('href').substr(1)];
+        return this.tabMap[this.$panel.find('.nav-tabs li.active a').attr('href').substring(1)];
     }
 
     onClick(event: ClickEvent) {
@@ -241,7 +235,7 @@ class AddTorrentForm {
         this.$submit = $(submitSelector);
         this.modes = [];
 
-        this.$submit.click(this.onSubmitClick.bind(this));
+        this.$submit.on('click', this.onSubmitClick.bind(this));
     }
 
     onSubmitClick(event: ClickEvent) {
@@ -291,7 +285,7 @@ class AddTorrentForm {
     }
 
     submit() {
-        let params: Params = {};
+        const params: Params = {};
 
         for (let i = 0, { length } = this.modes; i < length; ++i) {
             params[this.modes[i].getInputName()] = this.modes[i].getItems();
@@ -324,7 +318,7 @@ abstract class AddTorrentMode {
 
     abstract onEnabled(): void;
 
-    constructor(private inputName: string, elementSelector: string, btnSelector: string, counterSelector: string, form: AddTorrentForm) {
+    protected constructor(private inputName: string, elementSelector: string, btnSelector: string, counterSelector: string, form: AddTorrentForm) {
 
         this.$element = $(elementSelector);
         this.$btn = $(btnSelector);
@@ -335,7 +329,7 @@ abstract class AddTorrentMode {
             form.registerMode(this);
         }
 
-        this.$btn.click(this.toggle.bind(this));
+        this.$btn.on('click', this.toggle.bind(this));
         $(this).on('enabled', this.onEnabled.bind(this));
     }
 
@@ -411,11 +405,9 @@ class AddTorrentFileMode extends AddTorrentMode {
 
 
         this.dropzone = new Dropzone(elementSelector, {
-            // @ts-ignore
             url: router.generateUrl('uploadTorrent'),
             paramName: 'upload-torrent-file',
             dictDefaultMessage: translator.translate('torrents.dropzone'),
-            // @ts-ignore
             previewTemplate: ui.templates.dropzonePreview,
             acceptedFiles: '.torrent',
             parallelUploads: 1,
@@ -430,30 +422,30 @@ class AddTorrentFileMode extends AddTorrentMode {
     }
 
     onEnabled() {
-        this.$element.click();
+        this.$element.trigger('click');
     }
 
     onRemovedFile() {
         this.setCounter(this.dropzone.getAcceptedFiles().length);
     }
 
-    onSuccess(file: any, result: AjaxResponse) {
+    onSuccess(file: DropzoneFile[], result: ApiResponse<unknown>) {
         this.securityManager.setCsrfToken(result.csrfToken);
         this.setCounter(this.dropzone.getAcceptedFiles().length);
     }
 
-    onError(file: any, result: AjaxResponse) {
+    onError(file: DropzoneFile[], result: ApiResponse<unknown>) {
         if (typeof result === 'object' && result.hasOwnProperty('csrfToken')) {
             this.securityManager.setCsrfToken(result.csrfToken);
         }
     }
 
-    onSending(file: any, xhr: any, formData: any) {
+    onSending(file: DropzoneFile[], xhr: XMLHttpRequest, formData: FormData) {
         formData.append('csrfToken', this.securityManager.getCsrfToken());
     }
 
     getItems() {
-        let items = [],
+        const items = [],
             files = this.dropzone.getAcceptedFiles();
 
         for (let i = 0, { length } = files; i < length; ++i) {
@@ -477,7 +469,7 @@ class AddTorrentMagnetMode extends AddTorrentMode {
     }
 
     onEnabled() {
-        this.$element.children('textarea').focus();
+        this.$element.children('textarea').trigger('focus');
     }
 
     onInput() {
@@ -485,7 +477,7 @@ class AddTorrentMagnetMode extends AddTorrentMode {
     }
 
     getItems() {
-        let magnets = [],
+        const magnets = [],
             rmagnet = /^magnet:\?[\x20-\x7E]*/,
             lines = ($('#add-torrent-magnet-input').val() as string).split(/\r\n|\r|\n/);
 
@@ -523,7 +515,6 @@ class TorrentsPage extends AbstractPage {
         this.initializeAddTorrentForm();
 
         if (navigator.registerProtocolHandler) {
-            // @ts-ignore
             navigator.registerProtocolHandler('magnet', `${ location.origin }/user/torrents/magnet?magnet=%s`, 'Athorrent');
         }
     }
@@ -588,7 +579,7 @@ class TorrentsPage extends AbstractPage {
         const addTorrentForm = new AddTorrentForm('#add-torrent-form', '#add-torrent-submit', this.router, () => {
             this.torrentsUpdater.update();
         });
-        // @ts-ignore
+
         this.addTorrentFileMode = new AddTorrentFileMode(this.router, this.translator, this.ui, this.securityManager, 'add-torrent-files', '#add-torrent-file-drop', '#add-torrent-file', '#add-torrent-file-counter', addTorrentForm);
         this.addTorrentMagnetMode = new AddTorrentMagnetMode('add-torrent-magnets', '#add-torrent-magnet-wrapper', '#add-torrent-magnet', '#add-torrent-magnet-counter', addTorrentForm);
     }

@@ -21,8 +21,8 @@ export abstract class AbstractPage extends DataManager {
         this.ui = ui;
     }
 
-    sendRequest(action: string, parameters: Params = {}) {
-        return this.router.sendRequest(action, parameters);
+    sendRequest<R>(action: string, parameters: Params = {}) {
+        return this.router.sendRequest<R>(action, parameters);
     }
 
     translate(key: string): string {

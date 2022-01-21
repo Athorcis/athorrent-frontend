@@ -1,5 +1,3 @@
-/* eslint-env browser */
-
 import $ from 'jquery';
 import '../css/users.scss';
 import {AbstractPage} from './core/abstract-page';
@@ -21,7 +19,7 @@ class UsersPage extends AbstractPage {
     }
 
     async onRemoveUser(event: MouseEvent) {
-        let target = event.target as HTMLElement;
+        const target = event.target as HTMLElement;
 
         if (window.confirm(`Êtes-vous sur de vouloir supprimer l'utilisateur ${ this.getUserName(target) } ?`)) {
             await this.sendRequest('removeUser', {
@@ -33,10 +31,10 @@ class UsersPage extends AbstractPage {
     }
 
     async onResetUserPassword(event: MouseEvent) {
-        var target = event.target as HTMLElement;
+        const target = event.target as HTMLElement;
 
         if (window.confirm(`Êtes-vous sur de vouloir réinitialiser le mot de passe de l'utilisateur ${this.getUserName(target)}?`)) {
-            const data = await this.sendRequest('resetUserPassword', {
+            const data = await this.sendRequest<{password: string}>('resetUserPassword', {
                 userId: this.getUserId(target)
             });
 

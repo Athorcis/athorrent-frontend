@@ -26,6 +26,15 @@ interface Routes {
     [name: string]: RouteGroup;
 }
 
+type RequestOptions = ConstructorParameters<typeof Request>[1];
+
+export interface ApiResponse<T> {
+    status: string;
+    data?: T;
+    message?: string;
+    csrfToken?: string;
+}
+
 export class Router {
 
     private queryParams;
@@ -44,7 +53,7 @@ export class Router {
     init() {
 
         $('[data-ajax-action]').on('click',(event) => {
-            let $btn = $(event.target),
+            const $btn = $(event.target),
                 action = $btn.data('ajax-action'),
                 spinner = Boolean($btn.data('ajax-spinner'));
 
@@ -60,19 +69,19 @@ export class Router {
         });
     }
 
-    sendRequest<R = any>(name: string , parameters: Params = {}): AbortablePromise<R> {
+    sendRequest<R>(name: string , parameters: Params = {}): AbortablePromise<R> {
         const route = this.getRoute(name);
         const request = this.createRequest(route, parameters);
 
-        const body$ = this.http.executeForResponse(request).then(response => {
+        const body$ = this.http.executeForResponse<ApiResponse<R>>(request).then(response => {
 
-            const {body}: {body: any} = response;
+            const {body} = response;
 
             if (body.status === 'success') {
                 return body.data;
             }
 
-            throw new body.message;
+            throw new Error(body.message);
         }) as AbortablePromise<R>;
 
         body$.abort = function () {
@@ -129,7 +138,7 @@ export class Router {
 
         const {method} = route;
 
-        const options: any = {
+        const options: RequestOptions = {
             method,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'

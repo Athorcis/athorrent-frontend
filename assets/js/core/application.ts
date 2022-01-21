@@ -1,8 +1,8 @@
 import {Translator} from './translator';
 import {Router} from './router';
-import $ from 'jquery';
 import {SecurityManager} from './security-manager';
 import {AbstractPage} from './abstract-page';
+import 'jquery';
 import 'bootstrap-sass';
 import 'picturefill';
 import {UiManager} from './ui-manager';
@@ -17,7 +17,7 @@ export class Application {
 
     private translator: Translator;
 
-    constructor(private config: {[key: string]: any}) {
+    constructor(private config: AppConfig) {
         this.router = new Router(config.routes, config.routeParameters, config.action);
         this.securityManager = new SecurityManager(config.csrfToken, this.router.getHttpClient());
         this.ui = new UiManager(config.templates);
@@ -41,6 +41,6 @@ export class Application {
     }
 
     static create() {
-        return new Application((window as any).athorrent || {});
+        return new Application(window.athorrent || {});
     }
 }

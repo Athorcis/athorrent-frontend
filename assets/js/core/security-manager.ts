@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import {HttpClient, Request, Response, FilterChain} from "typescript-http-client";
+import {ApiResponse} from './router';
 
 export class SecurityManager {
 
@@ -7,12 +8,12 @@ export class SecurityManager {
     }
 
     init() {
-        $('form[method="post"]').submit(event => {
+        $('form[method="post"]').on('submit', event => {
             $(event.target).append(`<input type="hidden" name="csrfToken" value="${this.csrfToken}" />`);
         });
 
         this.http.addFilter({
-            doFilter: (request: Request, filterChain: FilterChain<any>): Promise<Response<any>> => {
+            doFilter: <T>(request: Request, filterChain: FilterChain<ApiResponse<T>>): Promise<Response<ApiResponse<T>>> => {
                 request.addHeader('X-Csrf-Token', this.csrfToken);
 
                 const response$ = filterChain.doFilter(request);

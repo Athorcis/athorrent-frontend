@@ -2,8 +2,8 @@ import $ from 'jquery';
 
 export class DataManager {
     getItem(type: string, element: HTMLElement, selector: string = null) {
-        let $item,
-            $element = $(element);
+        let $item;
+        const $element = $(element);
 
         selector = selector || `.${type}`;
 
@@ -21,8 +21,8 @@ export class DataManager {
     }
 
     getItemId(type: string, element: HTMLElement, selector: string = null) {
-        let id,
-            $item = this.getItem(type, element, selector);
+        let id
+        const $item = this.getItem(type, element, selector);
 
         if ($item) {
             id = $item.attr('id').replace(`${type}-`, '');
@@ -34,8 +34,8 @@ export class DataManager {
     }
 
     getItemAttr(type: string, element: HTMLElement, name: string, selector: string = null) {
-        let attr,
-            $item = this.getItem(type, element, selector);
+        let attr;
+        const $item = this.getItem(type, element, selector);
 
         if ($item) {
             attr = $item.children(`.${type}-${name}`).text();

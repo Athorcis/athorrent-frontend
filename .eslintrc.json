@@ -1,6 +1,8 @@
 {
     "root": true,
 
+    "parser": "@typescript-eslint/parser",
+
     "env": {
         "es6": true
     },
@@ -9,45 +11,29 @@
         "sourceType": "module"
     },
 
-    "extends": "eslint:all",
+    "extends": [
+        "eslint:recommended"
+    ],
 
     "rules": {
         "no-prototype-builtins": "off",
+        "no-magic-numbers": ["warn", { "ignore": [-1, 0, 1] }]
+    },
 
-        "no-alert": "warn",
-        "no-magic-numbers": ["warn", { "ignore": [-1, 0, 1] }],
-        "no-param-reassign": "off",
-        "vars-on-top": "off",
+    "overrides": [{
+        "files": ["**/*.ts"],
 
-        "init-declarations": "off",
+        "plugins": [
+            "@typescript-eslint"
+        ],
 
-        "array-element-newline": "off",
-        "function-call-argument-newline": ["warn", "consistent"],
-        "func-names": ["warn", "never"],
-        "func-style": "off",
-        "id-length": ["warn", { "exceptions": ["$", "i"] }],
-        "max-len": "off",
-        "max-lines": "off",
-        "max-params": "off",
-        "max-statements": "off",
-        "multiline-ternary": "off",
-        "newline-per-chained-call": ["warn", { "ignoreChainWithDepth": 3 }],
-        "no-invalid-this": "off",
-        "no-plusplus": "off",
-        "no-ternary": "off",
-        "no-underscore-dangle": "off",
-        "object-curly-newline": "off",
-        "object-curly-spacing": ["warn", "always"],
-        "one-var": "off",
-        "padded-blocks": ["warn", "never"],
-        "quote-props": ["error", "consistent-as-needed"],
-        "quotes": ["error", "single"],
-        "require-jsdoc": "warn",
-        "sort-keys": "off",
-        "sort-vars": "off",
-        "space-before-function-paren": ["error", { "anonymous": "always", "named": "never" }],
-        "template-curly-spacing": "off",
+        "extends": [
+            "plugin:@typescript-eslint/eslint-recommended",
+            "plugin:@typescript-eslint/recommended"
+        ],
 
-        "prefer-const": "off"
-    }
+        "rules": {
+            "@typescript-eslint/no-inferrable-types": "off"
+        }
+    }]
 }
