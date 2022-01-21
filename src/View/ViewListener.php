@@ -21,7 +21,7 @@ class ViewListener implements EventSubscriberInterface
         $this->renderer = $renderer;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [KernelEvents::VIEW => [
             ['onEarlyKernelView', 255],
