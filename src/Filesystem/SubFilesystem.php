@@ -80,7 +80,7 @@ class SubFilesystem extends AbstractFilesystem
      */
     public function getPath(string $internalPath): string
     {
-        $path = Path::makeRelative($internalPath, $this->root);
+        $path = str_replace([$this->root, DIRECTORY_SEPARATOR], ['', '/'], $internalPath);
 
         return ltrim($path, '/');
     }
