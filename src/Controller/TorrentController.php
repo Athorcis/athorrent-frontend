@@ -84,7 +84,8 @@ class TorrentController extends AbstractController
 
         if ($file && $file->getSize() <= 1048576) {
             if ($file->getMimeType() === 'application/x-bittorrent') {
-                $file->move($torrentManager->getTorrentsDirectory(), $file->getClientOriginalName());
+                $torrentsDir = $torrentManager->ensureTorrentsDirExists();
+                $file->move($torrentsDir, $file->getClientOriginalName());
 
                 return [];
             }

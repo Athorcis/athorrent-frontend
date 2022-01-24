@@ -11,6 +11,8 @@ use Symfony\Component\Filesystem\Path;
 
 class TorrentManager
 {
+    private $fs;
+
     private $user;
 
     private $service;
@@ -22,6 +24,7 @@ class TorrentManager
      */
     public function __construct(EntityManagerInterface $em, Filesystem $fs, User $user)
     {
+        $this->fs = $fs;
         $this->user = $user;
         $this->service = new AthorrentService($em, $fs, $user);
     }
@@ -33,7 +36,19 @@ class TorrentManager
 
     public function getTorrentsDirectory(): string
     {
-        return $this->user->getPath('torrents');
+        return $this->user->getBackendPath('new-torrents');
+    }
+
+    /**
+     * S'assure que le dossier d'upload des fichiers torrents existe et retourne son chemin
+     * @return string
+     */
+    public function ensureTorrentsDirExists(): string
+    {
+        $torrentsDir = $this->getTorrentsDirectory();
+        $this->fs->mkdir($torrentsDir);
+
+        return $torrentsDir;
     }
 
     /**
@@ -43,7 +58,8 @@ class TorrentManager
      */
     public function addTorrentFromUrl(string $url)
     {
-        $path = Path::join($this->getTorrentsDirectory(), md5($url) . '.torrent');
+        $torrentsDir = $this->ensureTorrentsDirExists();
+        $path = Path::join($torrentsDir, md5($url) . '.torrent');
 
         file_put_contents($path, file_get_contents($url));
 
