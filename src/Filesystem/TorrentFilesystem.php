@@ -6,6 +6,7 @@ namespace Athorrent\Filesystem;
 use Athorrent\Database\Entity\User;
 use Athorrent\Utils\TorrentManager;
 use Exception;
+use Symfony\Component\Filesystem\Path;
 
 class TorrentFilesystem extends UserFilesystem
 {
@@ -50,6 +51,7 @@ class TorrentFilesystem extends UserFilesystem
     protected function isTorrentImplementation(string $path): bool
     {
         $torrentPaths = $this->getTorrentPaths();
+        $path = Path::canonicalize($path);
         $index = -strlen($path);
 
         foreach ($torrentPaths as $torrentPath) {
