@@ -51,6 +51,18 @@ class TorrentManager
         return $torrentsDir;
     }
 
+    protected function makePathRelative(string $path): string
+    {
+        $backendDir = $this->user->getBackendPath();
+        return str_replace($backendDir, '<workdir>', $path);
+    }
+
+    protected function makePathAbsolute(string $path): string
+    {
+        $backendDir = $this->user->getBackendPath();
+        return str_replace('<workdir>', $backendDir, $path);
+    }
+
     /**
      * @param string $url
      * @return mixed
@@ -78,7 +90,10 @@ class TorrentManager
 
         rename($oldFile, $newFile);
 
-        $result = $this->service->call('addTorrentFromFile', ['file' => $newFile]);
+        $result = $this->service->call('addTorrentFromFile', [
+            'file' => $this->makePathRelative($newFile)
+        ]);
+
         unlink($newFile);
 
         return $result;
@@ -111,11 +126,9 @@ class TorrentManager
     {
         $paths = $this->service->call('getPaths');
 
-        /*if (DIRECTORY_SEPARATOR !== '/') {
-            foreach ($paths as $index => $path) {
-                $paths[$index] = str_replace('/', DIRECTORY_SEPARATOR, $path);
-            }
-        }*/
+        foreach ($paths as $index => $path) {
+            $paths[$index] = Path::canonicalize($this->makePathAbsolute($path));
+        }
 
         return $paths;
     }
