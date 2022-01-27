@@ -4,6 +4,7 @@ namespace Athorrent\Filesystem;
 
 
 use Athorrent\Database\Entity\User;
+use Athorrent\Utils\ServiceUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Exception;
 use Symfony\Component\Filesystem\Path;
@@ -12,6 +13,9 @@ class TorrentFilesystem extends UserFilesystem
 {
     /** @var TorrentManager */
     protected $torrentManager;
+
+    /** @var bool */
+    protected $torrentManagerFailed = false;
 
     /** @var string[] */
     protected $torrentPaths;
@@ -50,7 +54,18 @@ class TorrentFilesystem extends UserFilesystem
      */
     protected function isTorrentImplementation(string $path): bool
     {
-        $torrentPaths = $this->getTorrentPaths();
+        if ($this->torrentManagerFailed) {
+            return true;
+        }
+
+        try {
+            $torrentPaths = $this->getTorrentPaths();
+        }
+        catch (ServiceUnavailableException $exception) {
+            $this->torrentManagerFailed = true;
+            return true;
+        }
+
         $path = Path::canonicalize($path);
         $index = -strlen($path);
 
