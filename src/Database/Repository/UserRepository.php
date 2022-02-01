@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -29,14 +30,14 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
         return $this->paginateQueryBuilderOriginal($queryBuilder, $limit, $offset);
     }
 
-    public function loadUserByUsername(string $username): ?UserInterface
+    public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
-        return $this->findOneBy(['username' => $username]);
+        return $this->findOneBy(['username' => $identifier]);
     }
 
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        $user->setPassword($newEncodedPassword);
+        $user->setPassword($newHashedPassword);
         $this->_em->flush($user);
     }
 }
