@@ -1,0 +1,8 @@
+nelmio_security:
+
+    # forces HTTPS handling, don't combine with flexible mode
+    # and make sure you have SSL working on your site before enabling this
+    forced_ssl:
+        hsts_max_age: 63072000
+        hsts_subdomains: false
+        redirect_status_code: 302 # default, switch to 301 for permanent redirects
