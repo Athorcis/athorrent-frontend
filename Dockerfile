@@ -1,10 +1,13 @@
-FROM php:7.4-fpm AS base
+FROM php:8.1-fpm AS base
 
 RUN set -ex ;\
     apt-get update ;\
     apt-get install -y --no-install-recommends \
         libicu-dev ;\
-    docker-php-ext-install -j $(nproc) bcmath intl opcache pdo_mysql sockets
+    docker-php-ext-install -j $(nproc) bcmath intl opcache pdo_mysql
+
+# CFLAGS can be dropped when PHP 8.1.3 is released
+RUN CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets
 
 RUN set -ex ;\
     pecl install apcu ;\
@@ -42,5 +45,7 @@ COPY . /var/www/athorrent
 
 COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
 COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
+
+RUN chown -R www-data:www-data /var/www/athorrent/var
 
 VOLUME ["/var/www/athorrent/var/user"]

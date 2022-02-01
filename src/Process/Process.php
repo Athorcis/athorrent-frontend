@@ -43,10 +43,10 @@ class Process extends BaseProcess
     }
 
     /**
-     * @param float|int|null $timeout
-     * @return BaseProcess
+     * @param float|null $timeout
+     * @return $this
      */
-    public function setTimeout($timeout): BaseProcess
+    public function setTimeout(?float $timeout): static
     {
         if ($this->daemon && $timeout > 0) {
             throw new RuntimeException('a daemon process cannot have a timeout');
@@ -103,8 +103,8 @@ class Process extends BaseProcess
     /**
      * @param string[] $command
      * @param string|null $cwd
-     * @param array|null $env
-     * @param mixed|null $input
+     * @param array $env
+     * @param mixed $input
      * @param bool $daemon
      * @param int|float|null $timeout
      * @return Process
@@ -112,8 +112,8 @@ class Process extends BaseProcess
     protected static function new(
         array $command,
         ?string $cwd,
-        ?array $env,
-        $input,
+        array $env,
+        mixed $input,
         bool $daemon,
         ?float $timeout
     ): Process
@@ -134,12 +134,12 @@ class Process extends BaseProcess
     /**
      * @param string[] $command
      * @param string|null $cwd
-     * @param array|null $env
-     * @param mixed|null $input
+     * @param array $env
+     * @param mixed $input
      * @param int|float|null $timeout
      * @return Process
      */
-    public static function create(array $command, string $cwd = null, array $env = null, $input = null, ?float $timeout = 60): Process
+    public static function create(array $command, string $cwd = null, array $env = [], mixed $input = null, ?float $timeout = 60): Process
     {
         return static::new($command, $cwd, $env, $input, false, $timeout);
     }
@@ -147,21 +147,21 @@ class Process extends BaseProcess
     /**
      * @param string[] $command
      * @param string|null $cwd
-     * @param array|null $env
-     * @param mixed|null $input
+     * @param array $env
+     * @param mixed $input
      * @return Process
      */
-    public static function daemon(array $command, string $cwd = null, array $env = null, $input = null): Process
+    public static function daemon(array $command, string $cwd = null, array $env = [], mixed $input = null): Process
     {
         return static::new($command, $cwd, $env, $input, true, null);
     }
 
     /**
      * @param string[] $command
-     * @param mixed|null $input
+     * @param mixed $input
      * @return string
      */
-    public static function exec(array $command, $input = null): string
+    public static function exec(array $command, mixed $input = null): string
     {
         $process = static::create($command, null, null, $input);
         $process->mustRun();
