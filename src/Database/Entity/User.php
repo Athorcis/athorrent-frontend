@@ -5,7 +5,7 @@ namespace Athorrent\Database\Entity;
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Process\Entity\TrackedProcess;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -18,71 +18,60 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface
 {
     /**
-     * @var int
      * @ORM\Id
      * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
      * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8mb4_bin"})
      */
-    private $username;
+    private string $username;
+
+    private ?string $plainPassword = null;
 
     /**
-     * @var string
-     */
-    private $plainPassword;
-
-    /**
-     * @var string
      * @ORM\Column(type="text", nullable=false, options={"collation": "utf8mb4_bin"})
      */
-    private $password;
+    private string $password;
 
     /**
-     * @var string
      * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8mb4_bin", "fixed": true})
      */
-    private $salt;
+    private string $salt;
 
     /**
-     * @var DateTime
      * @ORM\Column(type="datetime", nullable=false)
      */
-    private $creationDateTime;
+    private DateTime $creationDateTime;
 
     /**
-     * @var DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $connectionDateTime;
+    private ?DateTime $connectionDateTime = null;
 
     /**
-     * @var UserHasRole[]
+     * @var UserHasRole[]|Collection
      * @ORM\OneToMany(targetEntity="UserHasRole", mappedBy="user", cascade={"persist"}, fetch="EAGER")
      */
-    private $hasRoles;
+    private array|Collection $hasRoles;
 
     /**
-     * @var Sharing[]
+     * @var Sharing[]|Collection
      * @ORM\OneToMany(targetEntity="Sharing", mappedBy="user", indexBy="token")
      */
-    private $sharings;
+    private array|Collection $sharings;
 
     /**
-     * @var TrackedProcess
      * @ORM\OneToOne(targetEntity="Athorrent\Process\Entity\TrackedProcess", fetch="LAZY")
      */
-    private $athorrentProcess;
+    private TrackedProcess $athorrentProcess;
 
     /**
-     * @var int
      * @ORM\Column(type="integer")
      */
-    private $port;
+    private int $port;
 
     public function __construct($username, $plainPassword, $salt, array $roles)
     {
@@ -116,7 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->username = $username;
     }
 
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -160,7 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->connectionDateTime = $dateTime;
     }
 
-    public function getHasRoles()
+    public function getHasRoles(): array|Collection
     {
         return $this->hasRoles;
     }
@@ -177,15 +166,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     }
 
     /**
-     * @return Sharing[]|ArrayCollection
+     * @return Sharing[]|Collection
      */
-    public function getSharings()
+    public function getSharings(): array|Collection
     {
         return $this->sharings;
     }
 
     /**
-     * @return TrackedProcess
+     * @return TrackedProcess|null
      */
     public function getAthorrentProcess(): ?TrackedProcess
     {
@@ -216,7 +205,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->port = $port;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         $this->plainPassword = null;
     }

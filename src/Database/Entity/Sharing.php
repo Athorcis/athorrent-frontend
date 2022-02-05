@@ -13,42 +13,36 @@ use Doctrine\ORM\Mapping as ORM;
 class Sharing implements CacheKeyGetterInterface
 {
     /**
-     * @var string
      * @ORM\Id
      * @ORM\Column(type="string", length=32, options={"collation": "utf8mb4_bin", "fixed": true})
      */
-    private $token;
+    private string $token;
 
     /**
-     * @var User
      * @ORM\ManyToOne(targetEntity="User", inversedBy="sharings")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $user;
+    private User $user;
 
     /**
-     * @var string
      * @ORM\Column(type="text", options={"collation": "utf8mb4_bin"})
      */
-    private $path;
+    private string $path;
 
     /**
-     * @var DateTime
      * @ORM\Column(type="datetime")
      */
-    private $creationDateTime;
+    private DateTime $creationDateTime;
 
-    public function __construct($user = null, $path = null)
+    public function __construct(User $user, string $path)
     {
-        if ($user !== null) {
-            $this->token = self::generateToken($user, $path);
-            $this->user = $user;
-            $this->path = $path;
-            $this->creationDateTime = new DateTime();
-        }
+        $this->token = self::generateToken($user, $path);
+        $this->user = $user;
+        $this->path = $path;
+        $this->creationDateTime = new DateTime();
     }
 
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
@@ -58,12 +52,12 @@ class Sharing implements CacheKeyGetterInterface
         return $this->user;
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
 
-    public static function generateToken(User $user, $path)
+    public static function generateToken(User $user, $path): string
     {
         return md5($user->getId() . '/' . $path);
     }
