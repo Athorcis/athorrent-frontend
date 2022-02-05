@@ -4,9 +4,9 @@ namespace Athorrent\Filesystem;
 
 class SharedFilesystemEntry extends TorrentFilesystemEntry
 {
-    public function __construct(SharedFilesystem $filesystem, string $path, FilesystemEntry $intenalEntry = null)
+    public function __construct(SharedFilesystem $filesystem, string $path, FilesystemEntry $internalEntry = null)
     {
-        parent::__construct($filesystem, $path, $intenalEntry);
+        parent::__construct($filesystem, $path, $internalEntry);
     }
 
     public function getName(): string

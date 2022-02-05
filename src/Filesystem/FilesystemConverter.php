@@ -20,7 +20,7 @@ class FilesystemConverter implements ParamConverterInterface
 
     /**
      * @param UserFilesystem $filesystem
-     * @param string $path
+     * @param string|null $path
      * @param array $requirements
      * @return UserFilesystemEntry
      */

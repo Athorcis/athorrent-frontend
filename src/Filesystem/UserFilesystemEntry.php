@@ -12,9 +12,9 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
     /** @var string */
     private $sharingToken;
 
-    public function __construct(UserFilesystem $filesystem, string $path, FilesystemEntry $internalEnty = null)
+    public function __construct(UserFilesystem $filesystem, string $path, FilesystemEntry $internalEntry = null)
     {
-        parent::__construct($filesystem, $path, $internalEnty);
+        parent::__construct($filesystem, $path, $internalEntry);
     }
 
     /**
