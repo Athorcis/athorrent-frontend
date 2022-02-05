@@ -18,72 +18,61 @@ use const DIRECTORY_SEPARATOR;
 class TrackedProcess
 {
     /**
-     * @var int
      * @ORM\Id
      * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    protected int $id;
 
     /**
-     * @var int
      * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
      */
-    protected $pid;
+    protected int $pid;
 
     /**
-     * @var string
      * @ORM\Column(type="string", length=253, nullable=false, options={"collation": "utf8mb4_bin"})
      */
-    protected $host;
+    protected string $host;
 
     /**
-     * @var int
      * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
      */
-    protected $tracker;
+    protected int $tracker;
 
     /**
-     * @var string
      * @ORM\Column(type="text", nullable=false, options={"collation": "utf8mb4_bin"})
      */
-    protected $cmd;
+    protected string $cmd;
 
     /**
-     * @var DateTime
      * @ORM\Column(type="datetime", nullable=false)
      */
-    protected $startedAt;
+    protected DateTime $startedAt;
 
     /**
-     * @var DateTime
      * @ORM\Column(type="datetime", nullable=false)
      */
-    protected $lastHeartbeatAt;
+    protected DateTime $lastHeartbeatAt;
 
     /**
-     * @var DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $terminatedAt;
+    protected ?DateTime $terminatedAt = null;
 
     /**
-     * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
-    protected $interrupted;
+    protected ?bool $interrupted = null;
 
     /**
-     * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $exitCode;
+    protected ?int $exitCode = null;
 
     /**
-     * @var string
      * @ORM\Column(type="text", nullable=true, options={"collation": "utf8mb4_bin"})
      */
-    protected $errorOutput;
+    protected ?string $errorOutput = null;
 
     public function __construct(int $pid, $cmd, DateTime $startedAt)
     {
@@ -139,9 +128,9 @@ class TrackedProcess
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getTerminatedAt(): DateTime
+    public function getTerminatedAt(): ?DateTime
     {
         return $this->terminatedAt;
     }
@@ -163,9 +152,9 @@ class TrackedProcess
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getExitCode(): int
+    public function getExitCode(): ?int
     {
         return $this->exitCode;
     }
@@ -179,9 +168,9 @@ class TrackedProcess
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getErrorOutput(): string
+    public function getErrorOutput(): ?string
     {
         return $this->errorOutput;
     }

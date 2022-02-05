@@ -10,21 +10,19 @@ use Doctrine\ORM\Mapping as ORM;
 class UserHasRole
 {
     /**
-     * @var User
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="User", inversedBy="hasRoles")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $user;
+    private User $user;
 
     /**
-     * @var string
      * @ORM\Id
      * @ORM\Column(type="UserRole", nullable=false, options={"collation": "utf8mb4_bin"})
      */
-    private $role;
+    private string $role;
 
-    public function __construct(User $user, $role)
+    public function __construct(User $user, string $role)
     {
         $this->user = $user;
         $this->role = $role;
