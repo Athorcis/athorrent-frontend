@@ -91,15 +91,17 @@ export class Router {
         return body$;
     }
 
-    generateUrl(name: string, params: Params = {}): string {
-        const route = this.getRoute(name);
-        let url = this.prepareUrl(route, params);
-
+    protected getQueryString(params: Params): string {
         if (Object.keys(params).length > 0) {
-            url += '?' + queryString.stringify(params, { arrayFormat: 'bracket' });
+            return '?' + queryString.stringify(params, { arrayFormat: 'bracket' });
         }
 
-        return url;
+        return '';
+    }
+
+    generateUrl(name: string, params: Params = {}): string {
+        const route = this.getRoute(name);
+        return this.prepareUrl(route, params) + this.getQueryString(params);
     }
 
     protected prepareUrl(route: Route, params: Params): string {
@@ -146,9 +148,7 @@ export class Router {
         };
 
         if (method === 'GET') {
-            if (Object.keys(params).length > 0) {
-                url += '?' + queryString.stringify(params, { arrayFormat: 'bracket' });
-            }
+            url += this.getQueryString(params);
         }
         else {
             options.body = queryString.stringify(params, { arrayFormat: 'bracket' });

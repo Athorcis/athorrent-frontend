@@ -527,32 +527,24 @@ class TorrentsPage extends AbstractPage {
         $('.torrent-list').html(data);
     }
 
-    updateTorrentList() {
+    protected async applyActionToTorrent(action: string, element: HTMLElement) {
+        await this.sendRequest(action, {
+            hash: this.getTorrentHash(element)
+        });
+
         this.torrentsUpdater.update();
     }
 
-    async onTorrentPause(event: ClickEvent) {
-        await this.sendRequest('pauseTorrent', {
-            hash: this.getTorrentHash(event.target)
-        });
-
-        this.updateTorrentList();
+    onTorrentPause(event: ClickEvent) {
+        return this.applyActionToTorrent('pauseTorrent', event.target);
     }
 
-    async onTorrentResume(event: ClickEvent) {
-        await this.sendRequest('resumeTorrent', {
-            hash: this.getTorrentHash(event.target)
-        });
-
-        this.updateTorrentList();
+    onTorrentResume(event: ClickEvent) {
+        return this.applyActionToTorrent('resumeTorrent', event.target);
     }
 
-    async onTorrentRemove(event: ClickEvent) {
-        await this.sendRequest('removeTorrent', {
-            hash: this.getTorrentHash(event.target)
-        });
-
-        this.updateTorrentList();
+    onTorrentRemove(event: ClickEvent) {
+        return this.applyActionToTorrent('removeTorrent', event.target);
     }
 
     initializeTorrentsList() {
