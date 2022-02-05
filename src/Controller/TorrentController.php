@@ -127,8 +127,8 @@ class TorrentController extends AbstractController
      */
     public function addTorrents(Request $request, TorrentManager $torrentManager): array
     {
-        $files = $request->request->get('add-torrent-files');
-        $magnets = $request->request->get('add-torrent-magnets');
+        $files = $request->request->all('add-torrent-files');
+        $magnets = $request->request->all('add-torrent-magnets');
 
         $torrentsDir = $torrentManager->getTorrentsDirectory();
 
