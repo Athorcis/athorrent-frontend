@@ -8,7 +8,7 @@ abstract class UnixSocket implements SocketInterface
 
     public function shutdown(): void
     {
-        socket_shutdown($this->socket, 2);
+        socket_shutdown($this->socket);
     }
 
     public function close(): void

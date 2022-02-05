@@ -6,6 +6,7 @@ use Athorrent\View\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -13,7 +14,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NotificationListener implements EventSubscriberInterface
 {
-    private $urlGenerator;
+    private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
@@ -31,7 +32,7 @@ class NotificationListener implements EventSubscriberInterface
         $result = $event->getControllerResult();
 
         if ($result instanceof View) {
-            $response = $this->handleView($result, $request);
+            $this->handleView($result, $request);
         } elseif ($result instanceof Notification) {
             $response = $this->handleNotification($result, $request);
         }
@@ -41,7 +42,7 @@ class NotificationListener implements EventSubscriberInterface
         }
     }
 
-    protected function getFlashBag(Request $request)
+    protected function getFlashBag(Request $request): ?FlashBagInterface
     {
         $session = $request->getSession();
 
@@ -52,7 +53,7 @@ class NotificationListener implements EventSubscriberInterface
         return null;
     }
 
-    public function handleView(View $view, Request $request)
+    public function handleView(View $view, Request $request): void
     {
         $flashBag = $this->getFlashBag($request);
 
@@ -65,9 +66,7 @@ class NotificationListener implements EventSubscriberInterface
     {
         $flashBag = $this->getFlashBag($request);
 
-        if ($flashBag) {
-            $flashBag->add('notifications', $notification);
-        }
+        $flashBag?->add('notifications', $notification);
 
         $action = $notification->getAction();
 

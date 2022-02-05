@@ -6,11 +6,11 @@ use finfo;
 
 class FilesystemEntry extends AbstractFilesystemEntry
 {
-    protected $isDir;
+    protected ?bool $isDir = null;
 
-    protected $isFile;
+    protected ?bool $isFile = null;
 
-    protected $mimeType;
+    protected ?string $mimeType = null;
 
     public function __construct(Filesystem $filesystem, string $path)
     {
