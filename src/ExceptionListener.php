@@ -4,12 +4,14 @@ namespace Athorrent;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 use Twig\Environment;
 
 class ExceptionListener implements EventSubscriberInterface
@@ -29,45 +31,54 @@ class ExceptionListener implements EventSubscriberInterface
         return [KernelEvents::EXCEPTION => 'onKernelException'];
     }
 
+    protected function getMessageAndStatusCode(Throwable $throwable): array
+    {
+        if ($throwable instanceof HttpException) {
+            $statusCode = $throwable->getStatusCode();
+
+            if ($throwable instanceof NotFoundHttpException) {
+                $message = 'error.pageNotFound';
+            }
+        } else {
+            $statusCode = 500;
+        }
+
+        if ($statusCode === 500) {
+            $message = 'error.errorUnknown';
+        }
+
+        if (isset($message)) {
+            $message = $this->translator->trans($message);
+        } else {
+            $message = $throwable->getMessage();
+        }
+
+        return [$message, $statusCode];
+    }
+
+    protected function renderError(Request $request, string $message, int $statusCode)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $response = new JsonResponse([
+                'status' => 'error',
+                'error' => $message
+            ], $statusCode);
+        } else {
+            $html = $this->twig->render('pages/error.html.twig', ['error' => $message, 'code' => $statusCode]);
+            $response = new Response($html);
+        }
+
+        return $response;
+    }
+
     public function onKernelException(ExceptionEvent $event): void
     {
         if ($_SERVER['APP_DEBUG']) {
             return;
         }
 
-        $exception = $event->getThrowable();
-
-        if ($exception instanceof HttpException) {
-            $statusCode = $exception->getStatusCode();
-        } else {
-            $statusCode = 500;
-        }
-
-        if ($exception instanceof NotFoundHttpException) {
-            $error = 'error.pageNotFound';
-        }
-
-        if ($statusCode === 500) {
-            $error = 'error.errorUnknown';
-        }
-
-        if (isset($error)) {
-            $error = $this->translator->trans($error);
-        } else {
-            $error = $exception->getMessage();
-        }
-
-        $request = $event->getRequest();
-
-        if ($request->isXmlHttpRequest()) {
-            $response = new JsonResponse([
-                'status' => 'error',
-                'error' => $error
-            ], $statusCode);
-        } else {
-            $html = $this->twig->render('pages/error.html.twig', ['error' => $error, 'code' => $statusCode]);
-            $response = new Response($html);
-        }
+        [$message, $statusCode] = $this->getMessageAndStatusCode($event->getThrowable());
+        $response = $this->renderError($event->getRequest(), $message, $statusCode);
 
         $response->setStatusCode($statusCode);
         $event->setResponse($response);
