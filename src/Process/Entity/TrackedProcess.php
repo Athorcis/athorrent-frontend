@@ -105,7 +105,7 @@ class TrackedProcess
         return $this->startedAt;
     }
 
-    public function updateLastHearbeat(): void
+    public function updateLastHeartbeat(): void
     {
         $this->lastHeartbeatAt = new DateTime();
     }

@@ -55,7 +55,7 @@ class TrackProcessCommand extends Command
         // On affiche l'id du processus démarré
         $output->write(sprintf('id:%s', $processEntity->getId()));
 
-        // A l'arrêt du processus PHP
+        // À l'arrêt du processus PHP
         register_shutdown_function(
             function () use ($process, $processEntity) {
 
@@ -67,7 +67,7 @@ class TrackProcessCommand extends Command
         try {
 
             while ($process->isRunning()) {
-                $processEntity->updateLastHearbeat();
+                $processEntity->updateLastHeartbeat();
                 $this->em->flush();
 
                 sleep(2);
