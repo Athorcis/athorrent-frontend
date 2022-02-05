@@ -44,7 +44,7 @@ class RequestListener implements EventSubscriberInterface
     {
         $session = $event->getRequest()->getSession();
 
-        if ($session && $session->isStarted()) {
+        if ($session->isStarted()) {
             $session->save();
         }
     }

@@ -8,39 +8,39 @@ trait MimeTypeCheckerTrait
 
     public function isText(): bool
     {
-        return strpos($this->getMimeType(), 'text/') === 0;
+        return str_starts_with($this->getMimeType(), 'text/');
     }
 
     public function isImage(): bool
     {
-        return strpos($this->getMimeType(), 'image/') === 0;
+        return str_starts_with($this->getMimeType(), 'image/');
     }
 
     public function isAudio(): bool
     {
-        return strpos($this->getMimeType(), 'audio/') === 0;
+        return str_starts_with($this->getMimeType(), 'audio/');
     }
 
     public function isVideo(): bool
     {
-        return strpos($this->getMimeType(), 'video/') === 0;
+        return str_starts_with($this->getMimeType(), 'video/');
     }
 
     public function isPdf(): bool
     {
-        return strpos($this->getMimeType(), 'application/pdf') === 0;
+        return str_starts_with($this->getMimeType(), 'application/pdf');
     }
 
     public function isArchive(): bool
     {
         $mimeType = $this->getMimeType();
-        return strpos($mimeType, 'application/zip') === 0 || strpos($mimeType, 'application/x-gzip') === 0;
+        return str_starts_with($mimeType, 'application/zip') || str_starts_with($mimeType, 'application/x-gzip');
     }
 
     public function isPlayable(): bool
     {
         $mimeType = $this->getMimeType();
-        return strpos($mimeType, 'audio/mpeg') === 0 || strpos($mimeType, 'video/mp4') === 0;
+        return str_starts_with($mimeType, 'audio/mpeg') || str_starts_with($mimeType, 'video/mp4');
     }
 
     public function isDisplayable(): bool

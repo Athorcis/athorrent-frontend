@@ -21,7 +21,7 @@ class MagnetDLSource extends AbstractTorrentSource
         $query = trim(str_replace([' ', '_'], '-', $query));
         $query = strtolower(preg_replace('/[^a-zA-Z0-9-]/', '', $query));
 
-        return $this->doRequest($http, 'GET', "/{$query[0]}/$query/", [
+        return $this->doRequest($http, 'GET', "/$query[0]/$query/", [
             'headers' => ['Accept' => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"]
         ]);
     }
