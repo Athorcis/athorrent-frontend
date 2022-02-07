@@ -16,9 +16,9 @@ use Twig\Environment;
 
 class ExceptionListener implements EventSubscriberInterface
 {
-    private $translator;
+    private TranslatorInterface $translator;
 
-    private $twig;
+    private Environment $twig;
 
     public function __construct(TranslatorInterface $translator, Environment $twig)
     {
@@ -56,7 +56,7 @@ class ExceptionListener implements EventSubscriberInterface
         return [$message, $statusCode];
     }
 
-    protected function renderError(Request $request, string $message, int $statusCode)
+    protected function renderError(Request $request, string $message, int $statusCode): Response
     {
         if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse([

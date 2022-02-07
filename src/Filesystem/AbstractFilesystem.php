@@ -4,8 +4,7 @@ namespace Athorrent\Filesystem;
 
 abstract class AbstractFilesystem implements FilesystemInterface
 {
-    /** @var string */
-    protected $root;
+    protected string $root;
 
     public function __construct(string $root)
     {

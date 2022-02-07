@@ -11,7 +11,7 @@ use const JSON_THROW_ON_ERROR;
 
 class TrackerProcess extends CommandProcess
 {
-    private $trackedId;
+    private int $trackedId;
 
     /**
      * @param callable|null $callback
@@ -36,7 +36,7 @@ class TrackerProcess extends CommandProcess
         );
     }
 
-    public function getTrackedId()
+    public function getTrackedId(): int
     {
         return $this->trackedId;
     }

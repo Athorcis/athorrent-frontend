@@ -8,11 +8,12 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class TorrentManagerFactory
 {
-    private $em;
+    private EntityManagerInterface $em;
 
-    private $fs;
+    private Filesystem $fs;
 
-    private $instances;
+    /** @var TorrentManager[] */
+    private array $instances;
 
     public function __construct(EntityManagerInterface $em, Filesystem $fs)
     {

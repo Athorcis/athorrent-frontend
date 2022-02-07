@@ -13,20 +13,15 @@ use function preg_match;
 
 abstract class AbstractTorrentSource implements TorrentSourceInterface
 {
-    /** @var string */
-    private $id;
+    private string $id;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string */
-    protected $origin;
+    protected string $origin;
 
-    /** @var string */
-    private $rowFilter;
+    private string $rowFilter;
 
-    /** @var string */
-    private $cellFilter;
+    private string $cellFilter;
 
     public function __construct(string $id, string $name, string $origin, string $rowFilter = 'tbody > tr', string $cellFilter = 'td')
     {
@@ -125,7 +120,7 @@ abstract class AbstractTorrentSource implements TorrentSourceInterface
         return round($matches[1] * $magnitude[$matches[2]]);
     }
 
-    protected function createTorrentInfo(string $name, string $path, string $age, string $magnet, string $size, string $seeders, string $leechers)
+    protected function createTorrentInfo(string $name, string $path, string $age, string $magnet, string $size, string $seeders, string $leechers): TorrentInfo
     {
         if (preg_match('/^https?:\/\//', $path)) {
             $url = $path;

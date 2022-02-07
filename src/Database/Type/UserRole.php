@@ -4,9 +4,10 @@ namespace Athorrent\Database\Type;
 
 class UserRole extends Enum
 {
-    public static $values = ['ROLE_USER', 'ROLE_ADMIN'];
+    /** @var string[] */
+    public static array $values = ['ROLE_USER', 'ROLE_ADMIN'];
 
-    public function getValues()
+    public function getValues(): array
     {
         return self::$values;
     }

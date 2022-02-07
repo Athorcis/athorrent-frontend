@@ -7,9 +7,10 @@ use Symfony\Component\Process\PhpExecutableFinder;
 
 class CommandProcess extends Process
 {
-    private static $consolePath;
+    private static ?string $consolePath = null;
 
-    private static $commandPrefixes;
+    /** @var string[] */
+    private static ?array $commandPrefixes = null;
 
     protected static function getCommandPrefixes(): array
     {

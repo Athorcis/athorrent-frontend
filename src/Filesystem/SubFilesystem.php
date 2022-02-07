@@ -7,8 +7,7 @@ use Symfony\Component\Filesystem\Path;
 
 class SubFilesystem extends AbstractFilesystem
 {
-    /** @var Filesystem */
-    private $internalFilesystem;
+    private Filesystem $internalFilesystem;
 
     public function __construct(string $root)
     {

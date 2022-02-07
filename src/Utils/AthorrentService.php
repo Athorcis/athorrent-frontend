@@ -16,14 +16,11 @@ use const DIRECTORY_SEPARATOR;
 
 class AthorrentService extends JsonService
 {
-    private $fs;
+    private Filesystem $fs;
 
-    private $user;
+    private User $user;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $em, Filesystem $fs, User $user)
     {

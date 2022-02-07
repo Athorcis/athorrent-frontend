@@ -10,7 +10,7 @@ abstract class Enum extends Type
 {
     abstract public function getValues();
 
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         return "ENUM('" . implode("', '", $this->getValues()) . "')";
     }

@@ -11,17 +11,15 @@ use Symfony\Component\Filesystem\Path;
 
 class TorrentFilesystem extends UserFilesystem
 {
-    /** @var TorrentManager */
-    protected $torrentManager;
+    protected TorrentManager $torrentManager;
 
-    /** @var bool */
-    protected $torrentManagerFailed = false;
+    protected bool $torrentManagerFailed = false;
 
     /** @var string[] */
-    protected $torrentPaths;
+    protected ?array $torrentPaths = null;
 
     /** @var bool[] */
-    protected $torrentsMap;
+    protected ?array $torrentsMap = null;
 
     public function __construct(TorrentManager $torrentManager, ?User $accessor, string $path = '')
     {

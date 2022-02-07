@@ -8,13 +8,13 @@ use Symfony\Component\Filesystem\Path;
 
 class CacheCleaner
 {
-    private $cache;
+    private CacheInterface $cache;
 
-    private $cacheDir;
+    private string $cacheDir;
 
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    public function __construct(CacheInterface $cache, $cacheDir)
+    public function __construct(CacheInterface $cache, string $cacheDir)
     {
         $this->cache = $cache;
         $this->cacheDir = $cacheDir;

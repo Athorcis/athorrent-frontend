@@ -15,7 +15,7 @@ class UnixSocketClient extends UnixSocket implements ClientSocketInterface
         }
     }
 
-    public function read(&$buffer, $length)
+    public function read(&$buffer, $length): int
     {
         $bytesRead = socket_recv($this->socket, $buffer, $length, 0);
 
@@ -26,7 +26,7 @@ class UnixSocketClient extends UnixSocket implements ClientSocketInterface
         return $bytesRead;
     }
 
-    public function write($buffer, $length)
+    public function write($buffer, $length): int
     {
         $bytesWritten = socket_send($this->socket, $buffer, $length, 0);
 

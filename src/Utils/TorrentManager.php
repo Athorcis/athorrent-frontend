@@ -11,16 +11,17 @@ use Symfony\Component\Filesystem\Path;
 
 class TorrentManager
 {
-    private $fs;
+    private Filesystem $fs;
 
-    private $user;
+    private User $user;
 
-    private $service;
+    private AthorrentService $service;
 
     /**
      * TorrentManager constructor.
+     * @param EntityManagerInterface $em
+     * @param Filesystem $fs
      * @param User $user
-     * @throws Exception
      */
     public function __construct(EntityManagerInterface $em, Filesystem $fs, User $user)
     {
@@ -110,19 +111,19 @@ class TorrentManager
     }
 
     /**
-     * @return mixed
+     * @return array[]
      * @throws Exception
      */
-    public function getTorrents()
+    public function getTorrents(): array
     {
         return $this->service->call('getTorrents');
     }
 
     /**
-     * @return mixed
+     * @return string[]
      * @throws Exception
      */
-    public function getPaths()
+    public function getPaths(): array
     {
         $paths = $this->service->call('getPaths');
 
@@ -165,10 +166,10 @@ class TorrentManager
 
     /**
      * @param string $hash
-     * @return mixed
+     * @return array[]
      * @throws Exception
      */
-    public function listTrackers(string $hash)
+    public function listTrackers(string $hash): array
     {
         return $this->service->call('listTrackers', ['hash' => $hash]);
     }

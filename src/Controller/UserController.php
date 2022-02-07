@@ -6,6 +6,7 @@ use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
 use Athorrent\Notification\ErrorNotification;
+use Athorrent\Notification\Notification;
 use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
 use Athorrent\View\PaginatedView;
@@ -25,9 +26,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserController extends AbstractController
 {
-    protected $userManager;
+    protected UserManager $userManager;
 
-    protected $userRepository;
+    protected UserRepository $userRepository;
 
     public function __construct(UserManager $userManager, UserRepository $userRepository)
     {
@@ -58,11 +59,10 @@ class UserController extends AbstractController
      * @Route("/", methods="POST")
      *
      * @param Request $request
-     * @return ErrorNotification|SuccessNotification
+     * @return Notification
      *
-     * @throws Exception
      */
-    public function saveUser(Request $request)
+    public function saveUser(Request $request): Notification
     {
         $username = $request->request->get('username');
         $password = $request->request->get('password');

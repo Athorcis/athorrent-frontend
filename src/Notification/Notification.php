@@ -8,30 +8,30 @@ class Notification
     public const WARNING = 'warning';
     public const ERROR = 'error';
 
-    private $type;
+    private string $type;
 
-    private $message;
+    private string $message;
 
-    private $action;
+    private ?string $action;
 
-    public function __construct($type, $message, $action = null)
+    public function __construct(string $type, string $message, string $action = null)
     {
         $this->type = $type;
         $this->message = $message;
         $this->action = $action;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
-    public function getAction()
+    public function getAction(): ?string
     {
         return $this->action;
     }

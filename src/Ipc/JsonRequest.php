@@ -4,11 +4,11 @@ namespace Athorrent\Ipc;
 
 class JsonRequest
 {
-    private $action;
+    private string $action;
 
-    private $parameters;
+    private array $parameters;
 
-    public function __construct($action, $parameters)
+    public function __construct(string $action, array $parameters)
     {
         $this->action = $action;
         $this->parameters = $parameters;

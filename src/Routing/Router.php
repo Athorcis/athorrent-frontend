@@ -14,16 +14,13 @@ use const PHP_SAPI;
 
 class Router extends BaseRouter
 {
-    protected $actionMap;
+    protected ?array $actionMap = null;
 
-    /**
-     * @var ConfigCacheFactoryInterface|null
-     */
-    private $configCacheFactory;
+    private ?ConfigCacheFactoryInterface $configCacheFactory = null;
 
-    private static $cache = [];
+    private static ?array $cache = [];
 
-    protected function getActionMapDumperInstance()
+    protected function getActionMapDumperInstance(): ActionMapDumper
     {
         return new ActionMapDumper($this->getRouteCollection());
     }

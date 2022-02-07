@@ -4,13 +4,10 @@ namespace Athorrent\Filesystem;
 
 use Exception;
 
-/**
- * @property TorrentFilesystem $filesystem
- */
+/** @property TorrentFilesystem $filesystem */
 class TorrentFilesystemEntry extends UserFilesystemEntry
 {
-    /** @var bool */
-    private $torrent;
+    private ?bool $torrent = null;
 
     public function __construct(TorrentFilesystem $filesystem, string $path, FilesystemEntry $internalEntry = null)
     {

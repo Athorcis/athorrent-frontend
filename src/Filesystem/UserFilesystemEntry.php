@@ -9,8 +9,7 @@ use Athorrent\Database\Entity\User;
 /** @property UserFilesystem $filesystem */
 class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterInterface
 {
-    /** @var string */
-    private $sharingToken;
+    private ?string $sharingToken = null;
 
     public function __construct(UserFilesystem $filesystem, string $path, FilesystemEntry $internalEntry = null)
     {

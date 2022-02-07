@@ -21,7 +21,7 @@ trait DeletableRepositoryTrait
      * @param mixed $id
      * @throws ORMException
      */
-    public function delete($id): void
+    public function delete(mixed $id): void
     {
         $em = $this->getEntityManager();
         $entity = $em->getReference($this->getEntityName(), $id);

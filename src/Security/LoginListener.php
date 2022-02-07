@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\SecurityEvents;
 
 class LoginListener implements EventSubscriberInterface
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

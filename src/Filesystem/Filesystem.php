@@ -6,8 +6,7 @@ use FilesystemIterator;
 
 class Filesystem extends AbstractFilesystem
 {
-    /** @var FileUtils */
-    private $fileUtils;
+    private FileUtils $fileUtils;
 
     public function __construct(string $root)
     {

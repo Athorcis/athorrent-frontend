@@ -7,11 +7,9 @@ use Symfony\Component\Filesystem\Path;
 
 class UserFilesystem extends SubFilesystem
 {
-    /** @var User */
-    protected $owner;
+    protected User $owner;
 
-    /** @var User */
-    protected $accessor;
+    protected ?User $accessor;
 
     public function __construct(User $owner, ?User $accessor, string $path = '')
     {

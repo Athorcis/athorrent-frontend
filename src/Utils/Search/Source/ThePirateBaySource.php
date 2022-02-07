@@ -40,7 +40,7 @@ class ThePirateBaySource extends AbstractTorrentSource
         return null;
     }
 
-    private function replaceNonBreakingSpace($string)
+    private function replaceNonBreakingSpace(string $string): string
     {
         return str_replace("\xc2\xa0", ' ', $string);
     }
