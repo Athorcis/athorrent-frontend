@@ -4,6 +4,7 @@ namespace Athorrent\Ipc\Socket;
 
 abstract class UnixSocket implements SocketInterface
 {
+    /** @var resource */
     protected $socket;
 
     public function shutdown(): void

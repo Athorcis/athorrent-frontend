@@ -4,11 +4,11 @@ namespace Athorrent\Ipc;
 
 class JsonResponse
 {
-    private $data;
+    private mixed $data;
 
-    private $success;
+    private bool $success;
 
-    public function __construct($data, $success = true)
+    public function __construct(mixed $data, bool $success = true)
     {
         $this->data = $data;
         $this->success = $success;

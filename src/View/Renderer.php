@@ -7,9 +7,9 @@ use Twig\Environment;
 
 class Renderer
 {
-    private $twig;
+    private Environment $twig;
 
-    private $requestStack;
+    private RequestStack $requestStack;
 
     public function __construct(Environment $twig, RequestStack $requestStack)
     {

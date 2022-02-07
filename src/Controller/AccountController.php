@@ -4,6 +4,7 @@ namespace Athorrent\Controller;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Notification\ErrorNotification;
+use Athorrent\Notification\Notification;
 use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
 use Athorrent\View\View;
@@ -17,9 +18,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AccountController extends AbstractController
 {
-    protected $userManager;
+    protected UserManager $userManager;
 
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(UserManager $userManager, EntityManagerInterface $entityManager)
     {
@@ -39,9 +40,9 @@ class AccountController extends AbstractController
      * @Route("/", methods="PUT")
      *
      * @param Request $request
-     * @return ErrorNotification|SuccessNotification
+     * @return Notification
      */
-    public function saveAccount(Request $request)
+    public function saveAccount(Request $request): Notification
     {
         /** @var User $user */
         $user = $this->getUser();

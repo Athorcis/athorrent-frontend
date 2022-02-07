@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CacheController extends AbstractController
 {
-    protected $cacheCleaner;
+    protected CacheCleaner $cacheCleaner;
 
     public function __construct(CacheCleaner $cacheCleaner)
     {

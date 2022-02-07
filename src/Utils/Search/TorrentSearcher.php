@@ -15,11 +15,10 @@ use function array_intersect_key;
 
 class TorrentSearcher
 {
-    /** @var HttpClientInterface */
-    private $http;
+    private HttpClientInterface $http;
 
     /** @var TorrentSourceInterface[] */
-    private $sources;
+    private array $sources;
 
     public function __construct(HttpClientInterface $http)
     {
@@ -49,7 +48,7 @@ class TorrentSearcher
      * @param string|string[]|null $sourceIds
      * @return TorrentSourceInterface[]
      */
-    public function getSources($sourceIds = null): array
+    public function getSources(array|string $sourceIds = null): array
     {
         if ($sourceIds === null) {
             return $this->sources;
@@ -85,7 +84,7 @@ class TorrentSearcher
      * @return TorrentInfo[][]
      * @throws TransportExceptionInterface
      */
-    public function search(string $query, $sourceIds): array
+    public function search(string $query, array|string $sourceIds = null): array
     {
         $sources = $this->getSources($sourceIds);
         $responses = $this->sendRequests($query, $sources);

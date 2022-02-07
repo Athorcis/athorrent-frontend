@@ -20,9 +20,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class SharingController extends AbstractController
 {
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    protected $sharingRepository;
+    protected SharingRepository $sharingRepository;
 
     public function __construct(EntityManagerInterface $entityManager, SharingRepository $sharingRepository)
     {

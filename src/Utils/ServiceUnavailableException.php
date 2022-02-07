@@ -6,15 +6,15 @@ use Exception;
 
 class ServiceUnavailableException extends Exception
 {
-    private $reason;
+    private string $reason;
 
-    public function __construct($reason)
+    public function __construct(string $reason)
     {
         parent::__construct('service is unavailable: ' . $reason);
         $this->reason = $reason;
     }
 
-    public function getReason()
+    public function getReason(): string
     {
         return $this->reason;
     }

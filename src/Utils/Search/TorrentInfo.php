@@ -4,26 +4,19 @@ namespace Athorrent\Utils\Search;
 
 class TorrentInfo
 {
-    /** @var string */
-    public $name;
+    public string $name;
 
-    /** @var string */
-    public $href;
+    public string $href;
 
-    /** @var int */
-    public $age;
+    public int $age;
 
-    /** @var string */
-    public $magnet;
+    public string $magnet;
 
-    /** @var int */
-    public $size;
+    public int $size;
 
-    /** @var int */
-    public $seeders;
+    public int $seeders;
 
-    /** @var int */
-    public $leechers;
+    public int $leechers;
 
     public function __construct(
         string $name,

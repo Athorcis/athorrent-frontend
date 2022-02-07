@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateUserCommand extends Command
 {
-    protected $userManager;
+    protected UserManager $userManager;
 
     public function __construct(UserManager $userManager)
     {
@@ -18,7 +18,7 @@ class CreateUserCommand extends Command
         $this->userManager = $userManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('user:create')

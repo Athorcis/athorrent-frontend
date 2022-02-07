@@ -6,11 +6,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
 {
-    /** @var AbstractFilesystem */
-    protected $filesystem;
+    protected AbstractFilesystem $filesystem;
 
-    /** @var string */
-    protected $path;
+    protected string $path;
 
     public function __construct(AbstractFilesystem $filesystem, string $path)
     {

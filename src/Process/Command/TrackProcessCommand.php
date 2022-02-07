@@ -19,10 +19,7 @@ class TrackProcessCommand extends Command
 {
     public const NAME = 'process:track';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $em)
     {

@@ -6,10 +6,9 @@ use Athorrent\Ipc\Socket\ClientSocketInterface;
 
 class JsonClient
 {
-    /** @var ClientSocketInterface */
-    private $clientSocket;
+    private ClientSocketInterface $clientSocket;
 
-    public function __construct($clientSocketType, $address)
+    public function __construct(string $clientSocketType, string $address)
     {
         $this->clientSocket = new $clientSocketType($address);
     }

@@ -9,13 +9,13 @@ use Symfony\Component\Routing\RequestContext;
 
 class CompiledUrlGenerator extends BaseUrlGenerator
 {
-    private $actionMap;
+    private array $actionMap;
 
-    private $compiledRoutes;
+    private array $compiledRoutes;
 
-    private $defaultLocale;
+    private ?string $defaultLocale;
 
-    public function __construct($actionMap, array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, string $defaultLocale = null)
+    public function __construct(array $actionMap, array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, string $defaultLocale = null)
     {
         $this->actionMap = $actionMap;
         $this->compiledRoutes = $compiledRoutes;

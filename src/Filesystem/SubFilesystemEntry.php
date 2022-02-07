@@ -9,7 +9,7 @@ class SubFilesystemEntry extends AbstractFilesystemEntry
 {
     use MimeTypeCheckerTrait;
 
-    protected $internalEntry;
+    protected ?FilesystemEntry $internalEntry;
 
     public function __construct(SubFilesystem $filesystem, string $path, FilesystemEntry $internalEntry = null)
     {

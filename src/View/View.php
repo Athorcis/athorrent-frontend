@@ -7,11 +7,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class View
 {
-    private $name;
+    private ?string $name;
 
-    private $data;
+    private array $data;
 
-    public function __construct(array $data = [], $name = null)
+    public function __construct(array $data = [], string $name = null)
     {
         $this->name = $name;
         $this->data = $data;

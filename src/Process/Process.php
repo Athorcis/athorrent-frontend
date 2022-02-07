@@ -12,7 +12,7 @@ use const DIRECTORY_SEPARATOR;
 
 class Process extends BaseProcess
 {
-    private $daemon = false;
+    private bool $daemon = false;
 
     public function __destruct()
     {
@@ -26,7 +26,7 @@ class Process extends BaseProcess
         }
     }
 
-    public function start(callable $callback = null, array $env = [])
+    public function start(callable $callback = null, array $env = []): void
     {
         if ($this->isDaemon() && is_array($this->getPrivateAttribute('commandline'))) {
 

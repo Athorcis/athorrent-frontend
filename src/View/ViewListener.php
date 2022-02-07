@@ -11,9 +11,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ViewListener implements EventSubscriberInterface
 {
-    private $translator;
+    private TranslatorInterface $translator;
 
-    private $renderer;
+    private Renderer $renderer;
 
     public function __construct(TranslatorInterface $translator, Renderer $renderer)
     {

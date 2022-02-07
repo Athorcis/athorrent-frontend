@@ -15,7 +15,7 @@ class NamedPipeClient extends NamedPipe implements ClientSocketInterface
         }
     }
 
-    public function read(&$buffer, $length)
+    public function read(&$buffer, $length): int
     {
         $buffer = fread($this->namedPipe, $length);
 
@@ -28,7 +28,7 @@ class NamedPipeClient extends NamedPipe implements ClientSocketInterface
         return $bytesRead;
     }
 
-    public function write($buffer, $length)
+    public function write($buffer, $length): int
     {
         $bytesWritten = fwrite($this->namedPipe, $buffer, $length);
         fflush($this->namedPipe);

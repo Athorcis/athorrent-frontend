@@ -22,12 +22,12 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
         return 'u';
     }
 
-    protected function paginateQueryBuilder(QueryBuilder $queryBuilder, $limit, $offset): Paginator
+    protected function paginateQueryBuilder(QueryBuilder $qb, $limit, $offset): Paginator
     {
-        $queryBuilder->addSelect('uhr');
-        $queryBuilder->join('u.hasRoles', 'uhr');
+        $qb->addSelect('uhr');
+        $qb->join('u.hasRoles', 'uhr');
 
-        return $this->paginateQueryBuilderOriginal($queryBuilder, $limit, $offset);
+        return $this->paginateQueryBuilderOriginal($qb, $limit, $offset);
     }
 
     public function loadUserByIdentifier(string $identifier): ?UserInterface

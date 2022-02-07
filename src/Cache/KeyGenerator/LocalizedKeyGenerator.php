@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class LocalizedKeyGenerator extends KeyGenerator
 {
-    private $requestStack;
+    private RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {

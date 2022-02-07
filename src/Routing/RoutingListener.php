@@ -14,13 +14,13 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RoutingListener implements EventSubscriberInterface
 {
-    private $cache;
+    private CacheInterface $cache;
 
-    private $requestContext;
+    private RequestContext $requestContext;
 
-    private $routeDescriptors;
+    private array $routeDescriptors;
 
-    private $router;
+    private RouterInterface $router;
 
     public function __construct(CacheInterface $cache, RequestContext $requestContext, RouterInterface $router)
     {

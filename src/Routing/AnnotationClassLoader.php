@@ -11,9 +11,10 @@ use Symfony\Component\Routing\RouteCollection;
 
 class AnnotationClassLoader extends AnnotatedRouteControllerLoader
 {
-    private $locales;
+    /** @var string[] */
+    private array $locales;
 
-    private $defaultLocale;
+    private string $defaultLocale;
 
     public function __construct(Reader $reader, array $locales, string $defaultLocale)
     {
@@ -30,7 +31,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
      * @param ReflectionClass $class
      * @param ReflectionMethod $method
      */
-    protected function addRouteWithoutLocale(RouteCollection $collection, $annot, $globals, ReflectionClass $class, ReflectionMethod $method): void
+    protected function addRouteWithoutLocale(RouteCollection $collection, Route $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $annot->setDefaults(array_replace($annot->getDefaults(), [
             '_locale' => $this->defaultLocale
@@ -46,7 +47,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
      * @param ReflectionClass $class
      * @param ReflectionMethod $method
      */
-    protected function addRouteWithLocale(RouteCollection $collection, $annot, $globals, ReflectionClass $class, ReflectionMethod $method): void
+    protected function addRouteWithLocale(RouteCollection $collection, Route $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $annot->setName($annot->getName() . '|i18n');
 
@@ -63,7 +64,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
      * @param ReflectionClass $class
      * @param ReflectionMethod $method
      */
-    protected function addRoute(RouteCollection $collection, $annot, $globals, ReflectionClass $class, ReflectionMethod $method)
+    protected function addRoute(RouteCollection $collection, $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         if ($annot->getName() === null) {
             $annot->setName($this->getDefaultRouteName($class, $method));

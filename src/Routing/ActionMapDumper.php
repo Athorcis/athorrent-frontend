@@ -7,9 +7,9 @@ use function var_export;
 
 class ActionMapDumper
 {
-    private $routes;
+    private RouteCollection $routes;
 
-    private $actionMap;
+    private ?array $actionMap = null;
 
     public function __construct(RouteCollection $routes)
     {
@@ -47,7 +47,7 @@ class ActionMapDumper
         return $routes;
     }
 
-    public function dump()
+    public function dump(): string
     {
         $declaredActionMap = $this->generateDeclaredActionMap();
 

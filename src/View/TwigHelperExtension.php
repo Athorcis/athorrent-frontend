@@ -10,7 +10,7 @@ use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
-    private $translator;
+    private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
     {
@@ -70,7 +70,7 @@ class TwigHelperExtension extends AbstractExtension
         return $class;
     }
 
-    public function formatAge($age)
+    public function formatAge($age): ?string
     {
         $steps = [
             'seconds' => 60,
