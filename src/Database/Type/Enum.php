@@ -15,7 +15,7 @@ abstract class Enum extends Type
         return "ENUM('" . implode("', '", $this->getValues()) . "')";
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         if (!in_array($value, $this->getValues(), true)) {
             throw new InvalidArgumentException('Invalid status');
