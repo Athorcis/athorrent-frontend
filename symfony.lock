@@ -85,17 +85,14 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.7"
+    },
     "gabrielelana/byte-units": {
         "version": "0.5.0"
     },
     "laminas/laminas-code": {
         "version": "3.4.1"
-    },
-    "laminas/laminas-eventmanager": {
-        "version": "3.2.1"
-    },
-    "laminas/laminas-zendframework-bridge": {
-        "version": "1.0.4"
     },
     "monolog/monolog": {
         "version": "2.1.1"
@@ -111,15 +108,6 @@
         "files": [
             "./config/packages/nelmio_security.yaml"
         ]
-    },
-    "ocramius/package-versions": {
-        "version": "1.4.2"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.8.0"
-    },
-    "php": {
-        "version": "7.4"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -314,9 +302,6 @@
     "symfony/polyfill-mbstring": {
         "version": "v1.18.1"
     },
-    "symfony/polyfill-php73": {
-        "version": "v1.18.1"
-    },
     "symfony/polyfill-php80": {
         "version": "v1.18.1"
     },
@@ -370,9 +355,6 @@
         "version": "v5.0.11"
     },
     "symfony/security-csrf": {
-        "version": "v5.0.11"
-    },
-    "symfony/security-guard": {
         "version": "v5.0.11"
     },
     "symfony/security-http": {
@@ -464,6 +446,9 @@
     "symfony/yaml": {
         "version": "v5.0.11"
     },
+    "twig/cache-extension": {
+        "version": "2.0.0"
+    },
     "twig/extra-bundle": {
         "version": "v3.0.5"
     },
@@ -472,11 +457,5 @@
     },
     "ua-parser/uap-php": {
         "version": "v3.9.14"
-    },
-    "zendframework/zend-code": {
-        "version": "3.4.1"
-    },
-    "zendframework/zend-eventmanager": {
-        "version": "3.2.1"
     }
 }
