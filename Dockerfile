@@ -1,13 +1,10 @@
-FROM php:8.1-fpm AS base
+FROM php:8.1.3-fpm AS base
 
 RUN set -ex ;\
     apt-get update ;\
     apt-get install -y --no-install-recommends \
         libicu-dev ;\
-    docker-php-ext-install -j $(nproc) bcmath intl opcache pdo_mysql
-
-# CFLAGS can be dropped when PHP 8.1.3 is released
-RUN CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets
+    docker-php-ext-install -j $(nproc) bcmath intl opcache pdo_mysql sockets
 
 RUN set -ex ;\
     pecl install apcu ;\
