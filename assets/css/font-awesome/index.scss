@@ -1,6 +1,7 @@
 
 $fa-font-path: "~fonts/font-awesome";
 
+@import "~@fortawesome/fontawesome-free/scss/functions";
 @import "~@fortawesome/fontawesome-free/scss/variables";
 @import "~@fortawesome/fontawesome-free/scss/mixins";
 @import "~@fortawesome/fontawesome-free/scss/core";
@@ -11,3 +12,4 @@ $fa-font-path: "~fonts/font-awesome";
 @import "~@fortawesome/fontawesome-free/scss/regular";
 @import "~@fortawesome/fontawesome-free/scss/brands";
 @import "icons";
+@import "~@fortawesome/fontawesome-free/scss/screen-reader";
