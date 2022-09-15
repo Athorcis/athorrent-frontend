@@ -21,9 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/administration/users", name="users")
- */
+#[Route(path: '/administration/users', name: 'users')]
 class UserController extends AbstractController
 {
     protected UserManager $userManager;
@@ -37,31 +35,29 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/", methods="GET")
      *
      * @param Request $request
      * @return PaginatedView
      */
+    #[Route(path: '/', methods: 'GET')]
     public function listUsers(Request $request): PaginatedView
     {
         return new PaginatedView($request, $this->userRepository, 10);
     }
 
-    /**
-     * @Route("/add", methods="GET")
-     */
+    #[Route(path: '/add', methods: 'GET')]
     public function addUser(): View
     {
         return new View(['roleList' => UserRole::$values]);
     }
 
     /**
-     * @Route("/", methods="POST")
      *
      * @param Request $request
      * @return Notification
      *
      */
+    #[Route(path: '/', methods: 'POST')]
     public function saveUser(Request $request): Notification
     {
         $username = $request->request->get('username');
@@ -82,8 +78,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{userId}", methods="POST", options={"expose"=true})
-     * @ParamConverter("user", options={"id": "userId"})
      *
      * @param User $user
      * @param UserPasswordHasherInterface $hasher
@@ -91,6 +85,8 @@ class UserController extends AbstractController
      * @return array
      * @throws Exception
      */
+    #[Route(path: '/{userId}', methods: 'POST', options: ['expose' => true])]
+    #[ParamConverter('user', options: ['id' => 'userId'])]
     public function resetUserPassword(User $user, UserPasswordHasherInterface $hasher, EntityManagerInterface $em): array
     {
         $password = bin2hex(random_bytes(8));
@@ -102,13 +98,13 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{userId}", methods="DELETE", requirements={"userId"="\d+"}, options={"expose"=true})
      *
      * @param int $userId
      * @return array
      *
      * @throws Exception
      */
+    #[Route(path: '/{userId}', methods: 'DELETE', requirements: ['userId' => '\d+'], options: ['expose' => true])]
     public function removeUser(int $userId): array
     {
         try {

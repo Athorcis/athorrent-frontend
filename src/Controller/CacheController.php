@@ -8,9 +8,7 @@ use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/administration/cache", name="cache")
- */
+#[Route(path: '/administration/cache', name: 'cache')]
 class CacheController extends AbstractController
 {
     protected CacheCleaner $cacheCleaner;
@@ -20,17 +18,13 @@ class CacheController extends AbstractController
         $this->cacheCleaner = $cacheCleaner;
     }
 
-    /**
-     * @Route("/", methods="GET")
-     */
+    #[Route(path: '/', methods: 'GET')]
     public function handleCache(): View
     {
         return new View([], 'cache');
     }
 
-    /**
-     * @Route("/apc", methods="DELETE", options={"expose"=true})
-     */
+    #[Route(path: '/apc', methods: 'DELETE', options: ['expose' => true])]
     public function clearApc(): array
     {
         if (!$this->cacheCleaner->clearApplicationCache()) {
@@ -40,9 +34,7 @@ class CacheController extends AbstractController
         return [];
     }
 
-    /**
-     * @Route("/twig", methods="DELETE", options={"expose"=true})
-     */
+    #[Route(path: '/twig', methods: 'DELETE', options: ['expose' => true])]
     public function clearTwig(): array
     {
         if (!$this->cacheCleaner->clearTwigCache()) {
@@ -52,9 +44,7 @@ class CacheController extends AbstractController
         return [];
     }
 
-    /**
-     * @Route("/translations", methods="DELETE", options={"expose"=true})
-     */
+    #[Route(path: '/translations', methods: 'DELETE', options: ['expose' => true])]
     public function clearTranslations(): array
     {
         if (!$this->cacheCleaner->clearTranslationsCache()) {
@@ -64,9 +54,7 @@ class CacheController extends AbstractController
         return [];
     }
 
-    /**
-     * @Route("/", methods="DELETE", options={"expose"=true})
-     */
+    #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]
     public function clearAll(): array
     {
         $this->clearApc();

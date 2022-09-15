@@ -13,9 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/user/account", name="account")
- */
+#[Route(path: '/user/account', name: 'account')]
 class AccountController extends AbstractController
 {
     protected UserManager $userManager;
@@ -28,20 +26,18 @@ class AccountController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/", methods="GET")
-     */
+    #[Route(path: '/', methods: 'GET')]
     public function editAccount(): View
     {
         return new View();
     }
 
     /**
-     * @Route("/", methods="PUT")
      *
      * @param Request $request
      * @return Notification
      */
+    #[Route(path: '/', methods: 'PUT')]
     public function saveAccount(Request $request): Notification
     {
         /** @var User $user */

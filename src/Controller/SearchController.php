@@ -8,17 +8,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/search", name="search")
- */
+#[Route(path: '/search', name: 'search')]
 class SearchController extends AbstractController
 {
     /**
-     * @Route("/", methods="GET")
      *
      * @param Request $request
      * @return View
      */
+    #[Route(path: '/', methods: 'GET')]
     public function showSearch(Request $request, TorrentSearcher $searcher): View
     {
         $query = $request->query->get('q');

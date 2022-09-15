@@ -15,9 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * @Route("/user/sharings", name="sharings")
- */
+#[Route(path: '/user/sharings', name: 'sharings')]
 class SharingController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
@@ -31,23 +29,23 @@ class SharingController extends AbstractController
     }
 
     /**
-     * @Route("/", methods="GET")
      *
      * @param Request $request
      * @return PaginatedView
      */
+    #[Route(path: '/', methods: 'GET')]
     public function listSharings(Request $request): PaginatedView
     {
         return new PaginatedView($request, $this->sharingRepository, 10, ['user', $this->getUser()]);
     }
 
     /**
-     * @Route("/", methods="POST", options={"expose"=true})
-     * @ParamConverter("entry", options={"path": true})
      *
      * @param UserFilesystemEntry $entry
      * @return array
      */
+    #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
+    #[ParamConverter('entry', options: ['path' => true])]
     public function addSharing(UserFilesystemEntry $entry): array
     {
         if (!$entry->exists()) {
@@ -62,13 +60,13 @@ class SharingController extends AbstractController
     }
 
     /**
-     * @Route("/{token}", methods="DELETE", options={"expose"=true})
      *
      * @param string $token
      * @return array
      *
      * @throws ORMException
      */
+    #[Route(path: '/{token}', methods: 'DELETE', options: ['expose' => true])]
     public function removeSharing(string $token): array
     {
         $this->sharingRepository->delete($token);

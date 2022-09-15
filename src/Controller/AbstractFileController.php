@@ -41,12 +41,12 @@ abstract class AbstractFileController extends AbstractController
     }
 
     /**
-     * @Route("/", methods="GET", options={"expose"=true})
-     * @ParamConverter("dirEntry")
      *
      * @param UserFilesystemEntry $dirEntry
      * @return View
      */
+    #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
+    #[ParamConverter('dirEntry')]
     public function listFiles(UserFilesystemEntry $dirEntry): View
     {
         if ($this instanceof FileController && $dirEntry->isRoot()) {
@@ -85,38 +85,38 @@ abstract class AbstractFileController extends AbstractController
     }
 
     /**
-     * @Route("/open", methods="GET")
-     * @ParamConverter("entry", options={"path": true, "file": true})
      *
      * @param Request $request
      * @param UserFilesystemEntry $entry
      * @return BinaryFileResponse
      */
+    #[Route(path: '/open', methods: 'GET')]
+    #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
     public function openFile(Request $request, UserFilesystemEntry $entry): BinaryFileResponse
     {
         return $this->sendFile($request, $entry, 'inline');
     }
 
     /**
-     * @Route("/download", methods="GET")
-     * @ParamConverter("entry", options={"path": true, "file": true})
      *
      * @param Request $request
      * @param UserFilesystemEntry $entry
      * @return BinaryFileResponse
      */
+    #[Route(path: '/download', methods: 'GET')]
+    #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
     public function downloadFile(Request $request, UserFilesystemEntry $entry): BinaryFileResponse
     {
         return $this->sendFile($request, $entry,'attachment');
     }
 
     /**
-     * @Route("/play", methods="GET")
-     * @ParamConverter("entry", options={"path": true, "file": true})
      *
      * @param UserFilesystemEntry $entry
      * @return View
      */
+    #[Route(path: '/play', methods: 'GET')]
+    #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
     public function playFile(UserFilesystemEntry $entry): View
     {
         if ($entry->isPlayable()) {
@@ -144,12 +144,12 @@ abstract class AbstractFileController extends AbstractController
     }
 
     /**
-     * @Route("/display", methods="GET")
-     * @ParamConverter("entry", options={"path": true, "file": true})
      *
      * @param UserFilesystemEntry $entry
      * @return View
      */
+    #[Route(path: '/display', methods: 'GET')]
+    #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
     public function displayFile(UserFilesystemEntry $entry): View
     {
         if (!$entry->isDisplayable()) {
@@ -174,13 +174,13 @@ abstract class AbstractFileController extends AbstractController
     }
 
     /**
-     * @Route("/", methods="DELETE", options={"expose"=true})
-     * @ParamConverter("entry", options={"path": true})
      *
      * @param UserFilesystemEntry $entry
      * @param SharingRepository $sharingRepository
      * @return array
      */
+    #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]
+    #[ParamConverter('entry', options: ['path' => true])]
     public function removeFile(UserFilesystemEntry $entry, SharingRepository $sharingRepository): array
     {
         if ($entry->isRoot()) {
