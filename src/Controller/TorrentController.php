@@ -15,19 +15,17 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * @Route("/user/torrents", name="torrents")
- */
+#[Route(path: '/user/torrents', name: 'torrents')]
 class TorrentController extends AbstractController
 {
     /**
-     * @Route("/", methods="GET", options={"expose"=true})
      *
      * @param TorrentManager $torrentManager
      * @return View
      *
      * @throws Exception
      */
+    #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
     public function listTorrents(TorrentManager $torrentManager): View
     {
         try {
@@ -53,7 +51,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     * @Route("/{hash}/trackers", methods="GET", options={"expose"=true})
      *
      * @param TorrentManager $torrentManager
      * @param string $hash
@@ -61,6 +58,7 @@ class TorrentController extends AbstractController
      *
      * @throws Exception
      */
+    #[Route(path: '/{hash}/trackers', methods: 'GET', options: ['expose' => true])]
     public function listTrackers(TorrentManager $torrentManager, string $hash): View
     {
         $trackers = $torrentManager->listTrackers($hash);
@@ -69,7 +67,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     * @Route("/files", methods="POST", options={"expose"=true})
      *
      * @param Request $request
      * @param TorrentManager $torrentManager
@@ -77,6 +74,7 @@ class TorrentController extends AbstractController
      *
      * @throws Exception
      */
+    #[Route(path: '/files', methods: 'POST', options: ['expose' => true])]
     public function uploadTorrent(Request $request, TorrentManager $torrentManager): array
     {
         /** @var UploadedFile $file */
@@ -97,7 +95,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     * @Route("/magnet", methods="GET")
      *
      * @param Request $request
      * @param TorrentManager $torrentManager
@@ -105,6 +102,7 @@ class TorrentController extends AbstractController
      *
      * @throws Exception
      */
+    #[Route(path: '/magnet', methods: 'GET')]
     public function addMagnet(Request $request, TorrentManager $torrentManager): RedirectResponse
     {
         $magnet = $request->query->get('magnet');
@@ -117,7 +115,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     * @Route("/", methods="POST", options={"expose"=true})
      *
      * @param Request $request
      * @param TorrentManager $torrentManager
@@ -125,6 +122,7 @@ class TorrentController extends AbstractController
      *
      * @throws Exception
      */
+    #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
     public function addTorrents(Request $request, TorrentManager $torrentManager): array
     {
         $files = $request->request->all('add-torrent-files');
@@ -152,7 +150,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     * @Route("/{hash}/pause", methods="PUT", options={"expose"=true})
      *
      * @param TorrentManager $torrentManager
      * @param string $hash
@@ -160,6 +157,7 @@ class TorrentController extends AbstractController
      *
      * @throws Exception
      */
+    #[Route(path: '/{hash}/pause', methods: 'PUT', options: ['expose' => true])]
     public function pauseTorrent(TorrentManager $torrentManager, string $hash): array
     {
         $torrentManager->pauseTorrent($hash);
@@ -167,7 +165,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     * @Route("/{hash}/resume", methods="PUT", options={"expose"=true})
      *
      * @param TorrentManager $torrentManager
      * @param string $hash
@@ -175,6 +172,7 @@ class TorrentController extends AbstractController
      *
      * @throws Exception
      */
+    #[Route(path: '/{hash}/resume', methods: 'PUT', options: ['expose' => true])]
     public function resumeTorrent(TorrentManager $torrentManager, string $hash): array
     {
         $torrentManager->resumeTorrent($hash);
@@ -182,7 +180,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     * @Route("/{hash}", methods="DELETE", options={"expose"=true})
      *
      * @param TorrentManager $torrentManager
      * @param string $hash
@@ -190,6 +187,7 @@ class TorrentController extends AbstractController
      *
      * @throws Exception
      */
+    #[Route(path: '/{hash}', methods: 'DELETE', options: ['expose' => true])]
     public function removeTorrent(TorrentManager $torrentManager, string $hash): array
     {
         $torrentManager->removeTorrent($hash);

@@ -8,9 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    /**
-     * @Route("/", methods="GET")
-     */
+    #[Route(path: '/', methods: 'GET')]
     public function home(): View
     {
         return new View();
