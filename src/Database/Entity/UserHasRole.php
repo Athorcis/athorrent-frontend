@@ -4,22 +4,16 @@ namespace Athorrent\Database\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class UserHasRole
 {
-    /**
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="hasRoles")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'hasRoles')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private User $user;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="UserRole", nullable=false, options={"collation": "utf8mb4_bin"})
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'UserRole', nullable: false, options: ['collation' => 'utf8mb4_bin'])]
     private string $role;
 
     public function __construct(User $user, string $role)

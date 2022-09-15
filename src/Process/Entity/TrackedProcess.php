@@ -12,66 +12,42 @@ use function gethostname;
 use function getmypid;
 use const DIRECTORY_SEPARATOR;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class TrackedProcess
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    /**
-     * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
-     */
+    #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
     protected int $pid;
 
-    /**
-     * @ORM\Column(type="string", length=253, nullable=false, options={"collation": "utf8mb4_bin"})
-     */
+    #[ORM\Column(type: 'string', length: 253, nullable: false, options: ['collation' => 'utf8mb4_bin'])]
     protected string $host;
 
-    /**
-     * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
-     */
+    #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
     protected int $tracker;
 
-    /**
-     * @ORM\Column(type="text", nullable=false, options={"collation": "utf8mb4_bin"})
-     */
+    #[ORM\Column(type: 'text', nullable: false, options: ['collation' => 'utf8mb4_bin'])]
     protected string $cmd;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=false)
-     */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     protected DateTime $startedAt;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=false)
-     */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     protected DateTime $lastHeartbeatAt;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     protected ?DateTime $terminatedAt = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $interrupted = null;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $exitCode = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true, options={"collation": "utf8mb4_bin"})
-     */
+    #[ORM\Column(type: 'text', nullable: true, options: ['collation' => 'utf8mb4_bin'])]
     protected ?string $errorOutput = null;
 
     public function __construct(int $pid, $cmd, DateTime $startedAt)

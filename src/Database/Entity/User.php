@@ -3,6 +3,7 @@
 namespace Athorrent\Database\Entity;
 
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
+use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Process\Entity\TrackedProcess;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
@@ -11,66 +12,49 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass="Athorrent\Database\Repository\UserRepository")
- * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="username", columns={"username"})})
- */
+#[ORM\Table]
+#[ORM\UniqueConstraint(name: 'username', columns: ['username'])]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer", nullable=false, options={"unsigned": true})
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8mb4_bin"})
-     */
+    #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['collation' => 'utf8mb4_bin'])]
     private string $username;
 
     private ?string $plainPassword = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=false, options={"collation": "utf8mb4_bin"})
-     */
+    #[ORM\Column(type: 'text', nullable: false, options: ['collation' => 'utf8mb4_bin'])]
     private string $password;
 
-    /**
-     * @ORM\Column(type="string", length=32, nullable=false, options={"collation": "utf8mb4_bin", "fixed": true})
-     */
+    #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['collation' => 'utf8mb4_bin', 'fixed' => true])]
     private string $salt;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=false)
-     */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private DateTime $creationDateTime;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTime $connectionDateTime = null;
 
     /**
      * @var UserHasRole[]|Collection
-     * @ORM\OneToMany(targetEntity="UserHasRole", mappedBy="user", cascade={"persist"}, fetch="EAGER")
      */
+    #[ORM\OneToMany(targetEntity: 'UserHasRole', mappedBy: 'user', cascade: ['persist'], fetch: 'EAGER')]
     private array|Collection $hasRoles;
 
     /**
      * @var Sharing[]|Collection
-     * @ORM\OneToMany(targetEntity="Sharing", mappedBy="user", indexBy="token")
      */
+    #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token')]
     private array|Collection $sharings;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Athorrent\Process\Entity\TrackedProcess", fetch="LAZY")
-     */
+    #[ORM\OneToOne(targetEntity: 'Athorrent\Process\Entity\TrackedProcess', fetch: 'LAZY')]
     private TrackedProcess $athorrentProcess;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $port;
 
     public function __construct($username, $plainPassword, $salt, array $roles)
