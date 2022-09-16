@@ -11,11 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/administration/cache', name: 'cache')]
 class CacheController extends AbstractController
 {
-    protected CacheCleaner $cacheCleaner;
-
-    public function __construct(CacheCleaner $cacheCleaner)
+    public function __construct(protected CacheCleaner $cacheCleaner)
     {
-        $this->cacheCleaner = $cacheCleaner;
     }
 
     #[Route(path: '/', methods: 'GET')]

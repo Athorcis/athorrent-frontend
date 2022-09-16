@@ -16,7 +16,7 @@ class KeyGenerator implements KeyGeneratorInterface
         } elseif (is_string($value)) {
             $key = $value;
         } else {
-            throw new InvalidArgumentException(sprintf('unable to convert object of type %s to cache key', get_class($value)));
+            throw new InvalidArgumentException(sprintf('unable to convert object of type %s to cache key', $value::class));
         }
 
         return $key;

@@ -11,19 +11,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FilesystemConverter implements ParamConverterInterface
 {
-    private FilesystemFactory $filesystemFactory;
-
-    public function __construct(FilesystemFactory $filesystemFactory)
+    public function __construct(private FilesystemFactory $filesystemFactory)
     {
-        $this->filesystemFactory = $filesystemFactory;
     }
 
-    /**
-     * @param UserFilesystem $filesystem
-     * @param string|null $path
-     * @param array $requirements
-     * @return UserFilesystemEntry
-     */
     protected function getEntry(UserFilesystem $filesystem, ?string $path, array $requirements = []): UserFilesystemEntry
     {
         static $defaultRequirements = [

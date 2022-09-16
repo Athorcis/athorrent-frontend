@@ -30,7 +30,7 @@ class Filesystem extends AbstractFilesystem
         $this->fileUtils->remove($path);
     }
 
-    public function getEntry(string $path): FilesystemEntryInterface
+    public function getEntry(string $path): FilesystemEntry
     {
         return new FilesystemEntry($this, $path);
     }

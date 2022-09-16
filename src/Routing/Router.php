@@ -84,11 +84,7 @@ class Router extends BaseRouter
      */
     private function getConfigCacheFactory(): ConfigCacheFactoryInterface
     {
-        if (null === $this->configCacheFactory) {
-            $this->configCacheFactory = new ConfigCacheFactory($this->options['debug']);
-        }
-
-        return $this->configCacheFactory;
+        return $this->configCacheFactory ??= new ConfigCacheFactory($this->options['debug']);
     }
 
     private static function readCache(string $path): array
@@ -102,10 +98,6 @@ class Router extends BaseRouter
             return require $path;
         }
 
-        if (isset(self::$cache[$path])) {
-            return self::$cache[$path];
-        }
-
-        return self::$cache[$path] = require $path;
+        return self::$cache[$path] ??= require $path;
     }
 }

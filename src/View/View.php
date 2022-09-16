@@ -7,14 +7,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class View
 {
-    private ?string $name;
-
-    private array $data;
-
-    public function __construct(array $data = [], string $name = null)
+    public function __construct(private array $data = [], private ?string $name = null)
     {
-        $this->name = $name;
-        $this->data = $data;
     }
 
     public function has($key): bool

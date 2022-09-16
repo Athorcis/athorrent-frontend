@@ -18,7 +18,6 @@ trait DeletableRepositoryTrait
     abstract protected function getEntityName();
 
     /**
-     * @param mixed $id
      * @throws ORMException
      */
     public function delete(mixed $id): void

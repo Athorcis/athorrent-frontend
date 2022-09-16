@@ -9,21 +9,13 @@ class UserFilesystem extends SubFilesystem
 {
     protected User $owner;
 
-    protected ?User $accessor;
-
-    public function __construct(User $owner, ?User $accessor, string $path = '')
+    public function __construct(User $owner, protected ?User $accessor, string $path = '')
     {
         parent::__construct($this->buildRoot($owner, $path));
 
         $this->owner = $owner;
-        $this->accessor = $accessor;
     }
 
-    /**
-     * @param User $owner
-     * @param string $path
-     * @return string
-     */
     protected function buildRoot(User $owner, string $path): string
     {
         $root = $owner->getBackendPath('files');
@@ -35,26 +27,16 @@ class UserFilesystem extends SubFilesystem
         return $root;
     }
 
-    /**
-     * @param string $path
-     * @return UserFilesystemEntry
-     */
-    public function getEntry(string $path): FilesystemEntryInterface
+    public function getEntry(string $path): UserFilesystemEntry
     {
         return new UserFilesystemEntry($this, $path);
     }
 
-    /**
-     * @return User
-     */
     public function getOwner(): User
     {
         return $this->owner;
     }
 
-    /**
-     * @return bool
-     */
     public function isWritable(): bool
     {
         return $this->owner === $this->accessor;

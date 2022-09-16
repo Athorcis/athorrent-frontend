@@ -24,21 +24,10 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/administration/users', name: 'users')]
 class UserController extends AbstractController
 {
-    protected UserManager $userManager;
-
-    protected UserRepository $userRepository;
-
-    public function __construct(UserManager $userManager, UserRepository $userRepository)
+    public function __construct(protected UserManager $userManager, protected UserRepository $userRepository)
     {
-        $this->userManager = $userManager;
-        $this->userRepository = $userRepository;
     }
 
-    /**
-     *
-     * @param Request $request
-     * @return PaginatedView
-     */
     #[Route(path: '/', methods: 'GET')]
     public function listUsers(Request $request): PaginatedView
     {
@@ -51,12 +40,6 @@ class UserController extends AbstractController
         return new View(['roleList' => UserRole::$values]);
     }
 
-    /**
-     *
-     * @param Request $request
-     * @return Notification
-     *
-     */
     #[Route(path: '/', methods: 'POST')]
     public function saveUser(Request $request): Notification
     {
@@ -78,11 +61,6 @@ class UserController extends AbstractController
     }
 
     /**
-     *
-     * @param User $user
-     * @param UserPasswordHasherInterface $hasher
-     * @param EntityManagerInterface $em
-     * @return array
      * @throws Exception
      */
     #[Route(path: '/{userId}', methods: 'POST', options: ['expose' => true])]
@@ -98,10 +76,6 @@ class UserController extends AbstractController
     }
 
     /**
-     *
-     * @param int $userId
-     * @return array
-     *
      * @throws Exception
      */
     #[Route(path: '/{userId}', methods: 'DELETE', requirements: ['userId' => '\d+'], options: ['expose' => true])]

@@ -15,7 +15,6 @@ class TrackerProcess extends CommandProcess
 
     /**
      * @param callable|null $callback
-     * @param array $env
      */
     public function start(callable $callback = null, array $env = []): void
     {
@@ -52,7 +51,6 @@ class TrackerProcess extends CommandProcess
     }
 
     /**
-     * @param Process $process
      * @return static
      */
     public static function track(Process $process): self

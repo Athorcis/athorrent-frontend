@@ -14,11 +14,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class CsrfListener implements EventSubscriberInterface
 {
-    private CsrfTokenManagerInterface $tokenManager;
-
-    public function __construct(CsrfTokenManagerInterface $tokenManager)
+    public function __construct(private CsrfTokenManagerInterface $tokenManager)
     {
-        $this->tokenManager = $tokenManager;
     }
 
     public function onKernelRequest(RequestEvent $event): void

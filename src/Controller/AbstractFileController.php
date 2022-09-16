@@ -17,11 +17,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractFileController extends AbstractController
 {
-    protected TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(protected TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     protected function getBreadcrumb(string $path): array
@@ -40,11 +37,6 @@ abstract class AbstractFileController extends AbstractController
         return $breadcrumb;
     }
 
-    /**
-     *
-     * @param UserFilesystemEntry $dirEntry
-     * @return View
-     */
     #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
     #[ParamConverter('dirEntry')]
     public function listFiles(UserFilesystemEntry $dirEntry): View
@@ -84,12 +76,6 @@ abstract class AbstractFileController extends AbstractController
         return $response;
     }
 
-    /**
-     *
-     * @param Request $request
-     * @param UserFilesystemEntry $entry
-     * @return BinaryFileResponse
-     */
     #[Route(path: '/open', methods: 'GET')]
     #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
     public function openFile(Request $request, UserFilesystemEntry $entry): BinaryFileResponse
@@ -97,12 +83,6 @@ abstract class AbstractFileController extends AbstractController
         return $this->sendFile($request, $entry, 'inline');
     }
 
-    /**
-     *
-     * @param Request $request
-     * @param UserFilesystemEntry $entry
-     * @return BinaryFileResponse
-     */
     #[Route(path: '/download', methods: 'GET')]
     #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
     public function downloadFile(Request $request, UserFilesystemEntry $entry): BinaryFileResponse
@@ -110,11 +90,6 @@ abstract class AbstractFileController extends AbstractController
         return $this->sendFile($request, $entry,'attachment');
     }
 
-    /**
-     *
-     * @param UserFilesystemEntry $entry
-     * @return View
-     */
     #[Route(path: '/play', methods: 'GET')]
     #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
     public function playFile(UserFilesystemEntry $entry): View
@@ -143,11 +118,6 @@ abstract class AbstractFileController extends AbstractController
         ]);
     }
 
-    /**
-     *
-     * @param UserFilesystemEntry $entry
-     * @return View
-     */
     #[Route(path: '/display', methods: 'GET')]
     #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
     public function displayFile(UserFilesystemEntry $entry): View
@@ -173,12 +143,6 @@ abstract class AbstractFileController extends AbstractController
         return new View($data);
     }
 
-    /**
-     *
-     * @param UserFilesystemEntry $entry
-     * @param SharingRepository $sharingRepository
-     * @return array
-     */
     #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]
     #[ParamConverter('entry', options: ['path' => true])]
     public function removeFile(UserFilesystemEntry $entry, SharingRepository $sharingRepository): array

@@ -11,11 +11,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
 
 class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
-    private NotificationListener $notificationListener;
-
-    public function __construct(NotificationListener $notificationListener)
+    public function __construct(private NotificationListener $notificationListener)
     {
-        $this->notificationListener = $notificationListener;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response

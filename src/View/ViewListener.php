@@ -11,14 +11,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ViewListener implements EventSubscriberInterface
 {
-    private TranslatorInterface $translator;
-
-    private Renderer $renderer;
-
-    public function __construct(TranslatorInterface $translator, Renderer $renderer)
+    public function __construct(private TranslatorInterface $translator, private Renderer $renderer)
     {
-        $this->translator = $translator;
-        $this->renderer = $renderer;
     }
 
     public static function getSubscribedEvents(): array

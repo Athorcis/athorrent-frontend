@@ -19,10 +19,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class TorrentController extends AbstractController
 {
     /**
-     *
-     * @param TorrentManager $torrentManager
-     * @return View
-     *
      * @throws Exception
      */
     #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
@@ -33,12 +29,10 @@ class TorrentController extends AbstractController
             $clientUpdating = false;
 
             usort(
-                $torrents, function ($a, $b) {
-                    return strcmp($a['name'], $b['name']);
-                }
+                $torrents, fn($a, $b) => strcmp($a['name'], $b['name'])
             );
-        } catch (ServiceUnavailableException $e) {
-            $torrents = array();
+        } catch (ServiceUnavailableException) {
+            $torrents = [];
             $clientUpdating = true;
         }
 
@@ -51,11 +45,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     *
-     * @param TorrentManager $torrentManager
-     * @param string $hash
-     * @return View
-     *
      * @throws Exception
      */
     #[Route(path: '/{hash}/trackers', methods: 'GET', options: ['expose' => true])]
@@ -67,11 +56,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     *
-     * @param Request $request
-     * @param TorrentManager $torrentManager
-     * @return array
-     *
      * @throws Exception
      */
     #[Route(path: '/files', methods: 'POST', options: ['expose' => true])]
@@ -80,7 +64,7 @@ class TorrentController extends AbstractController
         /** @var UploadedFile $file */
         $file = $request->files->get('upload-torrent-file');
 
-        if ($file && $file->getSize() <= 1048576) {
+        if ($file && $file->getSize() <= 1_048_576) {
             if ($file->getMimeType() === 'application/x-bittorrent') {
                 $torrentsDir = $torrentManager->ensureTorrentsDirExists();
                 $file->move($torrentsDir, $file->getClientOriginalName());
@@ -95,11 +79,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     *
-     * @param Request $request
-     * @param TorrentManager $torrentManager
-     * @return RedirectResponse
-     *
      * @throws Exception
      */
     #[Route(path: '/magnet', methods: 'GET')]
@@ -115,11 +94,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     *
-     * @param Request $request
-     * @param TorrentManager $torrentManager
-     * @return array
-     *
      * @throws Exception
      */
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
@@ -150,11 +124,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     *
-     * @param TorrentManager $torrentManager
-     * @param string $hash
-     * @return array
-     *
      * @throws Exception
      */
     #[Route(path: '/{hash}/pause', methods: 'PUT', options: ['expose' => true])]
@@ -165,11 +134,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     *
-     * @param TorrentManager $torrentManager
-     * @param string $hash
-     * @return array
-     *
      * @throws Exception
      */
     #[Route(path: '/{hash}/resume', methods: 'PUT', options: ['expose' => true])]
@@ -180,11 +144,6 @@ class TorrentController extends AbstractController
     }
 
     /**
-     *
-     * @param TorrentManager $torrentManager
-     * @param string $hash
-     * @return array
-     *
      * @throws Exception
      */
     #[Route(path: '/{hash}', methods: 'DELETE', options: ['expose' => true])]

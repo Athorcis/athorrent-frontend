@@ -10,14 +10,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class TorrentManagerConverter implements ParamConverterInterface
 {
-    protected TokenStorageInterface $tokenStorage;
-
-    protected TorrentManagerFactory $torrentManagerFactory;
-
-    public function __construct(TokenStorageInterface $tokenStorage, TorrentManagerFactory $torrentManagerFactory)
+    public function __construct(protected TokenStorageInterface $tokenStorage, protected TorrentManagerFactory $torrentManagerFactory)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->torrentManagerFactory = $torrentManagerFactory;
     }
 
     public function apply(Request $request, ParamConverter $configuration): bool

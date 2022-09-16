@@ -4,14 +4,8 @@ namespace Athorrent\Ipc;
 
 class JsonRequest
 {
-    private string $action;
-
-    private array $parameters;
-
-    public function __construct(string $action, array $parameters)
+    public function __construct(private string $action, private array $parameters)
     {
-        $this->action = $action;
-        $this->parameters = $parameters;
     }
 
     public function toRawRequest(): string
