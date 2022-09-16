@@ -4,7 +4,6 @@ import {SecurityManager} from './security-manager';
 import {AbstractPage} from './abstract-page';
 import 'jquery';
 import 'bootstrap-sass';
-import 'picturefill';
 import {UiManager} from './ui-manager';
 
 export class Application {
