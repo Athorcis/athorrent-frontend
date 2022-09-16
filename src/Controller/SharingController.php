@@ -18,32 +18,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[Route(path: '/user/sharings', name: 'sharings')]
 class SharingController extends AbstractController
 {
-    protected EntityManagerInterface $entityManager;
-
-    protected SharingRepository $sharingRepository;
-
-    public function __construct(EntityManagerInterface $entityManager, SharingRepository $sharingRepository)
+    public function __construct(protected EntityManagerInterface $entityManager, protected SharingRepository $sharingRepository)
     {
-        $this->entityManager = $entityManager;
-        $this->sharingRepository = $sharingRepository;
     }
 
-    /**
-     *
-     * @param Request $request
-     * @return PaginatedView
-     */
     #[Route(path: '/', methods: 'GET')]
     public function listSharings(Request $request): PaginatedView
     {
         return new PaginatedView($request, $this->sharingRepository, 10, ['user', $this->getUser()]);
     }
 
-    /**
-     *
-     * @param UserFilesystemEntry $entry
-     * @return array
-     */
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
     #[ParamConverter('entry', options: ['path' => true])]
     public function addSharing(UserFilesystemEntry $entry): array
@@ -60,10 +44,6 @@ class SharingController extends AbstractController
     }
 
     /**
-     *
-     * @param string $token
-     * @return array
-     *
      * @throws ORMException
      */
     #[Route(path: '/{token}', methods: 'DELETE', options: ['expose' => true])]

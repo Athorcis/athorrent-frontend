@@ -32,9 +32,6 @@ class CommandProcess extends Process
         return self::$commandPrefixes;
     }
 
-    /**
-     * @param string $path
-     */
     public static function setConsolePath(string $path): void
     {
         self::$consolePath = $path;

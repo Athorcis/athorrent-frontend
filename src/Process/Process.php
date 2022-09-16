@@ -19,7 +19,7 @@ class Process extends BaseProcess
         // Si le processus n'est pas un daemon
         if (!$this->isDaemon()) {
 
-            // On le stoppe:
+            // On le stoppe :
             // on appelle directement la méthode stop au lieu du destructeur parent
             // pour laisser le temps au processus de se fermer avant d'envoyer un SIGKILL
             $this->stop();
@@ -55,9 +55,6 @@ class Process extends BaseProcess
         return parent::setTimeout($timeout);
     }
 
-    /**
-     * @return bool
-     */
     public function isDaemon(): bool
     {
         return $this->daemon;
@@ -65,9 +62,7 @@ class Process extends BaseProcess
 
     protected function getPrivateAttribute(string $name)
     {
-        return Closure::bind(function () use ($name) {
-            return $this->$name;
-        }, $this, BaseProcess::class)->__invoke();
+        return Closure::bind(fn() => $this->$name, $this, BaseProcess::class)->__invoke();
     }
 
     protected function setPrivateAttribute(string $name, $value)
@@ -102,17 +97,12 @@ class Process extends BaseProcess
 
     /**
      * @param string[] $command
-     * @param string|null $cwd
-     * @param array $env
-     * @param mixed $input
-     * @param bool $daemon
      * @param int|float|null $timeout
-     * @return Process
      */
     protected static function new(
         array $command,
         ?string $cwd,
-        array $env,
+        ?array $env,
         mixed $input,
         bool $daemon,
         ?float $timeout
@@ -134,12 +124,9 @@ class Process extends BaseProcess
     /**
      * @param string[] $command
      * @param string|null $cwd
-     * @param array $env
-     * @param mixed $input
      * @param int|float|null $timeout
-     * @return Process
      */
-    public static function create(array $command, string $cwd = null, array $env = [], mixed $input = null, ?float $timeout = 60): Process
+    public static function create(array $command, string $cwd = null, ?array $env = [], mixed $input = null, ?float $timeout = 60): Process
     {
         return static::new($command, $cwd, $env, $input, false, $timeout);
     }
@@ -147,19 +134,14 @@ class Process extends BaseProcess
     /**
      * @param string[] $command
      * @param string|null $cwd
-     * @param array $env
-     * @param mixed $input
-     * @return Process
      */
-    public static function daemon(array $command, string $cwd = null, array $env = [], mixed $input = null): Process
+    public static function daemon(array $command, string $cwd = null, ?array $env = [], mixed $input = null): Process
     {
         return static::new($command, $cwd, $env, $input, true, null);
     }
 
     /**
      * @param string[] $command
-     * @param mixed $input
-     * @return string
      */
     public static function exec(array $command, mixed $input = null): string
     {

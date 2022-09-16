@@ -10,12 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateUserCommand extends Command
 {
-    protected UserManager $userManager;
-
-    public function __construct(UserManager $userManager)
+    public function __construct(protected UserManager $userManager)
     {
         parent::__construct();
-        $this->userManager = $userManager;
     }
 
     protected function configure(): void

@@ -15,14 +15,11 @@ use function array_intersect_key;
 
 class TorrentSearcher
 {
-    private HttpClientInterface $http;
-
     /** @var TorrentSourceInterface[] */
     private array $sources;
 
-    public function __construct(HttpClientInterface $http)
+    public function __construct(private HttpClientInterface $http)
     {
-        $this->http = $http;
         $this->sources = $this->mapSources([
             new ThePirateBaySource(),
             new NyaaSource(),
@@ -37,9 +34,7 @@ class TorrentSearcher
      */
     private function mapSources(array $sources): array
     {
-        $keys = array_map(function ($source) {
-            return $source->getId();
-        }, $sources);
+        $keys = array_map(fn($source) => $source->getId(), $sources);
 
         return array_combine($keys, $sources);
     }
@@ -62,7 +57,6 @@ class TorrentSearcher
     }
 
     /**
-     * @param string $query
      * @param TorrentSourceInterface[] $sources
      * @return ResponseInterface[]
      * @throws TransportExceptionInterface
@@ -79,7 +73,6 @@ class TorrentSearcher
     }
 
     /**
-     * @param string $query
      * @param string|string[]|null $sourceIds
      * @return TorrentInfo[][]
      * @throws TransportExceptionInterface

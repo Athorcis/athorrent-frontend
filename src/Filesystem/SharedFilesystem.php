@@ -13,7 +13,7 @@ class SharedFilesystem extends TorrentFilesystem
         parent::__construct($torrentManager, $accessor, $sharing->getPath());
     }
 
-    public function getEntry(string $path): FilesystemEntryInterface
+    public function getEntry(string $path): SharedFilesystemEntry
     {
         return new SharedFilesystemEntry($this, $path);
     }

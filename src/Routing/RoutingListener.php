@@ -14,19 +14,10 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RoutingListener implements EventSubscriberInterface
 {
-    private CacheInterface $cache;
-
-    private RequestContext $requestContext;
-
     private array $routeDescriptors;
 
-    private RouterInterface $router;
-
-    public function __construct(CacheInterface $cache, RequestContext $requestContext, RouterInterface $router)
+    public function __construct(private CacheInterface $cache, private RequestContext $requestContext, private RouterInterface $router)
     {
-        $this->cache = $cache;
-        $this->requestContext = $requestContext;
-        $this->router = $router;
     }
 
     public static function getSubscribedEvents(): array

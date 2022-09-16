@@ -13,55 +13,26 @@ use function preg_match;
 
 abstract class AbstractTorrentSource implements TorrentSourceInterface
 {
-    private string $id;
-
-    private string $name;
-
-    protected string $origin;
-
-    private string $rowFilter;
-
-    private string $cellFilter;
-
-    public function __construct(string $id, string $name, string $origin, string $rowFilter = 'tbody > tr', string $cellFilter = 'td')
+    public function __construct(private string $id, private string $name, protected string $origin, private string $rowFilter = 'tbody > tr', private string $cellFilter = 'td')
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->origin = $origin;
-        $this->rowFilter = $rowFilter;
-        $this->cellFilter = $cellFilter;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getOrigin(): string
     {
         return $this->origin;
     }
 
     /**
-     * @param HttpClientInterface $http
-     * @param string $method
-     * @param string $route
-     * @param array $options
-     * @return ResponseInterface
      * @throws TransportExceptionInterface
      */
     protected function doRequest(HttpClientInterface $http, string $method, string $route, array $options = []): ResponseInterface
@@ -73,7 +44,6 @@ abstract class AbstractTorrentSource implements TorrentSourceInterface
     abstract protected function parseRow(Crawler $cells): ?TorrentInfo;
 
     /**
-     * @param ResponseInterface $response
      * @return TorrentInfo[]
      * @throws TransportExceptionInterface
      * @throws ClientExceptionInterface

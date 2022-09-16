@@ -11,20 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/search', name: 'search')]
 class SearchController extends AbstractController
 {
-    /**
-     *
-     * @param Request $request
-     * @return View
-     */
     #[Route(path: '/', methods: 'GET')]
     public function showSearch(Request $request, TorrentSearcher $searcher): View
     {
         $query = $request->query->get('q');
         $source = $request->query->get('source');
 
-        $sources = array_map(function ($source) {
-            return $source->getName();
-        }, $searcher->getSources());
+        $sources = array_map(fn($source) => $source->getName(), $searcher->getSources());
 
         if (empty($query)) {
             $results = [];

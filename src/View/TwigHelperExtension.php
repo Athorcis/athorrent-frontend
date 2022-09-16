@@ -10,21 +10,18 @@ use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('torrentStateToClass', [$this, 'torrentStateToClass']),
-            new TwigFunction('format_age', [$this, 'formatAge']),
-            new TwigFunction('icon', [$this, 'getIcon']),
+            new TwigFunction('torrentStateToClass', $this->torrentStateToClass(...)),
+            new TwigFunction('format_age', $this->formatAge(...)),
+            new TwigFunction('icon', $this->getIcon(...)),
             new TwigFunction('base64_encode', 'base64_encode'),
-            new TwigFunction('format_bytes', [$this, 'formatBytes'])
+            new TwigFunction('format_bytes', $this->formatBytes(...))
         ];
     }
 
@@ -76,8 +73,8 @@ class TwigHelperExtension extends AbstractExtension
             'seconds' => 60,
             'minutes' => 3600,
             'hours' => 86400,
-            'days' => 2592000,
-            'months' => 31557600,
+            'days' => 2_592_000,
+            'months' => 31_557_600,
             'years' => INF
         ];
 

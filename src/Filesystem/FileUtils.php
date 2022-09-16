@@ -33,7 +33,7 @@ class FileUtils extends \Symfony\Component\Filesystem\Filesystem
 
     private function toIterable($files): iterable
     {
-        return is_iterable($files) ? $files : array($files);
+        return is_iterable($files) ? $files : [$files];
     }
 
     public static function encodeFilename(string $path): string

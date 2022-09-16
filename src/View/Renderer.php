@@ -7,14 +7,8 @@ use Twig\Environment;
 
 class Renderer
 {
-    private Environment $twig;
-
-    private RequestStack $requestStack;
-
-    public function __construct(Environment $twig, RequestStack $requestStack)
+    public function __construct(private Environment $twig, private RequestStack $requestStack)
     {
-        $this->twig = $twig;
-        $this->requestStack = $requestStack;
     }
 
     public function getDefaultTemplateName()

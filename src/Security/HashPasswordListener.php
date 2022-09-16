@@ -9,11 +9,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class HashPasswordListener implements EventSubscriber
 {
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
-        $this->passwordHasher = $passwordHasher;
     }
 
     public function getSubscribedEvents(): array
@@ -37,7 +34,7 @@ class HashPasswordListener implements EventSubscriber
 
     public function prePersist(LifecycleEventArgs $args): void
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
 
         if (!$entity instanceof User) {
             return;
@@ -48,7 +45,7 @@ class HashPasswordListener implements EventSubscriber
 
     public function preUpdate(LifecycleEventArgs $args): void
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
 
         if (!$entity instanceof User) {
             return;
@@ -57,8 +54,8 @@ class HashPasswordListener implements EventSubscriber
         $this->encodePassword($entity);
 
         // necessary to force the update to see the change
-        $em = $args->getEntityManager();
-        $meta = $em->getClassMetadata(get_class($entity));
+        $em = $args->getObjectManager();
+        $meta = $em->getClassMetadata($entity::class);
         $em->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $entity);
     }
 }

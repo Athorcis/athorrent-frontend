@@ -51,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token')]
     private array|Collection $sharings;
 
-    #[ORM\OneToOne(targetEntity: 'Athorrent\Process\Entity\TrackedProcess', fetch: 'LAZY')]
+    #[ORM\OneToOne(targetEntity: TrackedProcess::class, fetch: 'LAZY')]
     private TrackedProcess $athorrentProcess;
 
     #[ORM\Column(type: 'integer')]
@@ -64,9 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->salt = $salt;
         $this->creationDateTime = new DateTime();
 
-        $this->hasRoles = array_map(function ($role) {
-            return new UserHasRole($this, $role);
-        }, $roles);
+        $this->hasRoles = array_map(fn($role) => new UserHasRole($this, $role), $roles);
     }
 
     public function getId(): int

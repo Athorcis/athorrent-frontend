@@ -6,14 +6,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
 {
-    protected AbstractFilesystem $filesystem;
-
-    protected string $path;
-
-    public function __construct(AbstractFilesystem $filesystem, string $path)
+    public function __construct(protected AbstractFilesystem $filesystem, protected string $path)
     {
-        $this->filesystem = $filesystem;
-        $this->path = $path;
     }
 
     public function getPath(): string
@@ -32,7 +26,6 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
     }
 
     /**
-     * @param bool $includeParentDirectory
      * @return static[]
      */
     public function readDirectory(bool $includeParentDirectory = false): array

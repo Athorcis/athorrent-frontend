@@ -15,17 +15,12 @@ class SubFilesystem extends AbstractFilesystem
         $this->internalFilesystem = new Filesystem('/');
     }
 
-    /**
-     * @param string $path
-     * @return int
-     */
     public function getSize(string $path): int
     {
         return $this->internalFilesystem->getSize($this->getInternalPath($path));
     }
 
     /**
-     * @param string $path
      * @return string[]
      */
     public function readDirectory(string $path): array
@@ -33,31 +28,21 @@ class SubFilesystem extends AbstractFilesystem
         return $this->internalFilesystem->readDirectory($this->getInternalPath($path));
     }
 
-    /**
-     * @param string $path
-     */
     public function remove(string $path): void
     {
         $this->internalFilesystem->remove($this->getInternalPath($path));
     }
 
-    public function getEntry(string $path): FilesystemEntryInterface
+    public function getEntry(string $path): SubFilesystemEntry
     {
         return new SubFilesystemEntry($this, $path);
     }
 
-    /**
-     * @return Filesystem
-     */
     public function getInternalFilesystem(): Filesystem
     {
         return $this->internalFilesystem;
     }
 
-    /**
-     * @param string $path
-     * @return string
-     */
     public function getInternalPath(string $path): string
     {
         $internalPath = Path::makeAbsolute($path, $this->root);
@@ -73,10 +58,6 @@ class SubFilesystem extends AbstractFilesystem
         return $internalPath;
     }
 
-    /**
-     * @param string $internalPath
-     * @return string
-     */
     public function getPath(string $internalPath): string
     {
         $path = str_replace([$this->root, DIRECTORY_SEPARATOR], ['', '/'], $internalPath);

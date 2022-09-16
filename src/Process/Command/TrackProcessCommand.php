@@ -19,12 +19,9 @@ class TrackProcessCommand extends Command
 {
     public const NAME = 'process:track';
 
-    private EntityManagerInterface $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
         parent::__construct(self::NAME);
-        $this->em = $em;
     }
 
     public function configure(): void

@@ -27,7 +27,7 @@ class TorrentFilesystem extends UserFilesystem
         $this->torrentManager = $torrentManager;
     }
 
-    public function getEntry(string $path): FilesystemEntryInterface
+    public function getEntry(string $path): TorrentFilesystemEntry
     {
         return new TorrentFilesystemEntry($this, $path);
     }
@@ -46,8 +46,6 @@ class TorrentFilesystem extends UserFilesystem
     }
 
     /**
-     * @param string $path
-     * @return bool
      * @throws Exception
      */
     protected function isTorrentImplementation(string $path): bool
@@ -59,7 +57,7 @@ class TorrentFilesystem extends UserFilesystem
         try {
             $torrentPaths = $this->getTorrentPaths();
         }
-        catch (ServiceUnavailableException $exception) {
+        catch (ServiceUnavailableException) {
             $this->torrentManagerFailed = true;
             return true;
         }
@@ -77,8 +75,6 @@ class TorrentFilesystem extends UserFilesystem
     }
 
     /**
-     * @param string $path
-     * @return bool
      * @throws Exception
      */
     public function isTorrent(string $path): bool

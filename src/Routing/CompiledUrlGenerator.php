@@ -6,26 +6,20 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\CompiledUrlGenerator as BaseUrlGenerator;
 use Symfony\Component\Routing\RequestContext;
+use function in_array;
 
 class CompiledUrlGenerator extends BaseUrlGenerator
 {
-    private array $actionMap;
-
-    private array $compiledRoutes;
-
-    private ?string $defaultLocale;
-
-    public function __construct(array $actionMap, array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, string $defaultLocale = null)
+    public function __construct(private array $actionMap, private array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, private ?string $defaultLocale = null)
     {
-        $this->actionMap = $actionMap;
-        $this->compiledRoutes = $compiledRoutes;
         $this->context = $context;
         $this->logger = $logger;
-        $this->defaultLocale = $defaultLocale;
     }
 
     protected function getPrefixId($name, array $parameters)
     {
+        $prefixId = null;
+
         if (isset($parameters['_prefixId'])) {
             $prefixId = $parameters['_prefixId'];
         } else {
@@ -79,7 +73,7 @@ class CompiledUrlGenerator extends BaseUrlGenerator
         [$variables, $defaults, $requirements, $tokens, $hostTokens, $requiredSchemes] = $this->compiledRoutes[$name];
 
         if (isset($defaults['_canonical_route'], $defaults['_locale'])) {
-            if (!\in_array('_locale', $variables, true)) {
+            if (!in_array('_locale', $variables, true)) {
                 unset($parameters['_locale']);
             } elseif (!isset($parameters['_locale'])) {
                 $parameters['_locale'] = $defaults['_locale'];

@@ -15,7 +15,6 @@ class SharedFilesystemEntry extends TorrentFilesystemEntry
     }
 
     /**
-     * @param bool $includeParentDirectory
      * @return static[]
      */
     public function readDirectory(bool $includeParentDirectory = false): array

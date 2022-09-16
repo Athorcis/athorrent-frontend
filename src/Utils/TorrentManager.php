@@ -11,22 +11,13 @@ use Symfony\Component\Filesystem\Path;
 
 class TorrentManager
 {
-    private Filesystem $fs;
-
-    private User $user;
-
     private AthorrentService $service;
 
     /**
      * TorrentManager constructor.
-     * @param EntityManagerInterface $em
-     * @param Filesystem $fs
-     * @param User $user
      */
-    public function __construct(EntityManagerInterface $em, Filesystem $fs, User $user)
+    public function __construct(EntityManagerInterface $em, private Filesystem $fs, private User $user)
     {
-        $this->fs = $fs;
-        $this->user = $user;
         $this->service = new AthorrentService($em, $fs, $user);
     }
 
@@ -42,7 +33,6 @@ class TorrentManager
 
     /**
      * S'assure que le dossier d'upload des fichiers torrents existe et retourne son chemin
-     * @return string
      */
     public function ensureTorrentsDirExists(): string
     {
@@ -65,7 +55,6 @@ class TorrentManager
     }
 
     /**
-     * @param string $url
      * @return mixed
      * @throws Exception
      */
@@ -80,7 +69,6 @@ class TorrentManager
     }
 
     /**
-     * @param string $path
      * @return mixed
      * @throws Exception
      */
@@ -101,7 +89,6 @@ class TorrentManager
     }
 
     /**
-     * @param string $magnet
      * @return mixed
      * @throws Exception
      */
@@ -135,7 +122,6 @@ class TorrentManager
     }
 
     /**
-     * @param string $hash
      * @return mixed
      * @throws Exception
      */
@@ -145,7 +131,6 @@ class TorrentManager
     }
 
     /**
-     * @param string $hash
      * @return mixed
      * @throws Exception
      */
@@ -155,7 +140,6 @@ class TorrentManager
     }
 
     /**
-     * @param string $hash
      * @return mixed
      * @throws Exception
      */
@@ -165,7 +149,6 @@ class TorrentManager
     }
 
     /**
-     * @param string $hash
      * @return array[]
      * @throws Exception
      */

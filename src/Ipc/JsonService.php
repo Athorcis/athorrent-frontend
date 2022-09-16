@@ -6,17 +6,11 @@ use RuntimeException;
 
 class JsonService
 {
-    private string $clientSocketType;
-
-    private string $address;
-
-    public function __construct(string $clientSocketType, string $address)
+    public function __construct(private string $clientSocketType, private string $address)
     {
-        $this->clientSocketType = $clientSocketType;
-        $this->address = $address;
     }
 
-    public function call($action, $parameters = array())
+    public function call($action, $parameters = [])
     {
         $request = new JsonRequest($action, $parameters);
 

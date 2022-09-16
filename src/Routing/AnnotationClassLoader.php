@@ -11,26 +11,14 @@ use Symfony\Component\Routing\RouteCollection;
 
 class AnnotationClassLoader extends AnnotatedRouteControllerLoader
 {
-    /** @var string[] */
-    private array $locales;
-
-    private string $defaultLocale;
-
-    public function __construct(Reader $reader, array $locales, string $defaultLocale)
+    /**
+     * @param string[] $locales
+     */
+    public function __construct(Reader $reader, private array $locales, private string $defaultLocale)
     {
         parent::__construct($reader);
-
-        $this->locales = $locales;
-        $this->defaultLocale = $defaultLocale;
     }
 
-    /**
-     * @param RouteCollection $collection
-     * @param Route $annot
-     * @param array $globals
-     * @param ReflectionClass $class
-     * @param ReflectionMethod $method
-     */
     protected function addRouteWithoutLocale(RouteCollection $collection, Route $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $annot->setDefaults(array_replace($annot->getDefaults(), [
@@ -40,13 +28,6 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
         parent::addRoute($collection, $annot, $globals, $class, $method);
     }
 
-    /**
-     * @param RouteCollection $collection
-     * @param Route $annot
-     * @param array $globals
-     * @param ReflectionClass $class
-     * @param ReflectionMethod $method
-     */
     protected function addRouteWithLocale(RouteCollection $collection, Route $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $annot->setName($annot->getName() . '|i18n');
@@ -58,11 +39,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
     }
 
     /**
-     * @param RouteCollection $collection
      * @param Route $annot
-     * @param array $globals
-     * @param ReflectionClass $class
-     * @param ReflectionMethod $method
      */
     protected function addRoute(RouteCollection $collection, $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {

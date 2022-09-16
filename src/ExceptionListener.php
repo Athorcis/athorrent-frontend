@@ -16,14 +16,8 @@ use Twig\Environment;
 
 class ExceptionListener implements EventSubscriberInterface
 {
-    private TranslatorInterface $translator;
-
-    private Environment $twig;
-
-    public function __construct(TranslatorInterface $translator, Environment $twig)
+    public function __construct(private TranslatorInterface $translator, private Environment $twig)
     {
-        $this->translator = $translator;
-        $this->twig = $twig;
     }
 
     public static function getSubscribedEvents(): array

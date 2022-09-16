@@ -7,18 +7,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NotificationListener implements EventSubscriberInterface
 {
-    private UrlGeneratorInterface $urlGenerator;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
     }
 
     public static function getSubscribedEvents(): array
@@ -44,13 +40,7 @@ class NotificationListener implements EventSubscriberInterface
 
     protected function getFlashBag(Request $request): ?FlashBagInterface
     {
-        $session = $request->getSession();
-
-        if ($session instanceof Session) {
-            return $session->getFlashBag();
-        }
-
-        return null;
+        return $request->getSession()->getFlashBag();
     }
 
     public function handleView(View $view, Request $request): void

@@ -10,28 +10,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class FilesystemFactory
 {
-    private TokenStorageInterface $tokenStorage;
-
-    private TorrentManagerFactory $torrentManagerFactory;
-
-    private SharingRepository $sharingRepository;
-
-    public function __construct(TokenStorageInterface $tokenStorage, TorrentManagerFactory $torrentManagerFactory, SharingRepository $sharingRepository)
+    public function __construct(private TokenStorageInterface $tokenStorage, private TorrentManagerFactory $torrentManagerFactory, private SharingRepository $sharingRepository)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->torrentManagerFactory = $torrentManagerFactory;
-        $this->sharingRepository = $sharingRepository;
     }
 
     protected function getUser(): ?User
     {
         $token = $this->tokenStorage->getToken();
-
-        if ($token === null) {
-            return null;
-        }
-
-        return $token->getUser();
+        return $token?->getUser();
     }
 
     public function createSharedFilesystem(string $token): SharedFilesystem

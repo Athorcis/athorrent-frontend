@@ -7,13 +7,10 @@ use function var_export;
 
 class ActionMapDumper
 {
-    private RouteCollection $routes;
-
     private ?array $actionMap = null;
 
-    public function __construct(RouteCollection $routes)
+    public function __construct(private RouteCollection $routes)
     {
-        $this->routes = $routes;
     }
 
     public function generateActionMap(): array

@@ -39,6 +39,11 @@ class Sharing implements CacheKeyGetterInterface
         return $this->token;
     }
 
+    public function getCacheKey(): string
+    {
+        return $this->token;
+    }
+
     public function getUser(): User
     {
         return $this->user;
@@ -49,13 +54,13 @@ class Sharing implements CacheKeyGetterInterface
         return $this->path;
     }
 
+    public function getCreationDateTime(): DateTime
+    {
+        return $this->creationDateTime;
+    }
+
     public static function generateToken(User $user, $path): string
     {
         return md5($user->getId() . '/' . $path);
-    }
-
-    public function getCacheKey(): string
-    {
-        return $this->token;
     }
 }

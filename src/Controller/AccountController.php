@@ -16,14 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/user/account', name: 'account')]
 class AccountController extends AbstractController
 {
-    protected UserManager $userManager;
-
-    protected EntityManagerInterface $entityManager;
-
-    public function __construct(UserManager $userManager, EntityManagerInterface $entityManager)
+    public function __construct(protected UserManager $userManager, protected EntityManagerInterface $entityManager)
     {
-        $this->userManager = $userManager;
-        $this->entityManager = $entityManager;
     }
 
     #[Route(path: '/', methods: 'GET')]
@@ -32,11 +26,6 @@ class AccountController extends AbstractController
         return new View();
     }
 
-    /**
-     *
-     * @param Request $request
-     * @return Notification
-     */
     #[Route(path: '/', methods: 'PUT')]
     public function saveAccount(Request $request): Notification
     {
