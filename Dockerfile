@@ -4,7 +4,8 @@ RUN set -ex ;\
     apt-get update ;\
     apt-get install -y --no-install-recommends \
         libicu-dev ;\
-    docker-php-ext-install -j $(nproc) bcmath intl opcache pdo_mysql sockets
+    docker-php-ext-install -j $(nproc) bcmath intl opcache pdo_mysql sockets ;\
+    apt-get clean
 
 RUN set -ex ;\
     pecl install apcu ;\
@@ -18,7 +19,8 @@ WORKDIR /build
 RUN set -ex ;\
     apt-get update ;\
     apt-get install -y \
-        unzip
+        unzip ;\
+    apt-get clean
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -39,6 +41,17 @@ RUN set -ex ;\
     yarn build
 
 FROM base
+
+RUN set -ex ;\
+    apt-get update ;\
+    apt-get install -y --no-install-recommends \
+        libfcgi-bin ;\
+    curl -so /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/a2d45de918787f761754b96b94a59f4f6acebc25/php-fpm-healthcheck ;\
+    chmod +x /usr/local/bin/php-fpm-healthcheck ; \
+    apt-get clean
+
+HEALTHCHECK --interval=5s --timeout=1s \
+    CMD FCGI_CONNECT=localhost:9001 php-fpm-healthcheck --listen-queue=10 || exit 1
 
 COPY . /var/www/athorrent
 
