@@ -24,7 +24,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /build
 
-RUN composer install --classmap-authoritative
+RUN set -ex ;\
+    composer install --classmap-authoritative ;\
+    composer dump-env prod
 
 FROM node:16-alpine AS yarn-build
 
@@ -41,6 +43,7 @@ FROM base
 COPY . /var/www/athorrent
 
 COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
+COPY --from=composer-build /build/.env.local.php /var/www/athorrent/.env.local.php
 COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
 
 RUN chown -R www-data:www-data /var/www/athorrent/var
