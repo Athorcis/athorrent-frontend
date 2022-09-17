@@ -6,6 +6,7 @@ use Athorrent\Database\Entity\User;
 use Athorrent\Filesystem\FileUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -55,10 +56,10 @@ class TorrentManager
     }
 
     /**
-     * @return mixed
      * @throws Exception
      */
-    public function addTorrentFromUrl(string $url)
+    #[ArrayShape(['hash' => 'string'])]
+    public function addTorrentFromUrl(string $url): array
     {
         $torrentsDir = $this->ensureTorrentsDirExists();
         $path = Path::join($torrentsDir, md5($url) . '.torrent');
@@ -69,10 +70,10 @@ class TorrentManager
     }
 
     /**
-     * @return mixed
      * @throws Exception
      */
-    public function addTorrentFromFile(string $path)
+    #[ArrayShape(['hash' => 'string'])]
+    public function addTorrentFromFile(string $path): array
     {
         $oldFile = Path::canonicalize($path);
         $newFile = FileUtils::encodeFilename($oldFile);
@@ -89,10 +90,10 @@ class TorrentManager
     }
 
     /**
-     * @return mixed
      * @throws Exception
      */
-    public function addTorrentFromMagnet(string $magnet)
+    #[ArrayShape(['hash' => 'string'])]
+    public function addTorrentFromMagnet(string $magnet): array
     {
         return $this->service->call('addTorrentFromMagnet', ['magnet' => $magnet]);
     }
@@ -122,28 +123,25 @@ class TorrentManager
     }
 
     /**
-     * @return mixed
      * @throws Exception
      */
-    public function pauseTorrent(string $hash)
+    public function pauseTorrent(string $hash): string
     {
         return $this->service->call('pauseTorrent', ['hash' => $hash]);
     }
 
     /**
-     * @return mixed
      * @throws Exception
      */
-    public function resumeTorrent(string $hash)
+    public function resumeTorrent(string $hash): string
     {
         return $this->service->call('resumeTorrent', ['hash' => $hash]);
     }
 
     /**
-     * @return mixed
      * @throws Exception
      */
-    public function removeTorrent(string $hash)
+    public function removeTorrent(string $hash): string
     {
         return $this->service->call('removeTorrent', ['hash' => $hash]);
     }
