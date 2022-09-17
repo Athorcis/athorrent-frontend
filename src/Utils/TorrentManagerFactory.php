@@ -9,11 +9,10 @@ use Symfony\Component\Filesystem\Filesystem;
 class TorrentManagerFactory
 {
     /** @var TorrentManager[] */
-    private array $instances;
+    private array $instances = [];
 
     public function __construct(private EntityManagerInterface $em, private Filesystem $fs)
     {
-        $this->instances = [];
     }
 
     public function create(User $user)
