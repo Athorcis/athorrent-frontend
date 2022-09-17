@@ -1,4 +1,4 @@
-FROM php:8.1.3-fpm AS base
+FROM php:8.1-fpm AS base
 
 RUN set -ex ;\
     apt-get update ;\
