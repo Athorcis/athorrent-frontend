@@ -6,7 +6,7 @@ use Athorrent\Utils\Search\Source\AniDexSource;
 use Athorrent\Utils\Search\Source\MagnetDLSource;
 use Athorrent\Utils\Search\Source\NyaaSource;
 use Athorrent\Utils\Search\Source\ThePirateBaySource;
-use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -100,7 +100,7 @@ class TorrentSearcher
                     }
                 }
             }
-            catch (HttpExceptionInterface $exception) {
+            catch (ExceptionInterface $exception) {
                 $sourceId = $response->getInfo('user_data')['sourceId'];
                 $results[$sourceId] = $exception;
             }
