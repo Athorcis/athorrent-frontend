@@ -4,15 +4,11 @@ namespace Athorrent\Notification;
 
 class Notification
 {
-    public const SUCCESS = 'success';
-    public const WARNING = 'warning';
-    public const ERROR = 'error';
-
-    public function __construct(private string $type, private string $message, private ?string $action = null)
+    public function __construct(private NotificationType $type, private string $message, private ?string $action = null)
     {
     }
 
-    public function getType(): string
+    public function getType(): NotificationType
     {
         return $this->type;
     }
