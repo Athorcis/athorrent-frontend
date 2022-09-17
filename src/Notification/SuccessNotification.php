@@ -6,6 +6,6 @@ class SuccessNotification extends Notification
 {
     public function __construct($message, $action = null)
     {
-        parent::__construct(Notification::SUCCESS, $message, $action);
+        parent::__construct(NotificationType::SUCCESS, $message, $action);
     }
 }
