@@ -93,9 +93,9 @@ class TwigHelperExtension extends AbstractExtension
         return null;
     }
 
-    public function dateToAge(string $date): false|int
+    public function dateToAge(string $date): int
     {
-        return strtotime($date);
+        return time() - strtotime($date);
     }
 
     public function formatBytes(int $value): string
