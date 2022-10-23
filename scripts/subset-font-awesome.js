@@ -20,7 +20,6 @@ const iconsMap = {
         'magnet',
         'sign-out-alt',
         'user',
-        'cog',
         'share',
         'lock',
         'wrench',

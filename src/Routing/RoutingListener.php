@@ -3,7 +3,6 @@
 namespace Athorrent\Routing;
 
 use Athorrent\View\View;
-use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -11,6 +10,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class RoutingListener implements EventSubscriberInterface
 {
@@ -49,9 +49,7 @@ class RoutingListener implements EventSubscriberInterface
         $locale = $request->getLocale();
         $ajaxRouteDescriptorsKey = 'ajax_route_descriptors_' . $locale;
 
-        if ($this->cache->has($ajaxRouteDescriptorsKey)) {
-            $ajaxRouteDescriptors = $this->cache->get($ajaxRouteDescriptorsKey);
-        } else {
+        $ajaxRouteDescriptors = $this->cache->get($ajaxRouteDescriptorsKey, function () use ($locale) {
             $ajaxRouteDescriptors = [];
 
             foreach ($this->router->getRouteCollection() as $route) {
@@ -79,8 +77,8 @@ class RoutingListener implements EventSubscriberInterface
                 }
             }
 
-            $this->cache->set($ajaxRouteDescriptorsKey, $ajaxRouteDescriptors);
-        }
+            return $ajaxRouteDescriptors;
+        });
 
         $this->routeDescriptors = $ajaxRouteDescriptors;
     }
