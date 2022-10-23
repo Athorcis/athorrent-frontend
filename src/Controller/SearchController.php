@@ -2,34 +2,35 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Utils\Search\TorrentSearcher;
+use Athorrent\Utils\Search\JackettApi;
 use Athorrent\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 #[Route(path: '/search', name: 'search')]
 class SearchController extends AbstractController
 {
     #[Route(path: '/', methods: 'GET')]
-    public function showSearch(Request $request, TorrentSearcher $searcher): View
+    public function showSearch(Request $request, JackettApi $jackett, CacheInterface $cache): View
     {
         $query = $request->query->get('q');
         $source = $request->query->get('source');
 
-        $sources = array_map(fn($source) => $source->getName(), $searcher->getSources());
+        $sources = $cache->get('search.trackers', fn () => $jackett->getConfiguredIndexers());
 
         if (empty($query)) {
             $results = [];
         } else {
-            $results = $searcher->search($query, $source === 'all' ? null: $source);
+            $results = $jackett->getResults($query, $source);
         }
 
         return new View([
             'query' => $query,
             'source' => $source,
             'sources' => $sources,
-            'resultsMap' => $results
+            'results' => $results
         ], 'showSearch');
     }
 }

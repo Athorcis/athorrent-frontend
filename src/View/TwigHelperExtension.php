@@ -19,6 +19,7 @@ class TwigHelperExtension extends AbstractExtension
         return [
             new TwigFunction('torrentStateToClass', $this->torrentStateToClass(...)),
             new TwigFunction('format_age', $this->formatAge(...)),
+            new TwigFunction('date_to_age', $this->dateToAge(...)),
             new TwigFunction('icon', $this->getIcon(...)),
             new TwigFunction('base64_encode', 'base64_encode'),
             new TwigFunction('format_bytes', $this->formatBytes(...))
@@ -90,6 +91,11 @@ class TwigHelperExtension extends AbstractExtension
         }
 
         return null;
+    }
+
+    public function dateToAge(string $date): false|int
+    {
+        return strtotime($date);
     }
 
     public function formatBytes($value): string
