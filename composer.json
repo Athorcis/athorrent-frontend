@@ -24,7 +24,6 @@
         "doctrine/orm": "^2.10",
         "gabrielelana/byte-units": "^0.5",
         "nelmio/security-bundle": "^3.0",
-        "psr/simple-cache": "^3.0",
         "sensio/framework-extra-bundle": "^6.2.1",
         "symfony/console": "6.1.*",
         "symfony/css-selector": "6.1.*",

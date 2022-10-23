@@ -44,9 +44,6 @@ services:
             $parameters: null
             $defaultLocale: '%kernel.default_locale%'
 
-    Athorrent\Cache\CacheCleaner:
-        arguments: ['@simple_cache', '%kernel.cache_dir%']
-
     Athorrent\Database\Repository\SharingRepository:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments: [Athorrent\Database\Entity\Sharing]
@@ -64,16 +61,8 @@ services:
             $locales: '%app.locales%'
             $defaultLocale: '%kernel.default_locale%'
 
-    Athorrent\Routing\RoutingListener:
-        arguments: ['@simple_cache']
-        tags: [kernel.event_subscriber]
-
     Athorrent\Utils\TorrentManagerFactory:
         lazy: true
-
-    simple_cache:
-        class: Symfony\Component\Cache\Psr16Cache
-        arguments: ['@cache.app']
 
     app.doctrine.hash_password_listener:
         class: Athorrent\Security\HashPasswordListener

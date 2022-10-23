@@ -159,14 +159,6 @@ users:
 administration:
     title: Administration
     handleUsers: Manage users
-    handleCache: Manage cache
-
-cache:
-    title: Manage cache
-    clearApc: Clear application cache
-    clearTwig: Clear Twig cache
-    clearTranslations: Clear translations cache
-    clearAll: Clear everything
 
 account:
     edit:

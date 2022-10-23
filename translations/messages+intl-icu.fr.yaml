@@ -158,14 +158,6 @@ users:
 administration:
     title: Administration
     handleUsers: Gestion des utilisateurs
-    handleCache: Gestion du cache
-
-cache:
-    title: Gestion du cache
-    clearApc: Vider le cache applicatif
-    clearTwig: Vider le cache Twig
-    clearTranslations: Vider le cache des traductions
-    clearAll: Vider tout
 
 account:
     edit:

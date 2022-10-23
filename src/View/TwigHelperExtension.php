@@ -51,7 +51,7 @@ class TwigHelperExtension extends AbstractExtension
         return '';
     }
 
-    public function torrentStateToClass($torrent): string
+    public function torrentStateToClass(array $torrent): string
     {
         $state = $torrent['state'];
 
@@ -68,7 +68,7 @@ class TwigHelperExtension extends AbstractExtension
         return $class;
     }
 
-    public function formatAge($age): ?string
+    public function formatAge(int $age): ?string
     {
         $steps = [
             'seconds' => 60,
@@ -98,7 +98,7 @@ class TwigHelperExtension extends AbstractExtension
         return strtotime($date);
     }
 
-    public function formatBytes($value): string
+    public function formatBytes(int $value): string
     {
         return Metric::bytes($value)->format(null, ' ');
     }
