@@ -15,8 +15,8 @@
     <form method="get" class="input-group search-control">
         <select class="form-control" name="source">
             <option value="all"{% if source == 'all' %} selected{% endif %}>{{ 'search.all-sources'|trans }}</option>
-            {% for key, name in sources %}
-                <option value="{{ key }}"{% if source == key %} selected{% endif %}>{{ name }}</option>
+            {% for s in sources %}
+                <option value="{{ s.id }}"{% if s.id == source %} selected{% endif %}>{{ s.name }}</option>
             {% endfor %}
         </select>
         <div class="input-expander">
@@ -28,7 +28,7 @@
     </form>
 
     {% if query is not empty %}
-        {% if resultsMap is empty %}
+        {% if results is empty %}
             <div class="alert alert-info" role="alert">{{ 'search.no-results'|trans }}</div>
         {% else %}
             {% include 'fragments/searchResults.html.twig' %}

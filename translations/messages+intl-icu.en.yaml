@@ -128,6 +128,7 @@ search:
     torrents:
         type: Type
         name: Name
+        tracker: Tracker
         size: Size
         age: Age
     age:
