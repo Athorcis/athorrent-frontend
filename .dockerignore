@@ -1,6 +1,5 @@
 .idea
 .git
-.yarn
 assets/fonts/font-awesome
 assets/images/icon.ai
 bin
@@ -11,4 +10,7 @@ var
 vendor
 .env.local
 composer.phar
-yarn.lock
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
