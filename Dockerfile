@@ -37,7 +37,7 @@ WORKDIR /build
 COPY . /build
 
 RUN set -ex ;\
-    yarn install ;\
+    yarn install --frozen-lockfile ;\
     yarn build
 
 FROM base
