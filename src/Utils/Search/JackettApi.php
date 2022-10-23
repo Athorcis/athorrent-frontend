@@ -17,7 +17,7 @@ class JackettApi
         return $this->http->request($method, $_ENV['JACKETT_ORIGIN'] . $path, $options);
     }
 
-    protected function login()
+    protected function login(): void
     {
         $response = $this->sendRequest('POST', '/UI/Dashboard', [
             'body' => ['password' => $_ENV['JACKET_ADMIN_PASSWORD']],
