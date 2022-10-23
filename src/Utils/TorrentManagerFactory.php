@@ -15,7 +15,7 @@ class TorrentManagerFactory
     {
     }
 
-    public function create(User $user)
+    public function create(User $user): TorrentManager
     {
         $userId = $user->getId();
 
