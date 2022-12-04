@@ -4,9 +4,9 @@ namespace Athorrent\Controller;
 
 use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\AbstractFilesystemEntry;
+use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +38,6 @@ abstract class AbstractFileController extends AbstractController
     }
 
     #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
-    #[ParamConverter('dirEntry')]
     public function listFiles(UserFilesystemEntry $dirEntry): View
     {
         if ($this instanceof FileController && $dirEntry->isRoot()) {
@@ -77,22 +76,19 @@ abstract class AbstractFileController extends AbstractController
     }
 
     #[Route(path: '/open', methods: 'GET')]
-    #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
-    public function openFile(Request $request, UserFilesystemEntry $entry): BinaryFileResponse
+    public function openFile(Request $request, #[Requirements(path: true, file: true)] UserFilesystemEntry $entry): BinaryFileResponse
     {
         return $this->sendFile($request, $entry, 'inline');
     }
 
     #[Route(path: '/download', methods: 'GET')]
-    #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
-    public function downloadFile(Request $request, UserFilesystemEntry $entry): BinaryFileResponse
+    public function downloadFile(Request $request, #[Requirements(path: true, file: true)] UserFilesystemEntry $entry): BinaryFileResponse
     {
         return $this->sendFile($request, $entry,'attachment');
     }
 
     #[Route(path: '/play', methods: 'GET')]
-    #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
-    public function playFile(UserFilesystemEntry $entry): View
+    public function playFile(#[Requirements(path: true, file: true)] UserFilesystemEntry $entry): View
     {
         if ($entry->isPlayable()) {
             if ($entry->isAudio()) {
@@ -119,8 +115,7 @@ abstract class AbstractFileController extends AbstractController
     }
 
     #[Route(path: '/display', methods: 'GET')]
-    #[ParamConverter('entry', options: ['path' => true, 'file' => true])]
-    public function displayFile(UserFilesystemEntry $entry): View
+    public function displayFile(#[Requirements(path: true, file: true)] UserFilesystemEntry $entry): View
     {
         if (!$entry->isDisplayable()) {
             throw new UnsupportedMediaTypeHttpException('error.notDisplayable');
@@ -144,8 +139,7 @@ abstract class AbstractFileController extends AbstractController
     }
 
     #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]
-    #[ParamConverter('entry', options: ['path' => true])]
-    public function removeFile(UserFilesystemEntry $entry, SharingRepository $sharingRepository): array
+    public function removeFile(#[Requirements(path: true)] UserFilesystemEntry $entry, SharingRepository $sharingRepository): array
     {
         if ($entry->isRoot()) {
             throw new NotFoundHttpException();

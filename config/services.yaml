@@ -64,6 +64,14 @@ services:
     Athorrent\Utils\TorrentManagerFactory:
         lazy: true
 
+    Athorrent\Utils\TorrentManagerValueResolver:
+        tags:
+            - { name: controller.argument_value_resolver }
+
+    Athorrent\Filesystem\FilesystemValueResolver:
+        tags:
+            - { name: controller.argument_value_resolver }
+
     app.doctrine.hash_password_listener:
         class: Athorrent\Security\HashPasswordListener
         tags:
