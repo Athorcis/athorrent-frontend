@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
 use RuntimeException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -64,8 +64,7 @@ class UserController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/{userId}', methods: 'POST', options: ['expose' => true])]
-    #[ParamConverter('user', options: ['id' => 'userId'])]
-    public function resetUserPassword(User $user, UserPasswordHasherInterface $hasher, EntityManagerInterface $em): array
+    public function resetUserPassword(#[MapEntity(id: 'userId')] User $user, UserPasswordHasherInterface $hasher, EntityManagerInterface $em): array
     {
         $password = bin2hex(random_bytes(8));
 

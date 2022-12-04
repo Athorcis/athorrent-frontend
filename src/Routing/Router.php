@@ -100,4 +100,13 @@ class Router extends BaseRouter
 
         return self::$cache[$path] ??= require $path;
     }
+
+    /**
+     * This method needs to be overridden or else it causes an error on Symfony 6.2
+     * @return array
+     */
+    public static function getSubscribedServices(): array
+    {
+        return [];
+    }
 }
