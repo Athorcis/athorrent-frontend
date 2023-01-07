@@ -2,7 +2,6 @@
 
 namespace Athorrent\Routing;
 
-use Doctrine\Common\Annotations\Reader;
 use ReflectionClass;
 use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Routing\AnnotatedRouteControllerLoader;
@@ -14,9 +13,9 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
     /**
      * @param string[] $locales
      */
-    public function __construct(Reader $reader, private array $locales, private string $defaultLocale)
+    public function __construct(private array $locales, private string $defaultLocale)
     {
-        parent::__construct($reader);
+        parent::__construct();
     }
 
     protected function addRouteWithoutLocale(RouteCollection $collection, Route $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
