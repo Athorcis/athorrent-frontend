@@ -24,20 +24,12 @@ class FilesystemEntry extends AbstractFilesystemEntry
 
     public function isDirectory(): bool
     {
-        if ($this->isDir === null) {
-            $this->isDir = is_dir($this->path);
-        }
-
-        return $this->isDir;
+       return $this->isDir ??= is_dir($this->path);
     }
 
     public function isFile(): bool
     {
-        if ($this->isFile === null) {
-            $this->isFile = is_file($this->path);
-        }
-
-        return $this->isFile;
+        return $this->isFile ??= is_file($this->path);
     }
 
     public function getModificationTimestamp(): int

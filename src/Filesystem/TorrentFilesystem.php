@@ -38,11 +38,7 @@ class TorrentFilesystem extends UserFilesystem
      */
     protected function getTorrentPaths(): array
     {
-        if ($this->torrentPaths === null) {
-            $this->torrentPaths = $this->torrentManager->getPaths();
-        }
-
-        return $this->torrentPaths;
+       return $this->torrentPaths ??= $this->torrentManager->getPaths();
     }
 
     /**

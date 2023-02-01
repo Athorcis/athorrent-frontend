@@ -53,11 +53,7 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
      */
     public function getSharingToken(): string
     {
-        if ($this->sharingToken === null) {
-            $this->sharingToken = Sharing::generateToken($this->getOwner(), $this->path);
-        }
-
-        return $this->sharingToken;
+        return $this->sharingToken ??= Sharing::generateToken($this->getOwner(), $this->path);
     }
 
     /**
