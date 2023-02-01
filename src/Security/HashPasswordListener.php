@@ -4,7 +4,8 @@ namespace Athorrent\Security;
 
 use Athorrent\Database\Entity\User;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class HashPasswordListener implements EventSubscriber
@@ -32,7 +33,7 @@ class HashPasswordListener implements EventSubscriber
         $entity->setPassword($encoded);
     }
 
-    public function prePersist(LifecycleEventArgs $args): void
+    public function prePersist(PrePersistEventArgs $args): void
     {
         $entity = $args->getObject();
 
@@ -43,7 +44,7 @@ class HashPasswordListener implements EventSubscriber
         $this->encodePassword($entity);
     }
 
-    public function preUpdate(LifecycleEventArgs $args): void
+    public function preUpdate(PreUpdateEventArgs $args): void
     {
         $entity = $args->getObject();
 
