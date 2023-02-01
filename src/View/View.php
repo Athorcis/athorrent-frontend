@@ -45,11 +45,7 @@ class View
 
     public function render(TranslatorInterface $translator, Renderer $renderer): string
     {
-        $name = $this->name;
-
-        if ($name === null) {
-            $name = $renderer->getDefaultTemplateName();
-        }
+        $name = $this->name ?? $renderer->getDefaultTemplateName();
 
         $data = $this->data;
 

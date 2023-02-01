@@ -20,11 +20,7 @@ class TorrentFilesystemEntry extends UserFilesystemEntry
      */
     public function isTorrent(): bool
     {
-        if ($this->torrent === null) {
-            $this->torrent = $this->filesystem->isTorrent($this->internalEntry->path);
-        }
-
-        return $this->torrent;
+        return $this->torrent ??= $this->filesystem->isTorrent($this->internalEntry->path);
     }
 
     /**
