@@ -35,16 +35,7 @@ class TrackProcessCommand extends Command
         $command = json_decode($input->getArgument('cmd'), true, 512, JSON_THROW_ON_ERROR);
 
         // On crée le processus et on le démarre
-        $process = Process::create($command);
-        $process->setInput(STDIN);
-        $process->setTimeout(null);
-
-        $process->start();
-
-        // On persiste l'état du processus en base
-        $processEntity = TrackedProcess::create($process);
-        $this->em->persist($processEntity);
-        $this->em->flush();
+        [$process, $processEntity] = $this->startProcess($command);
 
         // On affiche l'id du processus démarré
         $output->write(sprintf('id:%s', $processEntity->getId()));
@@ -59,13 +50,7 @@ class TrackProcessCommand extends Command
         );
 
         try {
-
-            while ($process->isRunning()) {
-                $processEntity->updateLastHeartbeat();
-                $this->em->flush();
-
-                sleep(2);
-            }
+            $this->waitProcessEnd($process, $processEntity);
 
             // On attend que processus se termine
             $exitCode = $process->getExitCode();
@@ -81,6 +66,37 @@ class TrackProcessCommand extends Command
         }
 
         return $exitCode;
+    }
+
+    /**
+     * @param string[] $command
+     * @return array{Process,TrackedProcess}
+     */
+    protected function startProcess(array $command): array
+    {
+        // On crée le processus et on le démarre
+        $process = Process::create($command);
+        $process->setInput(STDIN);
+        $process->setTimeout(null);
+
+        $process->start();
+
+        // On persiste l'état du processus en base
+        $entity = TrackedProcess::create($process);
+        $this->em->persist($entity);
+        $this->em->flush();
+
+        return [$process, $entity];
+    }
+
+    protected function waitProcessEnd(Process $process, TrackedProcess $entity): void
+    {
+        while ($process->isRunning()) {
+            $entity->updateLastHeartbeat();
+            $this->em->flush();
+
+            sleep(2);
+        }
     }
 
     protected function stopProcess(Process $process, TrackedProcess $processEntity): void
