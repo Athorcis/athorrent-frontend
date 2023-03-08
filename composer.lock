@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a8f3c6b62c8c36e3bd1864144ed3353",
+    "content-hash": "e7790368d96cb398ce078d0507e419a8",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -6554,25 +6554,27 @@
         },
         {
             "name": "twig/cache-extension",
-            "version": "2.0.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Athorcis/twig-cache-extension.git",
-                "reference": "39e4c317264d478cbe13a010ad9f343276cd56c4"
+                "url": "https://github.com/twigphp/twig-cache-extension.git",
+                "reference": "2c243643f59132194458bd03c745b079bbb12e78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Athorcis/twig-cache-extension/zipball/39e4c317264d478cbe13a010ad9f343276cd56c4",
-                "reference": "39e4c317264d478cbe13a010ad9f343276cd56c4",
+                "url": "https://api.github.com/repos/twigphp/twig-cache-extension/zipball/2c243643f59132194458bd03c745b079bbb12e78",
+                "reference": "2c243643f59132194458bd03c745b079bbb12e78",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
-                "twig/twig": "^3.0"
+                "twig/twig": "^1.38|^2.4|^3.0"
             },
             "require-dev": {
                 "doctrine/cache": "~1.0",
-                "phpunit/phpunit": "^5.0 || ^4.8.10"
+                "phpunit/phpunit": "^5.0 || ^4.8.36",
+                "psr/cache": "^1.0",
+                "sebastian/comparator": "^1.2.4|^2.0"
             },
             "suggest": {
                 "psr/cache-implementation": "To make use of PSR-6 cache implementation via PsrCacheAdapter."
@@ -6580,7 +6582,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.5-dev"
                 }
             },
             "autoload": {
@@ -6588,16 +6590,7 @@
                     "": "lib/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "": "test/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -6615,9 +6608,21 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/Athorcis/twig-cache-extension/tree/2.0.0"
+                "issues": "https://github.com/twigphp/twig-cache-extension/issues",
+                "source": "https://github.com/twigphp/twig-cache-extension/tree/v1.5.0"
             },
-            "time": "2020-05-08T05:27:44+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/twig/twig",
+                    "type": "tidelift"
+                }
+            ],
+            "abandoned": "twig/cache-extra",
+            "time": "2020-10-04T09:56:48+00:00"
         },
         {
             "name": "twig/extra-bundle",

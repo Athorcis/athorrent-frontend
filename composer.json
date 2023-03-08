@@ -3,12 +3,6 @@
     "description": "A lightweight seedbox frontend",
     "type": "project",
     "license": "Apache-2.0",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Athorcis/twig-cache-extension"
-        }
-    ],
     "require": {
         "php": "^8.1",
         "ext-ctype": "*",
@@ -42,8 +36,7 @@
         "symfony/twig-bundle": "6.2.*",
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "6.2.*",
-        "twig/cache-extension": "^2.0",
-        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/cache-extension": "v1.5.0",
         "twig/twig": "^2.12|^3.0"
     },
     "minimum-stability": "RC",
