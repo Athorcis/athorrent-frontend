@@ -1,4 +1,4 @@
-FROM php:8.1-fpm AS base
+FROM php:8.2.4-fpm AS base
 
 RUN set -ex ;\
     apt-get update ;\
@@ -22,7 +22,7 @@ RUN set -ex ;\
         unzip ;\
     apt-get clean
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.5.5 /usr/bin/composer /usr/bin/composer
 
 COPY . /build
 
@@ -30,7 +30,7 @@ RUN set -ex ;\
     composer install --classmap-authoritative ;\
     composer dump-env prod
 
-FROM node:16-alpine AS yarn-build
+FROM node:18.15-alpine AS yarn-build
 
 WORKDIR /build
 
@@ -59,6 +59,6 @@ COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
 COPY --from=composer-build /build/.env.local.php /var/www/athorrent/.env.local.php
 COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
 
-RUN chown -R www-data:www-data /var/www/athorrent/var
+RUN mkdir -p /var/www/athorrent/var && chown -R www-data:www-data /var/www/athorrent/var
 
 VOLUME ["/var/www/athorrent/var/user"]
