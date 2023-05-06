@@ -11,7 +11,7 @@
     }
 }
 
-@media (max-width: 767px) {
+@media (width <= 767px) {
     #add-torrent-form {
         &.enabled {
             border-top: 51px solid #000;
