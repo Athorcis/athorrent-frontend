@@ -23,6 +23,8 @@ services:
         exclude:
             - '../src/Cache/'
             - '../src/Database/Entity/'
+            - '../src/View/PaginatedView.php'
+            - '../src/View/View.php'
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
