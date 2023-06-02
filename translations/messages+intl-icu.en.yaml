@@ -10,14 +10,14 @@ error:
     badRequest: Bad request
     fileNotFound: File not found
     notPlayable: This file is neither an audio file nor a video file
-    notDisplayble: This file is neither an image nor a text file
+    notDisplayable: This file is neither an image nor a text file
     cannotRemoveFile: Unable to remove this file
     usernameAlreadyUsed: This username is already used
     roleNotSpecified: Undefined role
     cannotRemoveUser: Unable to remove this user
     errorUnknown: Unknown error
     loginFailure: Username or password invalid
-    usernameOrPasswordEmpty: Username or pasword empty
+    usernameOrPasswordEmpty: Username or password empty
     passwordInvalid: Password invalid
     passwordsDiffer: Passwords differ
 
@@ -61,7 +61,7 @@ home:
     performance:
         title: Performance
         content: |
-            You dream of downloading and seeding your torrents at full speed, this website is perfect for you. It uses the latest web technologies availables, it was specifically designed to be as efficient as possible, in order to offer you a pleasant experience.
+            You dream of downloading and seeding your torrents at full speed, this website is perfect for you. It uses the latest web technologies available, it was specifically designed to be as efficient as possible, in order to offer you a pleasant experience.
     openSource:
         title: Open source
         content: |
@@ -91,7 +91,7 @@ torrents:
     ratio: Ratio
     seeders: Seeders
     leechers: Leechers
-    managerUpdating: The torrent manager is neing updating
+    managerUpdating: The torrent manager is being updated
     none: no torrents to display
 
     state:
