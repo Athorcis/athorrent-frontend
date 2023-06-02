@@ -10,7 +10,7 @@ error:
     badRequest: Requête malformée
     fileNotFound: Fichier introuvable
     notPlayable: Le fichier n'est ni un fichier audio, ni un fichier vidéo
-    notDisplayble: Le fichier n'est ni une image, ni un fichier texte
+    notDisplayable: Le fichier n'est ni une image, ni un fichier texte
     cannotRemoveFile: Impossible de supprimer le fichier
     usernameAlreadyUsed: Ce nom d'utilisateur existe déjà.
     roleNotSpecified: Rôle indéfini
@@ -53,7 +53,7 @@ home:
     sharing:
         title: Partage
         content: |
-            Vous vouvez partager avec vos amis l'intégralité des fichiers présents sur votre seedbox? Rien de plus simple, vous n'avez qu'un clic à faire pour obtenir un lien de partage.
+            Vous voulez partager avec vos amis l'intégralité des fichiers présents sur votre seedbox? Rien de plus simple, vous n'avez qu'un clic à faire pour obtenir un lien de partage.
     security:
         title: Sécurité
         content: |
@@ -61,7 +61,7 @@ home:
     performance:
         title: Performance
         content: |
-            Si vous rêvez de télécharger et seeder vos torrents à toute vitesse, ce site est fait pour vous. Il utilise les dernières technologies disponibles pour le web, il a été spécialement conçu pour être le plus performant possible, dans l'optique de vous offir une expérience plaisante.
+            Si vous rêvez de télécharger et seeder vos torrents à toute vitesse, ce site est fait pour vous. Il utilise les dernières technologies disponibles pour le web, il a été spécialement conçu pour être le plus performant possible, dans l'optique de vous offrir une expérience plaisante.
     openSource:
         title: Logiciel libre
         content: |

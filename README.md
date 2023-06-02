@@ -2,7 +2,7 @@
 
 ## Getting started
 
-Install the following prerequesites
+Install the following prerequisites
 - Apache (or any webserver)
 - PHP and extensions mysql, pdo, apcu (optional)
 - Mysql Server
@@ -27,7 +27,7 @@ Options +FollowSymLinks
 </IfModule>
 ```
 
-If you don't you might find an anwser [here] (http://silex.sensiolabs.org/doc/master/web_servers.html)
+If you don't you might find an answer [here] (http://silex.sensiolabs.org/doc/master/web_servers.html)
 
 Create a bin directory and put the backend binary in it.
 To build the backend see [athorrent-backend] (https://github.com/Athorcis/athorrent-backend)
