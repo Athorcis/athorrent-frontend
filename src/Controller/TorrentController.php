@@ -11,6 +11,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -82,10 +83,11 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/magnet', methods: 'GET')]
-    public function addMagnet(Request $request, TorrentManager $torrentManager): RedirectResponse
+    public function addMagnet(
+        TorrentManager $torrentManager,
+        #[MapQueryParameter] ?string $magnet = null,
+        ): RedirectResponse
     {
-        $magnet = $request->query->get('magnet');
-
         if ($magnet) {
             $torrentManager->addTorrentFromMagnet($magnet);
         }

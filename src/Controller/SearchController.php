@@ -5,7 +5,7 @@ namespace Athorrent\Controller;
 use Athorrent\Utils\Search\JackettApi;
 use Athorrent\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -13,11 +13,13 @@ use Symfony\Contracts\Cache\CacheInterface;
 class SearchController extends AbstractController
 {
     #[Route(path: '/', methods: 'GET')]
-    public function showSearch(Request $request, JackettApi $jackett, CacheInterface $cache): View
+    public function showSearch(
+        JackettApi $jackett,
+        CacheInterface $cache,
+        #[MapQueryParameter(name: 'q')] string $query = '',
+        #[MapQueryParameter] string $source = 'all',
+    ): View
     {
-        $query = $request->query->get('q');
-        $source = $request->query->get('source');
-
         $sources = $cache->get('search.trackers', fn () => $jackett->getConfiguredIndexers());
 
         if (empty($query)) {
