@@ -32,7 +32,6 @@ Encore
     .addEntry('users', './assets/js/users.ts')
 
     .addStyleEntry('administration', './assets/css/administration.scss')
-    .addStyleEntry('cache', './assets/css/cache.scss')
     .addStyleEntry('home', './assets/css/home.scss')
     .addStyleEntry('main', './assets/css/main.scss')
 
