@@ -1,4 +1,4 @@
-FROM php:8.2.4-fpm AS base
+FROM php:8.2.6-fpm AS base
 
 RUN set -ex ;\
     apt-get update ;\
@@ -22,7 +22,7 @@ RUN set -ex ;\
         unzip ;\
     apt-get clean
 
-COPY --from=composer:2.5.5 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.5.7 /usr/bin/composer /usr/bin/composer
 
 COPY . /build
 
@@ -30,7 +30,7 @@ RUN set -ex ;\
     composer install --classmap-authoritative ;\
     composer dump-env prod
 
-FROM node:18.15-alpine AS yarn-build
+FROM node:19.9-alpine AS yarn-build
 
 WORKDIR /build
 
