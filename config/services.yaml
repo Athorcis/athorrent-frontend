@@ -6,7 +6,7 @@
 parameters:
     app.locales: [fr, en]
     app.public_dir: '%kernel.project_dir%/public'
-    container.dumper.inline_factories: true
+    .container.dumper.inline_factories: true
 
 services:
     # default configuration for services in *this* file
@@ -73,11 +73,6 @@ services:
     Athorrent\Filesystem\FilesystemValueResolver:
         tags:
             - { name: controller.argument_value_resolver }
-
-    app.doctrine.hash_password_listener:
-        class: Athorrent\Security\HashPasswordListener
-        tags:
-            - { name: doctrine.event_subscriber }
 
     twig.cache.extension:
         class: Twig\CacheExtension\Extension
