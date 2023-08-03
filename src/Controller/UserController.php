@@ -69,7 +69,7 @@ class UserController extends AbstractController
         $password = bin2hex(random_bytes(8));
 
         $user->setPassword($hasher->hashPassword($user, $password));
-        $em->flush($user);
+        $em->flush();
 
         return ['password' => $password];
     }
