@@ -3,6 +3,7 @@
 namespace Athorrent\View;
 
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class View
@@ -11,39 +12,39 @@ class View
     {
     }
 
-    public function has($key): bool
+    public function has(string $key): bool
     {
         return isset($this->data[$key]);
     }
 
-    public function set($key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $this->data[$key] = $value;
     }
 
-    public function setJsVar($key, $value): void
+    public function setJsVar(string $key, mixed $value): void
     {
         $this->data['js_vars'][$key] = $value;
     }
 
-    public function setJsVars($vars): void
+    public function setJsVars(array $vars): void
     {
         foreach ($vars as $key => $value) {
             $this->data['js_vars'][$key] = $value;
         }
     }
 
-    public function addString($id): void
+    public function addString(string $id): void
     {
         $this->data['_strings'][] = $id;
     }
 
-    public function addTemplate($name): void
+    public function addTemplate(string $name): void
     {
         $this->data['_templates'][] = $name;
     }
 
-    public function render(TranslatorInterface $translator, Renderer $renderer): string
+    public function render(Request $request, TranslatorInterface $translator, Renderer $renderer): string
     {
         $name = $this->name ?? $renderer->getDefaultTemplateName();
 
@@ -61,6 +62,6 @@ class View
             }
         }
 
-        return $renderer->render($name, $data);
+        return $renderer->render($request, $name, $data);
     }
 }
