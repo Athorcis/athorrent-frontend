@@ -1,5 +1,5 @@
 import {Translator} from './translator';
-import {Params, Router} from './router';
+import {Router} from './router';
 import {DataManager} from './data-manager';
 import {UiManager} from './ui-manager';
 import {SecurityManager} from "./security-manager";
