@@ -49,13 +49,14 @@ class JackettApi
             'query' => ['apikey' => $_ENV['JACKET_API_KEY']],
         ]));
     }
+
     public function getIndexers($query = [])
     {
         $response = $this->queryInternalApi('GET', '/api/v2.0/indexers', [
             'query' => $query,
         ]);
 
-        return json_decode($response->getContent(), true);
+        return json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function getConfiguredIndexers()
@@ -69,6 +70,6 @@ class JackettApi
             'query' => ['query' => $query],
         ]);
 
-        return json_decode($response->getContent(), true)['Results'];
+        return json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR)['Results'];
     }
 }
