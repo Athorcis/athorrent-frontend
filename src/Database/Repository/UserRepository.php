@@ -40,4 +40,15 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
         $user->setPassword($newHashedPassword);
         $this->_em->flush($user);
     }
+
+    public function getNextAvailablePort(): int
+    {
+        $nextAvailablePort = $this->createQueryBuilder('u')
+            ->select('MAX(u.port) + 1')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return max(6881, $nextAvailablePort);
+    }
+
 }
