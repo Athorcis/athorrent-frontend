@@ -29,6 +29,7 @@ class UserManager
 
         $salt = base64_encode(random_bytes(22));
         $user = new User($username, $password, $salt, $roles);
+        $user->setPort($this->userRepository->getNextAvailablePort());
 
         $this->entityManager->persist($user);
 

@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Table]
 #[ORM\UniqueConstraint(name: 'username', columns: ['username'])]
+#[ORM\UniqueConstraint(name: 'port', columns: ['port'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface
 {
