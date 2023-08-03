@@ -3,7 +3,7 @@
 import $ from 'jquery';
 import Dropzone, {DropzoneFile} from 'dropzone';
 import '../css/torrents.scss';
-import {AbortablePromise, ApiResponse, Params, Router} from './core/router';
+import {Router} from './core/router';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {SecurityManager} from './core/security-manager';

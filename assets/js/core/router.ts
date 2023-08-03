@@ -1,39 +1,8 @@
 import $ from 'jquery';
 import queryString from 'query-string';
-
-export interface Params {
-    [name: string]: string|string[];
-}
-
 import { HttpClient, Request, newHttpClient } from 'typescript-http-client';
 
-interface Abortable { abort(): void; }
-export type AbortablePromise<T> = Promise<T> & Abortable;
-
-
-interface Route {
-    name: string;
-    method: string;
-    pattern: string;
-    prefixId: string;
-}
-
-interface RouteGroup {
-    [namePrefix: string]: Route;
-}
-
-interface Routes {
-    [name: string]: RouteGroup;
-}
-
 type RequestOptions = ConstructorParameters<typeof Request>[1];
-
-export interface ApiResponse<T> {
-    status: string;
-    data?: T;
-    message?: string;
-    csrfToken?: string;
-}
 
 export class Router {
 

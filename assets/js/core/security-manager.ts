@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import {HttpClient, Request, Response, FilterChain} from "typescript-http-client";
-import {ApiResponse} from './router';
 
 export class SecurityManager {
 
