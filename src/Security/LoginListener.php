@@ -2,6 +2,7 @@
 
 namespace Athorrent\Security;
 
+use AssertionError;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,6 +18,9 @@ class LoginListener implements EventSubscriberInterface
     public function onInteractiveLogin(InteractiveLoginEvent $event): void
     {
         $user = $event->getAuthenticationToken()->getUser();
+
+        assert($user !== null, new AssertionError('user is not supposed to be null when login just happened'));
+
         $user->setConnectionDateTime(new DateTime());
 
         $this->entityManager->persist($user);
