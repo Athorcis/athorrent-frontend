@@ -1,4 +1,8 @@
-FROM php:8.2.6-fpm AS base
+ARG PHP_VERSION=8.2.7
+ARG COMPOSER_VERSION=2.5.8
+ARG NODEJS_VERSION=20.5.0
+
+FROM php:${PHP_VERSION}-fpm AS base
 
 RUN set -ex ;\
     apt-get update ;\
@@ -12,6 +16,8 @@ RUN set -ex ;\
     docker-php-ext-enable apcu ;\
     pecl clear-cache
 
+FROM composer:$COMPOSER_VERSION AS composer
+
 FROM base AS composer-build
 
 WORKDIR /build
@@ -22,7 +28,7 @@ RUN set -ex ;\
         unzip ;\
     apt-get clean
 
-COPY --from=composer:2.5.7 /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY . /build
 
@@ -30,7 +36,7 @@ RUN set -ex ;\
     composer install --classmap-authoritative ;\
     composer dump-env prod
 
-FROM node:19.9-alpine AS yarn-build
+FROM node:${NODEJS_VERSION}-alpine AS yarn-build
 
 WORKDIR /build
 
