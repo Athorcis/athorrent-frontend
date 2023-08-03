@@ -25,7 +25,8 @@ class ViewListener implements EventSubscriberInterface
 
     public function onEarlyKernelView(ViewEvent $event): void
     {
-        $xhr = $event->getRequest()->isXmlHttpRequest();
+        $request = $event->getRequest();
+        $xhr = $request->isXmlHttpRequest();
 
         if (!$xhr) {
             return;
@@ -34,7 +35,7 @@ class ViewListener implements EventSubscriberInterface
         $result = $event->getControllerResult();
 
         if ($result instanceof View) {
-            $data = $result->render($this->translator, $this->renderer);
+            $data = $result->render($request, $this->translator, $this->renderer);
         } elseif ($result === null || is_array($result)) {
             $data = $result;
         } else {
@@ -52,7 +53,7 @@ class ViewListener implements EventSubscriberInterface
         $result = $event->getControllerResult();
 
         if ($result instanceof View) {
-            $response = new Response($result->render($this->translator, $this->renderer));
+            $response = new Response($result->render($event->getRequest(), $this->translator, $this->renderer));
         } elseif (is_array($result)) {
             $response = new JsonResponse($result);
         }
