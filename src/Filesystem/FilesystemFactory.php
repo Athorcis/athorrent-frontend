@@ -2,6 +2,7 @@
 
 namespace Athorrent\Filesystem;
 
+use AssertionError;
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Utils\TorrentManagerFactory;
@@ -36,6 +37,9 @@ class FilesystemFactory
     public function createTorrentFilesystem(): TorrentFilesystem
     {
         $user = $this->getUser();
+
+        assert($user !== null, new AssertionError('cannot instantiate a torrent manager if no user is logged in'));
+
         $torrentManager = $this->torrentManagerFactory->create($user);
 
         return new TorrentFilesystem($torrentManager, $user);

@@ -2,6 +2,7 @@
 
 namespace Athorrent\Cache\KeyGenerator;
 
+use RuntimeException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class LocalizedKeyGenerator extends KeyGenerator
@@ -19,6 +20,10 @@ class LocalizedKeyGenerator extends KeyGenerator
         }
 
         $request = $this->requestStack->getCurrentRequest();
+
+        if ($request === null) {
+            throw new RuntimeException('cannot generated localized key without a request');
+        }
 
         return $request->getLocale() . $keySuffix;
     }
