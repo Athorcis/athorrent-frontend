@@ -56,7 +56,7 @@
 
         {% if js_vars %}
             <script type="text/javascript" nonce="{{ csp_nonce('script') }}">
-                const athorrent = {{ js_vars|json_encode|raw }};
+                window.athorrent = {{ js_vars|json_encode|raw }};
             </script>
         {% endif %}
 
