@@ -20,6 +20,9 @@ abstract class AbstractFileController extends AbstractController
     {
     }
 
+    /**
+     * @return string[]
+     */
     protected function getBreadcrumb(string $path): array
     {
         $breadcrumb = [$this->translator->trans('files.root') => ''];

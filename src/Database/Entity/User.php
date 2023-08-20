@@ -58,6 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     #[ORM\Column(type: 'integer')]
     private int $port;
 
+    /**
+     * @param string[] $roles
+     */
     public function __construct($username, $plainPassword, $salt, array $roles)
     {
         $this->username = $username;
@@ -132,6 +135,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->connectionDateTime = $dateTime;
     }
 
+    /**
+     * @return UserHasRole[]|Collection
+     */
     public function getHasRoles(): array|Collection
     {
         return $this->hasRoles;
