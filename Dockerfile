@@ -32,7 +32,8 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY . /build
 
-RUN set -ex ;\
+RUN --mount=type=cache,target=/root/.composer/ set -ex ;\
+    export COMPOSER_ALLOW_SUPERUSER=1 ;\
     composer install --classmap-authoritative ;\
     composer dump-env prod
 
@@ -42,8 +43,10 @@ WORKDIR /build
 
 COPY . /build
 
-RUN set -ex ;\
-    yarn install --frozen-lockfile ;\
+RUN --mount=type=cache,target=/root/.yarn \
+    --mount=type=cache,target=/build/node_modules/.cache \
+    set -ex ;\
+    YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable ;\
     yarn build
 
 FROM base
