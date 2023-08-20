@@ -15,7 +15,7 @@ class UnixSocketClient extends UnixSocket implements ClientSocketInterface
         }
     }
 
-    public function read(string|false &$buffer, int $length): int
+    public function read(string|false|null &$buffer, int $length): int
     {
         $bytesRead = socket_recv($this->socket, $buffer, $length, 0);
 
