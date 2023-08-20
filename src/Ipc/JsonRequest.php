@@ -2,7 +2,7 @@
 
 namespace Athorrent\Ipc;
 
-class JsonRequest
+readonly class JsonRequest
 {
     public function __construct(private string $action, private array $parameters)
     {

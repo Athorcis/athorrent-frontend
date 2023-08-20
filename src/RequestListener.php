@@ -55,8 +55,6 @@ class RequestListener implements EventSubscriberInterface
      * Disable output buffering when returning a BinaryFileResponse
      * A memory error happens on certain versions of PHP when writing on php://output
      * with stream_copy_to_stream if output buffering is enabled (PHP 8.1.10 on Windows)
-     * @param ResponseEvent $event
-     * @return void
      */
     public function disableOutputBuffering(ResponseEvent $event): void
     {

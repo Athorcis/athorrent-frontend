@@ -10,7 +10,7 @@ use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 

@@ -52,7 +52,7 @@ class Router extends BaseRouter
 
     public function getGenerator(): UrlGeneratorInterface
     {
-        if (null !== $this->generator) {
+        if ($this->generator instanceof UrlGeneratorInterface) {
             return $this->generator;
         }
 

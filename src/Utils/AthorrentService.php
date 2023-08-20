@@ -16,14 +16,12 @@ use const DIRECTORY_SEPARATOR;
 
 class AthorrentService extends JsonService
 {
-    private User $user;
 
-    public function __construct(private EntityManagerInterface $em, private Filesystem $fs, User $user)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly Filesystem $fs, private readonly User $user)
     {
         $clientSocketClass = DIRECTORY_SEPARATOR === '\\' ? NamedPipeClient::class : UnixSocketClient::class;
 
         parent::__construct($clientSocketClass, self::getPath($user));
-        $this->user = $user;
 
         if ($_ENV['BACKEND_AUTO_START']) {
             $this->ensureRunning();

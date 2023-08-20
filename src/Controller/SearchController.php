@@ -22,7 +22,7 @@ class SearchController extends AbstractController
     {
         $sources = $cache->get('search.trackers', fn () => $jackett->getConfiguredIndexers());
 
-        if (empty($query)) {
+        if ($query === '') {
             $results = [];
         } else {
             $results = $jackett->getResults($query, $source);

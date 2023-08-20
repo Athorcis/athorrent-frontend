@@ -8,7 +8,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class View
 {
-    public function __construct(private array $data = [], private ?string $name = null)
+    public function __construct(private array $data = [], private readonly ?string $name = null)
     {
     }
 

@@ -6,11 +6,11 @@ use RuntimeException;
 
 class JsonService
 {
-    public function __construct(private string $clientSocketType, private string $address)
+    public function __construct(private readonly string $clientSocketType, private readonly string $address)
     {
     }
 
-    public function call($action, $parameters = [])
+    public function call(string $action, $parameters = [])
     {
         $request = new JsonRequest($action, $parameters);
 
@@ -21,7 +21,7 @@ class JsonService
 
         $client->disconnect();
 
-        if ($response) {
+        if ($response instanceof JsonResponse) {
             if ($response->isSuccess()) {
                 return $response->getData();
             }

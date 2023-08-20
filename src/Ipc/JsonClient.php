@@ -33,7 +33,7 @@ class JsonClient
             }
         } while ($rawResponse[strlen($rawResponse) - 1] !== '\n');
 
-        if ($rawResponse) {
+        if ($rawResponse !== '') {
             return JsonResponse::parse($rawResponse);
         }
 

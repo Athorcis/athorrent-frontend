@@ -65,17 +65,11 @@ class TrackedProcess
         return $this->id;
     }
 
-    /**
-     * @return int
-     */
     public function getPid(): int
     {
         return $this->pid;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getStartedAt(): DateTime
     {
         return $this->startedAt;
@@ -103,57 +97,36 @@ class TrackedProcess
         return $this->exitCode === 0 && !$this->interrupted;
     }
 
-    /**
-     * @return DateTime|null
-     */
     public function getTerminatedAt(): ?DateTime
     {
         return $this->terminatedAt;
     }
 
-    /**
-     * @param DateTime $terminatedAt
-     */
     public function setTerminatedAt(DateTime $terminatedAt): void
     {
         $this->terminatedAt = $terminatedAt;
     }
 
-    /**
-     * @param bool $interrupted
-     */
     public function setInterrupted(bool $interrupted): void
     {
         $this->interrupted = $interrupted;
     }
 
-    /**
-     * @return int|null
-     */
     public function getExitCode(): ?int
     {
         return $this->exitCode;
     }
 
-    /**
-     * @param int $exitCode
-     */
     public function setExitCode(int $exitCode): void
     {
         $this->exitCode = $exitCode;
     }
 
-    /**
-     * @return string|null
-     */
     public function getErrorOutput(): ?string
     {
         return $this->errorOutput;
     }
 
-    /**
-     * @param string $errorOutput
-     */
     public function setErrorOutput(string $errorOutput): void
     {
         $this->errorOutput = $errorOutput;

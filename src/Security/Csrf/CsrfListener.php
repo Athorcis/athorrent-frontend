@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-class CsrfListener implements EventSubscriberInterface
+readonly class CsrfListener implements EventSubscriberInterface
 {
     public function __construct(private CsrfTokenManagerInterface $tokenManager)
     {

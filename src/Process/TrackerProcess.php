@@ -13,9 +13,6 @@ class TrackerProcess extends CommandProcess
 {
     private int $trackedId;
 
-    /**
-     * @param callable|null $callback
-     */
     public function start(callable $callback = null, array $env = []): void
     {
         if ($this->isOutputDisabled()) {
@@ -50,9 +47,6 @@ class TrackerProcess extends CommandProcess
         return parent::prefix([json_encode($command, JSON_THROW_ON_ERROR)]);
     }
 
-    /**
-     * @return static
-     */
     public static function track(Process $process): self
     {
         if ($process->isStarted()) {

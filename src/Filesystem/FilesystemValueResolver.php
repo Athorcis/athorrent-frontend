@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class FilesystemValueResolver implements ValueResolverInterface
+readonly class FilesystemValueResolver implements ValueResolverInterface
 {
     public function __construct(private FilesystemFactory $filesystemFactory)
     {

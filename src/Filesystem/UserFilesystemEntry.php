@@ -16,49 +16,31 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
         parent::__construct($filesystem, $path, $internalEntry);
     }
 
-    /**
-     * @return User
-     */
     public function getOwner(): User
     {
         return $this->filesystem->getOwner();
     }
 
-    /**
-     * @return bool
-     */
     public function isWritable(): bool
     {
         return $this->filesystem->isWritable();
     }
 
-    /**
-     * @return bool
-     */
     public function isCachable(): bool
     {
         return true;
     }
 
-    /**
-     * @return bool
-     */
     public function isSharable(): bool
     {
         return $this->filesystem->isWritable();
     }
 
-    /**
-     * @return string
-     */
     public function getSharingToken(): string
     {
         return $this->sharingToken ??= Sharing::generateToken($this->getOwner(), $this->path);
     }
 
-    /**
-     * @return bool
-     */
     public function isShared(): bool
     {
         return isset($this->getOwner()->getSharings()[$this->getSharingToken()]);

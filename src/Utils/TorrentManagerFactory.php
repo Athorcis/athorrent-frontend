@@ -11,7 +11,7 @@ class TorrentManagerFactory
     /** @var TorrentManager[] */
     private array $instances = [];
 
-    public function __construct(private EntityManagerInterface $em, private Filesystem $fs)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly Filesystem $fs)
     {
     }
 

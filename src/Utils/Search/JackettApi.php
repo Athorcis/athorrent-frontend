@@ -10,7 +10,7 @@ class JackettApi
 {
     private ?Cookie $authCookie = null;
 
-    public function __construct(private HttpClientInterface $http) {}
+    public function __construct(private readonly HttpClientInterface $http) {}
 
     protected function sendRequest(string $method, string $path, array $options = []): ResponseInterface
     {
