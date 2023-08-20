@@ -6,8 +6,7 @@
         "target": "es6",
         "incremental": true,
         "esModuleInterop": true,
-        "types": ["bootstrap"],
-        "typeRoots": ["./node_modules/@types", "./assets/js/types"]
+        "types": ["bootstrap"]
     },
     "include": [
         "./assets/js/"
