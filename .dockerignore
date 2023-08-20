@@ -14,3 +14,4 @@ composer.phar
 .yarn/*
 !.yarn/releases
 !.yarn/plugins
+.pnp.*
