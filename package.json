@@ -1,6 +1,6 @@
 {
   "name": "athorrent-frontend",
-  "packageManager": "yarn@3.4.1",
+  "packageManager": "yarn@3.6.2",
   "description": "A lightweight seedbox frontend",
   "license": "Apache-2.0",
   "dependencies": {
