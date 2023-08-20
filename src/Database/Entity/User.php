@@ -83,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         return $this->username;
     }
 
-    public function setUsername($username): void
+    public function setUsername(string $username): void
     {
         $this->username = $username;
     }
@@ -93,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         return $this->plainPassword;
     }
 
-    public function setPlainPassword($plainPassword): void
+    public function setPlainPassword(string $plainPassword): void
     {
         $this->plainPassword = $plainPassword;
     }
@@ -103,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         return $this->password;
     }
 
-    public function setPassword($password): void
+    public function setPassword(string $password): void
     {
         $this->password = $password;
     }
@@ -120,11 +120,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getConnectionTimestamp(): int
     {
-        if ($this->connectionDateTime === null) {
-            return 0;
+        if ($this->connectionDateTime instanceof DateTime) {
+            return $this->connectionDateTime->getTimestamp();
         }
 
-        return $this->connectionDateTime->getTimestamp();
+        return 0;
     }
 
     public function setConnectionDateTime(DateTime $dateTime): void
@@ -137,6 +137,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         return $this->hasRoles;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRoles(): array
     {
         $roles = [];
@@ -156,33 +159,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         return $this->sharings;
     }
 
-    /**
-     * @return TrackedProcess|null
-     */
     public function getAthorrentProcess(): ?TrackedProcess
     {
         return $this->athorrentProcess;
     }
 
-    /**
-     * @param TrackedProcess|null $process
-     */
     public function setAthorrentProcess(?TrackedProcess $process): void
     {
         $this->athorrentProcess = $process;
     }
 
-    /**
-     * @return int
-     */
     public function getPort(): int
     {
         return $this->port;
     }
 
-    /**
-     * @param int $port
-     */
     public function setPort(int $port): void
     {
         $this->port = $port;

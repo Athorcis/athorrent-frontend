@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
-class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
+readonly class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
     public function __construct(private NotificationListener $notificationListener)
     {

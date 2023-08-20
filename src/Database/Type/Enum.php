@@ -26,7 +26,7 @@ abstract class Enum extends Type
 
     public function getName(): string
     {
-        return $this::class;
+        return static::class;
     }
 
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool

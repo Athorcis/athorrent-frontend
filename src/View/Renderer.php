@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 
-class Renderer
+readonly class Renderer
 {
     public function __construct(private Environment $twig, private RequestStack $requestStack)
     {

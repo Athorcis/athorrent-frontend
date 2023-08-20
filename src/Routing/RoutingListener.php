@@ -16,7 +16,7 @@ class RoutingListener implements EventSubscriberInterface
 {
     private array $routeDescriptors;
 
-    public function __construct(private CacheInterface $cache, private RequestContext $requestContext, private RouterInterface $router)
+    public function __construct(private readonly CacheInterface $cache, private readonly RequestContext $requestContext, private readonly RouterInterface $router)
     {
     }
 

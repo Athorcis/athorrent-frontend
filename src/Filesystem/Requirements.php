@@ -3,11 +3,11 @@
 namespace Athorrent\Filesystem;
 
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
-class Requirements
+readonly class Requirements
 {
     public function __construct(
-        readonly bool $path = false,
-        readonly bool $dir = false,
-        readonly bool $file = false,
+        public bool $path = false,
+        public bool $dir = false,
+        public bool $file = false,
     ) {}
 }

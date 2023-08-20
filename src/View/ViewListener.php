@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ViewListener implements EventSubscriberInterface
+readonly class ViewListener implements EventSubscriberInterface
 {
     public function __construct(private TranslatorInterface $translator, private Renderer $renderer)
     {

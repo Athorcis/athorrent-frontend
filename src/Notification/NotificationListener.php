@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class NotificationListener implements EventSubscriberInterface
+readonly class NotificationListener implements EventSubscriberInterface
 {
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {

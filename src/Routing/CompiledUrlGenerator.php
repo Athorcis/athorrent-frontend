@@ -4,19 +4,19 @@ namespace Athorrent\Routing;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Generator\CompiledUrlGenerator as BaseUrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use function in_array;
 
-class CompiledUrlGenerator extends BaseUrlGenerator
+class CompiledUrlGenerator extends UrlGenerator
 {
-    public function __construct(private array $actionMap, private array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, private ?string $defaultLocale = null)
+    public function __construct(private readonly array $actionMap, private readonly array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, private readonly ?string $defaultLocale = null)
     {
         $this->context = $context;
         $this->logger = $logger;
     }
 
-    protected function getPrefixId($name, array $parameters)
+    protected function getPrefixId(string $name, array $parameters)
     {
         $prefixId = null;
 
@@ -35,7 +35,7 @@ class CompiledUrlGenerator extends BaseUrlGenerator
         return $prefixId;
     }
 
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         $locale = $parameters['_locale']
             ?? $this->context->getParameter('_locale')
@@ -50,7 +50,7 @@ class CompiledUrlGenerator extends BaseUrlGenerator
                     $name .= '.'.$tmpLocale;
                     break;
                 }
-            } while (false !== $tmpLocale = strstr($tmpLocale, '_', true));
+            } while (false !== $tmpLocale = strstr((string) $tmpLocale, '_', true));
         }
 
         if (!isset($this->compiledRoutes[$name])) {

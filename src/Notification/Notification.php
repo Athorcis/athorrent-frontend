@@ -4,7 +4,7 @@ namespace Athorrent\Notification;
 
 class Notification
 {
-    public function __construct(private NotificationType $type, private string $message, private ?string $action = null)
+    public function __construct(private readonly NotificationType $type, private readonly string $message, private readonly ?string $action = null)
     {
     }
 

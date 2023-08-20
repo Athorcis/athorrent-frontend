@@ -6,7 +6,7 @@ use Exception;
 
 class ServiceUnavailableException extends Exception
 {
-    private string $reason;
+    private readonly string $reason;
 
     public function __construct(string $reason)
     {

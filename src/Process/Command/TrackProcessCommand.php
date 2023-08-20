@@ -19,7 +19,7 @@ class TrackProcessCommand extends Command
 {
     public const NAME = 'process:track';
 
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private readonly EntityManagerInterface $em)
     {
         parent::__construct(self::NAME);
     }

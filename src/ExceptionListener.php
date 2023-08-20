@@ -14,7 +14,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 use Twig\Environment;
 
-class ExceptionListener implements EventSubscriberInterface
+readonly class ExceptionListener implements EventSubscriberInterface
 {
     public function __construct(private TranslatorInterface $translator, private Environment $twig)
     {

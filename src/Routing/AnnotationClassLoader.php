@@ -13,7 +13,7 @@ class AnnotationClassLoader extends AnnotatedRouteControllerLoader
     /**
      * @param string[] $locales
      */
-    public function __construct(private array $locales, private string $defaultLocale)
+    public function __construct(private readonly array $locales, private readonly string $defaultLocale)
     {
         parent::__construct();
     }

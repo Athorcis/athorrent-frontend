@@ -7,7 +7,7 @@ use Symfony\Component\Filesystem\Path;
 
 class SubFilesystem extends AbstractFilesystem
 {
-    private Filesystem $internalFilesystem;
+    private readonly Filesystem $internalFilesystem;
 
     public function __construct(string $root)
     {
@@ -48,11 +48,11 @@ class SubFilesystem extends AbstractFilesystem
         $internalPath = Path::makeAbsolute($path, $this->root);
 
         if (!$internalPath || !Path::isBasePath($this->root, $internalPath)) {
-            if (empty($path)) {
-                $internalPath = $this->root;
-            } else {
+            if ($path !== '') {
                 throw new FileNotFoundException(null, 0, null, $path);
             }
+
+            $internalPath = $this->root;
         }
 
         return $internalPath;

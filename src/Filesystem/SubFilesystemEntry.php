@@ -13,11 +13,12 @@ class SubFilesystemEntry extends AbstractFilesystemEntry
 
     public function __construct(SubFilesystem $filesystem, string $path, FilesystemEntry $internalEntry = null)
     {
-        if ($internalEntry === null) {
+        if ($internalEntry instanceof FilesystemEntry) {
+            $internalPath = $internalEntry->path;
+        }
+        else {
             $internalPath = $filesystem->getInternalPath($path);
             $internalEntry = new FilesystemEntry($filesystem->getInternalFilesystem(), $internalPath);
-        } else {
-            $internalPath = $internalEntry->path;
         }
 
         parent::__construct($filesystem, $filesystem->getPath($internalPath));
@@ -60,7 +61,6 @@ class SubFilesystemEntry extends AbstractFilesystemEntry
     }
 
     /**
-     * @param bool $includeParentDirectory
      * @return static[]
      */
     public function readDirectory(bool $includeParentDirectory = false): array

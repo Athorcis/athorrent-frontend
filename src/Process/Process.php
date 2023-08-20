@@ -42,10 +42,6 @@ class Process extends BaseProcess
         parent::start($callback, $env);
     }
 
-    /**
-     * @param float|null $timeout
-     * @return $this
-     */
     public function setTimeout(?float $timeout): static
     {
         if ($this->daemon && $timeout > 0) {

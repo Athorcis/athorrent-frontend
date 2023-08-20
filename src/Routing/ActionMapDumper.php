@@ -9,7 +9,7 @@ class ActionMapDumper
 {
     private ?array $actionMap = null;
 
-    public function __construct(private RouteCollection $routes)
+    public function __construct(private readonly RouteCollection $routes)
     {
     }
 

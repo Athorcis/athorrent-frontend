@@ -6,7 +6,7 @@ use Athorrent\Utils\ServiceUnavailableException;
 
 class UnixSocketClient extends UnixSocket implements ClientSocketInterface
 {
-    public function __construct($path)
+    public function __construct(string $path)
     {
         $this->socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
 
@@ -15,7 +15,7 @@ class UnixSocketClient extends UnixSocket implements ClientSocketInterface
         }
     }
 
-    public function read(&$buffer, $length): int
+    public function read(string|false &$buffer, int $length): int
     {
         $bytesRead = socket_recv($this->socket, $buffer, $length, 0);
 
@@ -26,7 +26,7 @@ class UnixSocketClient extends UnixSocket implements ClientSocketInterface
         return $bytesRead;
     }
 
-    public function write($buffer, $length): int
+    public function write(string $buffer, int $length): int
     {
         $bytesWritten = socket_send($this->socket, $buffer, $length, 0);
 
