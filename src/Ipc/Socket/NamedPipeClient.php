@@ -15,7 +15,7 @@ class NamedPipeClient extends NamedPipe implements ClientSocketInterface
         }
     }
 
-    public function read(string|false &$buffer, int $length): int
+    public function read(string|false|null &$buffer, int $length): int
     {
         $buffer = fread($this->namedPipe, $length);
 
