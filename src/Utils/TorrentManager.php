@@ -99,7 +99,12 @@ readonly class TorrentManager
     }
 
     /**
-     * @return array[]
+     * @return array<array{
+     *     state: string, paused: bool,
+     *     total_payload_download: string, total_payload_upload: string, size: string, progress: float,
+     *     download_rate: float, download_payload_rate: float, upload_rate: float, upload_payload_rate: float,
+     *     num_seeds: int, num_peers: int, num_complete: int, num_incomplete: int,
+     *     list_seeds: int, list_peers: int, hash: string}>
      * @throws Exception
      */
     public function getTorrents(): array
@@ -147,7 +152,7 @@ readonly class TorrentManager
     }
 
     /**
-     * @return array[]
+     * @return array<array{id: string, url: string, peers: int, message: string}>
      * @throws Exception
      */
     public function listTrackers(string $hash): array

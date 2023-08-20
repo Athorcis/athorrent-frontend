@@ -102,7 +102,7 @@ class Router extends BaseRouter
     }
 
     /**
-     * This method needs to be overridden or else it causes an error on Symfony 6.2
+     * This method needs to be overridden or else it causes an error on Symfony 6.2+
      * @return array
      */
     public static function getSubscribedServices(): array

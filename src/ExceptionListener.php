@@ -25,6 +25,9 @@ readonly class ExceptionListener implements EventSubscriberInterface
         return [KernelEvents::EXCEPTION => 'onKernelException'];
     }
 
+    /**
+     * @return array{string, int}
+     */
     protected function getMessageAndStatusCode(Throwable $throwable): array
     {
         if ($throwable instanceof HttpException) {
