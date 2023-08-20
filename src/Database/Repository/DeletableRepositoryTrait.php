@@ -25,6 +25,8 @@ trait DeletableRepositoryTrait
         $em = $this->getEntityManager();
         $entity = $em->getReference($this->getEntityName(), $id);
 
+        assert($entity !== null, 'failed to acquire reference');
+
         $em->remove($entity);
         $em->flush();
     }
