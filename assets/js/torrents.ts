@@ -7,7 +7,6 @@ import {Router} from './core/router';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {SecurityManager} from './core/security-manager';
-import ClickEvent = JQuery.ClickEvent;
 import {Translator} from './core/translator';
 import {UiManager} from './core/ui-manager';
 
@@ -84,16 +83,21 @@ class TabsPanel {
 
     private tabMap: { [key: string]: Tab };
 
-    private $panel: JQuery;
+    private panel: HTMLElement;
 
-    private $tabs: JQuery;
+    private $tabs: HTMLElement;
 
     constructor(selector: string) {
         this.tabMap = {};
-        this.$panel = $(selector);
-        this.$tabs = this.$panel.find('.nav-tabs a');
+        this.panel = document.querySelector(selector);
 
-        this.$tabs.on('click', this.onClick.bind(this));
+        this.panel.addEventListener('click', event => {
+            const target = event.target as HTMLElement;
+
+            if (target.closest('.nav-tabs a')) {
+                this.onClick(event);
+            }
+        })
     }
 
     addTab(id: string, tab: Tab) {
@@ -101,28 +105,28 @@ class TabsPanel {
     }
 
     getCurrentTab() {
-        return this.tabMap[this.$panel.find('.nav-tabs li.active a').attr('href').substring(1)];
+        return this.tabMap[this.panel.querySelector('.nav-tabs li.active a').getAttribute('href').substring(1)];
     }
 
-    onClick(event: ClickEvent) {
+    onClick(event: MouseEvent) {
         event.preventDefault();
         $(event.target).tab('show');
     }
 
     isVisible() {
-        return this.$panel.is(':visible');
+        return this.panel.offsetParent != null;
     }
 
     show() {
-        this.$panel.show();
-        $('body > .container').css('margin-bottom', `${ this.$panel.height() }px`);
-        this.$panel.find('.nav-tabs li.active a').trigger('show.bs.tab');
+        this.panel.style.display = 'block';
+        (document.querySelector('body > .container') as HTMLElement).style.marginBottom = `${ this.panel.clientHeight }px`;
+        $(this.panel).find('.nav-tabs li.active a').trigger('show.bs.tab');
     }
 
     hide() {
-        this.$panel.find('.nav-tabs li.active a').trigger('hide.bs.tab');
-        $('body > .container').css('margin-bottom', '');
-        this.$panel.hide();
+        $(this.panel).find('.nav-tabs li.active a').trigger('hide.bs.tab');
+        (document.querySelector('body > .container') as HTMLElement).style.marginBottom = '';
+        this.panel.style.display = 'none';
     }
 }
 
@@ -132,13 +136,13 @@ class Tab {
 
     private $tab: JQuery;
 
-    private $container: JQuery;
+    private container: HTMLElement;
 
     private updater;
 
     constructor(router: Router, parent: TabsPanel, id: string, action: string, parameters: Params, interval: number) {
         this.$tab = $(`[href="#${id}"]`);
-        this.$container = $(`#${id}`);
+        this.container = document.querySelector(`#${id}`);
         this.updater = new Updater(router, action, parameters, this.onUpdate.bind(this), interval);
 
         if (parent) {
@@ -155,7 +159,7 @@ class Tab {
     }
 
     onUpdate(data: string) {
-        this.$container.html(data);
+        this.container.innerHTML = data;
     }
 
     onShow() {
@@ -222,24 +226,26 @@ class AddTorrentForm {
 
     private enabled: boolean;
 
-    private $form: JQuery;
+    private form: HTMLFormElement;
 
-    private $submit: JQuery;
+    private submitEl: HTMLSpanElement;
 
     private mode: AddTorrentMode;
 
     private modes: AddTorrentMode[];
 
     constructor(selector: string, submitSelector: string, private router: Router, private afterSubmit: () => void) {
-        this.$form = $(selector);
-        this.$submit = $(submitSelector);
+        this.form = document.querySelector(selector);
+        this.submitEl = document.querySelector(submitSelector);
         this.modes = [];
 
-        this.$submit.on('click', this.onSubmitClick.bind(this));
+        this.submitEl.addEventListener('click', this.onSubmitClick.bind(this));
     }
 
-    onSubmitClick(event: ClickEvent) {
-        if (!$(event.target).hasClass('disabled')) {
+    onSubmitClick(event: MouseEvent) {
+        const target = event.target as HTMLElement;
+
+        if (!target.classList.contains('disabled')) {
             this.submit();
         }
     }
@@ -250,12 +256,12 @@ class AddTorrentForm {
 
     enable() {
         this.enabled = true;
-        this.$form.addClass('enabled');
+        this.form.classList.add('enabled');
     }
 
     disable() {
         this.enabled = false;
-        this.$form.removeClass('enabled');
+        this.form.classList.remove('enabled');
     }
 
     setMode(mode: AddTorrentMode) {
@@ -278,9 +284,9 @@ class AddTorrentForm {
         }
 
         if (count > 0) {
-            this.$submit.removeClass('disabled');
+            this.submitEl.classList.remove('disabled');
         } else {
-            this.$submit.addClass('disabled');
+            this.submitEl.classList.add('disabled');
         }
     }
 
@@ -306,13 +312,13 @@ abstract class AddTorrentMode {
 
     private enabled: boolean = false;
 
-    protected $element: JQuery;
+    protected element: HTMLElement;
 
-    private $btn: JQuery;
+    private btn: HTMLElement;
 
     private counter: number = 0;
 
-    private $counter: JQuery;
+    private counterEL: HTMLElement;
 
     private form: AddTorrentForm;
 
@@ -320,23 +326,23 @@ abstract class AddTorrentMode {
 
     protected constructor(private inputName: string, elementSelector: string, btnSelector: string, counterSelector: string, form: AddTorrentForm) {
 
-        this.$element = $(elementSelector);
-        this.$btn = $(btnSelector);
-        this.$counter = $(counterSelector);
+        this.element = document.querySelector(elementSelector);
+        this.btn = document.querySelector(btnSelector);
+        this.counterEL = document.querySelector(counterSelector);
 
         if (form) {
             this.form = form;
             form.registerMode(this);
         }
 
-        this.$btn.on('click', this.toggle.bind(this));
+        this.btn.addEventListener('click', this.toggle.bind(this));
         $(this).on('enabled', this.onEnabled.bind(this));
     }
 
     enable() {
         this.enabled = true;
-        this.$element.show();
-        this.$btn.addClass('active');
+        this.element.style.display = 'block';
+        this.btn.classList.add('active');
 
         if (this.form.isDisabled()) {
             this.form.enable();
@@ -351,8 +357,8 @@ abstract class AddTorrentMode {
 
     disable(recursive = false) {
         this.enabled = false;
-        this.$element.hide();
-        this.$btn.removeClass('active');
+        this.element.style.display = 'none';
+        this.btn.classList.remove('active');
 
         if (!recursive) {
             this.form.disable();
@@ -370,7 +376,7 @@ abstract class AddTorrentMode {
 
     setCounter(number: number) {
         this.counter = number;
-        this.$counter.text(`(${number})`);
+        this.counterEL.textContent = `(${number})`;
         this.form.updateFileCounter();
     }
 
@@ -422,7 +428,7 @@ class AddTorrentFileMode extends AddTorrentMode {
     }
 
     onEnabled() {
-        this.$element.trigger('click');
+        this.element.dispatchEvent(new MouseEvent('click'));
     }
 
     onRemovedFile() {
@@ -463,13 +469,17 @@ class AddTorrentFileMode extends AddTorrentMode {
 
 class AddTorrentMagnetMode extends AddTorrentMode {
 
+    private textarea: HTMLTextAreaElement;
+
     constructor(inputName: string, elementSelector: string, btnSelector: string, counterSelector: string, form: AddTorrentForm) {
         super(inputName, elementSelector, btnSelector, counterSelector, form);
-        $('#add-torrent-magnet-input').on('input', this.onInput.bind(this));
+
+        this.textarea = document.querySelector('#add-torrent-magnet-input');
+        this.textarea.addEventListener('input', this.onInput.bind(this));
     }
 
     onEnabled() {
-        this.$element.children('textarea').trigger('focus');
+        this.element.querySelector('textarea').focus();
     }
 
     onInput() {
@@ -479,7 +489,7 @@ class AddTorrentMagnetMode extends AddTorrentMode {
     getItems() {
         const magnets = [],
             rmagnet = /^magnet:\?[\x20-\x7E]*/,
-            lines = ($('#add-torrent-magnet-input').val() as string).split(/\r\n|\r|\n/);
+            lines = this.textarea.value.split(/\r\n|\r|\n/);
 
         for (let i = 0, { length } = lines; i < length; ++i) {
             if (rmagnet.test(lines[i])) {
@@ -491,7 +501,7 @@ class AddTorrentMagnetMode extends AddTorrentMode {
     }
 
     clearItems() {
-        $('#add-torrent-magnet-input').val('');
+        this.textarea.value = '';
         this.setCounter(0);
     }
 }
@@ -524,7 +534,7 @@ class TorrentsPage extends AbstractPage {
     }
 
     onUpdateTorrents(data: string) {
-        $('.torrent-list').html(data);
+        document.querySelector('.torrent-list').innerHTML = data;
     }
 
     protected async applyActionToTorrent(action: string, element: HTMLElement) {
@@ -535,36 +545,52 @@ class TorrentsPage extends AbstractPage {
         this.torrentsUpdater.update();
     }
 
-    onTorrentPause(event: ClickEvent) {
-        return this.applyActionToTorrent('pauseTorrent', event.target);
+    onTorrentPause(event: MouseEvent) {
+        return this.applyActionToTorrent('pauseTorrent', event.target as HTMLElement);
     }
 
-    onTorrentResume(event: ClickEvent) {
-        return this.applyActionToTorrent('resumeTorrent', event.target);
+    onTorrentResume(event: MouseEvent) {
+        return this.applyActionToTorrent('resumeTorrent', event.target as HTMLElement);
     }
 
-    onTorrentRemove(event: ClickEvent) {
-        return this.applyActionToTorrent('removeTorrent', event.target);
+    onTorrentRemove(event: MouseEvent) {
+        return this.applyActionToTorrent('removeTorrent', event.target as HTMLElement);
     }
 
     initializeTorrentsList() {
         this.torrentsUpdater = new Updater(this.router,'listTorrents', {}, this.onUpdateTorrents, torrentListTimeout);
         this.torrentsUpdater.start();
 
-        $(document).on('click', '.torrent-pause', this.onTorrentPause.bind(this));
-        $(document).on('click', '.torrent-resume', this.onTorrentResume.bind(this));
-        $(document).on('click', '.torrent-remove', this.onTorrentRemove.bind(this));
+        document.addEventListener('click', event => {
+            const target = event.target as HTMLElement;
+
+            if (target.closest('.torrent-pause')) {
+                this.onTorrentPause(event);
+            }
+            else if (target.closest('.torrent-resume')) {
+                this.onTorrentResume(event);
+            }
+            else if (target.closest('.torrent-remove')) {
+                this.onTorrentRemove(event);
+            }
+        });
     }
 
-    onShowDetails(event: ClickEvent) {
-        this.torrentPanel.toggleHash(this.getTorrentHash(event.target));
+    onShowDetails(event: MouseEvent) {
+        this.torrentPanel.toggleHash(this.getTorrentHash(event.target as HTMLElement));
     }
 
     initializeTorrentPanel() {
         this.torrentPanel = new TorrentPanel();
         this.trackersTab = new TorrentPanelTab(this.router, this.torrentPanel, 'torrent-trackers', 'listTrackers', {}, trackerListTimeout);
 
-        $(document).on('click', '.torrent-detail', this.onShowDetails.bind(this));
+        document.addEventListener('click', event => {
+            const target = event.target as HTMLElement;
+
+            if (target.closest('.torrent-detail')) {
+                this.onShowDetails(event);
+            }
+        });
     }
 
     initializeAddTorrentForm() {

@@ -1,17 +1,28 @@
-import $ from 'jquery';
 import {decode} from 'js-base64';
 import '../css/files.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
-import ClickEvent = JQuery.ClickEvent;
 
 class FilesPage extends AbstractPage {
 
     init() {
-        $(document).on('click', '.add-sharing', this.onSharingAdd.bind(this));
-        $(document).on('click', '.sharing-remove', this.onSharingRemove.bind(this));
-        $(document).on('click', '.sharing-link', this.onSharingLink.bind(this));
-        $(document).on('click', '.file-remove', this.onFileRemove.bind(this));
+
+        document.addEventListener('click', event => {
+            const target = event.target as HTMLElement;
+
+            if (target.closest('.add-sharing')) {
+                this.onSharingAdd(event);
+            }
+            else if (target.closest('.sharing-remove')) {
+                this.onSharingRemove(event);
+            }
+            else if (target.closest('.sharing-link')) {
+                this.onSharingLink(event);
+            }
+            else if (target.closest('.file-remove')) {
+                this.onFileRemove(event);
+            }
+        });
     }
 
     getFilePath(element: HTMLElement) {
@@ -32,12 +43,12 @@ class FilesPage extends AbstractPage {
 
     updateFileList() {
         this.sendRequest<string>('listFiles').then(data => {
-            $('.file-list').html(data);
+            document.querySelector('.file-list').innerHTML = data;
         });
     }
 
-    onSharingAdd(event: ClickEvent) {
-        const { target } = event;
+    onSharingAdd(event: MouseEvent) {
+        const target = event.target as HTMLElement;
 
         this.sendRequest<string>('addSharing',{
             path: this.getFilePath(target)
@@ -47,21 +58,24 @@ class FilesPage extends AbstractPage {
         });
     }
 
-    async onSharingRemove(event: ClickEvent) {
+    async onSharingRemove(event: MouseEvent) {
+        const target = event.target as HTMLElement;
+
         await this.sendRequest('removeSharing', {
-            token: this.getSharingToken(event.target, '.sharing-remove')
+            token: this.getSharingToken(target, '.sharing-remove')
         });
 
         this.updateFileList();
     }
 
-    onSharingLink(event: ClickEvent) {
-        this.modalSharingLink($(event.target).attr('href'));
+    onSharingLink(event: MouseEvent) {
+        const target = event.target as HTMLElement;
+        this.modalSharingLink(target.getAttribute('href'));
         event.preventDefault();
     }
 
-    async onFileRemove(event: ClickEvent) {
-        const { target } = event;
+    async onFileRemove(event: MouseEvent) {
+        const target = event.target as HTMLElement;
 
         if (window.confirm(`Êtes-vous sur de vouloir supprimer "${ this.getFileName(target) }" ?`)) {
 

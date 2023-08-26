@@ -6,10 +6,14 @@ import {Application} from './core/application';
 class SearchPage extends AbstractPage {
 
     init() {
-        $('.nav-tabs a').on('click',function (event) {
-            event.preventDefault();
-            $(this).tab('show');
-        });
+        document.addEventListener('click', event => {
+            const target = event.target as HTMLElement;
+
+            if (target.closest('.nav-tabs a')) {
+                event.preventDefault();
+                $(target).tab('show');
+            }
+        })
     }
 }
 

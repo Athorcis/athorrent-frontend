@@ -1,14 +1,7 @@
 
 export class DataManager {
     getItem(type: string, element: HTMLElement, selector: string = null): HTMLElement {
-
-        selector = selector || `.${type}`;
-
-        if (element.matches(selector)) {
-            return element;
-        }
-
-        return element.closest(selector);
+        return element.closest(selector || `.${type}`);
     }
 
     getItemId(type: string, element: HTMLElement, selector: string = null) {

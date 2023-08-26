@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import '../css/users.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
@@ -6,8 +5,16 @@ import {Application} from './core/application';
 class UsersPage extends AbstractPage {
 
     init() {
-        $(document).on('click', '.user-reset-password', this.onResetUserPassword.bind(this));
-        $(document).on('click', '.user-remove', this.onRemoveUser.bind(this));
+        document.addEventListener('click', event => {
+            const target = event.target as HTMLElement;
+
+            if (target.closest('.user-reset-password')) {
+                this.onResetUserPassword(event);
+            }
+            else if (target.closest( '.user-remove')) {
+                this.onRemoveUser(event);
+            }
+        });
     }
 
     getUserId(element: HTMLElement) {
