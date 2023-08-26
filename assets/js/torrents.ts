@@ -408,7 +408,7 @@ class AddTorrentFileMode extends AddTorrentMode {
             url: router.generateUrl('uploadTorrent'),
             paramName: 'upload-torrent-file',
             dictDefaultMessage: translator.translate('torrents.dropzone'),
-            previewTemplate: ui.templates.dropzonePreview,
+            previewTemplate: document.querySelector('#template-dropzone-preview').innerHTML,
             acceptedFiles: '.torrent',
             parallelUploads: 1,
             maxFilesize: 1

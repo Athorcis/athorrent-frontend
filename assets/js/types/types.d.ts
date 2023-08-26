@@ -13,7 +13,6 @@ interface AppConfig {
     routeParameters: Params;
     action: string;
     csrfToken: string;
-    templates: Record<string, string>;
     strings: Translations;
 }
 

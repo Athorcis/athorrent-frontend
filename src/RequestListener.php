@@ -30,8 +30,6 @@ class RequestListener implements EventSubscriberInterface
             $request = $event->getRequest();
 
             if (!$request->isXmlHttpRequest()) {
-                $result->addTemplate('modal');
-
                 $vars = [
                     'debug' => (bool)$_SERVER['APP_DEBUG'],
                     'assetsOrigin' => $_ENV['ASSETS_ORIGIN']

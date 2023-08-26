@@ -2,17 +2,21 @@ import $ from 'jquery';
 
 export class UiManager {
 
-    constructor(readonly templates: {[key: string]: string}) {
+    private modalTemplate: HTMLTemplateElement;
 
+    constructor() {
+        this.modalTemplate = document.querySelector('#template-modal');
     }
 
     showModal(title: string, content: string) {
-        const $modal = $(this.templates.modal);
+        const fragment: DocumentFragment = this.modalTemplate.content.cloneNode(true) as DocumentFragment;
 
-        $modal.find('.modal-title').text(title);
-        $modal.find('.modal-body').html(content);
+        fragment.querySelector('.modal-title').textContent = title;
+        fragment.querySelector('.modal-body').innerHTML = content;
 
-        $modal.appendTo('body');
-        $modal.modal('show');
+        const modal = fragment.children[0];
+        document.body.append(fragment);
+
+        $(modal).modal('show');
     }
 }
