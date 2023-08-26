@@ -20,7 +20,7 @@ export class Router {
 
     sendRequest<R>(name: string , parameters: Params = {}): AbortablePromise<R> {
         const route = this.getRoute(name);
-        const request = this.createRequest(route, parameters);
+        const request = this.createRequest(route, { ...parameters });
 
         const body$ = this.http.executeForResponse<ApiResponse<R>>(request).then(response => {
 
