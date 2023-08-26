@@ -1,5 +1,4 @@
-import $ from 'jquery';
-import 'mediaelement';
+import {MediaElementPlayer} from 'mediaelement/full';
 import '../css/media.scss';
 import 'mediaelement/build/mediaelementplayer.css';
 import {AbstractPage} from './core/abstract-page';
@@ -9,7 +8,7 @@ import iconSprite from 'mediaelement/build/mejs-controls.svg';
 class MediaPage extends AbstractPage {
 
     init() {
-        $('audio, video').mediaelementplayer({
+        new MediaElementPlayer(document.querySelector('audio, video') as HTMLElement, {
             stretching: 'responsive',
             iconSprite,
         });

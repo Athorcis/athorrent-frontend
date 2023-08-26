@@ -1,4 +1,6 @@
 
-interface JQuery<TElement = HTMLElement> {
-    mediaelementplayer(options: Record<string, unknown>): JQuery<TElement>;
+declare module 'mediaelement/full' {
+    export class MediaElementPlayer {
+        constructor(selectorOrEl: string|HTMLElement, options: Record<string, unknown>);
+    }
 }

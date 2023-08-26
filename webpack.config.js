@@ -102,6 +102,19 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
+
+    .addRule({
+        test: require.resolve('mediaelement/build/mediaelement-and-player.js'),
+        loader: "exports-loader",
+        options: {
+            type: 'commonjs',
+            exports: "MediaElementPlayer",
+        },
+    })
+
+    .addAliases({
+        'mediaelement/full': require.resolve('mediaelement/build/mediaelement-and-player.js')
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();
