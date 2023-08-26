@@ -33,3 +33,11 @@
         </div>
     </div>
 {% endblock %}
+
+{% block templates %}
+    {{ parent() }}
+
+    <template id="template-dropzone-preview">
+        {% include "fragments/dropzonePreview.html.twig" %}
+    </template>
+{% endblock %}

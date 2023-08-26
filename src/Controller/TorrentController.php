@@ -40,7 +40,6 @@ class TorrentController extends AbstractController
         return new View([
             'torrents' => $torrents,
             'client_updating' => $clientUpdating,
-            '_templates' => ['dropzonePreview'],
             '_strings' => ['torrents.dropzone']
         ]);
     }

@@ -39,11 +39,6 @@ class View
         $this->data['_strings'][] = $id;
     }
 
-    public function addTemplate(string $name): void
-    {
-        $this->data['_templates'][] = $name;
-    }
-
     public function render(Request $request, TranslatorInterface $translator, Renderer $renderer): string
     {
         $name = $this->name ?? $renderer->getDefaultTemplateName();
@@ -53,12 +48,6 @@ class View
         if (isset($data['_strings'])) {
             foreach ($data['_strings'] as $id) {
                 $data['js_vars']['strings'][$id] = $translator->trans($id);
-            }
-        }
-
-        if (isset($data['_templates'])) {
-            foreach ($data['_templates'] as $fragmentName) {
-                $data['js_vars']['templates'][$fragmentName] = $renderer->renderFragment($fragmentName);
             }
         }
 
