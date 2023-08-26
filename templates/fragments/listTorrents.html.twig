@@ -1,6 +1,6 @@
 {% apply spaceless %}
 {% for torrent in torrents %}
-    <div class="torrent {% if loop.index is odd %}torrent-odd{% else %}torrent-even{% endif %}" id="torrent-{{ torrent.hash }}">
+    <div class="torrent" id="torrent-{{ torrent.hash }}">
         <h2 class="torrent-header">
             <span class="torrent-name">{{ torrent.name }}</span> (<span class="torrent-progress">{{ (100 * torrent.progress)|round  }}</span>%)
         </h2>
