@@ -12,6 +12,7 @@ use Athorrent\Process\TrackerProcess;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use const DIRECTORY_SEPARATOR;
 
 class AthorrentService extends JsonService
@@ -48,6 +49,10 @@ class AthorrentService extends JsonService
 
         $process = TrackerProcess::track(Process::daemon([Path::join(BIN_DIR, 'athorrent-backend'), '--port', $this->user->getPort()], $this->user->getBackendPath()));
         $process->start();
+
+        if (!($process->isRunning() || $process->isSuccessful())) {
+            throw new ProcessFailedException($process);
+        }
 
         $processEntity = $this->em->find(TrackedProcess::class,  $process->getTrackedId());
         $this->user->setAthorrentProcess($processEntity);
