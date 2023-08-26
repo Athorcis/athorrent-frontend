@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import queryString from 'query-string';
 import { HttpClient, Request, newHttpClient } from 'typescript-http-client';
 
@@ -17,25 +16,6 @@ export class Router {
 
     getHttpClient(): HttpClient {
         return this.http;
-    }
-
-    init() {
-
-        $('[data-ajax-action]').on('click',(event) => {
-            const $btn = $(event.target),
-                action = $btn.data('ajax-action'),
-                spinner = Boolean($btn.data('ajax-spinner'));
-
-            if (spinner) {
-                $btn.append('<span class="fa fa-sync-alt fa-spin"></span>');
-            }
-
-            this.sendRequest(action).finally(() => {
-                if (spinner) {
-                    $btn.children('.fa-spin').remove();
-                }
-            });
-        });
     }
 
     sendRequest<R>(name: string , parameters: Params = {}): AbortablePromise<R> {

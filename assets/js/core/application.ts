@@ -25,7 +25,6 @@ export class Application {
 
     initialize() {
         this.securityManager.init();
-        this.router.init();
     }
 
     run(pageType: { new(): AbstractPage } = null) {
