@@ -6,10 +6,10 @@
 .torrent {
     overflow: hidden;
     padding: 0 10px 5px;
-}
 
-.torrent-odd {
-    background-color: #fafafa;
+    &:nth-child(odd) {
+        background-color: #fafafa;
+    }
 }
 
 .torrent-header {
