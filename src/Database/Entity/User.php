@@ -53,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     private array|Collection $sharings;
 
     #[ORM\OneToOne(targetEntity: TrackedProcess::class, fetch: 'LAZY')]
-    private TrackedProcess $athorrentProcess;
+    private ?TrackedProcess $athorrentProcess = null;
 
     #[ORM\Column(type: 'integer')]
     private int $port;
