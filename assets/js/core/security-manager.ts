@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import {HttpClient, Request, Response, FilterChain} from "typescript-http-client";
 
 export class SecurityManager {
@@ -7,8 +6,12 @@ export class SecurityManager {
     }
 
     init() {
-        $('form[method="post"]').on('submit', event => {
-            $(event.target).append(`<input type="hidden" name="csrfToken" value="${this.csrfToken}" />`);
+        document.addEventListener('submit', event => {
+            const form = event.target as HTMLFormElement;
+
+            form.appendChild(
+                document.createRange().createContextualFragment(`<input type="hidden" name="csrfToken" value="${this.csrfToken}" />`)
+            );
         });
 
         this.http.addFilter({
