@@ -2978,6 +2978,7 @@ __metadata:
     dropzone: ~5.9.3
     eslint: ^8.47.0
     eslint-webpack-plugin: ^4.0.1
+    exports-loader: ^4.0.0
     file-loader: ^6.2.0
     fontawesome-subset: ^4.4.0
     jquery: ~3.7.0
@@ -4448,6 +4449,17 @@ __metadata:
     signal-exit: ^3.0.3
     strip-final-newline: ^2.0.0
   checksum: fba9022c8c8c15ed862847e94c252b3d946036d7547af310e344a527e59021fd8b6bb0723883ea87044dc4f0201f949046993124a42ccb0855cae5bf8c786343
+  languageName: node
+  linkType: hard
+
+"exports-loader@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "exports-loader@npm:4.0.0"
+  dependencies:
+    source-map: ^0.6.1
+  peerDependencies:
+    webpack: ^5.0.0
+  checksum: 8d92a3a04e55abf87c245ea19b449fa109d17de5629bb0e5888eaadae3aeefdba497c7faf7d1ae4b072bd89a68a9d72ed37102cd0a5ccb5e804e7ca7269309c9
   languageName: node
   linkType: hard
 
@@ -8062,7 +8074,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:0.6.1, source-map@npm:^0.6.0":
+"source-map@npm:0.6.1, source-map@npm:^0.6.0, source-map@npm:^0.6.1":
   version: 0.6.1
   resolution: "source-map@npm:0.6.1"
   checksum: 59ce8640cf3f3124f64ac289012c2b8bd377c238e316fb323ea22fbfe83da07d81e000071d7242cad7a23cd91c7de98e4df8830ec3f133cb6133a5f6e9f67bc2

@@ -1,48 +1,33 @@
-import $ from 'jquery';
 
 export class DataManager {
-    getItem(type: string, element: HTMLElement, selector: string = null) {
-        let $item;
-        const $element = $(element);
+    getItem(type: string, element: HTMLElement, selector: string = null): HTMLElement {
 
         selector = selector || `.${type}`;
 
-        if ($element.filter(selector).length) {
-            $item = $element;
-        } else {
-            $item = $element.closest(selector);
-
-            if ($item.length === 0) {
-                $item = null;
-            }
+        if (element.matches(selector)) {
+            return element;
         }
 
-        return $item;
+        return element.closest(selector);
     }
 
     getItemId(type: string, element: HTMLElement, selector: string = null) {
-        let id
-        const $item = this.getItem(type, element, selector);
+        const item = this.getItem(type, element, selector);
 
-        if ($item) {
-            id = $item.attr('id').replace(`${type}-`, '');
-        } else {
-            id = null;
+        if (item) {
+            return item.getAttribute('id').replace(`${type}-`, '');
         }
 
-        return id;
+        return null;
     }
 
     getItemAttr(type: string, element: HTMLElement, name: string, selector: string = null) {
-        let attr;
-        const $item = this.getItem(type, element, selector);
+        const item = this.getItem(type, element, selector);
 
-        if ($item) {
-            attr = $item.children(`.${type}-${name}`).text();
-        } else {
-            attr = null;
+        if (item) {
+            return item.querySelector(`.${type}-${name}`).textContent;
         }
 
-        return attr;
+        return null;
     }
 }
