@@ -2,6 +2,7 @@
 
 namespace Athorrent;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,7 @@ use Twig\Environment;
 
 readonly class ExceptionListener implements EventSubscriberInterface
 {
-    public function __construct(private TranslatorInterface $translator, private Environment $twig)
+    public function __construct(private TranslatorInterface $translator, private Environment $twig, private LoggerInterface $logger)
     {
     }
 
@@ -74,10 +75,13 @@ readonly class ExceptionListener implements EventSubscriberInterface
             return;
         }
 
-        [$message, $statusCode] = $this->getMessageAndStatusCode($event->getThrowable());
+        $throwable = $event->getThrowable();
+        [$message, $statusCode] = $this->getMessageAndStatusCode($throwable);
         $response = $this->renderError($event->getRequest(), $message, $statusCode);
 
         $response->setStatusCode($statusCode);
         $event->setResponse($response);
+
+        $this->logger->error($throwable->getMessage(), ['exception' => $throwable]);
     }
 }
