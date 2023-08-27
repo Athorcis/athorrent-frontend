@@ -17,6 +17,7 @@ class RequestListener implements EventSubscriberInterface
             KernelEvents::VIEW => 'onKernelView',
             KernelEvents::RESPONSE => [
                 ['saveSession', -512],
+                ['addVaryHeader'],
                 ['disableOutputBuffering'],
             ]
         ];
@@ -47,6 +48,11 @@ class RequestListener implements EventSubscriberInterface
         if ($session->isStarted()) {
             $session->save();
         }
+    }
+
+    public function addVaryHeader(ResponseEvent $event): void
+    {
+        $event->getResponse()->headers->set('Vary', 'X-Requested-With');
     }
 
     /**
