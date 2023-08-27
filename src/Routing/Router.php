@@ -2,15 +2,14 @@
 
 namespace Athorrent\Routing;
 
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
-use Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use function function_exists;
-use function in_array;
-use const PHP_SAPI;
+use Symfony\Component\Routing\RequestContext;
 
 class Router extends BaseRouter
 {
@@ -19,6 +18,20 @@ class Router extends BaseRouter
     private ?ConfigCacheFactoryInterface $configCacheFactory = null;
 
     private static ?array $cache = [];
+
+    public function __construct(
+        ContainerInterface $container,
+        mixed $resource,
+        array $options = [],
+        RequestContext $context = null,
+        ContainerInterface $parameters = null,
+        LoggerInterface $logger = null,
+        string $defaultLocale = null
+    ) {
+
+        $options['generator_class'] = CompiledUrlGenerator::class;
+        parent::__construct($container, $resource, $options, $context, $parameters, $logger, $defaultLocale);
+    }
 
     protected function getActionMapDumperInstance(): ActionMapDumper
     {
@@ -56,26 +69,10 @@ class Router extends BaseRouter
             return $this->generator;
         }
 
-        if (null === $this->options['cache_dir']) {
-            $routes = $this->getRouteCollection();
-            $routes = (new CompiledUrlGeneratorDumper($routes))->getCompiledRoutes();
+        $generator = parent::getGenerator();
+        $generator->setActionMap($this->getActionMap());
 
-            $this->generator = new CompiledUrlGenerator($this->getActionMap(), $routes, $this->context, $this->logger, $this->defaultLocale);
-        } else {
-            $cache = $this->getConfigCacheFactory()->cache($this->options['cache_dir'].'/url_generating_routes.php',
-                function (ConfigCacheInterface $cache) {
-                    $dumper = $this->getGeneratorDumperInstance();
-
-                    $cache->write($dumper->dump(), $this->getRouteCollection()->getResources());
-                }
-            );
-
-            $this->generator = new CompiledUrlGenerator($this->getActionMap(), self::readCache($cache->getPath()), $this->context, $this->logger, $this->defaultLocale);
-        }
-
-        $this->generator->setStrictRequirements($this->options['strict_requirements']);
-
-        return $this->generator;
+        return $generator;
     }
 
     /**
@@ -89,8 +86,7 @@ class Router extends BaseRouter
 
     private static function readCache(string $path): array
     {
-        if ([] === self::$cache && function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN) && (!in_array(
-                    PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOLEAN))) {
+        if ([] === self::$cache && \function_exists('opcache_invalidate') && filter_var(\ini_get('opcache.enable'), \FILTER_VALIDATE_BOOL) && (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(\ini_get('opcache.enable_cli'), \FILTER_VALIDATE_BOOL))) {
             self::$cache = null;
         }
 

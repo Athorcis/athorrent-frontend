@@ -10,10 +10,17 @@ use function in_array;
 
 class CompiledUrlGenerator extends UrlGenerator
 {
-    public function __construct(private readonly array $actionMap, private readonly array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, private readonly ?string $defaultLocale = null)
+    private array $actionMap;
+
+    public function __construct(private readonly array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, private readonly ?string $defaultLocale = null)
     {
         $this->context = $context;
         $this->logger = $logger;
+    }
+
+    public function setActionMap(array $actionMap): void
+    {
+        $this->actionMap = $actionMap;
     }
 
     protected function getPrefixId(string $name, array $parameters)
