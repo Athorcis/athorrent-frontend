@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class PaginatedView extends View
 {
-    public function __construct(Request $request, PaginableRepositoryInterface $entityRepository, $countPerPage, array $criteria = null)
+    public function __construct(Request $request, PaginableRepositoryInterface $entityRepository, $countPerPage, array $criteria = [], array $sort = [])
     {
         if ($request->query->has('page')) {
             $page = $request->query->get('page');
@@ -22,11 +22,7 @@ class PaginatedView extends View
 
         $offset = $countPerPage * ($page - 1);
 
-        if ($criteria) {
-            $paginator = $entityRepository->paginateBy($criteria, $countPerPage, $offset);
-        } else {
-            $paginator = $entityRepository->paginate($countPerPage, $offset);
-        }
+        $paginator = $entityRepository->paginate($countPerPage, $offset, $criteria, $sort);
 
         $count = count($paginator);
 
