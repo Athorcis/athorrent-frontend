@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table]
 #[ORM\Index(columns: ['creation_date_time'])]
+#[ORM\Index(columns: ['user_id', 'path'], options:['lengths' => [null, 50]])]
 #[ORM\Entity(repositoryClass: SharingRepository::class)]
 class Sharing implements CacheKeyGetterInterface
 {
