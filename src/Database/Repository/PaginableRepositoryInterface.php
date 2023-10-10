@@ -6,7 +6,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 interface PaginableRepositoryInterface
 {
-    public function paginate(int $limit, int $offset): Paginator;
+    public function paginate(int $limit, int $offset, array $criteria = [], array $sort = []): Paginator;
 
-    public function paginateBy(array $criteria, int $limit, int $offset): Paginator;
 }

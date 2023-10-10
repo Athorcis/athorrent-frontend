@@ -27,18 +27,20 @@ trait PaginableRepositoryTrait
         return new Paginator($qb->getQuery());
     }
 
-    public function paginate(int $limit, int $offset): Paginator
-    {
-        $qb = $this->getQueryBuilderForPagination();
-        return $this->paginateQueryBuilder($qb, $limit, $offset);
-    }
-
-    public function paginateBy(array $criteria, int $limit, int $offset): Paginator
+    public function paginate(int $limit, int $offset, array $criteria = [], array $sort = []): Paginator
     {
         $qb = $this->getQueryBuilderForPagination();
 
-        $qb->where($this->getEntityAlias() . '.' . $criteria[0] . ' = :' . $criteria[0]);
-        $qb->setParameter($criteria[0], $criteria[1]);
+        if (count($criteria) > 0) {
+            $qb->where($this->getEntityAlias().'.'.$criteria[0].' = :'.$criteria[0]);
+            $qb->setParameter($criteria[0], $criteria[1]);
+        }
+
+        if (count($sort) > 0) {
+            foreach ($sort as $field => $order) {
+                $qb->addOrderBy($this->getEntityAlias().'.'.$field, $order);
+            }
+        }
 
         return $this->paginateQueryBuilder($qb, $limit, $offset);
     }
