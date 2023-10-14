@@ -28,6 +28,7 @@ readonly class HashPasswordListener
             $entity->getPlainPassword()
         );
 
+        $entity->eraseCredentials();
         $entity->setPassword($encoded);
     }
 

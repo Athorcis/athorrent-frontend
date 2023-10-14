@@ -60,7 +60,6 @@ class AccountController extends AbstractController
             }
 
             $user->setPlainPassword($newPassword);
-            $this->userManager->setUserPassword($user, $newPassword);
         }
 
         $this->entityManager->persist($user);
