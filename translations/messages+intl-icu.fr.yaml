@@ -166,3 +166,4 @@ account:
         current_password: Mot de passe actuel
         new_password: Nouveau mot de passe
         password_confirm: Confirmation du mot de passe
+        success: Informations modifiées avec succès

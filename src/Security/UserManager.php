@@ -49,7 +49,7 @@ readonly class UserManager
 
     public function checkUserPassword(User $user, string $password): bool
     {
-        return $this->passwordHasher->hashPassword($user, $password) === $user->getPassword();
+        return $this->passwordHasher->isPasswordValid($user, $password);
     }
 
     public function setUserPassword(User $user, string $password): void
