@@ -66,6 +66,6 @@ class AccountController extends AbstractController
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        return new SuccessNotification('account updated successfully');
+        return new SuccessNotification('account.edit.success');
     }
 }
