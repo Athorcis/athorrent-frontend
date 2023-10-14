@@ -99,6 +99,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     public function setPlainPassword(string $plainPassword): void
     {
         $this->plainPassword = $plainPassword;
+
+        // We reset the password, when setting the password as plain text
+        // to trigger the preUpdate doctrine event
+        $this->password = '';
     }
 
     public function getPassword(): ?string

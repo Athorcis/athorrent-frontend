@@ -64,11 +64,10 @@ class UserController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/{userId}', methods: 'POST', options: ['expose' => true])]
-    public function resetUserPassword(#[MapEntity(id: 'userId')] User $user, UserPasswordHasherInterface $hasher, EntityManagerInterface $em): array
+    public function resetUserPassword(#[MapEntity(id: 'userId')] User $user, EntityManagerInterface $em): array
     {
         $password = bin2hex(random_bytes(8));
-
-        $user->setPassword($hasher->hashPassword($user, $password));
+        $user->setPlainPassword($password);
         $em->flush();
 
         return ['password' => $password];
