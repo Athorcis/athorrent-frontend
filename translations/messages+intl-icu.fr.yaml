@@ -5,6 +5,7 @@ error:
     title: Erreur
     pageNotFound: Page introuvable
     sharingNotFound: Partage introuvable
+    fileRequired: La requête doit contenir un fichier
     notATorrent: Ce fichier n'est pas un torrent
     fileTooBig: Ce fichier est trop grand
     badRequest: Requête malformée
@@ -15,6 +16,7 @@ error:
     usernameAlreadyUsed: Ce nom d'utilisateur existe déjà.
     roleNotSpecified: Rôle indéfini
     cannotRemoveUser: Impossible de supprimer l'utilisateur
+    serverError: Le serveur a retourné une erreur '{{statusCode}}'.
     unknownError: Erreur inconnue
     loginFailure: Nom d'utilisateur ou mot de passe invalide
     usernameOrPasswordEmpty: Nom d'utilisateur ou mot de passe vide.

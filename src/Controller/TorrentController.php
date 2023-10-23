@@ -6,13 +6,14 @@ use Athorrent\Utils\ServiceUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -59,23 +60,42 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/files', methods: 'POST', options: ['expose' => true])]
-    public function uploadTorrent(Request $request, TorrentManager $torrentManager): array
+    public function uploadTorrent(Request $request, TorrentManager $torrentManager, LoggerInterface $logger): array
     {
         /** @var UploadedFile $file */
         $file = $request->files->get('upload-torrent-file');
 
-        if ($file && $file->getSize() <= 1_048_576) {
-            if ($file->getMimeType() === 'application/x-bittorrent') {
-                $torrentsDir = $torrentManager->ensureTorrentsDirExists();
-                $file->move($torrentsDir, $file->getClientOriginalName());
-
-                return [];
-            }
-
-            throw new BadRequestHttpException('error.NotATorrent');
+        if ($file === null) {
+            throw new BadRequestException('error.fileRequired');
         }
 
-        throw new BadRequestHttpException('error.fileTooBig');
+        if (!$file->isValid()) {
+            $error = $file->getError();
+
+            if ($error === UPLOAD_ERR_INI_SIZE) {
+                throw new BadRequestException('error.fileTooBig');
+            }
+
+            $logger->error('upload failed with an unexpected error', [
+                'error' => $error,
+                'file' => $file
+            ]);
+
+            throw new BadRequestException("error.unknownError");
+        }
+
+        if ($file->getSize() > 1_048_576) {
+            throw new BadRequestException('error.fileTooBig');
+        }
+
+        if ($file->getMimeType() !== 'application/x-bittorrent') {
+            throw new BadRequestException('error.notATorrent');
+        }
+
+        $torrentsDir = $torrentManager->ensureTorrentsDirExists();
+        $file->move($torrentsDir, $file->getClientOriginalName());
+
+        return [];
     }
 
     /**
