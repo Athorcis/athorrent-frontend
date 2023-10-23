@@ -5,6 +5,7 @@ error:
     title: Error
     pageNotFound: Page not found
     sharingNotFound: Sharing not found
+    fileRequired: The request must contain a file
     notATorrent: This file is not a torrent
     fileTooBig: This file is too big
     badRequest: Bad request
@@ -15,7 +16,8 @@ error:
     usernameAlreadyUsed: This username is already used
     roleNotSpecified: Undefined role
     cannotRemoveUser: Unable to remove this user
-    errorUnknown: Unknown error
+    serverError: Server responded with '{{statusCode}}' code.
+    unknownError: Unknown error
     loginFailure: Username or password invalid
     usernameOrPasswordEmpty: Username or password empty
     passwordInvalid: Password invalid
