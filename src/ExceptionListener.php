@@ -71,7 +71,7 @@ readonly class ExceptionListener implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        if ($_SERVER['APP_DEBUG']) {
+        if ($_SERVER['APP_DEBUG'] && !$event->getRequest()->isXmlHttpRequest()) {
             return;
         }
 
