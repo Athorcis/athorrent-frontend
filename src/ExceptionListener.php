@@ -45,13 +45,11 @@ readonly class ExceptionListener implements EventSubscriberInterface
             $message = 'error.errorUnknown';
         }
 
-        if (isset($message)) {
-            $message = $this->translator->trans($message);
-        } else {
+        if (!isset($message)) {
             $message = $throwable->getMessage();
         }
 
-        return [$message, $statusCode];
+        return [$this->translator->trans($message), $statusCode];
     }
 
     protected function renderError(Request $request, string $message, int $statusCode): Response
