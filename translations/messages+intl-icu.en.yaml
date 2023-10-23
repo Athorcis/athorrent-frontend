@@ -15,7 +15,7 @@ error:
     usernameAlreadyUsed: This username is already used
     roleNotSpecified: Undefined role
     cannotRemoveUser: Unable to remove this user
-    errorUnknown: Unknown error
+    unknownError: Unknown error
     loginFailure: Username or password invalid
     usernameOrPasswordEmpty: Username or password empty
     passwordInvalid: Password invalid

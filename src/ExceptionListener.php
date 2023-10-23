@@ -42,7 +42,7 @@ readonly class ExceptionListener implements EventSubscriberInterface
         }
 
         if ($statusCode === 500) {
-            $message = 'error.errorUnknown';
+            $message = 'error.unknownError';
         }
 
         if (!isset($message)) {

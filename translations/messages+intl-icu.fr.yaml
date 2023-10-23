@@ -15,7 +15,7 @@ error:
     usernameAlreadyUsed: Ce nom d'utilisateur existe déjà.
     roleNotSpecified: Rôle indéfini
     cannotRemoveUser: Impossible de supprimer l'utilisateur
-    errorUnknown: Erreur inconnue
+    unknownError: Erreur inconnue
     loginFailure: Nom d'utilisateur ou mot de passe invalide
     usernameOrPasswordEmpty: Nom d'utilisateur ou mot de passe vide.
     passwordInvalid: Mot de passe invalide
