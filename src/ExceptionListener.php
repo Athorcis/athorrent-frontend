@@ -42,16 +42,14 @@ readonly class ExceptionListener implements EventSubscriberInterface
         }
 
         if ($statusCode === 500) {
-            $message = 'error.errorUnknown';
+            $message = 'error.unknownError';
         }
 
-        if (isset($message)) {
-            $message = $this->translator->trans($message);
-        } else {
+        if (!isset($message)) {
             $message = $throwable->getMessage();
         }
 
-        return [$message, $statusCode];
+        return [$this->translator->trans($message), $statusCode];
     }
 
     protected function renderError(Request $request, string $message, int $statusCode): Response
@@ -71,7 +69,7 @@ readonly class ExceptionListener implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        if ($_SERVER['APP_DEBUG']) {
+        if ($_SERVER['APP_DEBUG'] && !$event->getRequest()->isXmlHttpRequest()) {
             return;
         }
 
