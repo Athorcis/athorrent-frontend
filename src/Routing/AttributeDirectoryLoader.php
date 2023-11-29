@@ -3,11 +3,11 @@
 namespace Athorrent\Routing;
 
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Routing\Loader\AnnotationDirectoryLoader as BaseDirectoryLoader;
+use Symfony\Component\Routing\Loader\AttributeDirectoryLoader as BaseDirectoryLoader;
 
-class AnnotationDirectoryLoader extends BaseDirectoryLoader
+class AttributeDirectoryLoader extends BaseDirectoryLoader
 {
-    public function __construct(AnnotationClassLoader $classLoader)
+    public function __construct(AttributeClassLoader $classLoader)
     {
         parent::__construct(new FileLocator(), $classLoader);
     }

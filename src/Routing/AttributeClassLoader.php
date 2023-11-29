@@ -4,11 +4,11 @@ namespace Athorrent\Routing;
 
 use ReflectionClass;
 use ReflectionMethod;
-use Symfony\Bundle\FrameworkBundle\Routing\AnnotatedRouteControllerLoader;
+use Symfony\Bundle\FrameworkBundle\Routing\AttributeRouteControllerLoader;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class AnnotationClassLoader extends AnnotatedRouteControllerLoader
+class AttributeClassLoader extends AttributeRouteControllerLoader
 {
     /**
      * @param string[] $locales
