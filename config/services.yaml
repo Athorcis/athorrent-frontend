@@ -55,10 +55,10 @@ services:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments: [Athorrent\Database\Entity\User]
 
-    Athorrent\Routing\AnnotationDirectoryLoader:
+    Athorrent\Routing\AttributeDirectoryLoader:
         tags: [routing.loader]
 
-    Athorrent\Routing\AnnotationClassLoader:
+    Athorrent\Routing\AttributeClassLoader:
         arguments:
             $locales: '%app.locales%'
             $defaultLocale: '%kernel.default_locale%'
