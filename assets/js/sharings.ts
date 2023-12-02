@@ -1,23 +1,18 @@
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
+import {on} from './core/events';
 
 class SharingsPage extends AbstractPage {
 
     init() {
-        document.addEventListener('click', event => {
-            const target = event.target as HTMLElement;
-
-            if (target.closest('.sharing-remove')) {
-                this.onSharingRemove(event);
-            }
-        });
+        on(document, 'click', '.sharing-remove', this.onSharingRemove);
     }
 
     getSharingToken(element: HTMLElement, selector: string = null): string {
         return this.getItemId('sharing', element, selector);
     }
 
-    async onSharingRemove(event: MouseEvent) {
+    onSharingRemove = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         await this.sendRequest('removeSharing', {

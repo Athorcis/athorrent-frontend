@@ -2,27 +2,17 @@ import {decode} from 'js-base64';
 import '../css/files.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
+import {on} from './core/events';
 
 class FilesPage extends AbstractPage {
 
     init() {
-
-        document.addEventListener('click', event => {
-            const target = event.target as HTMLElement;
-
-            if (target.closest('.add-sharing')) {
-                this.onSharingAdd(event);
-            }
-            else if (target.closest('.sharing-remove')) {
-                this.onSharingRemove(event);
-            }
-            else if (target.closest('.sharing-link')) {
-                this.onSharingLink(event);
-            }
-            else if (target.closest('.file-remove')) {
-                this.onFileRemove(event);
-            }
-        });
+        on(document, 'click', new Map([
+            ['.add-sharing', this.onSharingAdd],
+            ['.sharing-remove', this.onSharingRemove],
+            ['.sharing-link', this.onSharingLink],
+            ['.file-remove', this.onFileRemove],
+        ]));
     }
 
     getFilePath(element: HTMLElement) {
@@ -41,24 +31,23 @@ class FilesPage extends AbstractPage {
         this.ui.showModal(this.translate('files.sharingLink'), `<a href="${link}">${link}</a>`);
     }
 
-    updateFileList() {
-        this.sendRequest<string>('listFiles').then(data => {
-            document.querySelector('.file-list').innerHTML = data;
-        });
+    async updateFileList() {
+        const data = await this.sendRequest<string>('listFiles');
+        document.querySelector('.file-list').innerHTML = data;
     }
 
-    onSharingAdd(event: MouseEvent) {
+    onSharingAdd = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
-        this.sendRequest<string>('addSharing',{
+        const data = await this.sendRequest<string>('addSharing',{
             path: this.getFilePath(target)
-        }).then(data => {
-            this.modalSharingLink(data);
-            this.updateFileList();
-        });
+        })
+
+        this.modalSharingLink(data);
+        this.updateFileList();
     }
 
-    async onSharingRemove(event: MouseEvent) {
+    onSharingRemove = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         await this.sendRequest('removeSharing', {
@@ -68,13 +57,13 @@ class FilesPage extends AbstractPage {
         this.updateFileList();
     }
 
-    onSharingLink(event: MouseEvent) {
+    onSharingLink = (event: MouseEvent) => {
         const target = event.target as HTMLElement;
         this.modalSharingLink(target.getAttribute('href'));
         event.preventDefault();
     }
 
-    async onFileRemove(event: MouseEvent) {
+    onFileRemove = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         if (window.confirm(`Êtes-vous sur de vouloir supprimer "${ this.getFileName(target) }" ?`)) {
