@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     /**
      * @var Sharing[]|Collection
      */
-    #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token')]
+    #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token', fetch: 'LAZY')]
     private array|Collection $sharings;
 
     #[ORM\OneToOne(targetEntity: TrackedProcess::class, fetch: 'LAZY')]
