@@ -8,14 +8,18 @@ use Athorrent\Process\Entity\TrackedProcess;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Table]
 #[ORM\UniqueConstraint(name: 'username', columns: ['username'])]
 #[ORM\UniqueConstraint(name: 'port', columns: ['port'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['username'], message: 'error.usernameAlreadyUsed')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface
 {
     #[ORM\Id]
@@ -23,6 +27,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
+    #[NotBlank]
+    #[Length(max: 32)]
     #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['collation' => 'utf8mb4_bin'])]
     private string $username;
 
@@ -43,13 +49,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     /**
      * @var UserHasRole[]|Collection
      */
-    #[ORM\OneToMany(targetEntity: 'UserHasRole', mappedBy: 'user', cascade: ['persist'], fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: 'UserHasRole', mappedBy: 'user', cascade: ['persist', 'detach'], fetch: 'EAGER')]
     private array|Collection $hasRoles;
 
     /**
      * @var Sharing[]|Collection
      */
-    #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token', fetch: 'LAZY')]
+    #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token', cascade: ['detach'], fetch: 'LAZY')]
     private array|Collection $sharings;
 
     #[ORM\OneToOne(targetEntity: TrackedProcess::class, fetch: 'LAZY')]

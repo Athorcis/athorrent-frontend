@@ -1,0 +1,4 @@
+
+error:
+    usernameAlreadyUsed: This username is already used
+    passwordsDiffer: Passwords differ

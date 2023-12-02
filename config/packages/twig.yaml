@@ -2,6 +2,7 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         locales: '%app.locales%'
+    form_themes: ['fragments/form-layout.html.twig']
 
 when@test:
     twig:

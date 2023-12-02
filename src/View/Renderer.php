@@ -2,6 +2,7 @@
 
 namespace Athorrent\View;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
@@ -19,6 +20,12 @@ readonly class Renderer
 
     protected function renderTemplate(string $id, array $parameters): string
     {
+        foreach ($parameters as $k => $v) {
+            if ($v instanceof FormInterface) {
+                $parameters[$k] = $v->createView();
+            }
+        }
+
         return $this->twig->render($id . '.html.twig', $parameters);
     }
 
