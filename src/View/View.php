@@ -34,9 +34,11 @@ class View
         }
     }
 
-    public function addString(string $id): void
+    public function addStrings(array $ids): void
     {
-        $this->data['_strings'][] = $id;
+        foreach ($ids as $id) {
+            $this->data['_strings'][] = $id;
+        }
     }
 
     public function render(Request $request, TranslatorInterface $translator, Renderer $renderer): string

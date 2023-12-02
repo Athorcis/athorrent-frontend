@@ -23,7 +23,7 @@ class UsersPage extends AbstractPage {
     onRemoveUser = async (event: MouseEvent) =>  {
         const target = event.target as HTMLElement;
 
-        if (window.confirm(`Êtes-vous sur de vouloir supprimer l'utilisateur ${ this.getUserName(target) } ?`)) {
+        if (this.confirm('users.deletionConfirmation', { user: this.getUserName(target) })) {
             await this.sendRequest('removeUser', {
                 userId: this.getUserId(target)
             });
@@ -35,12 +35,12 @@ class UsersPage extends AbstractPage {
     onResetUserPassword = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
-        if (window.confirm(`Êtes-vous sur de vouloir réinitialiser le mot de passe de l'utilisateur ${this.getUserName(target)}?`)) {
+        if (this.confirm('users.passwordResetConfirmation', { user: this.getUserName(target) })) {
             const data = await this.sendRequest<{password: string}>('resetUserPassword', {
                 userId: this.getUserId(target)
             });
 
-            this.ui.showModal('Nouveau mot de passe', data.password);
+            this.ui.showModal('users.newPasswordModalTitle', data.password);
         }
     }
 }

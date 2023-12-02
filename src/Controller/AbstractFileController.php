@@ -58,7 +58,8 @@ abstract class AbstractFileController extends AbstractController
             'breadcrumb' => $breadcrumb,
             'files' => $entries,
             '_strings' => [
-                'files.sharingLink'
+                'files.sharingLink',
+                'files.removalConfirmation',
             ]
         ], 'listFiles');
     }

@@ -29,7 +29,15 @@ class UserController extends AbstractController
     #[Route(path: '/', methods: 'GET')]
     public function listUsers(Request $request): PaginatedView
     {
-        return new PaginatedView($request, $this->userRepository, 10);
+        $view = new PaginatedView($request, $this->userRepository, 10);
+
+        $view->addStrings([
+            'users.passwordResetConfirmation',
+            'users.newPasswordModalTitle',
+            'users.deletionConfirmation',
+        ]);
+
+        return $view;
     }
 
     #[Route(path: '/add', methods: ['GET', 'POST'])]
@@ -48,7 +56,7 @@ class UserController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            return new SuccessNotification('user successfully created', 'listUsers');
+            return new SuccessNotification('users.add.success', 'listUsers');
         }
 
         return new View(['form' => $form]);

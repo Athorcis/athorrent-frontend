@@ -28,7 +28,7 @@ class FilesPage extends AbstractPage {
     }
 
     modalSharingLink(link: string) {
-        this.ui.showModal(this.translate('files.sharingLink'), `<a href="${link}">${link}</a>`);
+        this.ui.showModal('files.sharingLink', `<a href="${link}">${link}</a>`);
     }
 
     async updateFileList() {
@@ -66,7 +66,7 @@ class FilesPage extends AbstractPage {
     onFileRemove = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
-        if (window.confirm(`Êtes-vous sur de vouloir supprimer "${ this.getFileName(target) }" ?`)) {
+        if (window.confirm(this.translate('files.removalConfirmation', { entry: this.getFileName(target) }))) {
 
             await this.sendRequest('removeFile',{
                 path: this.getFilePath(target)

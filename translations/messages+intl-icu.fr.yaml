@@ -76,6 +76,7 @@ files:
     removeSharing: Supprimer le partage
     share: Partager
     none: Aucun fichier à afficher
+    removalConfirmation: Êtes-vous sur de vouloir supprimer "{entry}" ?
 
 torrents:
     title: Torrents
@@ -147,10 +148,14 @@ users:
     role: Rôle
     lastConnection: Dernière connexion
     lastConnectionNone: Aucune
+    passwordResetConfirmation: Êtes-vous sur de vouloir réinitialiser le mot de passe de l'utilisateur {user}?
+    newPasswordModalTitle: Nouveau mot de passe
+    deletionConfirmation: Êtes-vous sur de vouloir supprimer l'utilisateur {user}?
 
     add:
         title: Ajouter un utilisateur
         submit: Ajouter
+        success: Utilisateur créé avec succès
 
 administration:
     title: Administration
