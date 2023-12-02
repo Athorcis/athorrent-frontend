@@ -54,7 +54,7 @@
     "yarn-or-npm": "^3.0.1"
   },
   "scripts": {
-    "font-awesome": "node ./scripts/subset-font-awesome.js",
+    "font-awesome": "node scripts/subset-font-awesome.mjs",
     "dev-server": "yon run font-awesome && encore dev-server",
     "dev": "yon run font-awesome && encore dev",
     "watch": "yon run font-awesome && encore dev --watch",
