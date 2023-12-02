@@ -1,20 +1,15 @@
 import '../css/users.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
+import {on} from './core/events';
 
 class UsersPage extends AbstractPage {
 
     init() {
-        document.addEventListener('click', event => {
-            const target = event.target as HTMLElement;
-
-            if (target.closest('.user-reset-password')) {
-                this.onResetUserPassword(event);
-            }
-            else if (target.closest( '.user-remove')) {
-                this.onRemoveUser(event);
-            }
-        });
+        on(document, 'click', new Map([
+            ['.user-reset-password', this.onResetUserPassword],
+            ['.user-remove', this.onRemoveUser],
+        ]))
     }
 
     getUserId(element: HTMLElement) {
@@ -25,7 +20,7 @@ class UsersPage extends AbstractPage {
         return this.getItemAttr('user', element, 'name');
     }
 
-    async onRemoveUser(event: MouseEvent) {
+    onRemoveUser = async (event: MouseEvent) =>  {
         const target = event.target as HTMLElement;
 
         if (window.confirm(`Êtes-vous sur de vouloir supprimer l'utilisateur ${ this.getUserName(target) } ?`)) {
@@ -37,7 +32,7 @@ class UsersPage extends AbstractPage {
         }
     }
 
-    async onResetUserPassword(event: MouseEvent) {
+    onResetUserPassword = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         if (window.confirm(`Êtes-vous sur de vouloir réinitialiser le mot de passe de l'utilisateur ${this.getUserName(target)}?`)) {

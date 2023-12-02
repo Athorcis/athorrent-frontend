@@ -9,6 +9,7 @@ import {Application} from './core/application';
 import {SecurityManager} from './core/security-manager';
 import {Translator} from './core/translator';
 import {UiManager} from './core/ui-manager';
+import {on} from './core/events';
 
 const torrentListTimeout = 2000,
     trackerListTimeout = 5000;
@@ -91,13 +92,7 @@ class TabsPanel {
         this.tabMap = {};
         this.panel = document.querySelector(selector);
 
-        this.panel.addEventListener('click', event => {
-            const target = event.target as HTMLElement;
-
-            if (target.closest('.nav-tabs a')) {
-                this.onClick(event);
-            }
-        })
+        on(this.panel, 'click', '.nav-tags a', this.onClick);
     }
 
     addTab(id: string, tab: Tab) {
@@ -108,7 +103,7 @@ class TabsPanel {
         return this.tabMap[this.panel.querySelector('.nav-tabs li.active a').getAttribute('href').substring(1)];
     }
 
-    onClick(event: MouseEvent) {
+    onClick = (event: MouseEvent) => {
         event.preventDefault();
         $(event.target).tab('show');
     }
@@ -548,15 +543,15 @@ class TorrentsPage extends AbstractPage {
         this.torrentsUpdater.update();
     }
 
-    onTorrentPause(event: MouseEvent) {
+    onTorrentPause = async (event: MouseEvent) => {
         return this.applyActionToTorrent('pauseTorrent', event.target as HTMLElement);
     }
 
-    onTorrentResume(event: MouseEvent) {
+    onTorrentResume = async (event: MouseEvent) =>  {
         return this.applyActionToTorrent('resumeTorrent', event.target as HTMLElement);
     }
 
-    onTorrentRemove(event: MouseEvent) {
+    onTorrentRemove = async (event: MouseEvent) => {
         return this.applyActionToTorrent('removeTorrent', event.target as HTMLElement);
     }
 
@@ -564,22 +559,14 @@ class TorrentsPage extends AbstractPage {
         this.torrentsUpdater = new Updater(this.router,'listTorrents', {}, this.onUpdateTorrents, torrentListTimeout);
         this.torrentsUpdater.start();
 
-        document.addEventListener('click', event => {
-            const target = event.target as HTMLElement;
-
-            if (target.closest('.torrent-pause')) {
-                this.onTorrentPause(event);
-            }
-            else if (target.closest('.torrent-resume')) {
-                this.onTorrentResume(event);
-            }
-            else if (target.closest('.torrent-remove')) {
-                this.onTorrentRemove(event);
-            }
-        });
+        on(document, 'click', new Map([
+            ['.torrent-pause', this.onTorrentPause],
+            ['.torrent-resume', this.onTorrentResume],
+            ['.torrent-remove', this.onTorrentRemove]
+        ]));
     }
 
-    onShowDetails(event: MouseEvent) {
+    onShowDetails = (event: MouseEvent) => {
         this.torrentPanel.toggleHash(this.getTorrentHash(event.target as HTMLElement));
     }
 
@@ -587,13 +574,7 @@ class TorrentsPage extends AbstractPage {
         this.torrentPanel = new TorrentPanel();
         this.trackersTab = new TorrentPanelTab(this.router, this.torrentPanel, 'torrent-trackers', 'listTrackers', {}, trackerListTimeout);
 
-        document.addEventListener('click', event => {
-            const target = event.target as HTMLElement;
-
-            if (target.closest('.torrent-detail')) {
-                this.onShowDetails(event);
-            }
-        });
+        on(document, 'click', '.torrent-detail', this.onShowDetails);
     }
 
     initializeAddTorrentForm() {
