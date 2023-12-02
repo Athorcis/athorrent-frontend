@@ -142,6 +142,15 @@ class TrackedProcess
         return $this->isSuccessful() ? 'success' : 'error';
     }
 
+    protected function getKillCommand(): string
+    {
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            return "tasklist /PID $this->pid";
+        }
+
+        return "kill $this->pid";
+    }
+
     public function stop(): void
     {
         if ($this->isRunning()) {
@@ -149,16 +158,9 @@ class TrackedProcess
                 throw new RuntimeException('this process was started on another host');
             }
 
-            if ('\\' === DIRECTORY_SEPARATOR) {
-                $killCommand = "tasklist /PID $this->pid";
-            }
-            else {
-                $killCommand = "kill $this->pid";
-            }
-
             // Impossible d'utiliser posix_kill car cette fonction fait
             // le kill sur le host et non pas dans le conteneur
-            exec($killCommand, $output, $exitCode);
+            exec($this->getKillCommand(), $output, $exitCode);
         }
     }
 
