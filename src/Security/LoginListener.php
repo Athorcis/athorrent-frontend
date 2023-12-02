@@ -3,7 +3,7 @@
 namespace Athorrent\Security;
 
 use AssertionError;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,7 +22,7 @@ readonly class LoginListener implements EventSubscriberInterface
 
         assert($user instanceof UserInterface, new AssertionError('user is not supposed to be null when login just happened'));
 
-        $user->setConnectionDateTime(new DateTime());
+        $user->setConnectionDateTime(new DateTimeImmutable());
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

@@ -5,7 +5,7 @@ namespace Athorrent\Database\Entity;
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Process\Entity\TrackedProcess;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Filesystem\Path;
@@ -34,11 +34,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['collation' => 'utf8mb4_bin', 'fixed' => true])]
     private string $salt;
 
-    #[ORM\Column(type: 'datetime', nullable: false)]
-    private DateTime $creationDateTime;
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    private DateTimeImmutable $creationDateTime;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?DateTime $connectionDateTime = null;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?DateTimeImmutable $connectionDateTime = null;
 
     /**
      * @var UserHasRole[]|Collection
@@ -66,7 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->username = $username;
         $this->plainPassword = $plainPassword;
         $this->salt = $salt;
-        $this->creationDateTime = new DateTime();
+        $this->creationDateTime = new DateTimeImmutable();
 
         $this->hasRoles = array_map(fn($role) => new UserHasRole($this, $role), $roles);
     }
@@ -127,14 +127,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getConnectionTimestamp(): int
     {
-        if ($this->connectionDateTime instanceof DateTime) {
+        if ($this->connectionDateTime instanceof DateTimeImmutable) {
             return $this->connectionDateTime->getTimestamp();
         }
 
         return 0;
     }
 
-    public function setConnectionDateTime(DateTime $dateTime): void
+    public function setConnectionDateTime(DateTimeImmutable $dateTime): void
     {
         $this->connectionDateTime = $dateTime;
     }

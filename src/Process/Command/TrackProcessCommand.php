@@ -4,7 +4,7 @@ namespace Athorrent\Process\Command;
 
 use Athorrent\Process\Entity\TrackedProcess;
 use Athorrent\Process\Process;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -118,7 +118,7 @@ class TrackProcessCommand extends Command
         string $errorOutput,
         bool $interrupted = false
     ): void {
-        $processEntity->setTerminatedAt(new DateTime());
+        $processEntity->setTerminatedAt(new DateTimeImmutable());
         $processEntity->setInterrupted($interrupted || $exitCode > 128);
         $processEntity->setExitCode($exitCode);
         $processEntity->setErrorOutput($errorOutput);

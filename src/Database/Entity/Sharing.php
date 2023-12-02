@@ -4,7 +4,7 @@ namespace Athorrent\Database\Entity;
 
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Database\Repository\SharingRepository;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table]
@@ -24,15 +24,15 @@ class Sharing implements CacheKeyGetterInterface
     #[ORM\Column(type: 'text', options: ['collation' => 'utf8mb4_bin'])]
     private string $path;
 
-    #[ORM\Column(type: 'datetime')]
-    private DateTime $creationDateTime;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private DateTimeImmutable $creationDateTime;
 
     public function __construct(User $user, string $path)
     {
         $this->token = self::generateToken($user, $path);
         $this->user = $user;
         $this->path = $path;
-        $this->creationDateTime = new DateTime();
+        $this->creationDateTime = new DateTimeImmutable();
     }
 
     public function getToken(): string
@@ -55,7 +55,7 @@ class Sharing implements CacheKeyGetterInterface
         return $this->path;
     }
 
-    public function getCreationDateTime(): DateTime
+    public function getCreationDateTime(): DateTimeImmutable
     {
         return $this->creationDateTime;
     }
