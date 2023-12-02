@@ -25,8 +25,12 @@ export abstract class AbstractPage extends DataManager {
         return this.router.sendRequest<R>(action, parameters);
     }
 
-    translate(key: string): string {
-        return this.translator.translate(key);
+    translate(key: string, parameters: Record<string, string> = {}): string {
+        return this.translator.translate(key, parameters);
+    }
+
+    confirm(key: string, parameters: Record<string, string> = {}): boolean {
+        return window.confirm(this.translate(key, parameters));
     }
 
     abstract init(): void;
