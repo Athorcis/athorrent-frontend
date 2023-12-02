@@ -20,8 +20,6 @@ error:
     unknownError: Unknown error
     loginFailure: Username or password invalid
     usernameOrPasswordEmpty: Username or password empty
-    passwordInvalid: Password invalid
-    passwordsDiffer: Passwords differ
 
 app:
     name: Athorrent
