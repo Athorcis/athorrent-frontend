@@ -7,14 +7,14 @@ use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class UserManager
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
         private UserRepository $userRepository,
-        private UserPasswordHasherInterface $passwordHasher
+        private ValidatorInterface $validator,
     ) {
     }
 
@@ -33,22 +33,17 @@ readonly class UserManager
             throw new InvalidArgumentException(sprintf('%s is not a valid role', $rolesDiff[0]));
         }
 
-        $salt = base64_encode(random_bytes(22));
-        $user = new User($username, $password, $salt, $roles);
+        $user = new User();
+
+        $user->setUsername($username);
+        $user->setPlainPassword($password);
+        $user->setSalt(base64_encode(random_bytes(22)));
+        $user->setRoles($roles);
         $user->setPort($this->userRepository->getNextAvailablePort());
 
+        $this->validator->validate($user);
+
         $this->entityManager->persist($user);
-
         $this->entityManager->flush();
-    }
-
-    public function userExists(string $username): bool
-    {
-        return $this->userRepository->findOneBy(['username' => $username]) !== null;
-    }
-
-    public function checkUserPassword(User $user, string $password): bool
-    {
-        return $this->passwordHasher->isPasswordValid($user, $password);
     }
 }

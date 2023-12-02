@@ -69,7 +69,7 @@ class EditAccountType extends AbstractType
             ->add(
                 'update',
                 SubmitType::class,
-                ['label' => 'account.edit.submit']
+                ['label' => 'account.edit.submit'],
             );
 
         $builder->get('roles')

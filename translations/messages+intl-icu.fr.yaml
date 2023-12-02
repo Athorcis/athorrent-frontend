@@ -13,13 +13,10 @@ error:
     notPlayable: Le fichier n'est ni un fichier audio, ni un fichier vidéo
     notDisplayable: Le fichier n'est ni une image, ni un fichier texte
     cannotRemoveFile: Impossible de supprimer le fichier
-    usernameAlreadyUsed: Ce nom d'utilisateur existe déjà.
-    roleNotSpecified: Rôle indéfini
     cannotRemoveUser: Impossible de supprimer l'utilisateur
     serverError: Le serveur a retourné une erreur '{{statusCode}}'.
     unknownError: Erreur inconnue
     loginFailure: Nom d'utilisateur ou mot de passe invalide
-    usernameOrPasswordEmpty: Nom d'utilisateur ou mot de passe vide.
 
 app:
     name: Athorrent
