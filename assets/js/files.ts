@@ -66,7 +66,7 @@ class FilesPage extends AbstractPage {
     onFileRemove = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
-        if (window.confirm(this.translate('files.removalConfirmation', { entry: this.getFileName(target) }))) {
+        if (this.confirm(this.translate('files.removalConfirmation', { entry: this.getFileName(target) }))) {
 
             await this.sendRequest('removeFile',{
                 path: this.getFilePath(target)

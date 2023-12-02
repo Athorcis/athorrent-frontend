@@ -20,7 +20,7 @@ export class Router {
 
     sendRequest<R>(name: string , parameters: Params = {}): AbortablePromise<R> {
         const route = this.getRoute(name);
-        const request = this.createRequest(route, { ...parameters });
+        const request = this.createRequestFromRoute(route, { ...parameters });
 
         const body$ = this.http.executeForResponse<ApiResponse<R>>(request).then(response => {
 
@@ -68,27 +68,7 @@ export class Router {
         });
     }
 
-    protected createRequest(route: Route, params: Params): Request {
-
-        if (route.prefixId === this.routeParameters._prefixId) {
-            if (route.name === this.action) {
-                params = {...this.routeParameters, ...this.queryParams, ...params};
-            }
-             else {
-                params = {...this.routeParameters, ...params};
-            }
-        }
-
-        let url = this.prepareUrl(route, params);
-
-        for (const key of Object.keys(params)) {
-            if (key[0] === '_') {
-                delete params[key];
-            }
-        }
-
-        const {method} = route;
-
+    protected createRequest(method: string, url: string, params: Params): Request {
         const options: RequestOptions = {
             method,
             headers: {
@@ -105,6 +85,28 @@ export class Router {
         }
 
         return new Request(url, options);
+    }
+
+    protected createRequestFromRoute(route: Route, params: Params): Request {
+
+        if (route.prefixId === this.routeParameters._prefixId) {
+            if (route.name === this.action) {
+                params = {...this.routeParameters, ...this.queryParams, ...params};
+            }
+             else {
+                params = {...this.routeParameters, ...params};
+            }
+        }
+
+        const url = this.prepareUrl(route, params);
+
+        for (const key of Object.keys(params)) {
+            if (key[0] === '_') {
+                delete params[key];
+            }
+        }
+
+        return this.createRequest(route.method, url, params);
     }
 
     protected getRoute(name: string): Route {

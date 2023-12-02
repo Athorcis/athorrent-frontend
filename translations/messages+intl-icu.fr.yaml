@@ -8,11 +8,8 @@ error:
     fileRequired: La requête doit contenir un fichier
     notATorrent: Ce fichier n'est pas un torrent
     fileTooBig: Ce fichier est trop grand
-    badRequest: Requête malformée
-    fileNotFound: Fichier introuvable
     notPlayable: Le fichier n'est ni un fichier audio, ni un fichier vidéo
     notDisplayable: Le fichier n'est ni une image, ni un fichier texte
-    cannotRemoveFile: Impossible de supprimer le fichier
     cannotRemoveUser: Impossible de supprimer l'utilisateur
     serverError: Le serveur a retourné une erreur '{{statusCode}}'.
     unknownError: Erreur inconnue
