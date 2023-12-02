@@ -1,6 +1,6 @@
 /* eslint-env node */
-const fs = require('fs');
-const {fontawesomeSubset} = require('fontawesome-subset');
+import fs from 'fs';
+import {fontawesomeSubset} from 'fontawesome-subset';
 
 const iconsMap = {
     solid: [
@@ -43,7 +43,7 @@ const iconsMap = {
 }
 
 // Create or append a task to be ran with your configuration
-fontawesomeSubset(iconsMap, 'assets/fonts/font-awesome');
+await fontawesomeSubset(iconsMap, 'assets/fonts/font-awesome');
 
 const icons = Object.values(iconsMap).reduce(function (accumulator, icons) {
 
@@ -69,4 +69,4 @@ $icons: (
 }
 `;
 
-fs.writeFileSync('assets/css/font-awesome/_icons.scss', sass);
+await fs.promises.writeFile('assets/css/font-awesome/_icons.scss', sass);
