@@ -4,20 +4,17 @@ namespace Athorrent\View;
 
 use Athorrent\Database\Repository\PaginableRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PaginatedView extends View
 {
     public function __construct(Request $request, PaginableRepositoryInterface $entityRepository, $countPerPage, array $criteria = [], array $sort = [])
     {
-        if ($request->query->has('page')) {
-            $page = $request->query->get('page');
+        $page = $request->query->get('page', 1);
 
-            if (!is_numeric($page) || $page < 1) {
-                throw new HttpException(400);
-            }
-        } else {
-            $page = 1;
+        if (!is_numeric($page) || $page < 1) {
+            throw new BadRequestHttpException();
         }
 
         $offset = $countPerPage * ($page - 1);
@@ -27,17 +24,14 @@ class PaginatedView extends View
         $count = count($paginator);
 
         if ($offset >= $count && $count > 0) {
-            throw new HttpException(404);
+            throw new NotFoundHttpException();
         }
-
-        $entities = iterator_to_array($paginator);
-        $lastPage = ceil($count / $countPerPage);
 
         parent::__construct([
             'action' => $request->attributes->get('_action'),
             'pagination' => [
-                'entities' => $entities,
-                'lastPage' => $lastPage,
+                'entities' => iterator_to_array($paginator),
+                'lastPage' => ceil($count / $countPerPage),
                 'page' => $page
             ]
         ]);

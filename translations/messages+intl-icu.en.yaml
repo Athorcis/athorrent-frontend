@@ -8,11 +8,8 @@ error:
     fileRequired: The request must contain a file
     notATorrent: This file is not a torrent
     fileTooBig: This file is too big
-    badRequest: Bad request
-    fileNotFound: File not found
     notPlayable: This file is neither an audio file nor a video file
     notDisplayable: This file is neither an image nor a text file
-    cannotRemoveFile: Unable to remove this file
     cannotRemoveUser: Unable to remove this user
     serverError: Server responded with '{{statusCode}}' code.
     unknownError: Unknown error

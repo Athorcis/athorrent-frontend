@@ -6,7 +6,6 @@ use Athorrent\Utils\ServiceUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Exception;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -16,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route(path: '/user/torrents', name: 'torrents')]
 class TorrentController extends AbstractController
@@ -60,36 +61,29 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/files', methods: 'POST', options: ['expose' => true])]
-    public function uploadTorrent(Request $request, TorrentManager $torrentManager, LoggerInterface $logger): array
+    public function uploadTorrent(
+        Request $request,
+        TorrentManager $torrentManager,
+        ValidatorInterface $validator,
+    ): array
     {
         /** @var UploadedFile $file */
         $file = $request->files->get('upload-torrent-file');
 
-        if ($file === null) {
-            throw new BadRequestException('error.fileRequired');
-        }
+        $violations = $validator->validate($file, [
+            new Assert\NotBlank(message: 'error.fileRequired'),
+            new Assert\File(
+                maxSize: 1_048_576,
+                mimeTypes: ['application/x-bittorrent'],
 
-        if (!$file->isValid()) {
-            $error = $file->getError();
+                maxSizeMessage: 'error.fileTooBig',
+                mimeTypesMessage: 'error.notATorrent',
+                uploadIniSizeErrorMessage: 'error.fileTooBig',
+            ),
+        ]);
 
-            if ($error === UPLOAD_ERR_INI_SIZE) {
-                throw new BadRequestException('error.fileTooBig');
-            }
-
-            $logger->error('upload failed with an unexpected error', [
-                'error' => $error,
-                'file' => $file
-            ]);
-
-            throw new BadRequestException("error.unknownError");
-        }
-
-        if ($file->getSize() > 1_048_576) {
-            throw new BadRequestException('error.fileTooBig');
-        }
-
-        if ($file->getMimeType() !== 'application/x-bittorrent') {
-            throw new BadRequestException('error.notATorrent');
+        if (count($violations) > 0) {
+            throw new BadRequestException($violations[0]->getMessage());
         }
 
         $torrentsDir = $torrentManager->ensureTorrentsDirExists();
@@ -125,20 +119,16 @@ class TorrentController extends AbstractController
 
         $torrentsDir = $torrentManager->getTorrentsDirectory();
 
-        if ($files) {
-            foreach ($files as $file) {
-                $torrentPath = Path::join($torrentsDir, $file);
+        foreach ($files as $file) {
+            $torrentPath = Path::join($torrentsDir, $file);
 
-                if (file_exists($torrentPath)) {
-                    $torrentManager->addTorrentFromFile($torrentPath);
-                }
+            if (file_exists($torrentPath)) {
+                $torrentManager->addTorrentFromFile($torrentPath);
             }
         }
 
-        if ($magnets) {
-            foreach ($magnets as $magnet) {
-                $torrentManager->addTorrentFromMagnet($magnet);
-            }
+        foreach ($magnets as $magnet) {
+            $torrentManager->addTorrentFromMagnet($magnet);
         }
 
         return [];
