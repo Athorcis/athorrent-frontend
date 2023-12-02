@@ -67,14 +67,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     /**
      * @param string[] $roles
      */
-    public function __construct($username, $plainPassword, $salt, array $roles)
+    public function __construct()
     {
-        $this->username = $username;
-        $this->plainPassword = $plainPassword;
-        $this->salt = $salt;
         $this->creationDateTime = new DateTimeImmutable();
-
-        $this->hasRoles = array_map(fn($role) => new UserHasRole($this, $role), $roles);
     }
 
     public function getId(): int
@@ -126,6 +121,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         return $this->salt;
     }
 
+    public function setSalt(string $salt): void
+    {
+        $this->salt = $salt;
+    }
+
     public function getCreationTimestamp(): int
     {
         return $this->creationDateTime->getTimestamp();
@@ -165,6 +165,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         }
 
         return $roles;
+    }
+
+    /**
+     * @param string[] $roles
+     */
+    public function setRoles(array $roles)
+    {
+        $this->hasRoles = array_map(fn($role) => new UserHasRole($this, $role), $roles);
     }
 
     /**

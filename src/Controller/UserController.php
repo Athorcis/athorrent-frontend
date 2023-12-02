@@ -4,8 +4,7 @@ namespace Athorrent\Controller;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
-use Athorrent\Database\Type\UserRole;
-use Athorrent\Notification\ErrorNotification;
+use Athorrent\Form\Type\AddUserType;
 use Athorrent\Notification\Notification;
 use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
@@ -33,30 +32,26 @@ class UserController extends AbstractController
         return new PaginatedView($request, $this->userRepository, 10);
     }
 
-    #[Route(path: '/add', methods: 'GET')]
-    public function addUser(): View
+    #[Route(path: '/add', methods: ['GET', 'POST'])]
+    public function addUser(Request $request, EntityManagerInterface $em): View|Notification
     {
-        return new View(['roleList' => UserRole::$values]);
-    }
+        $user = new User();
+        $form = $this->createForm(AddUserType::class, $user);
 
-    #[Route(path: '/', methods: 'POST')]
-    public function saveUser(Request $request): Notification
-    {
-        $username = $request->request->get('username');
-        $password = $request->request->get('password');
-        $role = $request->request->get('role');
+        $form->handleRequest($request);
 
-        if (empty($username) || empty($password) || empty($role)) {
-            return new ErrorNotification('error.usernameOrPasswordEmpty');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setRoles([$form->get('role')->getData()]);
+            $user->setSalt(base64_encode(random_bytes(22)));
+            $user->setPort($this->userRepository->getNextAvailablePort());
+
+            $em->persist($user);
+            $em->flush();
+
+            return new SuccessNotification('user successfully created', 'listUsers');
         }
 
-        if ($this->userManager->userExists($username)) {
-            return new ErrorNotification('error.usernameAlreadyUsed');
-        }
-
-        $this->userManager->createUser($username, $password, $role);
-
-        return new SuccessNotification('user successfully updated', 'listUsers');
+        return new View(['form' => $form]);
     }
 
     /**

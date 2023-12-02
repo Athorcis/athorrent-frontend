@@ -58,6 +58,6 @@ class AccountController extends AbstractController
             return new SuccessNotification('account.edit.success');
         }
 
-        return new View(['form' => $form]);
+        return new View(['form' => $form, 'form_label_size' => 3]);
     }
 }

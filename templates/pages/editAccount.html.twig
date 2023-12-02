@@ -7,5 +7,6 @@
         <h1>{{ 'account.edit.title'|trans }}</h1>
     </div>
 
+    {% form_theme form 'fragments/editAccount-form-layout.html.twig' %}
     {{ form(form) }}
 {% endblock %}
