@@ -1,13 +1,17 @@
 /* eslint-env node */
-const path = require('path');
-const Encore = require('@symfony/webpack-encore');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
+import path from 'path';
+import Encore from '@symfony/webpack-encore';
+import StyleLintPlugin from 'stylelint-webpack-plugin';
+import { fileURLToPath } from 'url';
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 Encore
     // directory where compiled assets will be stored
@@ -101,7 +105,7 @@ Encore
     .autoProvidejQuery()
 
     .addRule({
-        test: require.resolve('mediaelement/build/mediaelement-and-player.js'),
+        test: /mediaelement\/build\/mediaelement-and-player.js$/,
         loader: "exports-loader",
         options: {
             type: 'commonjs',
@@ -110,8 +114,8 @@ Encore
     })
 
     .addAliases({
-        'mediaelement/full': require.resolve('mediaelement/build/mediaelement-and-player.js')
+        'mediaelement/full': 'mediaelement/build/mediaelement-and-player.js'
     })
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default Encore.getWebpackConfig();
