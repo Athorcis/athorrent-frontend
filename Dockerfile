@@ -4,17 +4,8 @@ ARG NODEJS_VERSION=20.8.0
 
 FROM php:${PHP_VERSION}-fpm AS base
 
-RUN set -ex ;\
-    apt-get update ;\
-    apt-get install -y --no-install-recommends \
-        libicu-dev ;\
-    docker-php-ext-install -j $(nproc) bcmath intl opcache pdo_mysql sockets ;\
-    apt-get clean
-
-RUN set -ex ;\
-    pecl install apcu ;\
-    docker-php-ext-enable apcu ;\
-    pecl clear-cache
+RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
+      apcu bcmath intl opcache pdo_mysql sockets
 
 FROM composer:$COMPOSER_VERSION AS composer
 
