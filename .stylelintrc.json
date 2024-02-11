@@ -2,7 +2,6 @@
     "extends": "stylelint-config-standard-scss",
     "rules": {
         "at-rule-empty-line-before": null,
-        "no-empty-first-line": null,
         "selector-pseudo-element-colon-notation": null,
         "declaration-block-no-redundant-longhand-properties": null
     }
