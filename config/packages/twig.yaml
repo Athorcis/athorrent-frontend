@@ -1,5 +1,5 @@
 twig:
-    default_path: '%kernel.project_dir%/templates'
+    file_name_pattern: '*.twig'
     globals:
         locales: '%app.locales%'
     form_themes: ['fragments/form-layout.html.twig']
