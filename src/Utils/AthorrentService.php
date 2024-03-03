@@ -9,6 +9,7 @@ use Athorrent\Ipc\Socket\UnixSocketClient;
 use Athorrent\Process\Entity\TrackedProcess;
 use Athorrent\Process\Process;
 use Athorrent\Process\TrackerProcess;
+use Athorrent\UserVisibleException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -27,6 +28,15 @@ class AthorrentService extends JsonService
         if ($_ENV['BACKEND_AUTO_START']) {
             $this->ensureRunning();
         }
+    }
+
+    protected function onError(array $error): void
+    {
+        if (isset($error['id']) && $error['id'] === 'INVALID_MAGNET_URI') {
+            throw new UserVisibleException('error.invalidMagnetUri');
+        }
+
+        parent::onError($error);
     }
 
     private function ensureRunning(): void
