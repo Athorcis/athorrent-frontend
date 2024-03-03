@@ -10,6 +10,7 @@ import {SecurityManager} from './core/security-manager';
 import {Translator} from './core/translator';
 import {UiManager} from './core/ui-manager';
 import {on} from './core/events';
+import { Response } from 'typescript-http-client';
 
 const torrentListTimeout = 2000,
     trackerListTimeout = 5000;
@@ -229,7 +230,14 @@ class AddTorrentForm {
 
     private modes: AddTorrentMode[];
 
-    constructor(selector: string, submitSelector: string, private router: Router, private afterSubmit: () => void) {
+    constructor(
+        selector: string,
+        submitSelector: string,
+        private router: Router,
+        private ui: UiManager,
+        private translator: Translator,
+        private afterSubmit: () => void
+    ) {
         this.form = document.querySelector(selector);
         this.submitEl = document.querySelector(submitSelector);
         this.modes = [];
@@ -292,7 +300,14 @@ class AddTorrentForm {
             params[this.modes[i].getInputName()] = this.modes[i].getItems();
         }
 
-        this.router.sendRequest('addTorrents', params).then(this.afterSubmit);
+        this.router.sendRequest('addTorrents', params).then(this.afterSubmit, (error: Response<{ status: string; error: string; }>) => {
+
+            if (error.body instanceof Object) {
+                this.ui.showModal('Erreur', error.body.error);
+            }else {
+                this.ui.showModal('Erreur', this.translator.translate('error.unknownError'))
+            }
+        });
 
         for (let i = 0, { length } = this.modes; i < length; ++i) {
             this.modes[i].clearItems();
@@ -578,9 +593,15 @@ class TorrentsPage extends AbstractPage {
     }
 
     initializeAddTorrentForm() {
-        const addTorrentForm = new AddTorrentForm('#add-torrent-form', '#add-torrent-submit', this.router, () => {
-            this.torrentsUpdater.update();
-        });
+        const addTorrentForm = new AddTorrentForm('#add-torrent-form',
+            '#add-torrent-submit',
+            this.router,
+            this.ui,
+            this.translator,
+            () => {
+                this.torrentsUpdater.update();
+            }
+        );
 
         this.addTorrentFileMode = new AddTorrentFileMode(this.router, this.translator, this.ui, this.securityManager, 'add-torrent-files', '#add-torrent-file-drop', '#add-torrent-file', '#add-torrent-file-counter', addTorrentForm);
         this.addTorrentMagnetMode = new AddTorrentMagnetMode('add-torrent-magnets', '#add-torrent-magnet-wrapper', '#add-torrent-magnet', '#add-torrent-magnet-counter', addTorrentForm);
