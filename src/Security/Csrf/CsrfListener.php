@@ -28,7 +28,7 @@ readonly class CsrfListener implements EventSubscriberInterface
             $previousCsrfToken = new CsrfToken('main', $request->headers->get('X-Csrf-Token', $request->get('csrfToken')));
 
             if (!$this->tokenManager->isTokenValid($previousCsrfToken)) {
-                throw new AccessDeniedHttpException('invalid csrf token');
+                throw new AccessDeniedHttpException('error.invalidCsrfToken');
             }
 
             $csrfToken = $this->tokenManager->refreshToken('main');

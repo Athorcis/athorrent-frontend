@@ -14,6 +14,7 @@ error:
     serverError: Server responded with '{{statusCode}}' code.
     unknownError: Unknown error
     loginFailure: Username or password invalid
+    invalidCsrfToken: The page needs to be reloaded (invalid csrf token)
 
 app:
     name: Athorrent
