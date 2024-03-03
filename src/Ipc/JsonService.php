@@ -26,9 +26,24 @@ class JsonService
                 return $response->getData();
             }
 
-            throw new RuntimeException($response->getData());
+            $error = $response->getData();
+
+            if (is_string($error)) {
+                $error = ['message' => $error];
+            }
+
+            $this->onError($error);
         }
 
         throw new RuntimeException('no response');
+    }
+
+    /**
+     * @param array{message: string, id: string|null} $error
+     * @return void
+     */
+    protected function onError(array $error): void
+    {
+        throw new RuntimeException($error['message']);
     }
 }
