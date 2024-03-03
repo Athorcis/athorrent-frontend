@@ -3,6 +3,7 @@ import '../css/files.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
+import {Router} from './core/router';
 
 class FilesPage extends AbstractPage {
 
@@ -32,7 +33,7 @@ class FilesPage extends AbstractPage {
     }
 
     async updateFileList() {
-        const data = await this.sendRequest<string>('listFiles');
+        const data = await this.sendRequest<string>('listFiles', { path: Router.parseQueryParameters().path });
         document.querySelector('.file-list').innerHTML = data;
     }
 
