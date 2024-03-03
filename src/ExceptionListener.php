@@ -41,7 +41,10 @@ readonly class ExceptionListener implements EventSubscriberInterface
             $statusCode = 500;
         }
 
-        if ($statusCode === 500) {
+        if ($throwable instanceof UserVisibleException) {
+            $message = $throwable->getMessage();
+        }
+        elseif ($statusCode === 500) {
             $message = 'error.unknownError';
         }
 
