@@ -111,6 +111,7 @@ torrents:
         url: URL
         state: State
         peers: Peers
+        seeds: Seeds
         message: Message
 
     tabPeers:
