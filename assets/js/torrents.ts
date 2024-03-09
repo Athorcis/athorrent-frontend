@@ -93,7 +93,7 @@ class TabsPanel {
         this.tabMap = {};
         this.panel = document.querySelector(selector);
 
-        on(this.panel, 'click', '.nav-tags a', this.onClick);
+        on(this.panel, 'click', '.nav-tabs a', this.onClick);
     }
 
     addTab(id: string, tab: Tab) {
