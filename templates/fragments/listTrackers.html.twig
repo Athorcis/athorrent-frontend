@@ -1,20 +1,22 @@
 <table class="table">
-    <thead>
-        <tr>
-            <td>#</td>
-            <td>{{ 'torrents.tabTrackers.url'|trans }}</td>
-            <td>{{ 'torrents.tabTrackers.state'|trans }}</td>
-            <td>{{ 'torrents.tabTrackers.peers'|trans }}</td>
-            <td>{{ 'torrents.tabTrackers.message'|trans }}</td>
-        </tr>
-    </thead>
+    {% cache 'trackers_head' app.locale %}
+        <thead>
+            <tr>
+                <td>{{ 'torrents.tabTrackers.url'|trans }}</td>
+                <td>{{ 'torrents.tabTrackers.state'|trans }}</td>
+                <td>{{ 'torrents.tabTrackers.peers'|trans }}</td>
+                <td>{{ 'torrents.tabTrackers.seeds'|trans }}</td>
+                <td>{{ 'torrents.tabTrackers.message'|trans }}</td>
+            </tr>
+        </thead>
+    {% endcache %}
     <tbody>
     {% for tracker in trackers %}
         <tr>
-            <td>{{ tracker.id }}</td>
             <td>{{ tracker.url }}</td>
-            <td>none</td>
+            <td>{{ tracker.state }}</td>
             <td>{{ tracker.peers }}</td>
+            <td>{{ tracker.seeds }}</td>
             <td>{{ tracker.message }}</td>
         </tr>
     {% endfor %}
