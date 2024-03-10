@@ -54,7 +54,7 @@ class TorrentController extends AbstractController
     {
         $trackers = $torrentManager->listTrackers($hash);
 
-        foreach ($trackers as $tracker) {
+        foreach ($trackers as &$tracker) {
             if ($tracker['peers'] === -1) {
                 $tracker['peers'] = '-';
             }
