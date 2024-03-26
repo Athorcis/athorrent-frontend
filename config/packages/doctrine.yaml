@@ -33,7 +33,8 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Process/Entity'
                 prefix: 'Athorrent\Process\Entity'
-
+        controller_resolver:
+            auto_mapping: false
 
 when@test:
     doctrine:
