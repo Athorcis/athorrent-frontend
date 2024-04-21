@@ -12,7 +12,7 @@ trait PaginableRepositoryTrait
      * @param string $indexBy
      * @return QueryBuilder
      */
-    abstract public function createQueryBuilder($alias, $indexBy = null);
+    abstract public function createQueryBuilder(string $alias, ?string $indexBy = null);
 
     protected function getQueryBuilderForPagination(): QueryBuilder
     {
