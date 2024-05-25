@@ -3,7 +3,6 @@
 namespace Athorrent\Cache\KeyGenerator;
 
 use InvalidArgumentException;
-use Twig\CacheExtension\CacheStrategy\KeyGeneratorInterface;
 
 class KeyGenerator implements KeyGeneratorInterface
 {

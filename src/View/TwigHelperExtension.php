@@ -2,6 +2,7 @@
 
 namespace Athorrent\View;
 
+use Athorrent\Cache\KeyGenerator\LocalizedKeyGenerator;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use ByteUnits\Metric;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -10,7 +11,7 @@ use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
-    public function __construct(private readonly TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly LocalizedKeyGenerator $keyGenerator)
     {
     }
 
@@ -22,7 +23,8 @@ class TwigHelperExtension extends AbstractExtension
             new TwigFunction('date_to_age', $this->dateToAge(...)),
             new TwigFunction('icon', $this->getIcon(...)),
             new TwigFunction('base64_encode', 'base64_encode'),
-            new TwigFunction('format_bytes', $this->formatBytes(...))
+            new TwigFunction('format_bytes', $this->formatBytes(...)),
+            new TwigFunction('cache_key', $this->getCacheKey(...)),
         ];
     }
 
@@ -101,5 +103,10 @@ class TwigHelperExtension extends AbstractExtension
     public function formatBytes(int $value): string
     {
         return Metric::bytes($value)->format(null, ' ');
+    }
+
+    public function getCacheKey(string $annotation, mixed $value = null): string
+    {
+        return $annotation . '.' . $this->keyGenerator->generateKey($value);
     }
 }
