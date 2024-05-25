@@ -52,6 +52,7 @@ class EditAccountType extends AbstractType
                 RepeatedType::class,
                 [
                     'type' => PasswordType::class,
+                    'invalid_message' => 'error.passwordsDiffer',
                     'label' => 'account.edit.new_password',
                     'required' => false,
                     'first_options'  => ['label' => 'account.edit.new_password'],
