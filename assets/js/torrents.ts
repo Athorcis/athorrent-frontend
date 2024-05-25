@@ -577,7 +577,7 @@ class TorrentsPage extends AbstractPage {
         return this.getItemId('torrent', element);
     }
 
-    onUpdateTorrents(data: string) {
+    onUpdateTorrents = (data: string) => {
         document.querySelector('.torrent-list').innerHTML = data;
 
         if (document.querySelector('.client-updating-warning')) {
