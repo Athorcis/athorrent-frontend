@@ -6,14 +6,19 @@
     padding: 0;
     position: relative;
 
-    &.enabled {
+    &.opened {
         height: 150px;
+    }
+
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.25;
     }
 }
 
 @media (width <= 767px) {
     #add-torrent-form {
-        &.enabled {
+        &.opened {
             border-top: 51px solid #000;
             height: 100%;
             left: 0;

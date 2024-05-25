@@ -220,7 +220,9 @@ class TorrentPanelTab extends Tab {
 
 class AddTorrentForm {
 
-    private enabled: boolean;
+    private opened: boolean = false;
+
+    private disabled: boolean;
 
     private form: HTMLFormElement;
 
@@ -243,6 +245,7 @@ class AddTorrentForm {
         this.modes = [];
 
         this.submitEl.addEventListener('click', this.onSubmitClick.bind(this));
+        this.disabled = this.form.classList.contains('disabled');
     }
 
     onSubmitClick(event: MouseEvent) {
@@ -253,18 +256,44 @@ class AddTorrentForm {
         }
     }
 
-    isDisabled() {
-        return !this.enabled;
+    isOpened() {
+        return !this.opened;
+    }
+
+    open() {
+        if (this.opened) {
+            return;
+        }
+
+        this.opened = true;
+        this.form.classList.add('opened');
+    }
+
+    close() {
+        if (!this.opened) {
+            return;
+        }
+
+        this.opened = false;
+        this.form.classList.remove('opened');
     }
 
     enable() {
-        this.enabled = true;
-        this.form.classList.add('enabled');
+        if (!this.disabled) {
+            return;
+        }
+
+        this.disabled = false;
+        this.form.classList.remove('disabled');
     }
 
     disable() {
-        this.enabled = false;
-        this.form.classList.remove('enabled');
+        if (this.disabled) {
+            return;
+        }
+
+        this.disabled = true;
+        this.form.classList.add('disabled');
     }
 
     setMode(mode: AddTorrentMode) {
@@ -354,8 +383,8 @@ abstract class AddTorrentMode {
         this.element.style.display = 'block';
         this.btn.classList.add('active');
 
-        if (this.form.isDisabled()) {
-            this.form.enable();
+        if (this.form.isOpened()) {
+            this.form.open();
         } else {
             this.form.getMode().disable(true);
         }
@@ -371,7 +400,7 @@ abstract class AddTorrentMode {
         this.btn.classList.remove('active');
 
         if (!recursive) {
-            this.form.disable();
+            this.form.close();
             this.form.setMode(null);
         }
     }
@@ -531,6 +560,8 @@ class TorrentsPage extends AbstractPage {
 
     private addTorrentMagnetMode: AddTorrentMagnetMode;
 
+    private addTorrentForm: AddTorrentForm;
+
     init() {
 
         this.initializeTorrentsList();
@@ -548,6 +579,13 @@ class TorrentsPage extends AbstractPage {
 
     onUpdateTorrents(data: string) {
         document.querySelector('.torrent-list').innerHTML = data;
+
+        if (document.querySelector('.client-updating-warning')) {
+            this.addTorrentForm.disable();
+        }
+        else {
+            this.addTorrentForm.enable();
+        }
     }
 
     protected async applyActionToTorrent(action: string, element: HTMLElement) {
@@ -593,7 +631,7 @@ class TorrentsPage extends AbstractPage {
     }
 
     initializeAddTorrentForm() {
-        const addTorrentForm = new AddTorrentForm('#add-torrent-form',
+        this.addTorrentForm = new AddTorrentForm('#add-torrent-form',
             '#add-torrent-submit',
             this.router,
             this.ui,
@@ -603,8 +641,8 @@ class TorrentsPage extends AbstractPage {
             }
         );
 
-        this.addTorrentFileMode = new AddTorrentFileMode(this.router, this.translator, this.ui, this.securityManager, 'add-torrent-files', '#add-torrent-file-drop', '#add-torrent-file', '#add-torrent-file-counter', addTorrentForm);
-        this.addTorrentMagnetMode = new AddTorrentMagnetMode('add-torrent-magnets', '#add-torrent-magnet-wrapper', '#add-torrent-magnet', '#add-torrent-magnet-counter', addTorrentForm);
+        this.addTorrentFileMode = new AddTorrentFileMode(this.router, this.translator, this.ui, this.securityManager, 'add-torrent-files', '#add-torrent-file-drop', '#add-torrent-file', '#add-torrent-file-counter', this.addTorrentForm);
+        this.addTorrentMagnetMode = new AddTorrentMagnetMode('add-torrent-magnets', '#add-torrent-magnet-wrapper', '#add-torrent-magnet', '#add-torrent-magnet-counter', this.addTorrentForm);
     }
 }
 

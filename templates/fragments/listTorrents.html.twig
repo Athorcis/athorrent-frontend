@@ -59,7 +59,7 @@
     </div>
 {% else %}
     {% if client_updating %}
-    <div class="alert alert-warning" role="alert">{{ 'torrents.managerUpdating'|trans }}</div>
+    <div class="alert alert-warning client-updating-warning" role="alert">{{ 'torrents.managerUpdating'|trans }}</div>
     {% else %}
     <div class="alert alert-info" role="alert">{{ 'torrents.none'|trans }}</div>
     {% endif %}
