@@ -11,4 +11,5 @@ return [
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
     Nelmio\SecurityBundle\NelmioSecurityBundle::class => ['all' => true],
+    Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
 ];

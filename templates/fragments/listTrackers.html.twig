@@ -1,5 +1,5 @@
 <table class="table">
-    {% cache 'trackers_head' app.locale %}
+    {% cache cache_key('trackers_head') %}
         <thead>
             <tr>
                 <td>{{ 'torrents.tabTrackers.url'|trans }}</td>
