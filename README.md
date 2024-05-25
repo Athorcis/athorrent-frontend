@@ -27,9 +27,9 @@ Options +FollowSymLinks
 </IfModule>
 ```
 
-If you don't you might find an answer [here] (http://silex.sensiolabs.org/doc/master/web_servers.html)
+If you don't you might find an answer [here](http://silex.sensiolabs.org/doc/master/web_servers.html)
 
 Create a bin directory and put the backend binary in it.
-To build the backend see [athorrent-backend] (https://github.com/Athorcis/athorrent-backend)
+To build the backend see [athorrent-backend](https://github.com/Athorcis/athorrent-backend)
 
 And make sure the athorrent directory and all its subdirectories and files are owned by the user who run the webserver.
