@@ -38,7 +38,7 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         $user->setPassword($newHashedPassword);
-        $this->_em->flush($user);
+        $this->getEntityManager()->flush();
     }
 
     public function getNextAvailablePort(): int
