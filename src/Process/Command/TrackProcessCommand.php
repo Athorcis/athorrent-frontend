@@ -17,7 +17,7 @@ use const STDIN;
 
 class TrackProcessCommand extends Command
 {
-    public const NAME = 'process:track';
+    public const string NAME = 'process:track';
 
     public function __construct(private readonly EntityManagerInterface $em)
     {

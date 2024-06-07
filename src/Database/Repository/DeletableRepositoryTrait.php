@@ -7,15 +7,9 @@ use Doctrine\ORM\Exception\ORMException;
 
 trait DeletableRepositoryTrait
 {
-    /**
-     * @return EntityManagerInterface
-     */
-    abstract protected function getEntityManager();
+    abstract protected function getEntityManager(): EntityManagerInterface;
 
-    /**
-     * @return string
-     */
-    abstract protected function getEntityName();
+    abstract protected function getEntityName(): string;
 
     /**
      * @throws ORMException
