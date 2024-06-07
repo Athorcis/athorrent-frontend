@@ -7,12 +7,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 trait PaginableRepositoryTrait
 {
-    /**
-     * @param string $alias
-     * @param string $indexBy
-     * @return QueryBuilder
-     */
-    abstract public function createQueryBuilder(string $alias, ?string $indexBy = null);
+    abstract public function createQueryBuilder(string $alias, ?string $indexBy = null): QueryBuilder;
 
     protected function getQueryBuilderForPagination(): QueryBuilder
     {

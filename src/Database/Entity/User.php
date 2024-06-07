@@ -64,9 +64,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     #[ORM\Column(type: 'integer')]
     private int $port;
 
-    /**
-     * @param string[] $roles
-     */
     public function __construct()
     {
         $this->creationDateTime = new DateTimeImmutable();
@@ -170,7 +167,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     /**
      * @param string[] $roles
      */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles): void
     {
         $this->hasRoles = array_map(fn($role) => new UserHasRole($this, $role), $roles);
     }
