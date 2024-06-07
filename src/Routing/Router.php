@@ -8,11 +8,23 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\RouterInterface;
+use function function_exists;
+use function in_array;
+use function ini_get;
+use const FILTER_VALIDATE_BOOL;
+use const PHP_SAPI;
 
-class Router extends BaseRouter
+class Router implements RouterInterface, RequestMatcherInterface, WarmableInterface
 {
+    protected BaseRouter $baseRouter;
+
     protected ?array $actionMap = null;
 
     private ?ConfigCacheFactoryInterface $configCacheFactory = null;
@@ -28,14 +40,13 @@ class Router extends BaseRouter
         LoggerInterface $logger = null,
         string $defaultLocale = null
     ) {
-
         $options['generator_class'] = CompiledUrlGenerator::class;
-        parent::__construct($container, $resource, $options, $context, $parameters, $logger, $defaultLocale);
+        $this->baseRouter = new BaseRouter($container, $resource, $options, $context, $parameters, $logger, $defaultLocale);
     }
 
     protected function getActionMapDumperInstance(): ActionMapDumper
     {
-        return new ActionMapDumper($this->getRouteCollection());
+        return new ActionMapDumper($this->baseRouter->getRouteCollection());
     }
 
     public function getActionMap(): array
@@ -44,16 +55,18 @@ class Router extends BaseRouter
             return $this->actionMap;
         }
 
-        if (null === $this->options['cache_dir']) {
+        $cacheDir = $this->baseRouter->getOption('cache_dir');
+
+        if (null === $cacheDir) {
             $dumper = $this->getActionMapDumperInstance();
             $this->actionMap = $dumper->generateActionMap();
         }
         else {
-            $cache = $this->getConfigCacheFactory()->cache($this->options['cache_dir'].'/action-map.php',
+            $cache = $this->getConfigCacheFactory()->cache($cacheDir.'/action-map.php',
                 function (ConfigCacheInterface $cache) {
                     $dumper = $this->getActionMapDumperInstance();
 
-                    $cache->write($dumper->dump(), $this->getRouteCollection()->getResources());
+                    $cache->write($dumper->dump(), $this->baseRouter->getRouteCollection()->getResources());
                 }
             );
 
@@ -69,8 +82,11 @@ class Router extends BaseRouter
             return $this->generator;
         }
 
-        $generator = parent::getGenerator();
-        $generator->setActionMap($this->getActionMap());
+        $generator = $this->baseRouter->getGenerator();
+
+        if ($generator instanceof CompiledUrlGenerator) {
+            $generator->setActionMap($this->getActionMap());
+        }
 
         return $generator;
     }
@@ -81,12 +97,12 @@ class Router extends BaseRouter
      */
     private function getConfigCacheFactory(): ConfigCacheFactoryInterface
     {
-        return $this->configCacheFactory ??= new ConfigCacheFactory($this->options['debug']);
+        return $this->configCacheFactory ??= new ConfigCacheFactory($this->baseRouter->getOption('debug'));
     }
 
     private static function readCache(string $path): array
     {
-        if ([] === self::$cache && \function_exists('opcache_invalidate') && filter_var(\ini_get('opcache.enable'), \FILTER_VALIDATE_BOOL) && (!\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(\ini_get('opcache.enable_cli'), \FILTER_VALIDATE_BOOL))) {
+        if ([] === self::$cache && function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOL) && (!in_array(PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOL))) {
             self::$cache = null;
         }
 
@@ -97,12 +113,38 @@ class Router extends BaseRouter
         return self::$cache[$path] ??= require $path;
     }
 
-    /**
-     * This method needs to be overridden or else it causes an error on Symfony 6.2+
-     * @return array
-     */
-    public static function getSubscribedServices(): array
+    public function setContext(RequestContext $context): void
     {
-        return [];
+        $this->baseRouter->setContext($context);
+    }
+
+    public function getContext(): RequestContext
+    {
+        return $this->baseRouter->getContext();
+    }
+
+    public function getRouteCollection(): RouteCollection
+    {
+        return $this->baseRouter->getRouteCollection();
+    }
+
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
+    {
+        return $this->getGenerator()->generate($name, $parameters, $referenceType);
+    }
+
+    public function match(string $pathinfo): array
+    {
+        return $this->baseRouter->match($pathinfo);
+    }
+
+    public function matchRequest(Request $request): array
+    {
+        return $this->baseRouter->matchRequest($request);
+    }
+
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
+    {
+        return $this->baseRouter->warmUp($cacheDir, $buildDir);
     }
 }
