@@ -15,7 +15,3 @@ interface AppConfig {
     csrfToken: string;
     strings: Translations;
 }
-
-interface Window {
-    athorrent: AppConfig;
-}
