@@ -81,7 +81,9 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader()
+    .enableSassLoader(function (options) {
+        options.sassOptions.quietDeps = true;
+    })
 
     .enablePostCssLoader()
 
