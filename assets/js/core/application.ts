@@ -39,6 +39,15 @@ export class Application {
     }
 
     static create() {
-        return new Application(window.athorrent || {});
+        let data: AppConfig;
+        const json = document.body.dataset.athorrent;
+
+        try {
+            data = JSON.parse(json);
+        } catch (e) {
+            console.error(e);
+        }
+
+        return new Application(data || {});
     }
 }

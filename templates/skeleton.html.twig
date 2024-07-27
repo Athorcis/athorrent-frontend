@@ -23,7 +23,11 @@
             {{ encore_entry_link_tags('main') }}
         {% endblock %}
     </head>
-    <body>
+    <body
+        {% if js_vars %}
+            data-athorrent="{{ js_vars|json_encode }}"
+        {% endif %}
+    >
         {% include 'nav.html.twig' %}
 
         <div class="container">
@@ -57,12 +61,6 @@
         {% block templates %}
             <template id="template-modal">{% include "fragments/modal.html.twig" %}</template>
         {% endblock %}
-
-        {% if js_vars %}
-            <script type="text/javascript" nonce="{{ csp_nonce('script') }}">
-                window.athorrent = {{ js_vars|json_encode|raw }};
-            </script>
-        {% endif %}
 
         {% block main_script %}
             {{ encore_entry_script_tags('athorrent') }}
