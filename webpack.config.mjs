@@ -107,7 +107,7 @@ Encore
     .autoProvidejQuery()
 
     .addRule({
-        test: /mediaelement\/build\/mediaelement-and-player.js$/,
+        test: /mediaelement[\\\/]build[\\\/]mediaelement-and-player\.js$/,
         loader: "exports-loader",
         options: {
             type: 'commonjs',
