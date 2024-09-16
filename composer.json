@@ -39,8 +39,8 @@
         "symfony/webpack-encore-bundle": "^v2.1.1",
         "symfony/yaml": "7.1.*",
         "twig/twig": "^2.12|^3.0",
-        "twig/cache-extra": "v3.10.0",
-        "twig/extra-bundle": "v3.10.0"
+        "twig/cache-extra": "^3.13",
+        "twig/extra-bundle": "^3.13"
     },
     "minimum-stability": "stable",
     "require-dev": {
