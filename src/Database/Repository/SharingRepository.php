@@ -28,11 +28,9 @@ class SharingRepository extends EntityRepository implements DeletableRepositoryI
             )
         );
 
-        $qb->setParameters([
-            'user' => $user,
-            'path' => $root,
-            'root' => $root . '/%'
-        ]);
+        $qb->setParameter('user', $user);
+        $qb->setParameter('path', $root);
+        $qb->setParameter('root', $root . '/%');
 
         return $qb;
     }
