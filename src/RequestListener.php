@@ -62,7 +62,7 @@ class RequestListener implements EventSubscriberInterface
      */
     public function disableOutputBuffering(ResponseEvent $event): void
     {
-        if ($event->getResponse() instanceof BinaryFileResponse) {
+        if ($event->getResponse() instanceof BinaryFileResponse && ob_get_level() > 0) {
             ob_end_flush();
         }
     }
