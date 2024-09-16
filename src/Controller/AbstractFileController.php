@@ -66,6 +66,7 @@ abstract class AbstractFileController extends AbstractController
 
     protected function sendFile(Request $request, UserFilesystemEntry $entry, $contentDisposition): BinaryFileResponse
     {
+        BinaryFileResponse::trustXSendfileTypeHeader();
         $response = $entry->toBinaryFileResponse();
 
         $response->setPrivate();
