@@ -1,6 +1,6 @@
 {
   "name": "athorrent-frontend",
-  "packageManager": "yarn@4.3.1",
+  "packageManager": "yarn@4.5.0",
   "description": "A lightweight seedbox frontend",
   "license": "Apache-2.0",
   "dependencies": {
@@ -45,7 +45,7 @@
     "stylelint-scss": "^6.7.0",
     "stylelint-webpack-plugin": "^5.0.1",
     "ts-loader": "^9.5.1",
-    "typescript": "~5.5.4",
+    "typescript": "~5.6.2",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "webpack-notifier": "^1.15.0",
