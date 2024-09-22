@@ -1694,10 +1694,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-free@npm:^6.6.0":
+"@fortawesome/fontawesome-free@npm:6.6.0":
   version: 6.6.0
   resolution: "@fortawesome/fontawesome-free@npm:6.6.0"
   checksum: 10/4673599d6a6e66db5542384fbe870ca8c06a450a20c629ed242e5f617a0a035f393fe8dfac9010688aa5d58a44bedc4c789cff0318956ae50c43bf98b4c7cb54
+  languageName: node
+  linkType: hard
+
+"@fortawesome/fontawesome-free@patch:@fortawesome/fontawesome-free@npm%3A6.6.0#~/.yarn/patches/@fortawesome-fontawesome-free-npm-6.6.0-fa479c2269.patch":
+  version: 6.6.0
+  resolution: "@fortawesome/fontawesome-free@patch:@fortawesome/fontawesome-free@npm%3A6.6.0#~/.yarn/patches/@fortawesome-fontawesome-free-npm-6.6.0-fa479c2269.patch::version=6.6.0&hash=6c56ab"
+  checksum: 10/0bdd902452f48ac6ec00daf64205e19d046f7aab886eddcae61ae6a8e2443f10e7323f2baee38b81df2958dec076be51da1ebbbc1ec5a088849eddb4ce32b4cf
   languageName: node
   linkType: hard
 
@@ -3051,7 +3058,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.25.2"
     "@babel/preset-env": "npm:^7.25.4"
-    "@fortawesome/fontawesome-free": "npm:^6.6.0"
+    "@fortawesome/fontawesome-free": "patch:@fortawesome/fontawesome-free@npm%3A6.6.0#~/.yarn/patches/@fortawesome-fontawesome-free-npm-6.6.0-fa479c2269.patch"
     "@symfony/webpack-encore": "npm:^4.7.0"
     "@types/bootstrap": "npm:^3.4.0"
     "@types/dropzone": "npm:^5.7.8"
