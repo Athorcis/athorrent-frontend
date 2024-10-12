@@ -2,6 +2,7 @@
 import path from 'path';
 import Encore from '@symfony/webpack-encore';
 import StyleLintPlugin from 'stylelint-webpack-plugin';
+import ESLintPlugin from 'eslint-webpack-plugin';
 import { fileURLToPath } from 'url';
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -92,9 +93,9 @@ Encore
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
 
-    .enableEslintPlugin({
+    .addPlugin(new ESLintPlugin({
         extensions: ['ts']
-    })
+    }))
 
     // uncomment if you use React
     //.enableReactPreset()
