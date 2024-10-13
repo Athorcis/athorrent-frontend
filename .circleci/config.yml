@@ -37,7 +37,10 @@ jobs:
                         command: docker build -t $NGINX_IMAGE_NAME --target nginx .
                     - run:
                         name: Publish Docker Image to Docker Hub
-                        command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $PHP_IMAGE_NAME:latest $NGINX_IMAGE_NAME:latest
+                        command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $PHP_IMAGE_NAME:latest
+                    - run:
+                        name: Publish Docker Image to Docker Hub
+                        command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin && docker push $NGINX_IMAGE_NAME:latest
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
