@@ -73,8 +73,6 @@ echo
 
 echo "
 
-ASSETS_ORIGIN=$(hostname)
-
 APP_ENV=prod
 APP_SECRET=$(randomString)
 
