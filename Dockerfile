@@ -1,6 +1,7 @@
 ARG PHP_VERSION=8.3.11
 ARG COMPOSER_VERSION=2.7.9
 ARG NODEJS_VERSION=22.8.0
+ARG NGINX_VERSION=1.27.2
 
 FROM php:${PHP_VERSION}-fpm AS base
 
@@ -40,7 +41,7 @@ RUN --mount=type=cache,target=/root/.yarn \
     YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable ;\
     yarn build
 
-FROM base
+FROM base AS php
 
 RUN set -ex ;\
     apt-get update ;\
@@ -62,3 +63,8 @@ COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
 RUN mkdir -p /var/www/athorrent/var && chown -R www-data:www-data /var/www/athorrent/var
 
 VOLUME ["/var/www/athorrent/var/user"]
+
+FROM nginx:${NGINX_VERSION}-alpine AS nginx
+
+COPY ./nginx.conf /etc/nginx/sites-enabled/seedbox.athorcis.ovh.conf
+COPY --chown=www-data:www-data --from=php /var/www/athorrent/public /var/www/athorrent/public
