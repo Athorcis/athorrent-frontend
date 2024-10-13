@@ -33,7 +33,6 @@ class RequestListener implements EventSubscriberInterface
             if (!$request->isXmlHttpRequest()) {
                 $vars = [
                     'debug' => (bool)$_SERVER['APP_DEBUG'],
-                    'assetsOrigin' => $_ENV['ASSETS_ORIGIN']
                 ];
 
                 $result->setJsVars($vars);
