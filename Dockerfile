@@ -66,5 +66,5 @@ VOLUME ["/var/www/athorrent/var/user"]
 
 FROM nginx:${NGINX_VERSION}-alpine AS nginx
 
-COPY ./nginx.conf /etc/nginx/sites-enabled/seedbox.athorcis.ovh.conf
+COPY ./nginx.conf /etc/nginx/conf.d/seedbox.athorcis.ovh.conf
 COPY --chown=www-data:www-data --from=php /var/www/athorrent/public /var/www/athorrent/public
