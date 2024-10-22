@@ -66,8 +66,8 @@
             {{ encore_entry_script_tags('athorrent') }}
         {% endblock %}
 
-        {% if constant('ANALYTICS_TAG') is defined %}
-            {{ constant('ANALYTICS_TAG') }}
+        {% if analytics_tag is not empty %}
+            {{ analytics_tag|raw }}
         {% endif %}
     </body>
 </html>

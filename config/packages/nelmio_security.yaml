@@ -7,7 +7,7 @@ nelmio_security:
             browser_adaptive:
                 enabled: false
             report-uri: '%router.request_context.base_url%/nelmio/csp/report'
-            default-src: ['self']
+            default-src: ['self', '%env(string:default::ADDITIONAL_CSP_ORIGIN)%']
             style-src: ['self', 'unsafe-inline']
             frame-ancestors: ['none']
             block-all-mixed-content: true
