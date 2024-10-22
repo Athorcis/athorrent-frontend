@@ -65,6 +65,10 @@
         {% block main_script %}
             {{ encore_entry_script_tags('athorrent') }}
         {% endblock %}
+
+        {% if constant('ANALYTICS_TAG') is defined %}
+            {{ constant('ANALYTICS_TAG') }}
+        {% endif %}
     </body>
 </html>
 {% endapply %}
