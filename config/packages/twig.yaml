@@ -2,7 +2,7 @@ twig:
     file_name_pattern: '*.twig'
     globals:
         locales: '%app.locales%'
-        analytics_tag: '%env(ANALYTICS_TAG)%'
+        analytics_tag: '%env(default::ANALYTICS_TAG)%'
     form_themes: ['fragments/form-layout.html.twig']
 
 when@test:
