@@ -18,26 +18,26 @@
         "doctrine/orm": "^3.1.2",
         "gabrielelana/byte-units": "^0.5",
         "nelmio/security-bundle": "^3.0",
-        "symfony/console": "7.1.*",
-        "symfony/css-selector": "7.1.*",
-        "symfony/dom-crawler": "7.1.*",
-        "symfony/dotenv": "7.1.*",
+        "symfony/console": "7.2.*",
+        "symfony/css-selector": "7.2.*",
+        "symfony/dom-crawler": "7.2.*",
+        "symfony/dotenv": "7.2.*",
         "symfony/flex": "^2.2.2",
-        "symfony/form": "7.1.*",
-        "symfony/framework-bundle": "7.1.*",
-        "symfony/http-client": "7.1.*",
-        "symfony/mime": "7.1.*",
+        "symfony/form": "7.2.*",
+        "symfony/framework-bundle": "7.2.*",
+        "symfony/http-client": "7.2.*",
+        "symfony/mime": "7.2.*",
         "symfony/monolog-bundle": "^3.1",
-        "symfony/process": "7.1.*",
+        "symfony/process": "7.2.*",
         "symfony/proxy-manager-bridge": "6.4.*",
-        "symfony/rate-limiter": "7.1.*",
-        "symfony/runtime": "7.1.*",
-        "symfony/security-bundle": "7.1.*",
-        "symfony/translation": "7.1.*",
-        "symfony/twig-bundle": "7.1.*",
-        "symfony/validator": "7.1.*",
+        "symfony/rate-limiter": "7.2.*",
+        "symfony/runtime": "7.2.*",
+        "symfony/security-bundle": "7.2.*",
+        "symfony/translation": "7.2.*",
+        "symfony/twig-bundle": "7.2.*",
+        "symfony/validator": "7.2.*",
         "symfony/webpack-encore-bundle": "^v2.1.1",
-        "symfony/yaml": "7.1.*",
+        "symfony/yaml": "7.2.*",
         "twig/twig": "^2.12|^3.0",
         "twig/cache-extra": "^3.13",
         "twig/extra-bundle": "^3.13"
@@ -92,7 +92,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "7.1.*"
+            "require": "7.2.*"
         }
     }
 }
