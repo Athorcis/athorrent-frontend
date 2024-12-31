@@ -1,4 +1,3 @@
-{% apply spaceless %}
 {% for torrent in torrents %}
     <div class="torrent" id="torrent-{{ torrent.hash }}">
         <h2 class="torrent-header">
@@ -64,4 +63,3 @@
     <div class="alert alert-info" role="alert">{{ 'torrents.none'|trans }}</div>
     {% endif %}
 {% endfor %}
-{% endapply %}
