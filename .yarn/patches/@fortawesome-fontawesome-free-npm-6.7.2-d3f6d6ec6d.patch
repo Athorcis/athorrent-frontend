@@ -1,5 +1,5 @@
 diff --git a/scss/brands.scss b/scss/brands.scss
-index 5061742233fa2bf70f7080edad6999ebc3f92a1c..754d8e4f2bfe946a2f4dcb6d09326e8a33bb410e 100644
+index f05b3fce7ad90c0198a288d403f838ef4d2f6bed..56655d1332c55ac12878c87605d64adee2c6ac7c 100644
 --- a/scss/brands.scss
 +++ b/scss/brands.scss
 @@ -24,7 +24,3 @@
@@ -8,5 +8,5 @@ index 5061742233fa2bf70f7080edad6999ebc3f92a1c..754d8e4f2bfe946a2f4dcb6d09326e8a
  }
 -
 -@each $name, $icon in $fa-brand-icons {
--  .#{$fa-css-prefix}-#{$name}:before { content: unquote("\"#{ $icon }\""); }
+-  .#{$fa-css-prefix}-#{$name} { #{$fa-icon-property}: unquote("\"#{ $icon }\""); }
 -}
