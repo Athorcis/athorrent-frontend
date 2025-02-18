@@ -14,14 +14,14 @@ use Doctrine\ORM\Mapping as ORM;
 class Sharing implements CacheKeyGetterInterface
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 32, options: ['collation' => 'utf8mb4_bin', 'fixed' => true])]
+    #[ORM\Column(type: 'string', length: 32, options:  ['fixed' => true])]
     private string $token;
 
     #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'sharings')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private User $user;
 
-    #[ORM\Column(type: 'text', options: ['collation' => 'utf8mb4_bin'])]
+    #[ORM\Column(type: 'text')]
     private string $path;
 
     #[ORM\Column(type: 'datetime_immutable')]
