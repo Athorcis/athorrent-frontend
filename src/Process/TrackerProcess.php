@@ -13,7 +13,7 @@ class TrackerProcess extends CommandProcess
 {
     private int $trackedId;
 
-    public function start(callable $callback = null, array $env = []): void
+    public function start(callable|null $callback = null, array $env = []): void
     {
         if ($this->isOutputDisabled()) {
             $this->enableOutput();

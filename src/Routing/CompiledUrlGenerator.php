@@ -12,7 +12,7 @@ class CompiledUrlGenerator extends UrlGenerator
 {
     private array $actionMap;
 
-    public function __construct(private readonly array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, private readonly ?string $defaultLocale = null)
+    public function __construct(private readonly array $compiledRoutes, RequestContext $context, LoggerInterface|null $logger = null, private readonly ?string $defaultLocale = null)
     {
         $this->context = $context;
         $this->logger = $logger;

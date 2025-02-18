@@ -35,10 +35,10 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
         ContainerInterface $container,
         mixed $resource,
         array $options = [],
-        RequestContext $context = null,
-        ContainerInterface $parameters = null,
-        LoggerInterface $logger = null,
-        string $defaultLocale = null
+        ?RequestContext $context = null,
+        ?ContainerInterface $parameters = null,
+        ?LoggerInterface $logger = null,
+        ?string $defaultLocale = null
     ) {
         $options['generator_class'] = CompiledUrlGenerator::class;
         $this->baseRouter = new BaseRouter($container, $resource, $options, $context, $parameters, $logger, $defaultLocale);
