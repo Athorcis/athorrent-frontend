@@ -27,12 +27,6 @@ readonly class UserManager
             $roles = [$roles];
         }
 
-        $rolesDiff = array_diff($roles, UserRole::cases());
-
-        if (count($rolesDiff) > 0) {
-            throw new InvalidArgumentException(sprintf('%s is not a valid role', $rolesDiff[0]));
-        }
-
         $user = new User();
 
         $user->setUsername($username);
