@@ -2,6 +2,7 @@
 
 namespace Athorrent\Database\Entity;
 
+use Athorrent\Database\Type\UserRole;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -13,10 +14,10 @@ class UserHasRole
     private User $user;
 
     #[ORM\Id]
-    #[ORM\Column(type: 'UserRole', nullable: false)]
-    private string $role;
+    #[ORM\Column(type: 'string', enumType: UserRole::class, nullable: false)]
+    private UserRole $role;
 
-    public function __construct(User $user, string $role)
+    public function __construct(User $user, UserRole $role)
     {
         $this->user = $user;
         $this->role = $role;
@@ -27,7 +28,7 @@ class UserHasRole
         return $this->user;
     }
 
-    public function getRole(): string
+    public function getRole(): UserRole
     {
         return $this->role;
     }
