@@ -46,7 +46,7 @@ class AddUserType extends AbstractType
                 'role',
                 ChoiceType::class,
                 [
-                    'choices' => UserRole::$values,
+                    'choices' => UserRole::cases(),
                     'choice_label' => fn(string $id) => $id,
                     'label' => 'users.role',
                     'mapped' => false,

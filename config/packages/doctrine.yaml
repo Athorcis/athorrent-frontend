@@ -9,11 +9,6 @@ doctrine:
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
 
-        types:
-            UserRole: Athorrent\Database\Type\UserRole
-
-        mapping_types:
-            enum: string
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
