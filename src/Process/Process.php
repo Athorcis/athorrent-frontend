@@ -26,7 +26,7 @@ class Process extends BaseProcess
         }
     }
 
-    public function start(callable $callback = null, array $env = []): void
+    public function start(callable|null $callback = null, array $env = []): void
     {
         if ($this->isDaemon() && is_array($this->getPrivateAttribute('commandline'))) {
 
@@ -122,7 +122,7 @@ class Process extends BaseProcess
      * @param string|null $cwd
      * @param int|float|null $timeout
      */
-    public static function create(array $command, string $cwd = null, ?array $env = [], mixed $input = null, ?float $timeout = 60): Process
+    public static function create(array $command, string|null $cwd = null, ?array $env = [], mixed $input = null, ?float $timeout = 60): Process
     {
         return static::new($command, $cwd, $env, $input, false, $timeout);
     }
@@ -131,7 +131,7 @@ class Process extends BaseProcess
      * @param string[] $command
      * @param string|null $cwd
      */
-    public static function daemon(array $command, string $cwd = null, ?array $env = [], mixed $input = null): Process
+    public static function daemon(array $command, string|null $cwd = null, ?array $env = [], mixed $input = null): Process
     {
         return static::new($command, $cwd, $env, $input, true, null);
     }
