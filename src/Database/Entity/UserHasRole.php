@@ -13,7 +13,7 @@ class UserHasRole
     private User $user;
 
     #[ORM\Id]
-    #[ORM\Column(type: 'UserRole', nullable: false, options: ['collation' => 'utf8mb4_bin'])]
+    #[ORM\Column(type: 'UserRole', nullable: false)]
     private string $role;
 
     public function __construct(User $user, string $role)

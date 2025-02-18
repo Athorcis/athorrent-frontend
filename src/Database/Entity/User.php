@@ -29,15 +29,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     #[NotBlank]
     #[Length(max: 32)]
-    #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['collation' => 'utf8mb4_bin'])]
+    #[ORM\Column(type: 'string', length: 32, nullable: false)]
     private string $username;
 
     private ?string $plainPassword = null;
 
-    #[ORM\Column(type: 'text', nullable: false, options: ['collation' => 'utf8mb4_bin'])]
+    #[ORM\Column(type: 'text', nullable: false)]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['collation' => 'utf8mb4_bin', 'fixed' => true])]
+    #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true])]
     private string $salt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]

@@ -24,13 +24,13 @@ class TrackedProcess
     #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
     protected int $pid;
 
-    #[ORM\Column(type: 'string', length: 253, nullable: false, options: ['collation' => 'utf8mb4_bin'])]
+    #[ORM\Column(type: 'string', length: 253, nullable: false)]
     protected string $host;
 
     #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
     protected int $tracker;
 
-    #[ORM\Column(type: 'text', nullable: false, options: ['collation' => 'utf8mb4_bin'])]
+    #[ORM\Column(type: 'text', nullable: false)]
     protected string $cmd;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
@@ -48,7 +48,7 @@ class TrackedProcess
     #[ORM\Column(type: 'integer', nullable: true)]
     protected ?int $exitCode = null;
 
-    #[ORM\Column(type: 'text', nullable: true, options: ['collation' => 'utf8mb4_bin'])]
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $errorOutput = null;
 
     public function __construct(int $pid, $cmd, DateTimeImmutable $startedAt)

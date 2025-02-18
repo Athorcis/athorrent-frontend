@@ -1,12 +1,12 @@
-ARG PHP_VERSION=8.4.2
-ARG COMPOSER_VERSION=2.8.4
-ARG NODEJS_VERSION=22.12.0
-ARG NGINX_VERSION=1.27.3
+ARG PHP_VERSION=8.4.4
+ARG COMPOSER_VERSION=2.8.5
+ARG NODEJS_VERSION=22.14.0
+ARG NGINX_VERSION=1.27.4
 
 FROM php:${PHP_VERSION}-fpm AS base
 
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
-      apcu bcmath intl opcache pdo_mysql sockets
+      apcu bcmath intl opcache pdo_pgsql sockets
 
 FROM composer:$COMPOSER_VERSION AS composer
 
