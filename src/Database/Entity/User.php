@@ -4,6 +4,7 @@ namespace Athorrent\Database\Entity;
 
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Database\Repository\UserRepository;
+use Athorrent\Database\Type\UserRole;
 use Athorrent\Process\Entity\TrackedProcess;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
@@ -158,7 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $roles = [];
 
         foreach ($this->hasRoles as $hasRole) {
-            $roles[] = $hasRole->getRole();
+            $roles[] = $hasRole->getRole()->value;
         }
 
         return $roles;
@@ -169,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
      */
     public function setRoles(array $roles): void
     {
-        $this->hasRoles = array_map(fn($role) => new UserHasRole($this, $role), $roles);
+        $this->hasRoles = array_map(fn($role) => new UserHasRole($this, UserRole::from($role)), $roles);
     }
 
     /**
