@@ -26,8 +26,7 @@ COPY . /build
 
 RUN --mount=type=cache,target=/root/.composer/ set -ex ;\
     export COMPOSER_ALLOW_SUPERUSER=1 ;\
-    composer install --classmap-authoritative ;\
-    composer dump-env prod
+    composer install --classmap-authoritative
 
 FROM node:${NODEJS_VERSION}-alpine AS yarn-build
 
@@ -57,7 +56,6 @@ HEALTHCHECK --interval=5s --timeout=1s \
 COPY . /var/www/athorrent
 
 COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
-COPY --from=composer-build /build/.env.local.php /var/www/athorrent/.env.local.php
 COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
 
 RUN mkdir -p /var/www/athorrent/var && chown -R www-data:www-data /var/www/athorrent/var
