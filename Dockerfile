@@ -22,7 +22,7 @@ RUN set -ex ;\
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-COPY . /build
+COPY composer.json composer.lock /build/
 
 RUN --mount=type=cache,target=/root/.composer/ set -ex ;\
     export COMPOSER_ALLOW_SUPERUSER=1 ;\
@@ -32,7 +32,7 @@ FROM node:${NODEJS_VERSION}-alpine AS yarn-build
 
 WORKDIR /build
 
-COPY . /build
+COPY package.json yarn.lock /build/
 
 RUN --mount=type=cache,target=/root/.yarn \
     --mount=type=cache,target=/build/node_modules/.cache \
