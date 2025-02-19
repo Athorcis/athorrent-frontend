@@ -26,7 +26,11 @@ COPY composer.json composer.lock /build/
 
 RUN --mount=type=cache,target=/root/.composer/ set -ex ;\
     composer validate ;\
-    COMPOSER_ALLOW_SUPERUSER=1 composer install --classmap-authoritative --no-scripts
+    COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
+
+COPY src /build/src
+
+RUN composer dump-autoload --classmap-authoritative
 
 FROM node:${NODEJS_VERSION}-alpine AS yarn-build
 
