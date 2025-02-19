@@ -25,19 +25,25 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.lock /build/
 
 RUN --mount=type=cache,target=/root/.composer/ set -ex ;\
-    export COMPOSER_ALLOW_SUPERUSER=1 ;\
-    composer install --classmap-authoritative
+    composer validate ;\
+    COMPOSER_ALLOW_SUPERUSER=1 composer install --classmap-authoritative --no-scripts
 
 FROM node:${NODEJS_VERSION}-alpine AS yarn-build
 
 WORKDIR /build
 
-COPY package.json yarn.lock /build/
+COPY .yarn /build/.yarn
+COPY .yarnrc.yml package.json yarn.lock /build/
+
+RUN --mount=type=cache,target=/root/.yarn \
+    YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable
+
+COPY assets /build/assets
+COPY scripts/subset-font-awesome.mjs / /build/scripts/
+COPY .browserlistrc .eslintrc.json .postcssrc.json .stylelintrc.json tsconfig.json webpack.config.mjs /build/
 
 RUN --mount=type=cache,target=/root/.yarn \
     --mount=type=cache,target=/build/node_modules/.cache \
-    set -ex ;\
-    YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable ;\
     yarn build
 
 FROM base AS php
