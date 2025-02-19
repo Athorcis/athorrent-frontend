@@ -23,9 +23,9 @@ jobs:
         strategy:
             max-parallel: 1
             matrix:
-            include:
-                - target: php
-                - target: nginx
+                include:
+                    - target: php
+                    - target: nginx
 
         steps:
             - name: Log in to the Container registry
