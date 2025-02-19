@@ -9,10 +9,9 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-    setup-build-publish:
+    build-php:
         runs-on: ubuntu-latest
 
         permissions:
@@ -20,6 +19,13 @@ jobs:
             packages: write
             attestations: write
             id-token: write
+
+        strategy:
+            max-parallel: 1
+            matrix:
+            include:
+                - target: php
+                - target: nginx
 
         steps:
             - name: Log in to the Container registry
@@ -36,9 +42,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: |
-                    ${{ env.REGISTRY }}/${{ github.repository }}
-                    ${{ env.REGISTRY }}/${{ github.repository }}-nginx
+                  images: ${{ env.REGISTRY }}/${{ github.repository }}-${{matrix.target}}
 
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
