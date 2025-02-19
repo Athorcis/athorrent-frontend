@@ -11,7 +11,7 @@ env:
     REGISTRY: ghcr.io
 
 jobs:
-    build-php:
+    build:
         runs-on: ubuntu-latest
 
         permissions:
