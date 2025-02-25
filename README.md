@@ -1,5 +1,5 @@
 [![Code Climate](https://codeclimate.com/github/Athorcis/athorrent-frontend/badges/gpa.svg)](https://codeclimate.com/github/Athorcis/athorrent-frontend)
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Athorcis/athorrent-frontend/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/Athorcis/athorrent-frontend/tree/master)
+![build](https://github.com/Athorcis/athorrent-frontend/actions/workflows/ci.yml/badge.svg)
 ## Getting started
 
 Install the following prerequisites
