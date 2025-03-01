@@ -187,7 +187,7 @@ class BackendManager
         return !$this->stopping;
     }
 
-    protected function processStart(Backend $backend)
+    protected function processStart(Backend $backend): void
     {
         $user = $backend->getUser();
 
@@ -229,7 +229,7 @@ class BackendManager
         }
     }
 
-    protected function processHeartbeat(Backend $backend)
+    protected function processHeartbeat(Backend $backend): void
     {
         $this->logger->debug(sprintf('Sending heartbeat to %s...', $backend));
         try {
@@ -259,7 +259,7 @@ class BackendManager
         }
     }
 
-    protected function rotateHeartbeatQueues()
+    protected function rotateHeartbeatQueues(): void
     {
         foreach ($this->heartbeatQueue as $backend) {
             $this->nextHeartbeatQueue->enqueue($backend);

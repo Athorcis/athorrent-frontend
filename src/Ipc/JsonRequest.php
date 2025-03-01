@@ -2,12 +2,18 @@
 
 namespace Athorrent\Ipc;
 
+use JsonException;
+
 readonly class JsonRequest
 {
     public function __construct(private string $action, private array $parameters)
     {
     }
 
+    /**
+     * @return string
+     * @throws JsonException
+     */
     public function toRawRequest(): string
     {
         return json_encode(

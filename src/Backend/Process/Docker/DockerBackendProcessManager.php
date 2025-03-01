@@ -70,7 +70,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     /**
      * @param int[] $userIds
      * @return DockerBackendProcess[]
-     * @throws \Throwable
+     * @throws Throwable
      */
     protected function listProcesses(bool $all, array $userIds = []): array
     {

@@ -2,7 +2,9 @@
 
 namespace Athorrent\Filesystem;
 
-#[\Attribute(\Attribute::TARGET_PARAMETER)]
+use Attribute;
+
+#[Attribute(Attribute::TARGET_PARAMETER)]
 readonly class Requirements
 {
     public function __construct(
