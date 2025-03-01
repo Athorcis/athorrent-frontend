@@ -2,7 +2,10 @@
 
 namespace Athorrent\Ipc;
 
+use Athorrent\Ipc\Exception\JsonServiceException;
+use Athorrent\Ipc\Exception\SocketException;
 use Athorrent\Ipc\Socket\ClientSocketInterface;
+use JsonException;
 
 class JsonClient
 {
@@ -19,6 +22,9 @@ class JsonClient
         $this->clientSocket->close();
     }
 
+    /**
+     * @throws JsonServiceException
+     */
     public function recv(): ?JsonResponse
     {
         $rawResponse = '';
@@ -34,15 +40,30 @@ class JsonClient
         } while ($rawResponse[strlen($rawResponse) - 1] !== '\n');
 
         if ($rawResponse !== '') {
-            return JsonResponse::parse($rawResponse);
+            try {
+                return JsonResponse::parse($rawResponse);
+            }
+            catch (JsonException $e) {
+                throw new JsonServiceException(sprintf('failed to parse response : %s', $e->getMessage()), 0, $e);
+            }
         }
 
         return null;
     }
 
+    /**
+     * @throws JsonServiceException
+     * @throws SocketException
+     */
     public function send(JsonRequest $request): void
     {
-        $rawRequest = $request->toRawRequest();
+        try {
+            $rawRequest = $request->toRawRequest();
+        }
+        catch (JsonException $e) {
+            throw new JsonServiceException(sprintf('failed to encode request : %s', $e->getMessage()), 0, $e);
+        }
+
         $length = strlen($rawRequest);
         $offset = 0;
 

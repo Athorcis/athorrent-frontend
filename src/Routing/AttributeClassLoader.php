@@ -5,7 +5,7 @@ namespace Athorrent\Routing;
 use ReflectionClass;
 use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Routing\AttributeRouteControllerLoader;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class AttributeClassLoader extends AttributeRouteControllerLoader
@@ -18,41 +18,41 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
         parent::__construct();
     }
 
-    protected function addRouteWithoutLocale(RouteCollection $collection, Route $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
+    protected function addRouteWithoutLocale(RouteCollection $collection, Route $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
-        $annot->setDefaults(array_replace($annot->getDefaults(), [
+        $attr->setDefaults(array_replace($attr->getDefaults(), [
             '_locale' => $this->defaultLocale
         ]));
 
-        parent::addRoute($collection, $annot, $globals, $class, $method);
+        parent::addRoute($collection, $attr, $globals, $class, $method);
     }
 
-    protected function addRouteWithLocale(RouteCollection $collection, Route $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
+    protected function addRouteWithLocale(RouteCollection $collection, Route $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
-        $annot->setName($annot->getName() . '|i18n');
+        $attr->setName($attr->getName() . '|i18n');
 
         $globals['path'] = '/{_locale}' . $globals['path'];
         $globals['requirements']['_locale'] = implode('|', $this->locales);
 
-        parent::addRoute($collection, $annot, $globals, $class, $method);
+        parent::addRoute($collection, $attr, $globals, $class, $method);
     }
 
     /**
-     * @param Route $annot
+     * @param Route $attr
      */
-    protected function addRoute(RouteCollection $collection, $annot, array $globals, ReflectionClass $class, ReflectionMethod $method): void
+    protected function addRoute(RouteCollection $collection, object $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
-        if ($annot->getName() === null) {
-            $annot->setName($this->getDefaultRouteName($class, $method));
+        if ($attr->getName() === null) {
+            $attr->setName($this->getDefaultRouteName($class, $method));
         }
 
-        $annot->setDefaults(array_replace($annot->getDefaults(), [
+        $attr->setDefaults(array_replace($attr->getDefaults(), [
             '_action' => $method->getName(),
             '_prefixId' => $globals['name'] ?? ''
         ]));
 
-        $this->addRouteWithLocale($collection, clone $annot, $globals, $class, $method);
-        $this->addRouteWithoutLocale($collection, $annot, $globals, $class, $method);
+        $this->addRouteWithLocale($collection, clone $attr, $globals, $class, $method);
+        $this->addRouteWithoutLocale($collection, $attr, $globals, $class, $method);
     }
 
     protected function getDefaultRouteName(ReflectionClass $class, ReflectionMethod $method): string

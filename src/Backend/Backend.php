@@ -5,7 +5,7 @@ namespace Athorrent\Backend;
 use Athorrent\Backend\Process\BackendProcessInterface;
 use Athorrent\Database\Entity\User;
 use Athorrent\Ipc\Exception\IpcException;
-use Athorrent\Ipc\Exception\JsonServiceIpcException;
+use Athorrent\Ipc\Exception\JsonServiceException;
 use Athorrent\Ipc\Exception\SocketException;
 use Athorrent\Ipc\JsonService;
 use Athorrent\Ipc\Socket\NamedPipeClient;
@@ -106,7 +106,7 @@ class Backend extends JsonService
 
     /**
      * @return string|null
-     * @throws JsonServiceIpcException
+     * @throws JsonServiceException
      * @throws SocketException
      */
     public function ping(): ?string

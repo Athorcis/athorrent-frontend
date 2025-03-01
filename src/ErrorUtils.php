@@ -4,9 +4,9 @@ namespace Athorrent;
 
 class ErrorUtils
 {
-    private const ERROR_GET_LAST_UNDEFINED = 'error_get_last undefined';
+    private const string ERROR_GET_LAST_UNDEFINED = 'error_get_last undefined';
 
-    public static function resetLastError()
+    public static function resetLastError(): void
     {
         @user_error(self::ERROR_GET_LAST_UNDEFINED);
     }

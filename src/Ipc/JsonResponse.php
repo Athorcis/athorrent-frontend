@@ -2,6 +2,8 @@
 
 namespace Athorrent\Ipc;
 
+use JsonException;
+
 readonly class JsonResponse
 {
     public function __construct(private mixed $data, private bool $success = true)
@@ -18,6 +20,9 @@ readonly class JsonResponse
         return $this->data;
     }
 
+    /**
+     * @throws JsonException
+     */
     public static function parse(string $rawResponse): ?JsonResponse
     {
         $array = json_decode($rawResponse, true, 512, JSON_THROW_ON_ERROR);

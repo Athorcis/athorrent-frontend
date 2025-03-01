@@ -4,9 +4,7 @@ namespace Athorrent\Security;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
-use Athorrent\Database\Type\UserRole;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class UserManager

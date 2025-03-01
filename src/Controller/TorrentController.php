@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route(path: '/user/torrents', name: 'torrents')]
 class TorrentController extends AbstractController
 {
-    public function __construct(private LoggerInterface $logger)
+    public function __construct(private readonly LoggerInterface $logger)
     {
     }
 
@@ -33,33 +33,28 @@ class TorrentController extends AbstractController
     #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
     public function listTorrents(TorrentManager $torrentManager): View
     {
-        $backendAvailable = true;
-
         try {
             $torrents = $torrentManager->getTorrents();
 
             usort(
                 $torrents, fn($a, $b) => strcmp($a['name'], $b['name'])
             );
-        } catch (BackendUnavailableException $e) {
-            $this->logger->error('backend unavailable', ['exception' => $e]);
-            $backendAvailable = false;
-            $torrents = [];
-        }
 
-        if ($backendAvailable) {
+            $backendAvailable = true;
             $backendStarting = false;
             $backendUpdating = false;
             $backendStopped = false;
-
             $alertLevel = 'none';
-        }
-        else {
-            $backendState = $e->state;
-            $backendStarting = $backendState === BackendState::Starting;
-            $backendUpdating = $backendState === BackendState::Updating;
-            $backendStopped = $backendState === BackendState::Stopped;
 
+        } catch (BackendUnavailableException $e) {
+            $this->logger->error('backend unavailable', ['exception' => $e]);
+
+            $torrents = [];
+
+            $backendAvailable = false;
+            $backendStarting = $e->state === BackendState::Starting;
+            $backendUpdating = $e->state === BackendState::Updating;
+            $backendStopped = $e->state === BackendState::Stopped;
             $alertLevel = $backendStarting || $backendUpdating ? 'warning' : 'error';
         }
 

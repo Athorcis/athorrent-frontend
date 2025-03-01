@@ -32,6 +32,9 @@ class NamedPipeClient extends NamedPipe implements ClientSocketInterface
         return $bytesRead;
     }
 
+    /**
+     * @throws SocketException
+     */
     public function write(string $buffer, int $length): int
     {
         ErrorUtils::resetLastError();
