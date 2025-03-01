@@ -7,6 +7,7 @@ use Athorrent\Database\Entity\User;
 use Clue\React\Docker\Client;
 use Psr\Log\LoggerInterface;
 use React\Http\Message\ResponseException;
+use Throwable;
 use function React\Async\await;
 
 class DockerBackendProcessManager implements BackendProcessManagerInterface
@@ -14,16 +15,56 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     /** @var array<int, DockerBackendProcess>  */
     private array $processes = [];
 
-    public function __construct(private readonly Client $docker, private readonly LoggerInterface $logger) {}
+    private string $imageTag;
+
+    public function __construct(private readonly Client $docker, private readonly LoggerInterface $logger)
+    {
+        $this->imageTag = $_ENV['BACKEND_DOCKER_IMAGE'];
+    }
 
     public function isPersistent(): bool
     {
         return true;
     }
 
+    public function supportsUpdate(): bool
+    {
+        return true;
+    }
+
+    public function requestUpdate(): void
+    {
+        $this->pullImage($this->imageTag);
+        $imageId = await($this->docker->imageInspect($this->imageTag))['Id'];
+
+        $updateCount = 0;
+
+        foreach ($this->processes as $process) {
+            try {
+                $processImageId = $process->getImageId();
+
+                if ($processImageId !== $imageId) {
+                    $process->requestRestartToUpdate();
+                    ++$updateCount;
+                }
+            }
+            catch (Throwable $exception) {
+                $this->logger->error(sprintf('Failed to get image id : %s', $exception->getMessage()), ['exception' => $exception]);
+            }
+        }
+
+        if ($updateCount > 0) {
+            $this->logger->info(sprintf('%d processes need an update', $updateCount));
+        }
+        else {
+            $this->logger->info('Found no process to update');
+        }
+    }
+
     public function listRunningProcesses(): array
     {
-        return $this->listProcesses(false);
+        $this->processes = $this->listProcesses(false);
+        return $this->processes;
     }
 
     /**
@@ -33,7 +74,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
      */
     protected function listProcesses(bool $all, array $userIds = []): array
     {
-        $clients = [];
+        $processes = [];
 
         $containers = await($this->docker->containerList($all));
 
@@ -53,11 +94,11 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             }
 
             if ($userId && (count($userIds) === 0 || in_array($userId, $userIds, true))) {
-                $clients[$userId] = new DockerBackendProcess($this->docker, $container['Id']);
+                $processes[$userId] = new DockerBackendProcess($this->docker, $container['Id']);
             }
         }
 
-        return $clients;
+        return $processes;
     }
 
     protected function pullImage(string $image): void
@@ -84,12 +125,11 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     {
         $userId = $user->getId();
         $port = $user->getPort();
-        $image = $_ENV['BACKEND_DOCKER_IMAGE'];
 
-        $this->pullImageIfNotExists($image);
+        $this->pullImageIfNotExists($this->imageTag);
 
         $container = await($this->docker->containerCreate([
-            'Image' => $image,
+            'Image' => $this->imageTag,
             'Cmd' => ['--port', "$port"],
             'User' => 'www-data',
             'WorkingDir' => '/var/lib/athorrent-backend',
@@ -114,7 +154,9 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
 
         await($this->docker->containerStart($container['Id']));
 
-        return new DockerBackendProcess($this->docker, $container['Id']);
+        $this->processes[$userId] = new DockerBackendProcess($this->docker, $container['Id']);
+
+        return $this->processes[$userId];
     }
 
     protected function doClean(DockerBackendProcess $process, int $userId): void

@@ -8,5 +8,7 @@ interface BackendProcessInterface
 
     public function stop(): void;
 
+    public function shouldRestartToUpdate(): bool;
+
     public function getErrorInfo(): array;
 }

@@ -7,9 +7,11 @@ use Clue\React\Docker\Client;
 use React\Http\Message\ResponseException;
 use function React\Async\await;
 
-readonly class DockerBackendProcess implements BackendProcessInterface
+class DockerBackendProcess implements BackendProcessInterface
 {
-    public function __construct(private Client $docker, private string $containerId)
+    private bool $restartToUpdate = false;
+
+    public function __construct(private readonly Client $docker, private readonly string $containerId)
     {
     }
 
@@ -28,9 +30,25 @@ readonly class DockerBackendProcess implements BackendProcessInterface
         return false;
     }
 
+    public function getImageId(): string
+    {
+        $data = await($this->docker->containerInspect($this->containerId));
+        return $data['Image'];
+    }
+
     public function stop(): void
     {
         await($this->docker->containerStop($this->containerId));
+    }
+
+    public function requestRestartToUpdate(): void
+    {
+        $this->restartToUpdate = true;
+    }
+
+    public function shouldRestartToUpdate(): bool
+    {
+        return $this->restartToUpdate;
     }
 
     public function getErrorInfo(): array
