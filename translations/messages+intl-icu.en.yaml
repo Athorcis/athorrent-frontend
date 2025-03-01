@@ -90,6 +90,11 @@ torrents:
     leechers: Leechers
     managerUpdating: The torrent manager is being updated
     none: no torrents to display
+    unavailable:
+        starting: The torrent manager is starting
+        updating: The torrent manager is being updated
+        failed: The torrent manager failed, contact the administrator
+        stopped: The torrent manager is stopped, contact the administrator
 
     state:
         allocating: Allocating

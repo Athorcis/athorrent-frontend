@@ -5,7 +5,6 @@ namespace Athorrent\Database\Entity;
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
-use Athorrent\Process\Entity\TrackedProcess;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -58,9 +57,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
      */
     #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token', cascade: ['detach'], fetch: 'LAZY')]
     private array|Collection $sharings;
-
-    #[ORM\OneToOne(targetEntity: TrackedProcess::class, fetch: 'LAZY')]
-    private ?TrackedProcess $athorrentProcess = null;
 
     #[ORM\Column(type: 'integer')]
     private int $port;
@@ -181,16 +177,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         return $this->sharings;
     }
 
-    public function getAthorrentProcess(): ?TrackedProcess
-    {
-        return $this->athorrentProcess;
-    }
-
-    public function setAthorrentProcess(?TrackedProcess $process): void
-    {
-        $this->athorrentProcess = $process;
-    }
-
     public function getPort(): int
     {
         return $this->port;
@@ -213,7 +199,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getPath(string $path): string
     {
-        return Path::join(USER_DIR, $this->id, $path);
+        return Path::join(USER_ROOT_DIR, $this->id, $path);
     }
 
     public function getBackendPath(string $path = ''): string

@@ -57,8 +57,18 @@
         <span class="label torrent-state label-{{ torrentStateToClass(torrent) }}">{{ ('torrents.state.' ~ torrent.state)|trans }}</span>
     </div>
 {% else %}
-    {% if client_updating %}
-    <div class="alert alert-warning client-updating-warning" role="alert">{{ 'torrents.managerUpdating'|trans }}</div>
+    {% if not backend_available %}
+        <div class="alert alert-{% if alert_level == 'error' %}danger{% else%}warning{% endif %} backend-alert" role="alert">
+            {% if backend_starting %}
+                {{ 'torrents.unavailable.starting'|trans }}
+            {% elseif backend_updating %}
+                {{ 'torrents.unavailable.updating'|trans }}
+            {% elseif backend_stopped %}
+                {{ 'torrents.unavailable.stopped'|trans }}
+            {% else %}
+                {{ 'torrents.unavailable.failed'|trans }}
+            {% endif %}
+        </div>
     {% else %}
     <div class="alert alert-info" role="alert">{{ 'torrents.none'|trans }}</div>
     {% endif %}

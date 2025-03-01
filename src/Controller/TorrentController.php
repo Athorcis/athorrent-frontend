@@ -2,10 +2,12 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Utils\ServiceUnavailableException;
+use Athorrent\Backend\BackendState;
+use Athorrent\Backend\BackendUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -21,27 +23,53 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route(path: '/user/torrents', name: 'torrents')]
 class TorrentController extends AbstractController
 {
+    public function __construct(private LoggerInterface $logger)
+    {
+    }
+
     /**
      * @throws Exception
      */
     #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
     public function listTorrents(TorrentManager $torrentManager): View
     {
+        $backendAvailable = true;
+
         try {
             $torrents = $torrentManager->getTorrents();
-            $clientUpdating = false;
 
             usort(
                 $torrents, fn($a, $b) => strcmp($a['name'], $b['name'])
             );
-        } catch (ServiceUnavailableException) {
+        } catch (BackendUnavailableException $e) {
+            $this->logger->error('backend unavailable', ['exception' => $e]);
+            $backendAvailable = false;
             $torrents = [];
-            $clientUpdating = true;
+        }
+
+        if ($backendAvailable) {
+            $backendStarting = false;
+            $backendUpdating = false;
+            $backendStopped = false;
+
+            $alertLevel = 'none';
+        }
+        else {
+            $backendState = $e->state;
+            $backendStarting = $backendState === BackendState::Starting;
+            $backendUpdating = $backendState === BackendState::Updating;
+            $backendStopped = $backendState === BackendState::Stopped;
+
+            $alertLevel = $backendStarting || $backendUpdating ? 'warning' : 'error';
         }
 
         return new View([
             'torrents' => $torrents,
-            'client_updating' => $clientUpdating,
+            'backend_available' => $backendAvailable,
+            'backend_starting' => $backendStarting,
+            'backend_updating' => $backendUpdating,
+            'backend_stopped' => $backendStopped,
+            'alert_level' => $alertLevel,
             '_strings' => ['torrents.dropzone', 'error.unknownError', 'error.notATorrent', 'error.fileTooBig', 'error.serverError']
         ]);
     }

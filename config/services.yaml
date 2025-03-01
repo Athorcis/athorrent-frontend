@@ -72,3 +72,8 @@ services:
     Athorrent\Filesystem\FilesystemValueResolver:
         tags:
             - { name: controller.argument_value_resolver }
+
+    Clue\React\Docker\Client:
+        arguments:
+            $loop: null
+            $url: '%env(DOCKER_API_ENDPOINT)%'

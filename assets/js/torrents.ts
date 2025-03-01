@@ -580,7 +580,7 @@ class TorrentsPage extends AbstractPage {
     onUpdateTorrents = (data: string) => {
         document.querySelector('.torrent-list').innerHTML = data;
 
-        if (document.querySelector('.client-updating-warning')) {
+        if (document.querySelector('.backend-alert')) {
             this.addTorrentForm.disable();
         }
         else {
