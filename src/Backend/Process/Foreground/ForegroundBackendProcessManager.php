@@ -5,7 +5,7 @@ namespace Athorrent\Backend\Process\Foreground;
 use Athorrent\Backend\Process\BackendProcessInterface;
 use Athorrent\Backend\Process\BackendProcessManagerInterface;
 use Athorrent\Database\Entity\User;
-use Symfony\Component\Filesystem\Path;
+use RuntimeException;
 use Symfony\Component\Process\Process;
 
 class ForegroundBackendProcessManager implements BackendProcessManagerInterface
@@ -16,6 +16,16 @@ class ForegroundBackendProcessManager implements BackendProcessManagerInterface
     public function isPersistent(): bool
     {
         return false;
+    }
+
+    public function supportsUpdate(): bool
+    {
+        return false;
+    }
+
+    public function requestUpdate(): void
+    {
+        throw new RuntimeException('Update not supported');
     }
 
     public function create(User $user): BackendProcessInterface

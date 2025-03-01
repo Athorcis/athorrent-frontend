@@ -3,6 +3,7 @@
 namespace Athorrent\Command;
 
 use Athorrent\Backend\BackendManager;
+use React\EventLoop\Loop;
 use Seld\Signal\SignalHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,9 +19,7 @@ class BackendManagerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        //@TODO implement docker image update
-
-        $signalHandler = SignalHandler::create(null, function (string $signalName, SignalHandler $self) use ($output) {
+        $interruptionHandler = SignalHandler::create(null, function (string $signalName, SignalHandler $self) use ($output) {
             $output->writeln(sprintf("Received signal %s", $signalName));
 
             $promise = null;
@@ -34,6 +33,16 @@ class BackendManagerCommand extends Command
             }
 
             resolve($promise)->then(function () use ($self) {
+                $self->reset();
+            });
+        });
+
+        $updateHandler = SignalHandler::create([SignalHandler::SIGUSR1], function (string $signalName, SignalHandler $self) use ($output) {
+            $output->writeln(sprintf("Received signal %s", $signalName));
+
+            // We have to execute this asynchronously or it crashes: https://github.com/php/php-src/pull/9028
+            Loop::get()->futureTick(function () use($self) {
+                $this->backendManager->update();
                 $self->reset();
             });
         });

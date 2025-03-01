@@ -86,6 +86,16 @@ class BackendManager
         Loop::run();
     }
 
+    public function update(): void
+    {
+        if (!$this->backendProcessManager->supportsUpdate()) {
+            $this->logger->warning('Backend manager does not support update');
+            return;
+        }
+
+        $this->backendProcessManager->requestUpdate();
+    }
+
     public function stop(bool $keepBackends = true): void
     {
         if ($this->stopping) {
@@ -104,7 +114,7 @@ class BackendManager
             await($this->runPromise);
         }
         catch (Throwable $e) {
-            dump($e->getMessage());
+            $this->logger->error(sprintf('Backend manager failed with error : %s', $e->getMessage()), ['exception' => $e]);
         }
 
         if (!$keepBackends || !$this->backendProcessManager->isPersistent()) {
@@ -238,6 +248,12 @@ class BackendManager
             $backend->setState(BackendState::Starting);
             $this->startQueue->enqueue($backend);
         }
+        elseif ($backend->getProcess()->shouldRestartToUpdate()) {
+            $this->logger->info(sprintf('Restarting %s to update...', $backend));
+
+            $backend->setState(BackendState::Updating);
+            $this->startQueue->enqueue($backend);
+        }
         else {
             $this->nextHeartbeatQueue->enqueue($backend);
         }
@@ -313,8 +329,8 @@ class BackendManager
             unlink($socketPath);
         }
 
-        // @TODO remove fastresume
-        // @TODO remove torrent data
+        // @TODO remove fastresume if needed
+        // @TODO remove torrent data if needed
     }
 
     /**

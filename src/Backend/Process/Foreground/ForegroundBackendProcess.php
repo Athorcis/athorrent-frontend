@@ -21,6 +21,11 @@ readonly class ForegroundBackendProcess implements BackendProcessInterface
         $this->process->stop();
     }
 
+    public function shouldRestartToUpdate(): bool
+    {
+        return false;
+    }
+
     public function getErrorInfo(): array
     {
         return [
