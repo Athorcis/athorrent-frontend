@@ -87,8 +87,12 @@ torrents:
     ratio: Ratio
     seeders: Seeders
     leechers: Leechers
-    managerUpdating: Le gestionnaire de torrents est en cours de mise à jour.
     none: Aucun torrent à afficher
+    unavailable:
+        starting: Le gestionnaire de torrents est en cours de démarrage.
+        updating: Le gestionnaire de torrents est en cours de mise à jour.
+        failed: Le gestionnaire de torrents a échoué, contactez l'administrateur.
+        stopped: Le gestionnaire de torrents est arrêté, contactez l'administrateur.
 
     state:
         allocating: Allocating # to translate

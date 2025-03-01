@@ -2,6 +2,8 @@
 
 namespace Athorrent\Ipc;
 
+use Athorrent\Ipc\Exception\JsonServiceIpcException;
+use Athorrent\Ipc\Exception\SocketException;
 use RuntimeException;
 
 class JsonService
@@ -10,7 +12,11 @@ class JsonService
     {
     }
 
-    public function call(string $action, $parameters = [])
+    /**
+     * @throws JsonServiceIpcException|
+     * @throws SocketException
+     */
+    public function call(string $action, array $parameters = []): mixed
     {
         $request = new JsonRequest($action, $parameters);
 
@@ -35,7 +41,7 @@ class JsonService
             $this->onError($error);
         }
 
-        throw new RuntimeException('no response');
+        throw new JsonServiceIpcException('no response');
     }
 
     /**

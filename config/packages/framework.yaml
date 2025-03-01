@@ -21,6 +21,12 @@ framework:
     php_errors:
         log: true
 
+    rate_limiter:
+        backend_restart:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '10 minutes'
+
 when@test:
     framework:
         test: true

@@ -2,16 +2,25 @@
 
 namespace Athorrent\Ipc\Socket;
 
-use Athorrent\Utils\ServiceUnavailableException;
+use Athorrent\Ipc\Exception\SocketException;
 
 class UnixSocketClient extends UnixSocket implements ClientSocketInterface
 {
+
+    /**
+     * @param string $path
+     * @throws SocketException
+     */
     public function __construct(string $path)
     {
         $this->socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
 
-        if (!socket_connect($this->socket, $path)) {
-            throw new ServiceUnavailableException('SERVICE_NOT_RUNNING');
+        if ($this->socket === false) {
+            throw new SocketException(sprintf("socket_create failed with error: %s", socket_strerror(socket_last_error())));
+        }
+
+        if (@!socket_connect($this->socket, $path)) {
+            throw new SocketException(sprintf('socket_connect failed with error: %s', socket_strerror(socket_last_error())));
         }
     }
 

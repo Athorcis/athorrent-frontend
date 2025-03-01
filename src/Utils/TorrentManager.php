@@ -2,9 +2,9 @@
 
 namespace Athorrent\Utils;
 
+use Athorrent\Backend\Backend;
 use Athorrent\Database\Entity\User;
 use Athorrent\Filesystem\FileUtils;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Filesystem\Filesystem;
@@ -12,14 +12,14 @@ use Symfony\Component\Filesystem\Path;
 
 readonly class TorrentManager
 {
-    private AthorrentService $service;
+    private Backend $service;
 
     /**
      * TorrentManager constructor.
      */
-    public function __construct(EntityManagerInterface $em, private Filesystem $fs, private User $user)
+    public function __construct(private Filesystem $fs, private User $user)
     {
-        $this->service = new AthorrentService($em, $fs, $user);
+        $this->service = new Backend($user);
     }
 
     public function getUser(): User
@@ -80,7 +80,7 @@ readonly class TorrentManager
 
         rename($oldFile, $newFile);
 
-        $result = $this->service->call('addTorrentFromFile', [
+        $result = $this->service->callGuarded('addTorrentFromFile', [
             'file' => $this->makePathRelative($newFile)
         ]);
 
@@ -95,7 +95,7 @@ readonly class TorrentManager
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromMagnet(string $magnet): array
     {
-        return $this->service->call('addTorrentFromMagnet', ['magnet' => $magnet]);
+        return $this->service->callGuarded('addTorrentFromMagnet', ['magnet' => $magnet]);
     }
 
     /**
@@ -109,7 +109,7 @@ readonly class TorrentManager
      */
     public function getTorrents(): array
     {
-        return $this->service->call('getTorrents');
+        return $this->service->callGuarded('getTorrents');
     }
 
     /**
@@ -118,7 +118,7 @@ readonly class TorrentManager
      */
     public function getPaths(): array
     {
-        $paths = $this->service->call('getPaths');
+        $paths = $this->service->callGuarded('getPaths');
 
         foreach ($paths as $index => $path) {
             $paths[$index] = Path::canonicalize($this->makePathAbsolute($path));
@@ -132,7 +132,7 @@ readonly class TorrentManager
      */
     public function pauseTorrent(string $hash): string
     {
-        return $this->service->call('pauseTorrent', ['hash' => $hash]);
+        return $this->service->callGuarded('pauseTorrent', ['hash' => $hash]);
     }
 
     /**
@@ -140,7 +140,7 @@ readonly class TorrentManager
      */
     public function resumeTorrent(string $hash): string
     {
-        return $this->service->call('resumeTorrent', ['hash' => $hash]);
+        return $this->service->callGuarded('resumeTorrent', ['hash' => $hash]);
     }
 
     /**
@@ -148,7 +148,7 @@ readonly class TorrentManager
      */
     public function removeTorrent(string $hash): string
     {
-        return $this->service->call('removeTorrent', ['hash' => $hash]);
+        return $this->service->callGuarded('removeTorrent', ['hash' => $hash]);
     }
 
     /**
@@ -157,6 +157,6 @@ readonly class TorrentManager
      */
     public function listTrackers(string $hash): array
     {
-        return $this->service->call('listTrackers', ['hash' => $hash]);
+        return $this->service->callGuarded('listTrackers', ['hash' => $hash]);
     }
 }
