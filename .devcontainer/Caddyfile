@@ -1,0 +1,10 @@
+
+athorrent.local {
+  reverse_proxy nginx:80
+  tls internal
+}
+
+jackett.athorrent.local {
+    reverse_proxy jackett:9117
+    tls internal
+}

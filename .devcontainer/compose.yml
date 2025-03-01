@@ -1,0 +1,56 @@
+
+volumes:
+    postgres_data:
+    jackett_data:
+
+services:
+    db:
+        image: postgres:17.4-alpine
+        environment:
+            - POSTGRES_DB=athorrent
+            - POSTGRES_PASSWORD=test
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+
+    jackett:
+        image: linuxserver/jackett:latest
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+            - AUTO_UPDATE=false #optional
+        volumes:
+            - jackett_data:/config
+        restart: unless-stopped
+
+    php:
+        build:
+            context: ..
+            target: dev
+        depends_on:
+            - db
+            - jackett
+        volumes:
+            - ..:/var/www/athorrent
+            - /var/run/docker.sock:/var/run/docker.sock
+
+    nginx:
+        build:
+            context: ..
+            target: nginx-base
+        depends_on:
+            - php
+        volumes:
+            - ..:/var/www/athorrent:ro
+
+    reverse-proxy:
+        image: caddy
+        depends_on:
+            - nginx
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile:ro
+        ports:
+            - "80:80"
+            - "443:443"

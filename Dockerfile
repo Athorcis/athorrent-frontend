@@ -1,5 +1,6 @@
 ARG PHP_VERSION=8.4.4
 ARG COMPOSER_VERSION=2.8.5
+ARG NVM_VERSION=0.40.1
 ARG NODEJS_VERSION=22.14.0
 ARG NGINX_VERSION=1.27.4
 
@@ -10,9 +11,7 @@ RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases
 
 FROM composer:$COMPOSER_VERSION AS composer
 
-FROM base AS composer-build
-
-WORKDIR /build
+FROM base AS builder
 
 RUN set -ex ;\
     apt-get update ;\
@@ -21,6 +20,29 @@ RUN set -ex ;\
     apt-get clean
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+ENV NVM_DIR /usr/local/nvm
+ARG NVM_VERSION
+
+RUN set -ex; \
+    mkdir -p $NVM_DIR ;\
+    curl -sSL -o- https://raw.githubusercontent.com/creationix/nvm/v${NVM_VERSION}/install.sh | bash
+
+ARG NODEJS_VERSION
+
+# install node and npm
+RUN . $NVM_DIR/nvm.sh \
+    && nvm install ${NODEJS_VERSION} \
+    && nvm alias default ${NODEJS_VERSION} \
+    && nvm use default
+
+# add node and npm to path so the commands are available
+ENV NODE_PATH $NVM_DIR/v${NODEJS_VERSION}/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
+
+FROM builder AS composer-build
+
+WORKDIR /build
 
 COPY composer.json composer.lock /build/
 
@@ -32,7 +54,7 @@ COPY src /build/src
 
 RUN composer dump-autoload --classmap-authoritative
 
-FROM node:${NODEJS_VERSION}-alpine AS yarn-build
+FROM builder AS yarn-build
 
 WORKDIR /build
 
@@ -49,6 +71,11 @@ COPY .browserlistrc .eslintrc.json .postcssrc.json .stylelintrc.json tsconfig.js
 RUN --mount=type=cache,target=/root/.yarn \
     --mount=type=cache,target=/build/node_modules/.cache \
     yarn build
+
+FROM builder AS dev
+
+RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
+      spx xdebug
 
 FROM base AS php
 
@@ -72,7 +99,8 @@ RUN mkdir -p /var/www/athorrent/var && chown -R www-data:www-data /var/www/athor
 
 VOLUME ["/var/www/athorrent/var/user"]
 
-FROM nginx:${NGINX_VERSION}-alpine AS nginx
+FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
+COPY ./nginx.conf /etc/nginx/conf.d/athorrent.local.conf
 
-COPY ./nginx.conf /etc/nginx/conf.d/seedbox.athorcis.ovh.conf
+FROM nginx-base AS nginx
 COPY --chown=www-data:www-data --from=php /var/www/athorrent/public /var/www/athorrent/public
