@@ -100,7 +100,7 @@ RUN mkdir -p /var/www/athorrent/var && chown -R www-data:www-data /var/www/athor
 VOLUME ["/var/www/athorrent/var/user"]
 
 FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
-COPY ./nginx.conf /etc/nginx/conf.d/athorrent.local.conf
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
 COPY --chown=www-data:www-data --from=php /var/www/athorrent/public /var/www/athorrent/public
