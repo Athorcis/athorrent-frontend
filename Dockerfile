@@ -86,6 +86,7 @@ HEALTHCHECK --interval=5s --timeout=1s \
     CMD FCGI_CONNECT=localhost:9001 php-fpm-healthcheck --listen-queue=10 || exit 1
 
 COPY . /var/www/athorrent
+WORKDIR /var/www/athorrent
 
 COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
 COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
@@ -99,3 +100,4 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
 COPY --chown=www-data:www-data --from=php /var/www/athorrent/public /var/www/athorrent/public
+WORKDIR /var/www/athorrent
