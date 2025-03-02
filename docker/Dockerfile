@@ -32,7 +32,7 @@ RUN set -eux; \
 ARG NODEJS_VERSION
 
 # install node and npm
-RUN set -eux ;\
+RUN set -ex ;\
     . $NVM_DIR/nvm.sh ;\
     nvm install ${NODEJS_VERSION} ;\
     nvm alias default ${NODEJS_VERSION} ;\
