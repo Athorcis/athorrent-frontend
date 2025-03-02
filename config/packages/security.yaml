@@ -40,7 +40,7 @@ security:
                 always_remember_me: true
                 secure: true
 
-            login_throttling: ~
+            login_throttling: true
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
