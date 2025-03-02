@@ -9,6 +9,8 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    private ?string $projectDir = null;
+
     public function boot(): void
     {
         parent::boot();
@@ -16,5 +18,14 @@ class Kernel extends BaseKernel
         if (!defined('USER_ROOT_DIR')) {
             define('USER_ROOT_DIR', $this->getProjectDir() . '/var' . '/user');
         }
+    }
+
+    public function getProjectDir(): string
+    {
+        if (null === $this->projectDir) {
+            $this->projectDir = dirname(__DIR__);
+        }
+
+        return $this->projectDir;
     }
 }
