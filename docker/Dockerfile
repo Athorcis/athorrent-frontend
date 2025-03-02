@@ -8,7 +8,9 @@ ARG NGINX_VERSION=1.27.4
 
 FROM php:${PHP_VERSION}-fpm AS base
 
-RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
+RUN set -eux ;\
+    docker-php-ext-enable opcache ;\
+    curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       apcu bcmath intl pcntl pdo_pgsql sockets sysvsem
 
 COPY docker/conf/php/base.ini /usr/local/etc/php/conf.d/
@@ -23,14 +25,14 @@ RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases
 ENV NVM_DIR=/usr/local/nvm
 ARG NVM_VERSION
 
-RUN set -ex; \
+RUN set -eux; \
     mkdir -p $NVM_DIR ;\
     curl -sSL -o- https://raw.githubusercontent.com/creationix/nvm/v${NVM_VERSION}/install.sh | bash
 
 ARG NODEJS_VERSION
 
 # install node and npm
-RUN set -ex ;\
+RUN set -eux ;\
     . $NVM_DIR/nvm.sh ;\
     nvm install ${NODEJS_VERSION} ;\
     nvm alias default ${NODEJS_VERSION} ;\
@@ -88,7 +90,7 @@ FROM base AS php
 
 RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
-    set -ex ;\
+    set -eux ;\
     apt-get update ;\
     apt-get install -y --no-install-recommends \
         libfcgi-bin ;\
