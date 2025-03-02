@@ -39,13 +39,13 @@ FROM builder AS composer-build
 
 WORKDIR /build
 
-COPY composer.json composer.lock /build/
+COPY ../composer.json ../composer.lock /build/
 
 RUN --mount=type=cache,target=/root/.composer/ set -ex ;\
     composer validate ;\
     COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
 
-COPY src /build/src
+COPY ../src /build/src
 
 RUN composer dump-autoload --classmap-authoritative
 
@@ -53,15 +53,15 @@ FROM builder AS yarn-build
 
 WORKDIR /build
 
-COPY .yarn /build/.yarn
-COPY .yarnrc.yml package.json yarn.lock /build/
+COPY ../.yarn /build/.yarn
+COPY ../.yarnrc.yml ../package.json ../yarn.lock /build/
 
 RUN --mount=type=cache,target=/root/.yarn \
     YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable
 
-COPY assets /build/assets
-COPY scripts/subset-font-awesome.mjs / /build/scripts/
-COPY .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs /build/
+COPY ../assets /build/assets
+COPY ../scripts/subset-font-awesome.mjs / /build/scripts/
+COPY ../.browserlistrc ../.postcssrc.json ../.stylelintrc.json ../eslint.config.mjs ../tsconfig.json ../webpack.config.mjs /build/
 
 RUN --mount=type=cache,target=/root/.yarn \
     --mount=type=cache,target=/build/node_modules/.cache \
@@ -85,7 +85,7 @@ RUN set -ex ;\
 HEALTHCHECK --interval=5s --timeout=1s \
     CMD FCGI_CONNECT=localhost:9001 php-fpm-healthcheck --listen-queue=10 || exit 1
 
-COPY . /var/www/athorrent
+COPY .. /var/www/athorrent
 WORKDIR /var/www/athorrent
 
 COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
