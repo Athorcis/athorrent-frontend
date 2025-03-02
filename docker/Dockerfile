@@ -1,3 +1,5 @@
+#syntax=docker/dockerfile:1.7-labs
+
 ARG PHP_VERSION=8.4.4
 ARG COMPOSER_VERSION=2.8.6
 ARG NVM_VERSION=0.40.1
@@ -49,21 +51,18 @@ RUN --mount=type=cache,target=/root/.composer/ set -ex ;\
     composer validate ;\
     COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
 
-COPY src /build/src
+COPY --parents src /build/
 
 RUN composer dump-autoload --classmap-authoritative
 
 FROM builder AS yarn-build
 
-COPY .yarn /build/.yarn
-COPY .yarnrc.yml package.json yarn.lock /build/
+COPY --parents .yarn .yarnrc.yml package.json yarn.lock /build/
 
 RUN --mount=type=cache,target=/root/.yarn \
     YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable
 
-COPY assets /build/assets
-COPY scripts/subset-font-awesome.mjs / /build/scripts/
-COPY .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs /build/
+COPY --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs /build/
 
 RUN --mount=type=cache,target=/root/.yarn \
     --mount=type=cache,target=/build/node_modules/.cache \
@@ -91,7 +90,7 @@ HEALTHCHECK --interval=5s --timeout=1s \
 
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 
-COPY . /var/www/athorrent
+COPY --parents bin config migrations public src templates translations .env /var/www/athorrent/
 
 COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
 COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
