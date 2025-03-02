@@ -2,7 +2,7 @@
 
 namespace Athorrent\Filesystem;
 
-use finfo;
+use Symfony\Component\Mime\MimeTypes;
 
 class FilesystemEntry extends AbstractFilesystemEntry
 {
@@ -45,8 +45,13 @@ class FilesystemEntry extends AbstractFilesystemEntry
     public function getMimeType(): string
     {
         if ($this->mimeType === null) {
-            $finfo = new finfo(FILEINFO_MIME);
-            $this->mimeType = $finfo->file($this->path);
+            static $mimeUtils;
+
+            if ($mimeUtils === null) {
+                $mimeUtils = new MimeTypes();
+            }
+
+            $this->mimeType = $mimeUtils->guessMimeType($this->path);
         }
 
         return $this->mimeType;
