@@ -27,7 +27,7 @@ services:
 
     php:
         build:
-            context: ..
+            context: ../docker
             target: dev
         depends_on:
             - db
@@ -38,7 +38,7 @@ services:
 
     nginx:
         build:
-            context: ..
+            context: ../docker
             target: nginx-base
         depends_on:
             - php
