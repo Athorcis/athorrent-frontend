@@ -68,6 +68,15 @@ RUN --mount=type=cache,target=/root/.yarn \
     --mount=type=cache,target=/build/node_modules/.cache \
     yarn build
 
+FROM builder AS full-build
+
+COPY --parents bin config migrations public src templates translations .env /var/www/athorrent/
+
+COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
+COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
+
+RUN mkdir -p /var/www/athorrent/var
+
 FROM builder AS dev
 
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
@@ -90,12 +99,7 @@ HEALTHCHECK --interval=5s --timeout=1s \
 
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 
-COPY --parents bin config migrations public src templates translations .env /var/www/athorrent/
-
-COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
-COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
-
-RUN mkdir -p /var/www/athorrent/var && chown -R www-data:www-data /var/www/athorrent/var
+COPY --chown=www-data:www-data --from=full-build /var/www/athorrent/ /var/www/athorrent/
 
 VOLUME ["/var/www/athorrent/var/user"]
 
@@ -103,5 +107,5 @@ FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
 COPY docker/conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
-COPY --chown=www-data:www-data --from=php /var/www/athorrent/public /var/www/athorrent/public
+COPY --chown=www-data:www-data --from=full-build /var/www/athorrent/public /var/www/athorrent/public
 WORKDIR /var/www/athorrent
