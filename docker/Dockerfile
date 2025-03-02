@@ -77,7 +77,9 @@ COPY --parents bin config migrations public src templates translations .env /var
 COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
 COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
 
-RUN mkdir -p /var/www/athorrent/var
+RUN set -eux ;\
+    cd /var/www/athorrent ;\
+    TRUSTED_HOSTS= php bin/console cache:warmup --env=prod
 
 FROM builder AS dev
 
