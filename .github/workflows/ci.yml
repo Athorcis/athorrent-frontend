@@ -47,6 +47,7 @@ jobs:
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
               with:
+                  context: "{{defaultContext}}:docker"
                   push: true
                   target: ${{matrix.target}}
                   tags: ${{ steps.meta.outputs.tags }}
