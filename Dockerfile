@@ -9,19 +9,12 @@ FROM php:${PHP_VERSION}-fpm AS base
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       apcu bcmath intl opcache pcntl pdo_pgsql sockets
 
-FROM composer:$COMPOSER_VERSION AS composer
-
 FROM base AS builder
 
-RUN set -ex ;\
-    apt-get update ;\
-    apt-get install -y \
-        unzip ;\
-    apt-get clean
+RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
+      @composer-${COMPOSER_VERSION}
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-
-ENV NVM_DIR /usr/local/nvm
+ENV NVM_DIR=/usr/local/nvm
 ARG NVM_VERSION
 
 RUN set -ex; \
@@ -31,14 +24,16 @@ RUN set -ex; \
 ARG NODEJS_VERSION
 
 # install node and npm
-RUN . $NVM_DIR/nvm.sh \
-    && nvm install ${NODEJS_VERSION} \
-    && nvm alias default ${NODEJS_VERSION} \
-    && nvm use default
+RUN set -ex ;\
+    . $NVM_DIR/nvm.sh ;\
+    nvm install ${NODEJS_VERSION} ;\
+    nvm alias default ${NODEJS_VERSION} ;\
+    nvm use default ;\
+    corepack enable
 
 # add node and npm to path so the commands are available
-ENV NODE_PATH $NVM_DIR/v${NODEJS_VERSION}/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
+ENV NODE_PATH=$NVM_DIR/v${NODEJS_VERSION}/lib/node_modules
+ENV PATH=$NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
 
 FROM builder AS composer-build
 
@@ -66,7 +61,7 @@ RUN --mount=type=cache,target=/root/.yarn \
 
 COPY assets /build/assets
 COPY scripts/subset-font-awesome.mjs / /build/scripts/
-COPY .browserlistrc .eslintrc.json .postcssrc.json .stylelintrc.json tsconfig.json webpack.config.mjs /build/
+COPY .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs /build/
 
 RUN --mount=type=cache,target=/root/.yarn \
     --mount=type=cache,target=/build/node_modules/.cache \
