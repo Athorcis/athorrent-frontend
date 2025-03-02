@@ -13,7 +13,6 @@
         "ext-json": "*",
         "ext-sockets": "*",
         "clue/docker-react": "^1.5.0",
-        "composer/package-versions-deprecated": "1.11.99.5",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^3.1.2",
