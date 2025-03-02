@@ -9,6 +9,10 @@ FROM php:${PHP_VERSION}-fpm AS base
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       apcu bcmath intl opcache pcntl pdo_pgsql sockets sysvsem
 
+COPY ./conf/php/base.ini /usr/local/etc/php/conf.d/
+
+WORKDIR /var/www/athorrent
+
 FROM base AS builder
 
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
@@ -35,9 +39,9 @@ RUN set -ex ;\
 ENV NODE_PATH=$NVM_DIR/v${NODEJS_VERSION}/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
 
-FROM builder AS composer-build
-
 WORKDIR /build
+
+FROM builder AS composer-build
 
 COPY ../composer.json ../composer.lock /build/
 
@@ -50,8 +54,6 @@ COPY ../src /build/src
 RUN composer dump-autoload --classmap-authoritative
 
 FROM builder AS yarn-build
-
-WORKDIR /build
 
 COPY ../.yarn /build/.yarn
 COPY ../.yarnrc.yml ../package.json ../yarn.lock /build/
@@ -72,6 +74,8 @@ FROM builder AS dev
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       spx xdebug
 
+WORKDIR /var/www/athorrent
+
 FROM base AS php
 
 RUN set -ex ;\
@@ -85,8 +89,9 @@ RUN set -ex ;\
 HEALTHCHECK --interval=5s --timeout=1s \
     CMD FCGI_CONNECT=localhost:9001 php-fpm-healthcheck --listen-queue=10 || exit 1
 
+COPY ./conf/php/prod.ini /usr/local/etc/php/conf.d/
+
 COPY .. /var/www/athorrent
-WORKDIR /var/www/athorrent
 
 COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
 COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
@@ -96,7 +101,7 @@ RUN mkdir -p /var/www/athorrent/var && chown -R www-data:www-data /var/www/athor
 VOLUME ["/var/www/athorrent/var/user"]
 
 FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
 COPY --chown=www-data:www-data --from=php /var/www/athorrent/public /var/www/athorrent/public
