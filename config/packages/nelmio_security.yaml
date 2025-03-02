@@ -11,6 +11,3 @@ nelmio_security:
             style-src: ['self', 'unsafe-inline']
             frame-ancestors: ['none']
             block-all-mixed-content: true
-
-    forced_ssl:
-        enabled: false
