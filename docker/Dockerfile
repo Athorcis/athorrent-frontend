@@ -11,7 +11,7 @@ FROM php:${PHP_VERSION}-fpm AS base
 RUN set -eux ;\
     docker-php-ext-enable opcache ;\
     curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
-      apcu bcmath intl pcntl pdo_pgsql sockets sysvsem
+      apcu bcmath intl pcntl pdo_mysql pdo_pgsql pdo_sqlite sockets sysvsem
 
 COPY docker/conf/php/base.ini /usr/local/etc/php/conf.d/
 
