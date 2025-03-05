@@ -162,11 +162,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     }
 
     /**
-     * @param string[] $roles
+     * @param string[]|UserRole[] $roles
      */
     public function setRoles(array $roles): void
     {
-        $this->hasRoles = array_map(fn($role) => new UserHasRole($this, UserRole::from($role)), $roles);
+        $this->hasRoles = array_map(fn($role) => new UserHasRole($this, UserRole::fromOrSelf($role)), $roles);
     }
 
     /**
