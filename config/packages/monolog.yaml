@@ -49,9 +49,9 @@ when@prod:
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
             nested:
                 type: stream
-                path: php://stderr
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                formatter: monolog.formatter.json
+                include_stacktraces: true
             console:
                 type: console
                 process_psr_3_messages: false
@@ -59,5 +59,4 @@ when@prod:
             deprecation:
                 type: stream
                 channels: [deprecation]
-                path: php://stderr
-                formatter: monolog.formatter.json
+                path: "%kernel.logs_dir%/%kernel.environment%.deprecations.log"
