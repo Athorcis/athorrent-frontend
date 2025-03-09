@@ -50,10 +50,13 @@ ENV PATH=$NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
 
 ARG USER
 USER $USER
+
+ARG BUILD_DIR
 WORKDIR $BUILD_DIR
 
 FROM builder AS composer-build
 
+ARG BUILD_DIR
 COPY composer.json composer.lock $BUILD_DIR/
 
 ARG UID
@@ -70,6 +73,7 @@ RUN composer dump-autoload --classmap-authoritative
 FROM builder AS yarn-build
 
 ARG USER
+ARG BUILD_DIR
 COPY --chown=$USER --parents .yarn .yarnrc.yml package.json yarn.lock $BUILD_DIR/
 
 ARG UID
@@ -98,6 +102,7 @@ WORKDIR $RUN_DIR
 
 COPY --chown=$USER --parents bin config migrations public src templates translations .env $RUN_DIR
 
+ARG BUILD_DIR
 COPY --chown=$USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
 COPY --chown=$USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 
