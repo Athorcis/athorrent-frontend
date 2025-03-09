@@ -19,8 +19,8 @@ readonly class AuthenticationFailureHandler implements AuthenticationFailureHand
     {
         if ($_SERVER['APP_DEBUG']) {
             dump($exception);
-            exit(0);
         }
+
         $notification = new ErrorNotification('error.loginFailure');
         return $this->notificationListener->handleNotification($notification, $request);
     }
