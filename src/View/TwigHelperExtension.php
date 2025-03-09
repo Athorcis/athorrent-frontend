@@ -4,7 +4,6 @@ namespace Athorrent\View;
 
 use Athorrent\Cache\KeyGenerator\LocalizedKeyGenerator;
 use Athorrent\Filesystem\UserFilesystemEntry;
-use ByteUnits\Metric;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -100,9 +99,25 @@ class TwigHelperExtension extends AbstractExtension
         return time() - strtotime($date);
     }
 
-    public function formatBytes(int $value): string
+    public function formatBytes(int $bytes, int $precision = 2): string
     {
-        return Metric::bytes($value)->format(null, ' ');
+        static $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        static $maxExponent = count($units) - 1;
+
+        $base = 1024;
+
+        if ($bytes === 0) {
+            $value = 0;
+            $exponent = 0;
+        }
+        else {
+            $exponent = floor(log($bytes) / log($base));
+            $exponent = min($exponent, $maxExponent);
+
+            $value = round($bytes / pow($base, $exponent), $precision);
+        }
+
+        return $value . ' ' . $units[$exponent];
     }
 
     public function getCacheKey(string $annotation, mixed $value = null): string
