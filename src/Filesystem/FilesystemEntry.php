@@ -2,6 +2,7 @@
 
 namespace Athorrent\Filesystem;
 
+use Symfony\Component\Mime\FileBinaryMimeTypeGuesser;
 use Symfony\Component\Mime\MimeTypes;
 
 class FilesystemEntry extends AbstractFilesystemEntry
@@ -49,6 +50,7 @@ class FilesystemEntry extends AbstractFilesystemEntry
 
             if ($mimeUtils === null) {
                 $mimeUtils = new MimeTypes();
+                $mimeUtils->registerGuesser(new FileBinaryMimeTypeGuesser());
             }
 
             $this->mimeType = $mimeUtils->guessMimeType($this->path);
