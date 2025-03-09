@@ -78,9 +78,6 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
-    "gabrielelana/byte-units": {
-        "version": "0.5.0"
-    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
