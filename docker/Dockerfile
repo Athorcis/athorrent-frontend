@@ -146,6 +146,7 @@ COPY docker/conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
 
+ARG RUN_DIR
 WORKDIR $RUN_DIR
 
 ARG USER
