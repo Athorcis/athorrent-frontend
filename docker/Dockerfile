@@ -106,7 +106,7 @@ ARG BUILD_DIR
 COPY --chown=$USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
 COPY --chown=$USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 
-RUN TRUSTED_HOSTS= php bin/console cache:warmup --env=prod
+RUN php bin/console cache:warmup --env=prod
 
 FROM builder AS dev
 
