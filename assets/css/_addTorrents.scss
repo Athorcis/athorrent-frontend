@@ -129,6 +129,7 @@
     overflow: hidden;
     position: absolute;
     right: -1px;
+    display: flex;
 }
 
 #add-torrent-file {
@@ -152,7 +153,5 @@
 
 #add-torrent-submit {
     border-top-right-radius: 0;
-    display: block;
-    float: none;
-    margin-left: 114px;
+    flex: 1;
 }
