@@ -8,6 +8,7 @@ use Athorrent\Database\Type\UserRole;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Cache;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\UniqueConstraint(name: 'port', columns: ['port'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'error.usernameAlreadyUsed')]
+#[Cache(usage: 'NONSTRICT_READ_WRITE')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface
 {
     #[ORM\Id]
@@ -50,12 +52,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
      * @var UserHasRole[]|Collection
      */
     #[ORM\OneToMany(targetEntity: 'UserHasRole', mappedBy: 'user', cascade: ['persist', 'detach'], fetch: 'EAGER')]
+    #[Cache(usage: 'READ_ONLY')]
     private array|Collection $hasRoles;
 
     /**
      * @var Sharing[]|Collection
      */
     #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token', cascade: ['detach'], fetch: 'LAZY')]
+    #[Cache(usage: 'NONSTRICT_READ_WRITE')]
     private array|Collection $sharings;
 
     #[ORM\Column(type: 'integer')]

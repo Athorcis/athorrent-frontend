@@ -37,6 +37,11 @@ when@test:
 when@prod:
     doctrine:
         orm:
+            second_level_cache:
+                enabled: true
+                region_cache_driver:
+                    type: pool
+                    pool: doctrine.second_level_cache_pool
             auto_generate_proxy_classes: false
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
             query_cache_driver:
@@ -49,6 +54,8 @@ when@prod:
     framework:
         cache:
             pools:
+                doctrine.second_level_cache_pool:
+                    adapter: cache.app
                 doctrine.result_cache_pool:
                     adapter: cache.app
                 doctrine.system_cache_pool:
