@@ -79,8 +79,6 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
     --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/unplugged \
-    whoami ;\
-    ls -la /var/www ;\
     yarn install --immutable
 
 COPY --chown=$USER --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs /build/
@@ -93,14 +91,14 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
 
 FROM builder AS full-build
 
+WORKDIR /var/www/athorrent
+
 COPY --chown=$USER --parents bin config migrations public src templates translations .env /var/www/athorrent/
 
 COPY --chown=$USER --from=composer-build /build/vendor /var/www/athorrent/vendor
 COPY --chown=$USER --from=yarn-build /build/public/build /var/www/athorrent/public/build
 
-RUN set -eux ;\
-    cd /var/www/athorrent ;\
-    TRUSTED_HOSTS= php bin/console cache:warmup --env=prod
+RUN TRUSTED_HOSTS= php bin/console cache:warmup --env=prod
 
 FROM builder AS dev
 
@@ -127,16 +125,14 @@ HEALTHCHECK --interval=5s --timeout=1s \
 
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 
-FROM nginx-base AS nginx
-ARG USER
-COPY --chown=$USER --from=full-build /var/www/athorrent/ /var/www/athorrent/
-
 VOLUME ["/var/www/athorrent/var/user"]
 
 FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
 COPY docker/conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
+
+WORKDIR /var/www/athorrent
+
 ARG USER
 COPY --chown=$USER --from=full-build /var/www/athorrent/public /var/www/athorrent/public
-WORKDIR /var/www/athorrent
