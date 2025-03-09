@@ -6,6 +6,10 @@ ARG NVM_VERSION=0.40.1
 ARG NODEJS_VERSION=22.14.0
 ARG NGINX_VERSION=1.27.4
 
+ARG UID=33
+ARG GID=33
+ARG USER=$UID:$GID
+
 FROM php:${PHP_VERSION}-fpm AS base
 
 RUN set -eux ;\
@@ -43,15 +47,21 @@ RUN set -ex ;\
 ENV NODE_PATH=$NVM_DIR/v${NODEJS_VERSION}/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
 
+ARG USER
+USER $USER
 WORKDIR /build
 
 FROM builder AS composer-build
 
+ARG UID
+ARG GID
+
 COPY composer.json composer.lock /build/
 
-RUN --mount=type=cache,target=/root/.composer/ set -ex ;\
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.composer/ \
+    set -ex ;\
     composer validate ;\
-    COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
+    composer install --no-dev --no-scripts
 
 COPY --parents src /build/
 
@@ -59,29 +69,42 @@ RUN composer dump-autoload --classmap-authoritative
 
 FROM builder AS yarn-build
 
-COPY --parents .yarn .yarnrc.yml package.json yarn.lock /build/
+ARG UID
+ARG GID
+ARG USER
 
-RUN --mount=type=cache,target=/root/.yarn \
-    YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable
+COPY --chown=$USER --parents .yarn .yarnrc.yml package.json yarn.lock /build/
 
-COPY --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs /build/
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
+    --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
+    --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/cache \
+    --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/unplugged \
+    whoami ;\
+    ls -la /var/www ;\
+    yarn install --immutable
 
-RUN --mount=type=cache,target=/root/.yarn \
-    --mount=type=cache,target=/build/node_modules/.cache \
+COPY --chown=$USER --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs /build/
+
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
+    --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
+    --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/cache \
+    --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/unplugged \
     yarn build
 
 FROM builder AS full-build
 
-COPY --parents bin config migrations public src templates translations .env /var/www/athorrent/
+COPY --chown=$USER --parents bin config migrations public src templates translations .env /var/www/athorrent/
 
-COPY --from=composer-build /build/vendor /var/www/athorrent/vendor
-COPY --from=yarn-build /build/public/build /var/www/athorrent/public/build
+COPY --chown=$USER --from=composer-build /build/vendor /var/www/athorrent/vendor
+COPY --chown=$USER --from=yarn-build /build/public/build /var/www/athorrent/public/build
 
 RUN set -eux ;\
     cd /var/www/athorrent ;\
     TRUSTED_HOSTS= php bin/console cache:warmup --env=prod
 
 FROM builder AS dev
+
+USER root
 
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       spx xdebug
@@ -104,7 +127,9 @@ HEALTHCHECK --interval=5s --timeout=1s \
 
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 
-COPY --chown=www-data:www-data --from=full-build /var/www/athorrent/ /var/www/athorrent/
+FROM nginx-base AS nginx
+ARG USER
+COPY --chown=$USER --from=full-build /var/www/athorrent/ /var/www/athorrent/
 
 VOLUME ["/var/www/athorrent/var/user"]
 
@@ -112,5 +137,6 @@ FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
 COPY docker/conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
-COPY --chown=www-data:www-data --from=full-build /var/www/athorrent/public /var/www/athorrent/public
+ARG USER
+COPY --chown=$USER --from=full-build /var/www/athorrent/public /var/www/athorrent/public
 WORKDIR /var/www/athorrent
