@@ -10,6 +10,9 @@ ARG UID=33
 ARG GID=33
 ARG USER=$UID:$GID
 
+ARG BUILD_DIR=/build
+ARG RUN_DIR=/var/www/athorrent
+
 FROM php:${PHP_VERSION}-fpm AS base
 
 RUN set -eux ;\
@@ -18,8 +21,6 @@ RUN set -eux ;\
       apcu bcmath intl pcntl pdo_mysql pdo_pgsql pdo_sqlite sockets sysvsem
 
 COPY docker/conf/php/base.ini /usr/local/etc/php/conf.d/
-
-WORKDIR /var/www/athorrent
 
 FROM base AS builder
 
@@ -49,54 +50,56 @@ ENV PATH=$NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
 
 ARG USER
 USER $USER
-WORKDIR /build
+WORKDIR $BUILD_DIR
 
 FROM builder AS composer-build
 
+COPY composer.json composer.lock $BUILD_DIR/
+
 ARG UID
 ARG GID
-
-COPY composer.json composer.lock /build/
-
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.composer/ \
     set -ex ;\
     composer validate ;\
     composer install --no-dev --no-scripts
 
-COPY --parents src /build/
+COPY --parents src $BUILD_DIR/
 
 RUN composer dump-autoload --classmap-authoritative
 
 FROM builder AS yarn-build
 
+ARG USER
+COPY --chown=$USER --parents .yarn .yarnrc.yml package.json yarn.lock $BUILD_DIR/
+
 ARG UID
 ARG GID
-ARG USER
-
-COPY --chown=$USER --parents .yarn .yarnrc.yml package.json yarn.lock /build/
-
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
-    --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/cache \
-    --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/unplugged \
+    --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/cache \
+    --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/unplugged \
     yarn install --immutable
 
-COPY --chown=$USER --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs /build/
+COPY --chown=$USER --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs $BUILD_DIR/
 
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
-    --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/cache \
-    --mount=type=cache,uid=$UID,gid=$GID,target=/build/.yarn/unplugged \
+    --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/cache \
+    --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/unplugged \
     yarn build
 
 FROM builder AS full-build
 
-WORKDIR /var/www/athorrent
+ARG USER
+USER $USER
 
-COPY --chown=$USER --parents bin config migrations public src templates translations .env /var/www/athorrent/
+ARG RUN_DIR
+WORKDIR $RUN_DIR
 
-COPY --chown=$USER --from=composer-build /build/vendor /var/www/athorrent/vendor
-COPY --chown=$USER --from=yarn-build /build/public/build /var/www/athorrent/public/build
+COPY --chown=$USER --parents bin config migrations public src templates translations .env $RUN_DIR
+
+COPY --chown=$USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
+COPY --chown=$USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 
 RUN TRUSTED_HOSTS= php bin/console cache:warmup --env=prod
 
@@ -107,7 +110,7 @@ USER root
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       spx xdebug
 
-WORKDIR /var/www/athorrent
+WORKDIR $RUN_DIR
 
 FROM base AS php
 
@@ -125,14 +128,20 @@ HEALTHCHECK --interval=5s --timeout=1s \
 
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 
-VOLUME ["/var/www/athorrent/var/user"]
+ARG RUN_DIR
+WORKDIR $RUN_DIR
+
+ARG USER
+COPY --chown=$USER --from=full-build $RUN_DIR $RUN_DIR
+
+VOLUME ["$RUN_DIR/var/user"]
 
 FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
 COPY docker/conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
 
-WORKDIR /var/www/athorrent
+WORKDIR $RUN_DIR
 
 ARG USER
-COPY --chown=$USER --from=full-build /var/www/athorrent/public /var/www/athorrent/public
+COPY --chown=$USER --from=full-build $RUN_DIR/public $RUN_DIR/public
