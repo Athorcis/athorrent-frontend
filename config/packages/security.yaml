@@ -26,6 +26,7 @@ security:
                 default_target_path: /user/files/
                 failure_handler: Athorrent\Security\AuthenticationFailureHandler
                 always_use_default_target_path: false
+                enable_csrf: true
 
             logout:
                 path: /logout

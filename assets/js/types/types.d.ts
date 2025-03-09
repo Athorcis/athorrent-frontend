@@ -12,6 +12,5 @@ interface AppConfig {
     routes: Routes;
     routeParameters: Params;
     action: string;
-    csrfToken: string;
     strings: Translations;
 }

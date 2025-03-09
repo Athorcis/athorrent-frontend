@@ -38,7 +38,7 @@ class AccountController extends AbstractController
         return $this->userLoader->loadUserByIdentifier($sessionUser->getUserIdentifier());
     }
 
-    #[Route(path: '/', methods: ['GET', 'POST'])]
+    #[Route(path: '/', methods: ['GET', 'POST'], options: ['delegate_csrf' => true])]
     public function editAccount(Request $request, TokenInterface $token): View|Notification
     {
         // We cannot use the session user directly

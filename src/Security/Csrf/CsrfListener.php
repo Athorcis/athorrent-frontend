@@ -2,68 +2,58 @@
 
 namespace Athorrent\Security\Csrf;
 
-use Athorrent\Notification\Notification;
-use Athorrent\View\View;
+use Symfony\Component\DependencyInjection\Attribute\Lazy;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 readonly class CsrfListener implements EventSubscriberInterface
 {
-    public function __construct(private CsrfTokenManagerInterface $tokenManager)
+    public function __construct(#[Lazy] private CsrfTokenManagerInterface $tokenManager)
     {
     }
 
-    public function onKernelRequest(RequestEvent $event): void
+    protected function getRouteOptions(ControllerArgumentsEvent $event): array
+    {
+        $routeOptions = [];
+
+        /** @var Route[] $routeAttributes */
+        $routeAttributes = $event->getAttributes(Route::class);
+
+        foreach ($routeAttributes as $attribute) {
+            $routeOptions = array_merge($routeOptions, $attribute->getOptions());
+        }
+
+        return $routeOptions;
+    }
+
+    public function onControllerArguments(ControllerArgumentsEvent $event): void
     {
         $request = $event->getRequest();
 
-        if ($request->isMethodSafe()) {
-            $csrfToken = $this->tokenManager->getToken('main');
-        } else {
-            $previousCsrfToken = new CsrfToken('main', $request->headers->get('X-Csrf-Token', $request->get('csrfToken')));
+        if (!$request->isMethodSafe()) {
+            $routeOptions = $this->getRouteOptions($event);
+            $delegateCsrf = $routeOptions['delegate_csrf'] ?? false;
 
-            if (!$this->tokenManager->isTokenValid($previousCsrfToken)) {
-                throw new AccessDeniedHttpException('error.invalidCsrfToken');
+            if (!$delegateCsrf) {
+                $tokenValue = $request->headers->get('X-Csrf-Token', $request->get('_token'));
+                $token = new CsrfToken('xhr', $tokenValue);
+
+                if ($tokenValue === null || !$this->tokenManager->isTokenValid($token)) {
+                    throw new AccessDeniedHttpException('error.invalidCsrfToken');
+                }
             }
-
-            $csrfToken = $this->tokenManager->refreshToken('main');
         }
-
-        $request->attributes->set('_csrfToken', $csrfToken);
-    }
-
-    public function onKernelView(ViewEvent $event): void
-    {
-        $result = $event->getControllerResult();
-
-        if ($result === null) {
-            return;
-        }
-
-        $request = $event->getRequest();
-        $csrfToken = $request->attributes->get('_csrfToken');
-
-        if ($result instanceof View) {
-            $result->setJsVar('csrfToken', $csrfToken->getValue());
-        } elseif ($result instanceof Notification) {
-            return;
-        } elseif (!$request->isMethodSafe()) {
-            $result['csrfToken'] = $csrfToken->getValue();
-        }
-
-        $event->setControllerResult($result);
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => 'onKernelRequest',
-            KernelEvents::VIEW => 'onKernelView',
+            KernelEvents::CONTROLLER_ARGUMENTS => 'onControllerArguments',
         ];
     }
 }

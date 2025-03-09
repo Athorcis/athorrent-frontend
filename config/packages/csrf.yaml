@@ -8,4 +8,4 @@ framework:
         stateless_token_ids:
             - submit
             - authenticate
-            - logout
+            - xhr

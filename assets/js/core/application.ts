@@ -18,7 +18,7 @@ export class Application {
 
     constructor(private config: Partial<AppConfig>) {
         this.router = new Router(config.routes, config.routeParameters, config.action);
-        this.securityManager = new SecurityManager(config.csrfToken, this.router.getHttpClient());
+        this.securityManager = new SecurityManager(this.router.getHttpClient());
         this.translator = new Translator(config.strings);
         this.ui = new UiManager(this.translator);
     }
