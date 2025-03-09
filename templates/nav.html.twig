@@ -1,7 +1,12 @@
-{% set roles = app.user.roles|default([]) %}
 
-{% if is_granted('IS_IMPERSONATOR') %}
-    {% set roles = roles|merge(['ROLE_IMPERSONATOR']) %}
+{% if is_granted('ROLE_USER') %}
+    {% set roles = app.user.roles|default([]) %}
+
+    {% if is_granted('IS_IMPERSONATOR') %}
+        {% set roles = roles|merge(['ROLE_IMPERSONATOR']) %}
+    {% endif %}
+{% else %}
+    {% set roles = [] %}
 {% endif %}
 
 {% cache cache_key('nav', roles) %}
