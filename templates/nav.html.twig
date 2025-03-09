@@ -58,8 +58,11 @@
                             <input type="text" placeholder="{{ 'nav.nickname'|trans }}" class="form-control" name="_username" />
                         </div>
                         <div class="form-group">
-                            <input type="password" placeholder="{{ 'nav.password'|trans }}" class="form-control" name="_password">
+                            <input type="password" placeholder="{{ 'nav.password'|trans }}" class="form-control" name="_password" />
                         </div>
+
+                        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}" />
+
                         <button type="submit" class="btn btn-success">{{ 'nav.login'|trans }}</button>
                     </form>
                 {% endif %}

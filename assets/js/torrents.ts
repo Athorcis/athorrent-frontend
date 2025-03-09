@@ -477,19 +477,17 @@ class AddTorrentFileMode extends AddTorrentMode {
         this.setCounter(this.dropzone.getAcceptedFiles().length);
     }
 
-    onSuccess(file: DropzoneFile[], result: ApiResponse<unknown>) {
-        this.securityManager.setCsrfToken(result.csrfToken);
+    onSuccess() {
+        this.securityManager.removeCsrfCookie();
         this.setCounter(this.dropzone.getAcceptedFiles().length);
     }
 
-    onError(file: DropzoneFile[], result: ApiResponse<unknown>) {
-        if (typeof result === 'object' && result.hasOwnProperty('csrfToken')) {
-            this.securityManager.setCsrfToken(result.csrfToken);
-        }
+    onError() {
+        this.securityManager.removeCsrfCookie();
     }
 
     onSending(file: DropzoneFile[], xhr: XMLHttpRequest, formData: FormData) {
-        formData.append('csrfToken', this.securityManager.getCsrfToken());
+        formData.append('_token', this.securityManager.initializeCsrfToken());
     }
 
     getItems() {
