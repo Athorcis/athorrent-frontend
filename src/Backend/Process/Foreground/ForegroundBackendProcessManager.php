@@ -6,12 +6,18 @@ use Athorrent\Backend\Process\BackendProcessInterface;
 use Athorrent\Backend\Process\BackendProcessManagerInterface;
 use Athorrent\Database\Entity\User;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Process\Process;
 
 class ForegroundBackendProcessManager implements BackendProcessManagerInterface
 {
     /** @var array<int, ForegroundBackendProcess>  */
     private array $processes = [];
+
+    public function __construct(
+        #[Autowire('%env(resolve:BACKEND_FOREGROUND_BINARY)%')]
+        private string $binaryPath,
+    ) {}
 
     public function isPersistent(): bool
     {
@@ -30,7 +36,7 @@ class ForegroundBackendProcessManager implements BackendProcessManagerInterface
 
     public function create(User $user): BackendProcessInterface
     {
-        $process = new Process([$_ENV['BACKEND_FOREGROUND_BINARY'], '--port', $user->getPort()], $user->getBackendPath());
+        $process = new Process([$this->binaryPath, '--port', $user->getPort()], $user->getBackendPath());
         $process->start();
 
         return new ForegroundBackendProcess($process);
