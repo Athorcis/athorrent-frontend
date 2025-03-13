@@ -7,6 +7,7 @@ use Athorrent\Database\Entity\User;
 use Clue\React\Docker\Client;
 use Psr\Log\LoggerInterface;
 use React\Http\Message\ResponseException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Throwable;
 use function React\Async\await;
 
@@ -15,12 +16,15 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     /** @var array<int, DockerBackendProcess>  */
     private array $processes = [];
 
-    private string $imageTag;
-
-    public function __construct(private readonly Client $docker, private readonly LoggerInterface $logger)
-    {
-        $this->imageTag = $_ENV['BACKEND_DOCKER_IMAGE'];
-    }
+    public function __construct(
+        private readonly Client $docker,
+        private readonly LoggerInterface $logger,
+        #[Autowire('%env(BACKEND_DOCKER_IMAGE)%')]
+        private string $imageTag,
+        #[Autowire('%env(BACKEND_DOCKER_DATA_SRC)%')]
+        private string $dataSrc
+    )
+    {}
 
     public function isPersistent(): bool
     {
@@ -141,7 +145,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
                 'Mounts' => [
                     [
                         'Type' => 'bind',
-                        'Source' => $_ENV['BACKEND_DOCKER_DATA_SRC'] . '/' . $userId . '/backend',
+                        'Source' => $this->dataSrc . '/' . $userId . '/backend',
                         'Target' => '/var/lib/athorrent-backend',
                         'ReadOnly' => false,
                     ]
