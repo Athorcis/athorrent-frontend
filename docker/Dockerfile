@@ -115,6 +115,7 @@ USER root
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       spx xdebug
 
+ARG RUN_DIR
 WORKDIR $RUN_DIR
 
 FROM base AS php
