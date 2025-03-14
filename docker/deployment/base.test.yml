@@ -1,5 +1,14 @@
 
+volumes:
+    user_data:
+
 services:
+    change-vol-ownership:
+        image: busybox
+        volumes:
+            - user_data:/tmp/user-data
+        command: chown -R 33:33 /tmp/user-data
+
     php:
         build:
             args: &build_args
@@ -7,7 +16,14 @@ services:
                 - COMPOSER_ARGS=
         env_file:
             - ../../.env.test
+        volumes:
+            - user_data:/var/www/athorrent/var/user
+        depends_on:
+            change-vol-ownership:
+                condition: service_completed_successfully
 
     nginx:
         build:
             args: *build_args
+        volumes:
+            - user_data:/var/www/athorrent/var/user:ro
