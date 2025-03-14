@@ -111,7 +111,7 @@ COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
 COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 
 ARG SYMFONY_APP_ENV
-RUN env && cat .env && php bin/console cache:warmup --env=$SYMFONY_APP_ENV
+RUN php bin/console cache:warmup --env=$SYMFONY_APP_ENV
 
 FROM builder AS dev
 
