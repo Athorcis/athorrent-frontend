@@ -8,7 +8,7 @@ ARG NGINX_VERSION=1.27.4
 
 ARG UID=33
 ARG GID=33
-ARG USER=$UID:$GID
+ARG RUN_USER=$UID:$GID
 
 ARG BUILD_DIR=/build
 ARG RUN_DIR=/var/www/athorrent
@@ -48,8 +48,8 @@ RUN set -ex ;\
 ENV NODE_PATH=$NVM_DIR/v${NODEJS_VERSION}/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
 
-ARG USER
-USER $USER
+ARG RUN_USER
+USER $RUN_USER
 
 ARG BUILD_DIR
 WORKDIR $BUILD_DIR
@@ -72,9 +72,9 @@ RUN composer dump-autoload --classmap-authoritative
 
 FROM builder AS yarn-build
 
-ARG USER
+ARG RUN_USER
 ARG BUILD_DIR
-COPY --chown=$USER --parents .yarn .yarnrc.yml package.json yarn.lock $BUILD_DIR/
+COPY --chown=$RUN_USER --parents .yarn .yarnrc.yml package.json yarn.lock $BUILD_DIR/
 
 ARG UID
 ARG GID
@@ -84,7 +84,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/unplugged \
     yarn install --immutable
 
-COPY --chown=$USER --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs $BUILD_DIR/
+COPY --chown=$RUN_USER --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs $BUILD_DIR/
 
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
@@ -94,17 +94,17 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
 
 FROM builder AS full-build
 
-ARG USER
-USER $USER
+ARG RUN_USER
+USER $RUN_USER
 
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
-COPY --chown=$USER --parents bin config migrations public src templates translations .env $RUN_DIR
+COPY --chown=$RUN_USER --parents bin config migrations public src templates translations .env $RUN_DIR
 
 ARG BUILD_DIR
-COPY --chown=$USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
-COPY --chown=$USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
+COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
+COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 
 RUN php bin/console cache:warmup --env=prod
 
@@ -137,8 +137,8 @@ COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
-ARG USER
-COPY --chown=$USER --from=full-build $RUN_DIR $RUN_DIR
+ARG RUN_USER
+COPY --chown=$RUN_USER --from=full-build $RUN_DIR $RUN_DIR
 
 VOLUME ["$RUN_DIR/var/user"]
 
@@ -150,5 +150,5 @@ FROM nginx-base AS nginx
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
-ARG USER
-COPY --chown=$USER --from=full-build $RUN_DIR/public $RUN_DIR/public
+ARG RUN_USER
+COPY --chown=$RUN_USER --from=full-build $RUN_DIR/public $RUN_DIR/public
