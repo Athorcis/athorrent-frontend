@@ -13,6 +13,9 @@ ARG RUN_USER=$UID:$GID
 ARG BUILD_DIR=/build
 ARG RUN_DIR=/var/www/athorrent
 
+ARG APP_ENV=prod
+ARG COMPOSER_ARGS="--no-dev"
+
 FROM php:${PHP_VERSION}-fpm AS base
 
 RUN set -eux ;\
@@ -61,10 +64,11 @@ COPY composer.json composer.lock $BUILD_DIR/
 
 ARG UID
 ARG GID
+ARG COMPOSER_ARGS
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.composer/ \
     set -ex ;\
     composer validate ;\
-    composer install --no-dev --no-scripts
+    composer install ${COMPOSER_ARGS} --no-scripts
 
 COPY --parents src $BUILD_DIR/
 
@@ -106,7 +110,8 @@ ARG BUILD_DIR
 COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
 COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 
-RUN php bin/console cache:warmup --env=prod
+ARG APP_ENV
+RUN php bin/console cache:warmup --env=$APP_ENV
 
 FROM builder AS dev
 

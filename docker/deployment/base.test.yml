@@ -1,5 +1,13 @@
 
 services:
     php:
-        environment:
-            - APP_ENV=test
+        build:
+            args: &build_args
+                - APP_ENV=test
+                - COMPOSER_ARGS=
+        env_file:
+            - ../../.env.test
+
+    nginx:
+        build:
+            args: *build_args
