@@ -1,0 +1,56 @@
+
+volumes:
+    jackett_data:
+
+configs:
+    jackett_server_config:
+        file: ./conf/jackett/ServerConfig.json
+    jackett_indexer_the_pirate_bay:
+        file: ./conf/jackett/Indexers/thepiratebay.json
+    caddy_config:
+        file: ./conf/caddy/Caddyfile
+
+services:
+    jackett:
+        image: linuxserver/jackett:latest
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/Paris
+        volumes:
+            - jackett_data:/config
+            - ./conf/jackett/ServerConfig.json:/config/Jackett/ServerConfig.json:ro
+        configs:
+            - source: jackett_server_config
+              target: /config/Jackett/ServerConfig.json
+            - source: jackett_indexer_the_pirate_bay
+              target: /config/Jackett/Indexers/thepiratebay.json
+
+    php:
+        build:
+            context: ../..
+            dockerfile: docker/Dockerfile
+            target: php
+        depends_on:
+            - jackett
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+
+    nginx:
+        build:
+            context: ../..
+            dockerfile: docker/Dockerfile
+            target: nginx
+        depends_on:
+            - php
+
+    reverse-proxy:
+        image: caddy
+        depends_on:
+            - nginx
+        configs:
+            - source: caddy_config
+              target: /etc/caddy/Caddyfile
+        ports:
+            - "80:80"
+            - "443:443"

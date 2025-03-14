@@ -1,0 +1,7 @@
+
+name: athorrent-test
+
+include:
+    - path:
+        - base.yml
+        - base.test.yml
