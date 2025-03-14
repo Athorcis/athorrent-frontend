@@ -12,7 +12,7 @@ services:
     php:
         build:
             args: &build_args
-                - APP_ENV=test
+                - SYMFONY_APP_ENV=test
                 - COMPOSER_ARGS=
         env_file:
             - ../../.env.test

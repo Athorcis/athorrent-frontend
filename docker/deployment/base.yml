@@ -35,6 +35,8 @@ services:
         hostname: athorrent-php
         depends_on:
             - jackett
+        env_file:
+            - ../../.env
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
 
