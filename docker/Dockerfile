@@ -13,7 +13,7 @@ ARG RUN_USER=$UID:$GID
 ARG BUILD_DIR=/build
 ARG RUN_DIR=/var/www/athorrent
 
-ARG APP_ENV=prod
+ARG SYMFONY_APP_ENV=prod
 ARG COMPOSER_ARGS="--no-dev"
 
 FROM php:${PHP_VERSION}-fpm AS base
@@ -110,8 +110,8 @@ ARG BUILD_DIR
 COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
 COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 
-ARG APP_ENV
-RUN php bin/console cache:warmup --env=$APP_ENV
+ARG SYMFONY_APP_ENV
+RUN env && cat .env && php bin/console cache:warmup --env=$SYMFONY_APP_ENV
 
 FROM builder AS dev
 
