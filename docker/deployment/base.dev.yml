@@ -1,0 +1,20 @@
+
+configs:
+    php_spx_config:
+        file: ./conf/php/spx.ini
+
+services:
+    php:
+        build:
+            target: dev
+        volumes:
+            - ../..:/var/www/athorrent
+        configs:
+            - source: php_spx_config
+              target: /usr/local/etc/php/conf.d/spx.ini
+
+    nginx:
+        build:
+            target: nginx-base
+        volumes:
+            - ../..:/var/www/athorrent:ro

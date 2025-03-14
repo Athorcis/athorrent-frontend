@@ -2,5 +2,5 @@
     "name": "athorrent-frontend",
     "service": "php",
     "shutdownAction": "stopCompose",
-    "dockerComposeFile": "compose.yml",
+    "dockerComposeFile": "../docker/deployment/dev.yml",
 }
