@@ -21,8 +21,10 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         private readonly LoggerInterface $logger,
         #[Autowire('%env(BACKEND_DOCKER_IMAGE)%')]
         private string $imageTag,
-        #[Autowire('%env(BACKEND_DOCKER_DATA_SRC)%')]
-        private string $dataSrc
+        #[Autowire('%env(BACKEND_DOCKER_MOUNT_TYPE)%')]
+        private string $mountType,
+        #[Autowire('%env(BACKEND_DOCKER_MOUNT_SRC)%')]
+        private string $mountSrc
     )
     {}
 
@@ -132,6 +134,32 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
 
         $this->pullImageIfNotExists($this->imageTag);
 
+        $mountSubpath = $userId . '/backend';
+
+        if ($this->mountType === 'bind') {
+            $mountSource = $this->mountSrc . '/' . $mountSubpath;
+            $mountExtra = [];
+        }
+        elseif ($this->mountType === 'volume') {
+            $mountSource = $this->mountSrc;
+            $mountExtra = [
+                'VolumeOptions' => [
+                    'Subpath' => $mountSubpath,
+                ]
+            ];
+        }
+        else {
+            throw new \RuntimeException('Unsupported mount type ' . $this->mountType);
+        }
+
+        $mount = [
+            'Type' => $this->mountType,
+            'Source' => $mountSource,
+            'Target' => '/var/lib/athorrent-backend',
+            'ReadOnly' => false,
+            ...$mountExtra,
+        ];
+
         $container = await($this->docker->containerCreate([
             'Image' => $this->imageTag,
             'Cmd' => ['--port', "$port"],
@@ -142,14 +170,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             ],
             'HostConfig' => [
                 'NetworkMode' => 'host',
-                'Mounts' => [
-                    [
-                        'Type' => 'bind',
-                        'Source' => $this->dataSrc . '/' . $userId . '/backend',
-                        'Target' => '/var/lib/athorrent-backend',
-                        'ReadOnly' => false,
-                    ]
-                ]
+                'Mounts' => [$mount],
             ],
             'Labels' => [
                 'com.athorrent.user' => "$userId",
