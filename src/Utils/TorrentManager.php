@@ -29,7 +29,7 @@ readonly class TorrentManager
 
     public function getTorrentsDirectory(): string
     {
-        return $this->user->getBackendPath('new-torrents');
+        return $this->user->getNewTorrentsPath();
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Athorrent\Security;
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class UserManager
@@ -37,5 +38,9 @@ readonly class UserManager
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
+        $fs = new Filesystem();
+        $fs->mkdir($user->getFilesPath());
+        $fs->mkdir($user->getNewTorrentsPath());
     }
 }

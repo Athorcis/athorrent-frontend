@@ -210,4 +210,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     {
         return $this->getPath(Path::join('backend', $path));
     }
+
+    public function getFilesPath(): string
+    {
+        return $this->getBackendPath('files');
+    }
+
+    public function getNewTorrentsPath(): string
+    {
+        return $this->getBackendPath('new-torrents');
+    }
 }
