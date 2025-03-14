@@ -139,10 +139,12 @@ HEALTHCHECK --interval=5s --timeout=1s \
 
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 
+ARG RUN_USER
+USER $RUN_USER
+
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
-ARG RUN_USER
 COPY --chown=$RUN_USER --from=full-build $RUN_DIR $RUN_DIR
 
 VOLUME ["$RUN_DIR/var/user"]
