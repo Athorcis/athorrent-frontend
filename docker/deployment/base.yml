@@ -13,6 +13,7 @@ configs:
 services:
     jackett:
         image: linuxserver/jackett:latest
+        hostname: athorrent-jackett
         environment:
             - PUID=1000
             - PGID=1000
@@ -31,6 +32,7 @@ services:
             context: ../..
             dockerfile: docker/Dockerfile
             target: php
+        hostname: athorrent-php
         depends_on:
             - jackett
         volumes:
@@ -41,11 +43,13 @@ services:
             context: ../..
             dockerfile: docker/Dockerfile
             target: nginx
+        hostname: athorrent-nginx
         depends_on:
             - php
 
     reverse-proxy:
         image: caddy
+        hostname: athorrent-caddy
         depends_on:
             - nginx
         configs:
