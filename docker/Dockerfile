@@ -143,7 +143,7 @@ COPY --chown=$RUN_USER --from=full-build $RUN_DIR $RUN_DIR
 VOLUME ["$RUN_DIR/var/user"]
 
 FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
-COPY docker/conf/nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker/conf/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx
 
