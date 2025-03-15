@@ -15,6 +15,7 @@ error:
     unknownError: Unknown error
     loginFailure: Username or password invalid
     invalidMagnetUri: Invalid Magnet URI
+    invalidTorrentFile: Invalid torrent file
     invalidCsrfToken: The page needs to be reloaded (invalid csrf token)
 
 app:
