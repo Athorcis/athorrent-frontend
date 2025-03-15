@@ -15,9 +15,13 @@ export class UiManager {
         fragment.querySelector('.modal-title').textContent = this.translator.translate(title);
         fragment.querySelector('.modal-body').innerHTML = content;
 
-        const modal = fragment.children[0];
-        document.body.append(fragment);
+        const modal = fragment.firstElementChild;
 
+        $(modal).on('hidden.bs.modal', function () {
+            document.body.removeChild(modal);
+        });
+
+        document.body.append(modal);
         $(modal).modal('show');
     }
 }
