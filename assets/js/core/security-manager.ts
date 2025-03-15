@@ -20,9 +20,9 @@ export class SecurityManager {
 
                 const response$ = filterChain.doFilter(request);
 
-                response$.then(() => {
-                    this.removeCsrfCookie();
-                });
+                response$
+                    .catch(() => {})
+                    .finally(() => this.removeCsrfCookie());
 
                 return response$;
             }
