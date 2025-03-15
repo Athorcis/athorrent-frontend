@@ -152,19 +152,31 @@ class TorrentController extends AbstractController
 
         $torrentsDir = $torrentManager->getTorrentsDirectory();
 
+        $torrentIds = [];
+
         foreach ($files as $file) {
             $torrentPath = Path::join($torrentsDir, $file);
 
             if (file_exists($torrentPath)) {
-                $torrentManager->addTorrentFromFile($torrentPath);
+                $result = $torrentManager->addTorrentFromFile($torrentPath);
+
+                if (isset($result['hash'])) {
+                    $torrentIds[] = $result['hash'];
+                }
             }
         }
 
         foreach ($magnets as $magnet) {
-            $torrentManager->addTorrentFromMagnet($magnet);
+            $result = $torrentManager->addTorrentFromMagnet($magnet);
+
+            if (isset($result['hash'])) {
+                $torrentIds[] = $result['hash'];
+            }
         }
 
-        return [];
+        return [
+            'torrentIds' => $torrentIds,
+        ];
     }
 
     /**
