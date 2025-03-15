@@ -116,8 +116,14 @@ class Backend extends JsonService
 
     protected function onError(array $error): void
     {
-        if (isset($error['id']) && $error['id'] === 'INVALID_MAGNET_URI') {
-            throw new UserVisibleException('error.invalidMagnetUri');
+        if (isset($error['id'])) {
+            switch ($error['id']) {
+                case 'INVALID_MAGNET_URI':
+                    throw new UserVisibleException('error.invalidMagnetUri');
+
+                case 'INVALID_TORRENT_FILE':
+                    throw new UserVisibleException('error.invalidTorrentFile');
+            }
         }
 
         parent::onError($error);
