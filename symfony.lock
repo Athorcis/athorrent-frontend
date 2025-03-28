@@ -12,9 +12,6 @@
         },
         "files": []
     },
-    "doctrine/cache": {
-        "version": "1.10.2"
-    },
     "doctrine/collections": {
         "version": "1.6.7"
     },
@@ -282,9 +279,6 @@
         "version": "v1.18.1"
     },
     "symfony/polyfill-mbstring": {
-        "version": "v1.18.1"
-    },
-    "symfony/polyfill-php80": {
         "version": "v1.18.1"
     },
     "symfony/process": {
