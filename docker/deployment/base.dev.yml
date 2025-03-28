@@ -7,6 +7,8 @@ services:
     php:
         build:
             target: dev
+        env_file:
+            - ../../.env.dev
         volumes:
             - ../..:/var/www/athorrent
         configs:
