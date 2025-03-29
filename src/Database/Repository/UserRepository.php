@@ -2,6 +2,7 @@
 
 namespace Athorrent\Database\Repository;
 
+use Athorrent\Database\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -37,6 +38,8 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
+        $user = User::as($user);
+
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->flush();
     }

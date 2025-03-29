@@ -220,4 +220,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     {
         return $this->getBackendPath('new-torrents');
     }
+
+    public static function as(mixed $user): static
+    {
+        assert(
+            $user instanceof static,
+            sprintf('$user should be an instance of %s found %s instead', static::class, is_object($user) ? get_class($user) : gettype($user)),
+        );
+
+        return $user;
+    }
 }

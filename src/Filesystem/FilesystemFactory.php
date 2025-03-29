@@ -21,11 +21,11 @@ readonly class FilesystemFactory
         $token = $this->tokenStorage->getToken();
         $user = $token?->getUser();
 
-        if ($user instanceof UserInterface) {
-            assert($user instanceof User, "invalid type of user");
+        if ($user === null) {
+            return null;
         }
 
-        return $user;
+        return User::as($user);
     }
 
     public function createSharedFilesystem(string $token): SharedFilesystem
