@@ -1,27 +1,29 @@
 <!doctype html>
 <html lang="{{ app.locale }}">
-    <head>
-        <meta charset="utf-8">
-        <title>{% block title %}{% endblock %}</title>
-        <meta name="description" content="{{ 'app.description'|trans }}">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" type="image/x-icon" href="{{ asset('build/favicon.ico') }}" />
+    {% set route = app.request.attributes.get('_route') %}
 
-        {% set route = app.request.attributes.get('_route') %}
+    {% cache cache_key('head', route) %}
+        <head>
+            <meta charset="utf-8">
+            <title>{% block title %}{% endblock %}</title>
+            <meta name="description" content="{{ 'app.description'|trans }}">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {% if route is not empty %}
-            {% cache cache_key('head', route) %}
+            <link rel="icon" type="image/x-icon" href="{{ asset('build/favicon.ico') }}" />
+
+            {% if route is not empty %}
                 {% for locale in locales %}
                     <link rel="alternate" href="{{ url(app.request.attributes.get('_action'), { _locale: locale }) }}" hreflang="{{ locale }}" />
                 {% endfor %}
-            {% endcache %}
-        {% endif %}
+            {% endif %}
 
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('main') }}
-        {% endblock %}
-    </head>
+            {% block stylesheets %}
+                {{ encore_entry_link_tags('main') }}
+            {% endblock %}
+        </head>
+    {% endcache %}
+
     <body
         {% if js_vars %}
             data-athorrent="{{ js_vars|json_encode }}"
@@ -57,16 +59,18 @@
             {% block content %}{% endblock %}
         </div>
 
-        {% block templates %}
-            <template id="template-modal">{% include "fragments/modal.html.twig" %}</template>
-        {% endblock %}
+        {% cache cache_key('footer', route) %}
+            {% block templates %}
+                <template id="template-modal">{% include "fragments/modal.html.twig" %}</template>
+            {% endblock %}
 
-        {% block main_script %}
-            {{ encore_entry_script_tags('athorrent') }}
-        {% endblock %}
+            {% block main_script %}
+                {{ encore_entry_script_tags('athorrent') }}
+            {% endblock %}
 
-        {% if analytics_tag is not empty %}
-            {{ analytics_tag|raw }}
-        {% endif %}
+            {% if analytics_tag is not empty %}
+                {{ analytics_tag|raw }}
+            {% endif %}
+        {% endcache %}
     </body>
 </html>
