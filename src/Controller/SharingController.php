@@ -3,6 +3,7 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Database\Entity\Sharing;
+use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
@@ -35,7 +36,7 @@ class SharingController extends AbstractController
             throw new FileNotFoundException();
         }
 
-        $sharing = new Sharing($this->getUser(), $entry->getPath());
+        $sharing = new Sharing(User::as($this->getUser()), $entry->getPath());
         $this->entityManager->persist($sharing);
         $this->entityManager->flush();
 
