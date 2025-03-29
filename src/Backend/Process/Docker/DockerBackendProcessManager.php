@@ -7,6 +7,7 @@ use Athorrent\Database\Entity\User;
 use Clue\React\Docker\Client;
 use Psr\Log\LoggerInterface;
 use React\Http\Message\ResponseException;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Throwable;
 use function React\Async\await;
@@ -20,11 +21,11 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         private readonly Client $docker,
         private readonly LoggerInterface $logger,
         #[Autowire('%env(BACKEND_DOCKER_IMAGE)%')]
-        private string $imageTag,
+        private readonly string $imageTag,
         #[Autowire('%env(BACKEND_DOCKER_MOUNT_TYPE)%')]
-        private string $mountType,
+        private readonly string $mountType,
         #[Autowire('%env(BACKEND_DOCKER_MOUNT_SRC)%')]
-        private string $mountSrc
+        private readonly string $mountSrc,
     )
     {}
 
@@ -149,7 +150,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             ];
         }
         else {
-            throw new \RuntimeException('Unsupported mount type ' . $this->mountType);
+            throw new RuntimeException('Unsupported mount type ' . $this->mountType);
         }
 
         $mount = [

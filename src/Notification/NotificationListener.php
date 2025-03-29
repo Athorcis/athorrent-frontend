@@ -17,7 +17,7 @@ class NotificationListener implements EventSubscriberInterface
 {
     private bool $keepCookie = false;
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
     {
     }
 

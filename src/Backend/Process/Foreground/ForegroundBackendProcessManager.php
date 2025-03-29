@@ -16,7 +16,7 @@ class ForegroundBackendProcessManager implements BackendProcessManagerInterface
 
     public function __construct(
         #[Autowire('%env(resolve:BACKEND_FOREGROUND_BINARY)%')]
-        private string $binaryPath,
+        private readonly string $binaryPath,
     ) {}
 
     public function isPersistent(): bool
