@@ -4,46 +4,51 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00232ca3a04d7d5309818f08ebb0b7e8",
+    "content-hash": "a38c9c615fd57fbad31035b3bfc9403d",
     "packages": [
         {
             "name": "clue/docker-react",
-            "version": "v1.5.0",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clue/reactphp-docker.git",
-                "reference": "c1d01583f351f2e810d5edf5ee89eba872bf8b2a"
+                "reference": "d9f16d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clue/reactphp-docker/zipball/c1d01583f351f2e810d5edf5ee89eba872bf8b2a",
-                "reference": "c1d01583f351f2e810d5edf5ee89eba872bf8b2a",
+                "url": "https://api.github.com/repos/clue/reactphp-docker/zipball/d9f16d2",
+                "reference": "d9f16d2",
                 "shasum": ""
             },
             "require": {
                 "clue/json-stream": "^0.1",
                 "php": ">=5.3",
                 "react/event-loop": "^1.2",
-                "react/http": "^1.8",
-                "react/promise": "^3.1 || ^2.11 || ^1.3",
+                "react/http": "^1.11",
+                "react/promise": "^3.2 || ^2.11 || ^1.3",
                 "react/promise-stream": "^1.6",
-                "react/socket": "^1.12",
-                "react/stream": "^1.2",
+                "react/socket": "^1.16",
+                "react/stream": "^1.4",
                 "rize/uri-template": "^0.3"
             },
             "require-dev": {
                 "clue/caret-notation": "^0.2",
                 "clue/tar-react": "^0.2",
                 "phpunit/phpunit": "^9.6 || ^5.7 || ^4.8.36",
-                "react/async": "^4 || ^3 || ^2"
+                "react/async": "^4.2 || ^3 || ^2"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Clue\\React\\Docker\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Clue\\Tests\\React\\Docker\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -56,26 +61,26 @@
             "description": "Async, event-driven access to the Docker Engine API, built on top of ReactPHP.",
             "homepage": "https://github.com/clue/reactphp-docker",
             "keywords": [
+                "Docker",
+                "ReactPHP",
                 "async",
-                "container",
-                "docker",
-                "reactphp"
+                "container"
             ],
             "support": {
-                "issues": "https://github.com/clue/reactphp-docker/issues",
-                "source": "https://github.com/clue/reactphp-docker/tree/v1.5.0"
+                "source": "https://github.com/clue/reactphp-docker/tree/1.x",
+                "issues": "https://github.com/clue/reactphp-docker/issues"
             },
             "funding": [
                 {
-                    "url": "https://clue.engineering/support",
-                    "type": "custom"
+                    "type": "github",
+                    "url": "https://github.com/clue"
                 },
                 {
-                    "url": "https://github.com/clue",
-                    "type": "github"
+                    "type": "custom",
+                    "url": "https://clue.engineering/support"
                 }
             ],
-            "time": "2024-05-03T10:28:09+00:00"
+            "time": "2024-11-27T10:05:45+00:00"
         },
         {
             "name": "clue/json-stream",
@@ -2712,23 +2717,25 @@
         },
         {
             "name": "rize/uri-template",
-            "version": "0.3.8",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rize/UriTemplate.git",
-                "reference": "34a5b96d0b65a5dddb7d20f09b6527a43faede24"
+                "reference": "56f374a9a42c7c3998f8b55b6b21b224de90c58b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/34a5b96d0b65a5dddb7d20f09b6527a43faede24",
-                "reference": "34a5b96d0b65a5dddb7d20f09b6527a43faede24",
+                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/56f374a9a42c7c3998f8b55b6b21b224de90c58b",
+                "reference": "56f374a9a42c7c3998f8b55b6b21b224de90c58b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=8.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8.36"
+                "friendsofphp/php-cs-fixer": "^3.63",
+                "phpstan/phpstan": "^1.12",
+                "phpunit/phpunit": "~10.0"
             },
             "type": "library",
             "autoload": {
@@ -2754,7 +2761,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rize/UriTemplate/issues",
-                "source": "https://github.com/rize/UriTemplate/tree/0.3.8"
+                "source": "https://github.com/rize/UriTemplate/tree/0.4.0"
             },
             "funding": [
                 {
@@ -2770,7 +2777,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-08-30T07:09:40+00:00"
+            "time": "2024-11-27T12:13:42+00:00"
         },
         {
             "name": "seld/signal-handler",
@@ -9102,9 +9109,23 @@
             "time": "2025-01-07T09:23:14+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "clue/docker-react",
+            "version": "1.9999999.9999999.9999999-dev",
+            "alias": "v1.5.1",
+            "alias_normalized": "1.5.1.0"
+        },
+        {
+            "package": "rize/uri-template",
+            "version": "0.4.0.0",
+            "alias": "0.3.8",
+            "alias_normalized": "0.3.8.0"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "clue/docker-react": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
