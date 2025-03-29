@@ -6,7 +6,7 @@ use Athorrent\Utils\Search\JackettApi;
 use Athorrent\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 
 #[Route(path: '/search', name: 'search')]
