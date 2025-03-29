@@ -12,12 +12,13 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-sockets": "*",
-        "clue/docker-react": "^1.5.0",
+        "clue/docker-react": "1.x-dev#d9f16d2 as v1.5.1",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/orm": "^3.1.2",
         "nelmio/security-bundle": "^3.0",
         "react/async": "^4.3",
         "react/promise-timer": "^1.11.0",
+        "rize/uri-template": "0.4 as 0.3.8",
         "seld/signal-handler": "^2.0.2",
         "symfony/console": "7.2.*",
         "symfony/css-selector": "7.2.*",
@@ -96,5 +97,11 @@
             "allow-contrib": true,
             "require": "7.2.*"
         }
-    }
+    },
+    "repositories": [
+        {
+            "url": "https://github.com/clue/reactphp-docker",
+            "type": "vcs"
+        }
+    ]
 }
