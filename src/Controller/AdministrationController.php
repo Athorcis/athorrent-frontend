@@ -4,7 +4,7 @@ namespace Athorrent\Controller;
 
 use Athorrent\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/administration', name: 'administration')]
 class AdministrationController extends AbstractController
