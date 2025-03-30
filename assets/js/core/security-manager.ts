@@ -1,5 +1,7 @@
 import {HttpClient, Request, Response, FilterChain} from "typescript-http-client";
 
+const CSRF_TOKEN_LENGTH = 18;
+
 export class SecurityManager {
 
     private csrfCookie: string|undefined;
@@ -52,7 +54,7 @@ export class SecurityManager {
 
         if (!this.csrfCookie && this.nameCheck.test(this.csrfToken)) {
             this.csrfCookie = this.csrfToken;
-            this.csrfToken = btoa(String.fromCharCode.apply(null, crypto.getRandomValues(new Uint8Array(18))));
+            this.csrfToken = btoa(String.fromCharCode.apply(null, crypto.getRandomValues(new Uint8Array(CSRF_TOKEN_LENGTH))));
         }
 
         if (this.csrfCookie && this.tokenCheck.test(this.csrfToken)) {
