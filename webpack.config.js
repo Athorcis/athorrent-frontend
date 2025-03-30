@@ -83,6 +83,7 @@ Encore
     // enables Sass/SCSS support
     .enableSassLoader(function (options) {
         options.sassOptions.quietDeps = true;
+        options.sassOptions.silenceDeprecations = ['import'];
     })
 
     .enablePostCssLoader()

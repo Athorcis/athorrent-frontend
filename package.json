@@ -57,7 +57,7 @@
     "yargs": "^17.7.2"
   },
   "scripts": {
-    "font-awesome": "node --loader ts-node/esm --loader ./.pnp.loader.mjs scripts/subset-font-awesome.ts",
+    "font-awesome": "node --loader ts-node/esm --loader ./.pnp.loader.mjs --no-deprecation scripts/subset-font-awesome.ts",
     "dev-server": "yarn font-awesome && encore dev-server",
     "dev": "yarn font-awesome && encore dev",
     "watch": "yarn font-awesome && encore dev --watch",
