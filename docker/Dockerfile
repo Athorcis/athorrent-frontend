@@ -88,7 +88,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/unplugged \
     yarn install --immutable
 
-COPY --chown=$RUN_USER --parents assets scripts/subset-font-awesome.mjs .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.mjs tsconfig.json webpack.config.mjs $BUILD_DIR/
+COPY --chown=$RUN_USER --parents assets scripts/subset-font-awesome.ts .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.ts tsconfig.json webpack.config.mjs $BUILD_DIR/
 
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
