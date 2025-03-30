@@ -1,4 +1,3 @@
-/* eslint-env node */
 import path from 'path';
 import Encore from '@symfony/webpack-encore';
 import StyleLintPlugin from 'stylelint-webpack-plugin';
