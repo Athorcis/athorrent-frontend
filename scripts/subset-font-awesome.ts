@@ -1,4 +1,3 @@
-/* eslint-env node */
 import fs from 'fs';
 import {fontawesomeSubset} from 'fontawesome-subset';
 

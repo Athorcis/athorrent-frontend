@@ -1,14 +1,11 @@
 {
     "compilerOptions": {
-        "lib": ["dom", "es2018"],
-        "noImplicitAny": true,
-        "moduleResolution": "node",
-        "target": "es6",
         "incremental": true,
-        "esModuleInterop": true,
-        "types": ["bootstrap"]
+        "module": "nodenext",
+        "noImplicitAny": true,
+        "target": "ES2024"
     },
-    "include": [
-        "./assets/js/"
-    ]
+    "ts-node": {
+        "logError": true
+    }
 }

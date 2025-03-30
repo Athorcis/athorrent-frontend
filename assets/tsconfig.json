@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "lib": ["dom", "es2018"],
+        "noImplicitAny": true,
+        "moduleResolution": "bundler",
+        "module": "esnext",
+        "target": "es2017",
+        "incremental": true,
+        "esModuleInterop": true,
+        "types": ["bootstrap"]
+    },
+    "include": [
+        "./js/"
+    ]
+}

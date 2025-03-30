@@ -1,5 +1,3 @@
-/* eslint-env browser */
-
 import $ from 'jquery';
 import Dropzone, {DropzoneFile} from 'dropzone';
 import '../css/torrents.scss';
