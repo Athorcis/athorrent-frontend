@@ -48,9 +48,9 @@
     "minimum-stability": "stable",
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "symfony/debug-bundle": "7.1.*",
-        "symfony/stopwatch": "7.1.*",
-        "symfony/web-profiler-bundle": "7.1.*"
+        "symfony/debug-bundle": "7.2.*",
+        "symfony/stopwatch": "7.2.*",
+        "symfony/web-profiler-bundle": "7.2.*"
     },
     "config": {
         "preferred-install": {
