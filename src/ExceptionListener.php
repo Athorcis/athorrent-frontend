@@ -63,7 +63,7 @@ readonly class ExceptionListener implements EventSubscriberInterface
                 'error' => $message
             ], $statusCode);
         } else {
-            $html = $this->twig->render('pages/error.html.twig', ['error' => $message, 'code' => $statusCode]);
+            $html = $this->twig->render('pages/error.html.twig', ['error' => $message, 'code' => $statusCode, 'js_vars' => []]);
             $response = new Response($html);
         }
 
