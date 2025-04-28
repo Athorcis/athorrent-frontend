@@ -42,7 +42,7 @@ export class Application {
         let data: AppConfig;
         const json = document.body.dataset.athorrent;
 
-        if (data !== undefined) {
+        if (json !== undefined) {
             try {
                 data = JSON.parse(json);
             } catch (e) {
