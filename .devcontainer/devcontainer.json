@@ -3,4 +3,5 @@
     "service": "php",
     "shutdownAction": "stopCompose",
     "dockerComposeFile": "../docker/deployment/dev.yml",
+    "overrideCommand": false
 }

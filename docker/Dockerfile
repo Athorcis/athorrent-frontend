@@ -120,6 +120,8 @@ USER root
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       spx xdebug
 
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates
+
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
