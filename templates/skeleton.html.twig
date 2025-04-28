@@ -10,7 +10,9 @@
 
             {% if route is not empty %}
                 {% for locale in locales %}
-                    <link rel="alternate" href="{{ url(app.request.attributes.get('_action'), { _locale: locale }) }}" hreflang="{{ locale }}" />
+                    {% if locale != app.locale %}
+                        <link rel="alternate" href="{{ url(app.request.attributes.get('_action'), app.request.query.all|merge({ _locale: locale })) }}" hreflang="{{ locale }}" />
+                    {% endif %}
                 {% endfor %}
             {% endif %}
 
