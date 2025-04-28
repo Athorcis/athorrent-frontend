@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ app.locale }}">
 
-    {% set route = app.request.attributes.get('_route') %}
+    {% set route = error is defined ? 'error' : app.request.attributes.get('_route') %}
 
     {% cache cache_key('head', route ~ sha256(app.request.query.all|json_encode)) %}
         <head>
