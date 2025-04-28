@@ -3,14 +3,10 @@
 
     {% set route = app.request.attributes.get('_route') %}
 
-    {% cache cache_key('head', route) %}
+    {% cache cache_key('head', route ~ sha256(app.request.query.all|json_encode)) %}
         <head>
             <meta charset="utf-8">
             <title>{% block title %}{% endblock %}</title>
-            <meta name="description" content="{{ 'app.description'|trans }}">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-
-            <link rel="icon" type="image/x-icon" href="{{ asset('build/favicon.ico') }}" />
 
             {% if route is not empty %}
                 {% for locale in locales %}
@@ -18,9 +14,16 @@
                 {% endfor %}
             {% endif %}
 
-            {% block stylesheets %}
-                {{ encore_entry_link_tags('main') }}
-            {% endblock %}
+            {% cache cache_key('head_inner', route) %}
+                <meta name="description" content="{{ 'app.description'|trans }}">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+
+                <link rel="icon" type="image/x-icon" href="{{ asset('build/favicon.ico') }}" />
+
+                {% block stylesheets %}
+                    {{ encore_entry_link_tags('main') }}
+                {% endblock %}
+            {% endcache %}
         </head>
     {% endcache %}
 

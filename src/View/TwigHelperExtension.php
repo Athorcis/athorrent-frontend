@@ -24,6 +24,7 @@ class TwigHelperExtension extends AbstractExtension
             new TwigFunction('base64_encode', 'base64_encode'),
             new TwigFunction('format_bytes', $this->formatBytes(...)),
             new TwigFunction('cache_key', $this->getCacheKey(...)),
+            new TwigFunction('sha256', $this->hashWithSha256(...)),
         ];
     }
 
@@ -123,5 +124,10 @@ class TwigHelperExtension extends AbstractExtension
     public function getCacheKey(string $annotation, mixed $value = null): string
     {
         return $annotation . '.' . $this->keyGenerator->generateKey($value);
+    }
+
+    public function hashWithSha256(string $value): string
+    {
+        return hash('sha256', $value);
     }
 }
