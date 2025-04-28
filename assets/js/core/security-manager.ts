@@ -66,6 +66,11 @@ export class SecurityManager {
     }
 
     addCsrfTokenToForm(form: HTMLFormElement) {
+
+        if (form.method === 'get') {
+            return;
+        }
+
         const csrfToken = this.initializeCsrfToken(form);
         const csrfField = form.querySelector('input[data-controller="csrf-protection"], input[name="_csrf_token"]') as HTMLInputElement;
 
