@@ -42,10 +42,12 @@ export class Application {
         let data: AppConfig;
         const json = document.body.dataset.athorrent;
 
-        try {
-            data = JSON.parse(json);
-        } catch (e) {
-            console.error(e);
+        if (data !== undefined) {
+            try {
+                data = JSON.parse(json);
+            } catch (e) {
+                console.error(e);
+            }
         }
 
         return new Application(data || {});
