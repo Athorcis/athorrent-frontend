@@ -20,27 +20,26 @@
         "react/promise-timer": "^1.11.0",
         "rize/uri-template": "0.4 as 0.3.8",
         "seld/signal-handler": "^2.0.2",
-        "symfony/console": "7.2.*",
-        "symfony/css-selector": "7.2.*",
-        "symfony/dom-crawler": "7.2.*",
-        "symfony/dotenv": "7.2.*",
+        "symfony/console": "7.3.*",
+        "symfony/css-selector": "7.3.*",
+        "symfony/dom-crawler": "7.3.*",
+        "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2.2.2",
-        "symfony/form": "7.2.*",
-        "symfony/framework-bundle": "7.2.*",
-        "symfony/http-client": "7.2.*",
-        "symfony/lock": "7.2.*",
-        "symfony/mime": "7.2.*",
+        "symfony/form": "7.3.*",
+        "symfony/framework-bundle": "7.3.*",
+        "symfony/http-client": "7.3.*",
+        "symfony/lock": "7.3.*",
+        "symfony/mime": "7.3.*",
         "symfony/monolog-bundle": "^3.1",
-        "symfony/process": "7.2.*",
-        "symfony/proxy-manager-bridge": "6.4.*",
-        "symfony/rate-limiter": "7.2.*",
-        "symfony/runtime": "7.2.*",
-        "symfony/security-bundle": "7.2.*",
-        "symfony/translation": "7.2.*",
-        "symfony/twig-bundle": "7.2.*",
-        "symfony/validator": "7.2.*",
+        "symfony/process": "7.3.*",
+        "symfony/rate-limiter": "7.3.*",
+        "symfony/runtime": "7.3.*",
+        "symfony/security-bundle": "7.3.*",
+        "symfony/translation": "7.3.*",
+        "symfony/twig-bundle": "7.3.*",
+        "symfony/validator": "7.3.*",
         "symfony/webpack-encore-bundle": "^v2.1.1",
-        "symfony/yaml": "7.2.*",
+        "symfony/yaml": "7.3.*",
         "twig/twig": "^2.12|^3.0",
         "twig/cache-extra": "^3.13",
         "twig/extra-bundle": "^3.13"
@@ -48,9 +47,9 @@
     "minimum-stability": "stable",
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "symfony/debug-bundle": "7.2.*",
-        "symfony/stopwatch": "7.2.*",
-        "symfony/web-profiler-bundle": "7.2.*"
+        "symfony/debug-bundle": "7.3.*",
+        "symfony/stopwatch": "7.3.*",
+        "symfony/web-profiler-bundle": "7.3.*"
     },
     "config": {
         "preferred-install": {
@@ -95,7 +94,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "7.2.*"
+            "require": "7.3.*"
         }
     },
     "repositories": [
