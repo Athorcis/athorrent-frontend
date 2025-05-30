@@ -40,7 +40,7 @@ class UserController extends AbstractController
         return $view;
     }
 
-    #[Route(path: '/add', methods: ['GET', 'POST'], options: ['delegate_csrf' => true])]
+    #[Route(path: '/add', methods: ['GET', 'POST'], options: ['csrf' => 'delegate'])]
     public function addUser(Request $request, EntityManagerInterface $em): View|Notification
     {
         $user = new User();

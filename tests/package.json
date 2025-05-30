@@ -1,0 +1,9 @@
+{
+  "name": "tests",
+  "packageManager": "yarn@4.9.1",
+  "devDependencies": {
+    "cypress": "^14.4.0",
+    "cypress-map": "^1.48.1",
+    "typescript": "^5.8.3"
+  }
+}

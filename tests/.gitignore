@@ -1,0 +1,9 @@
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/patches
+.pnp.*
+
+cypress/downloads
+cypress/screenshots
