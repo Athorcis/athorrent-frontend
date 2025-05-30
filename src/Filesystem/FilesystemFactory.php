@@ -8,7 +8,6 @@ use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Utils\TorrentManagerFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 readonly class FilesystemFactory
 {

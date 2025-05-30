@@ -50,7 +50,6 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setRoles([$form->get('role')->getData()]);
-            $user->setSalt(base64_encode(random_bytes(22)));
             $user->setPort($this->userRepository->getNextAvailablePort());
 
             $em->persist($user);
