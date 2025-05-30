@@ -6,6 +6,7 @@ use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class UserManager
@@ -14,6 +15,7 @@ readonly class UserManager
         private EntityManagerInterface $entityManager,
         private UserRepository $userRepository,
         private ValidatorInterface $validator,
+        private UserPasswordHasherInterface $hasher,
     ) {
     }
 
@@ -29,8 +31,7 @@ readonly class UserManager
         $user = new User();
 
         $user->setUsername($username);
-        $user->setPlainPassword($password);
-        $user->setSalt(base64_encode(random_bytes(22)));
+        $this->setPlainPassword($user, $password);
         $user->setRoles($roles);
         $user->setPort($this->userRepository->getNextAvailablePort());
 
@@ -42,5 +43,10 @@ readonly class UserManager
         $fs = new Filesystem();
         $fs->mkdir($user->getFilesPath());
         $fs->mkdir($user->getNewTorrentsPath());
+    }
+
+    public function setPlainPassword(User $user, string $password): void
+    {
+        $user->setPassword($this->hasher->hashPassword($user, $password));
     }
 }
