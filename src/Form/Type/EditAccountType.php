@@ -57,6 +57,8 @@ class EditAccountType extends AbstractType
                     'required' => false,
                     'first_options'  => ['label' => 'account.edit.new_password'],
                     'second_options' => ['label' => 'account.edit.password_confirm'],
+                    'hash_property_path' => 'password',
+                    'mapped' => false,
                 ]
             )
             ->add(

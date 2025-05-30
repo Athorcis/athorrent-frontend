@@ -40,6 +40,8 @@ class AddUserType extends AbstractType
                     'label' => 'users.password',
                     'empty_data' => '',
                     'constraints' => [new NotBlank()],
+                    'hash_property_path' => 'password',
+                    'mapped' => false,
                 ]
             )
             ->add(
