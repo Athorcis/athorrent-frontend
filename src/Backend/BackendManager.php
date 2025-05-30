@@ -15,7 +15,7 @@ use React\Promise\PromiseInterface;
 use RuntimeException;
 use SplObjectStorage;
 use SplQueue;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Throwable;
 use function React\Async\async;
 use function React\Async\await;
@@ -52,7 +52,7 @@ class BackendManager
         private readonly BackendProcessManagerFactory $factory,
         private readonly LoggerInterface $logger,
         private readonly UserRepository $userRepo,
-        private readonly RateLimiterFactory $backendRestartLimiter,
+        private readonly RateLimiterFactoryInterface $backendRestartLimiter,
     ) {
         $this->sleepPromises = new SplObjectStorage();
     }

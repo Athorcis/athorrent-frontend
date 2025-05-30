@@ -34,12 +34,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     #[ORM\Column(type: 'string', length: 32, nullable: false)]
     private string $username;
 
-    private ?string $plainPassword = null;
-
     #[ORM\Column(type: 'text', nullable: false)]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true])]
+    #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true])]
     private string $salt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
@@ -88,20 +86,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     public function setUsername(string $username): void
     {
         $this->username = $username;
-    }
-
-    public function getPlainPassword(): ?string
-    {
-        return $this->plainPassword;
-    }
-
-    public function setPlainPassword(string $plainPassword): void
-    {
-        $this->plainPassword = $plainPassword;
-
-        // We reset the password, when setting the password as plain text
-        // to trigger the preUpdate doctrine event
-        $this->password = '';
     }
 
     public function getPassword(): ?string
@@ -191,9 +175,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->port = $port;
     }
 
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
-        $this->plainPassword = null;
+    }
+
+    public function __serialize(): array
+    {
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
+        return $data;
     }
 
     public function getCacheKey(): string
