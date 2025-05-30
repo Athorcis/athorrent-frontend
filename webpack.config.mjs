@@ -3,6 +3,7 @@ import Encore from '@symfony/webpack-encore';
 import StyleLintPlugin from 'stylelint-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import { fileURLToPath } from 'url';
+import CompressionPlugin from "compression-webpack-plugin";
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.mjs file.
@@ -98,6 +99,10 @@ Encore
 
     .addPlugin(new ESLintPlugin({
         extensions: ['ts']
+    }))
+
+    .addPlugin(new CompressionPlugin({
+        test: /\.(css|eot|ico|js|svg|ttf)(\?.*)?$/i,
     }))
 
     // uncomment if you use React

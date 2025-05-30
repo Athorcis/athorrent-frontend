@@ -2619,6 +2619,7 @@ __metadata:
     "@types/node": "npm:^22.15.24"
     autoprefixer: "npm:^10.4.21"
     bootstrap-sass: "npm:~3.4.3"
+    compression-webpack-plugin: "npm:^11.1.0"
     core-js: "npm:^3.42.0"
     dotenv: "npm:^16.5.0"
     dropzone: "npm:~6.0.0-beta.2"
@@ -3066,6 +3067,18 @@ __metadata:
   version: 3.0.0
   resolution: "common-path-prefix@npm:3.0.0"
   checksum: 10/09c180e8d8495d42990d617f4d4b7522b5da20f6b236afe310192d401d1da8147a7835ae1ea37797ba0c2238ef3d06f3492151591451df34539fdb4b2630f2b3
+  languageName: node
+  linkType: hard
+
+"compression-webpack-plugin@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "compression-webpack-plugin@npm:11.1.0"
+  dependencies:
+    schema-utils: "npm:^4.2.0"
+    serialize-javascript: "npm:^6.0.2"
+  peerDependencies:
+    webpack: ^5.1.0
+  checksum: 10/9068fc0fe8feb3c342043b58d42756006b5e85393bd40356e2bd9b68b70adb77782cd42bda2c84bc26c749d7357ae195b526aad3e6e6ffb51db1a23217bf6357
   languageName: node
   linkType: hard
 
