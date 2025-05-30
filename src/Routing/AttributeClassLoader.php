@@ -15,7 +15,7 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
      */
     public function __construct(private readonly array $locales, private readonly string $defaultLocale)
     {
-        parent::__construct();
+        parent::__construct($_ENV['APP_ENV']);
     }
 
     protected function addRouteWithoutLocale(RouteCollection $collection, Route $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
