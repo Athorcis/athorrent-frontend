@@ -14,17 +14,17 @@ use Doctrine\ORM\Mapping as ORM;
 class Sharing implements CacheKeyGetterInterface
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 32, options:  ['fixed' => true])]
+    #[ORM\Column(length: 32, options:  ['fixed' => true])]
     private string $token;
 
     #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'sharings')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private User $user;
 
     #[ORM\Column(type: 'text')]
     private string $path;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column]
     private DateTimeImmutable $creationDateTime;
 
     public function __construct(User $user, string $path)

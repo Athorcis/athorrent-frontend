@@ -25,25 +25,25 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
+    #[ORM\Column(type: 'integer', options: ['unsigned' => true])]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
     #[NotBlank]
     #[Length(max: 32)]
-    #[ORM\Column(type: 'string', length: 32, nullable: false)]
+    #[ORM\Column(length: 32)]
     private string $username;
 
-    #[ORM\Column(type: 'text', nullable: false)]
+    #[ORM\Column(type: 'text')]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true])]
+    #[ORM\Column(length: 32, nullable: true, options: ['fixed' => true])]
     private string $salt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    #[ORM\Column]
     private DateTimeImmutable $creationDateTime;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $connectionDateTime = null;
 
     /**
@@ -60,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     #[Cache(usage: 'NONSTRICT_READ_WRITE')]
     private array|Collection $sharings;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private int $port;
 
     public function __construct()

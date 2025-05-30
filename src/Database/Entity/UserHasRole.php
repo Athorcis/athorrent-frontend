@@ -17,7 +17,7 @@ class UserHasRole
     private User $user;
 
     #[ORM\Id]
-    #[ORM\Column(type: 'string', enumType: UserRole::class, nullable: false)]
+    #[ORM\Column(nullable: false, enumType: UserRole::class)]
     private UserRole $role;
 
     public function __construct(User $user, UserRole $role)
