@@ -1520,17 +1520,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-free@npm:6.7.2":
-  version: 6.7.2
-  resolution: "@fortawesome/fontawesome-free@npm:6.7.2"
-  checksum: 10/88101fee12470ede1e7f2588b86121924259d98889b950e2ccde71d934f4f344b592d1360700de4e92d81262014d3ae33fe995c7799f2be2abddcee3102413d6
+"@fortawesome/fontawesome-free@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@fortawesome/fontawesome-free@npm:7.0.0"
+  checksum: 10/b2a8400d163c7543e20f0cfedf3285f58e12e1495281691e42397560ad8cbb14587faaf4bb302eb20213ad1b6eb58b2eaa99c6d6d44dd7b65ecb6d63e65a9833
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-free@patch:@fortawesome/fontawesome-free@npm%3A6.7.2#~/.yarn/patches/@fortawesome-fontawesome-free-npm-6.7.2-d3f6d6ec6d.patch":
-  version: 6.7.2
-  resolution: "@fortawesome/fontawesome-free@patch:@fortawesome/fontawesome-free@npm%3A6.7.2#~/.yarn/patches/@fortawesome-fontawesome-free-npm-6.7.2-d3f6d6ec6d.patch::version=6.7.2&hash=5cb824"
-  checksum: 10/a689cad77d81e210ba2b779cca9bdf34f3297b9430cfbf9d5e5421d1241f3c7cce4757a798e595509f9d964eee44d5f1ae98a5f33923d91f335e6cd2da99372f
+"@fortawesome/fontawesome-free@patch:@fortawesome/fontawesome-free@npm%3A7.0.0#~/.yarn/patches/@fortawesome-fontawesome-free-npm-7.0.0-18d2121b05.patch":
+  version: 7.0.0
+  resolution: "@fortawesome/fontawesome-free@patch:@fortawesome/fontawesome-free@npm%3A7.0.0#~/.yarn/patches/@fortawesome-fontawesome-free-npm-7.0.0-18d2121b05.patch::version=7.0.0&hash=78927c"
+  checksum: 10/35e9d8acb8a0a0b0a1df2aa5dda077ce2e384e6f59c3ccaa5d912d1575dceb597ffb4c3e441cc14069dde69aaa10bfab9ca74f6579635675cac3e0acc46e05dd
   languageName: node
   linkType: hard
 
@@ -2880,7 +2880,7 @@ __metadata:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
     "@eslint/js": "npm:^9.33.0"
-    "@fortawesome/fontawesome-free": "patch:@fortawesome/fontawesome-free@npm%3A6.7.2#~/.yarn/patches/@fortawesome-fontawesome-free-npm-6.7.2-d3f6d6ec6d.patch"
+    "@fortawesome/fontawesome-free": "patch:@fortawesome/fontawesome-free@npm%3A7.0.0#~/.yarn/patches/@fortawesome-fontawesome-free-npm-7.0.0-18d2121b05.patch"
     "@symfony/webpack-encore": "npm:^5.1.0"
     "@types/bootstrap": "npm:^3.4.0"
     "@types/dropzone": "npm:^5.7.9"
@@ -2896,7 +2896,7 @@ __metadata:
     eslint-webpack-plugin: "npm:^5.0.2"
     exports-loader: "npm:^5.0.0"
     file-loader: "npm:^6.2.0"
-    fontawesome-subset: "npm:^4.5.0"
+    fontawesome-subset: "patch:fontawesome-subset@npm%3A4.5.0#~/.yarn/patches/fontawesome-subset-npm-4.5.0-6aedfa86b9.patch"
     jiti: "npm:^2.5.1"
     jquery: "npm:~3.7.1"
     js-base64: "npm:~3.7.7"
@@ -4471,7 +4471,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fontawesome-subset@npm:^4.5.0":
+"fontawesome-subset@npm:4.5.0":
   version: 4.5.0
   resolution: "fontawesome-subset@npm:4.5.0"
   dependencies:
@@ -4488,6 +4488,26 @@ __metadata:
     "@fortawesome/fontawesome-pro":
       optional: true
   checksum: 10/1c466b5dcee9e51bd147acb04ec075588dda2f1c29522fe74d872019d915d79546bbf2dc041dd362f748ed28a8662a989f1762583dfd68750c1dcb8d531ea2a9
+  languageName: node
+  linkType: hard
+
+"fontawesome-subset@patch:fontawesome-subset@npm%3A4.5.0#~/.yarn/patches/fontawesome-subset-npm-4.5.0-6aedfa86b9.patch":
+  version: 4.5.0
+  resolution: "fontawesome-subset@patch:fontawesome-subset@npm%3A4.5.0#~/.yarn/patches/fontawesome-subset-npm-4.5.0-6aedfa86b9.patch::version=4.5.0&hash=421943"
+  dependencies:
+    lodash: "npm:>=4.17.21"
+    mkdirp: "npm:^2.1.6 || ^3.0.1"
+    subset-font: "npm:^2.0.0"
+    yaml: "npm:^2.2.1"
+  peerDependencies:
+    "@fortawesome/fontawesome-free": ">=5.12.0"
+    "@fortawesome/fontawesome-pro": ">=5.12.0"
+  peerDependenciesMeta:
+    "@fortawesome/fontawesome-free":
+      optional: true
+    "@fortawesome/fontawesome-pro":
+      optional: true
+  checksum: 10/8135ed44c52b9c0d54b3ac564622fe5a3c215e6b0db6bfa1f46cf8ccd4013197f77e597c3da1faf96c0f9aa22ab2aef78797868f6521cf75b90e5093a1f155c8
   languageName: node
   linkType: hard
 
