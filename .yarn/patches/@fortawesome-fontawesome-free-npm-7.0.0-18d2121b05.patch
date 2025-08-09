@@ -1,0 +1,17 @@
+diff --git a/scss/brands.scss b/scss/brands.scss
+index 000996081ca30c3cd10a0d4ad0a636ba6a8c7ca4..1b9f4bff34e1edab21412d7e3df3bc0dfb2a6808 100644
+--- a/scss/brands.scss
++++ b/scss/brands.scss
+@@ -27,12 +27,6 @@
+   --#{v.$css-prefix}-style: 400;
+ }
+ 
+-@each $name, $icon in v.$brand-icons {
+-  .#{v.$css-prefix}-#{$name} {
+-    #{v.$icon-property}: string.unquote("\"#{ $icon }\"");
+-  }
+-}
+-
+ // convenience mixin for declaring pseudo-elements by CSS variable,
+ // including all style-specific font properties and ::before elements.
+ @mixin icon($var) {

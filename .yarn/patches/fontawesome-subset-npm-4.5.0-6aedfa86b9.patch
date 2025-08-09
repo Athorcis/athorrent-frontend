@@ -1,0 +1,24 @@
+diff --git a/dist/index.js b/dist/index.js
+index bba8df7509a1af46a812ad0ec69add4b31bb0cfa..de5e3484f776d9d20f07a413f9f33b52f2b0172c 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -43,6 +43,10 @@ function fontawesomeSubset(subset, outputDir, options = {}) {
+     const fontMeta = (0, path_1.resolve)(packageLocation, "../../metadata/icons.yml");
+     const fontFamilyMeta = (0, path_1.resolve)(packageLocation, "../../metadata/icon-families.yml");
+     const fontFiles = (0, path_1.resolve)(packageLocation, "../../webfonts");
++	const packageJson = (0, path_1.resolve)(packageLocation, "../../package.json");
++	const pkg = JSON.parse((0, fs_1.readFileSync)(packageJson, "utf8"));
++	const pkgMajorVersion = pkg.version.replace(/^(\d+)\.\d+\.\d+$/, '$1');
++	const fontFileExt = pkgMajorVersion < 7 ? '.ttf' : '.woff2';
+     // If 'subset' is set to array, turn into object defaulted for 'solid' use (fontawesome free)
+     if (Array.isArray(subset)) {
+         subset = { solid: subset };
+@@ -65,7 +69,7 @@ function fontawesomeSubset(subset, outputDir, options = {}) {
+         }
+         const fontFamily = key;
+         const fontFileName = constants_1.STYLE_FONT_MAP[fontFamily];
+-        const fontFilePath = (0, path_1.resolve)(fontFiles, `./${fontFileName}.ttf`);
++        const fontFilePath = (0, path_1.resolve)(fontFiles, `./${fontFileName}${fontFileExt}`);
+         if (!(0, fs_1.existsSync)((0, path_1.resolve)(fontFilePath))) {
+             console.warn(`Unable to find font file for requested font style '${fontFamily}'. Skipping.`);
+             (0, utils_1.addIconError)(iconErrors, fontFamily, icons);

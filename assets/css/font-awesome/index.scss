@@ -1,15 +1,16 @@
 
 $fa-font-path: "~fonts/font-awesome";
 
-@import "~@fortawesome/fontawesome-free/scss/functions";
-@import "~@fortawesome/fontawesome-free/scss/variables";
-@import "~@fortawesome/fontawesome-free/scss/mixins";
-@import "~@fortawesome/fontawesome-free/scss/core";
-@import "~@fortawesome/fontawesome-free/scss/fixed-width";
-@import "~@fortawesome/fontawesome-free/scss/animated";
-@import "~@fortawesome/fontawesome-free/scss/rotated-flipped";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-@import "~@fortawesome/fontawesome-free/scss/regular";
-@import "~@fortawesome/fontawesome-free/scss/brands";
-@import "icons";
-@import "~@fortawesome/fontawesome-free/scss/screen-reader";
+@use '~@fortawesome/fontawesome-free/scss/core';
+//@use '~@fortawesome/fontawesome-free/scss/sizing';
+@use '~@fortawesome/fontawesome-free/scss/widths';
+//@use '~@fortawesome/fontawesome-free/scss/list';
+//@use '~@fortawesome/fontawesome-free/scss/bordered';
+//@use '~@fortawesome/fontawesome-free/scss/pulled';
+@use '~@fortawesome/fontawesome-free/scss/animated';
+@use '~@fortawesome/fontawesome-free/scss/rotated-flipped';
+//@use '~@fortawesome/fontawesome-free/scss/stacked';
+@use "~@fortawesome/fontawesome-free/scss/solid";
+@use "~@fortawesome/fontawesome-free/scss/regular";
+@use "~@fortawesome/fontawesome-free/scss/brands";
+@use 'icons';

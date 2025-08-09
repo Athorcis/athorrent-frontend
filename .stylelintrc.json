@@ -3,6 +3,8 @@
     "rules": {
         "at-rule-empty-line-before": null,
         "selector-pseudo-element-colon-notation": null,
-        "declaration-block-no-redundant-longhand-properties": null
+        "declaration-block-no-redundant-longhand-properties": null,
+        "scss/double-slash-comment-empty-line-before": null,
+        "scss/double-slash-comment-whitespace-inside": null
     }
 }
