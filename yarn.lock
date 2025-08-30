@@ -2935,7 +2935,7 @@ __metadata:
     eslint-webpack-plugin: "npm:^5.0.2"
     exports-loader: "npm:^5.0.0"
     file-loader: "npm:^6.2.0"
-    fontawesome-subset: "patch:fontawesome-subset@npm%3A4.5.0#~/.yarn/patches/fontawesome-subset-npm-4.5.0-6aedfa86b9.patch"
+    fontawesome-subset: "npm:^4.6.0"
     jiti: "npm:^2.5.1"
     jquery: "npm:~3.7.1"
     js-base64: "npm:~3.7.8"
@@ -4482,9 +4482,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fontawesome-subset@npm:4.5.0":
-  version: 4.5.0
-  resolution: "fontawesome-subset@npm:4.5.0"
+"fontawesome-subset@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "fontawesome-subset@npm:4.6.0"
   dependencies:
     lodash: "npm:>=4.17.21"
     mkdirp: "npm:^2.1.6 || ^3.0.1"
@@ -4498,27 +4498,7 @@ __metadata:
       optional: true
     "@fortawesome/fontawesome-pro":
       optional: true
-  checksum: 10/1c466b5dcee9e51bd147acb04ec075588dda2f1c29522fe74d872019d915d79546bbf2dc041dd362f748ed28a8662a989f1762583dfd68750c1dcb8d531ea2a9
-  languageName: node
-  linkType: hard
-
-"fontawesome-subset@patch:fontawesome-subset@npm%3A4.5.0#~/.yarn/patches/fontawesome-subset-npm-4.5.0-6aedfa86b9.patch":
-  version: 4.5.0
-  resolution: "fontawesome-subset@patch:fontawesome-subset@npm%3A4.5.0#~/.yarn/patches/fontawesome-subset-npm-4.5.0-6aedfa86b9.patch::version=4.5.0&hash=421943"
-  dependencies:
-    lodash: "npm:>=4.17.21"
-    mkdirp: "npm:^2.1.6 || ^3.0.1"
-    subset-font: "npm:^2.0.0"
-    yaml: "npm:^2.2.1"
-  peerDependencies:
-    "@fortawesome/fontawesome-free": ">=5.12.0"
-    "@fortawesome/fontawesome-pro": ">=5.12.0"
-  peerDependenciesMeta:
-    "@fortawesome/fontawesome-free":
-      optional: true
-    "@fortawesome/fontawesome-pro":
-      optional: true
-  checksum: 10/8135ed44c52b9c0d54b3ac564622fe5a3c215e6b0db6bfa1f46cf8ccd4013197f77e597c3da1faf96c0f9aa22ab2aef78797868f6521cf75b90e5093a1f155c8
+  checksum: 10/96d42f20e4b4ef8747663300115b5c35d13f677978b7c88f7376c39f38a215df0dc3f062d15b8175573945335e624783ab924f6077bf51114bfe34e9ea15eb5d
   languageName: node
   linkType: hard
 
