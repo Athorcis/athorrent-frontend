@@ -1558,10 +1558,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-free@npm:^7.0.1":
+"@fortawesome/fontawesome-free@npm:7.0.1":
   version: 7.0.1
   resolution: "@fortawesome/fontawesome-free@npm:7.0.1"
   checksum: 10/72fcb5be1c16c46dab8c8af58fb9abe54380d9acb54c3ab5bda42c247aa8139ddc038163d4b9ac15191c6b7b6aa255753022eb40b336bf8f88368371af4078f7
+  languageName: node
+  linkType: hard
+
+"@fortawesome/fontawesome-free@patch:@fortawesome/fontawesome-free@npm%3A7.0.1#~/.yarn/patches/@fortawesome-fontawesome-free-npm-7.0.1-fcdb3fc0e5.patch":
+  version: 7.0.1
+  resolution: "@fortawesome/fontawesome-free@patch:@fortawesome/fontawesome-free@npm%3A7.0.1#~/.yarn/patches/@fortawesome-fontawesome-free-npm-7.0.1-fcdb3fc0e5.patch::version=7.0.1&hash=5e3948"
+  checksum: 10/65f9b3436379a740a4ab3e15e398090544403202c1ad71526517c2dcc84903d24da4855bd0b514abe4457e8b7b309515b1152db786021455658eee4b4b2cbb11
   languageName: node
   linkType: hard
 
@@ -2912,7 +2919,7 @@ __metadata:
     "@babel/core": "npm:^7.28.3"
     "@babel/preset-env": "npm:^7.28.3"
     "@eslint/js": "npm:^9.34.0"
-    "@fortawesome/fontawesome-free": "npm:^7.0.1"
+    "@fortawesome/fontawesome-free": "patch:@fortawesome/fontawesome-free@npm%3A7.0.1#~/.yarn/patches/@fortawesome-fontawesome-free-npm-7.0.1-fcdb3fc0e5.patch"
     "@symfony/webpack-encore": "npm:^5.2.0"
     "@types/bootstrap": "npm:^3.4.0"
     "@types/dropzone": "npm:^5.7.9"
