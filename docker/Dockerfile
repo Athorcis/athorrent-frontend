@@ -2,7 +2,6 @@
 
 ARG PHP_VERSION=8.4.12
 ARG COMPOSER_VERSION=2.8.11
-ARG NVM_VERSION=0.40.3
 ARG NODEJS_VERSION=24.7.0
 ARG NGINX_VERSION=1.29.1
 
@@ -28,26 +27,16 @@ FROM base AS builder
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
       @composer-${COMPOSER_VERSION}
 
-ENV NVM_DIR=/usr/local/nvm
-ARG NVM_VERSION
-
-RUN set -eux; \
-    mkdir -p $NVM_DIR ;\
-    curl -sSL -o- https://raw.githubusercontent.com/creationix/nvm/v${NVM_VERSION}/install.sh | bash
-
 ARG NODEJS_VERSION
 
-# install node and npm
-RUN set -ex ;\
-    . $NVM_DIR/nvm.sh ;\
-    nvm install ${NODEJS_VERSION} ;\
-    nvm alias default ${NODEJS_VERSION} ;\
-    nvm use default ;\
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    set -eux; \
+    curl -sSL -o- https://deb.nodesource.com/setup_${NODEJS_VERSION%%.*}.x | bash ;\
+    apt-get install -y --no-install-recommends \
+        nodejs=$(apt-cache policy nodejs | grep $NODEJS_VERSION | grep -v Candidate | awk '{ print $1 }') \
+    ;\
     corepack enable
-
-# add node and npm to path so the commands are available
-ENV NODE_PATH=$NVM_DIR/v${NODEJS_VERSION}/lib/node_modules
-ENV PATH=$NVM_DIR/versions/node/v${NODEJS_VERSION}/bin:$PATH
 
 ARG RUN_USER
 USER $RUN_USER
