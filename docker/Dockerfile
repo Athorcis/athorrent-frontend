@@ -1,9 +1,9 @@
 #syntax=docker/dockerfile:1.7-labs
 
-ARG PHP_VERSION=8.4.12
-ARG COMPOSER_VERSION=2.8.11
-ARG NODEJS_VERSION=24.7.0
-ARG NGINX_VERSION=1.29.1
+ARG PHP_VERSION=8.4.15
+ARG COMPOSER_VERSION=2.9.2
+ARG NODEJS_VERSION=24.11.1
+ARG NGINX_VERSION=1.29.3
 
 ARG UID=33
 ARG GID=33
@@ -138,7 +138,7 @@ COPY --chown=$RUN_USER --from=full-build $RUN_DIR $RUN_DIR
 
 VOLUME ["$RUN_DIR/var/user"]
 
-FROM nginx:${NGINX_VERSION}-alpine AS nginx-base
+FROM nginx:${NGINX_VERSION}-alpine-slim AS nginx-base
 COPY docker/conf/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 FROM nginx-base AS nginx

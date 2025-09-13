@@ -1,5 +1,5 @@
 diff --git a/scss/brands.scss b/scss/brands.scss
-index cc57b47eda8a4c025b890cb1c55beee39d293c29..17387b0608bf8286f8988b259dacbfce1a8e09a0 100644
+index fa1b181df815b6a3550564853b00ada6b8fb8f07..c679ffcf4b0f567c14cb983d5446b1d79917f4c1 100644
 --- a/scss/brands.scss
 +++ b/scss/brands.scss
 @@ -27,12 +27,6 @@
