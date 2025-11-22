@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class TestsController extends AbstractController
 {
     #[Route(path: "/reset-data", methods: "POST")]
-    public function resetData(KernelInterface $kernel)
+    public function resetData(KernelInterface $kernel): Response
     {
         $application = new Application($kernel);
         $application->setAutoExit(false);

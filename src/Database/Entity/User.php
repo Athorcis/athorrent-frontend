@@ -6,6 +6,7 @@ use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
 use DateTimeImmutable;
+use Deprecated;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Cache;
@@ -175,7 +176,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->port = $port;
     }
 
-    #[\Deprecated]
+    #[Deprecated]
     public function eraseCredentials(): void
     {
     }
