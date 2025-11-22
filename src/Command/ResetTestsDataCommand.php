@@ -2,6 +2,7 @@
 
 namespace Athorrent\Command;
 
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +20,7 @@ class ResetTestsDataCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($_ENV['APP_ENV'] !== 'test') {
-            throw new \RuntimeException('This command can only be run in test environment');
+            throw new RuntimeException('This command can only be run in test environment');
         }
 
         $this->runCommand($output, new ArrayInput([
@@ -51,7 +52,7 @@ class ResetTestsDataCommand extends Command
         return $this->getApplication()->doRun($input, $output);
     }
 
-    protected function removeUserDirectoryContent()
+    protected function removeUserDirectoryContent(): void
     {
         $finder = new Finder();
         $finder->depth(0)->in(USER_ROOT_DIR);
