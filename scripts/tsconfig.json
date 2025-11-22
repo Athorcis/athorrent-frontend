@@ -3,7 +3,8 @@
     "compilerOptions": {
         "lib": ["esnext"],
         "module": "nodenext",
-        "target": "esnext"
+        "target": "esnext",
+        "types": ["node"]
     },
     "ts-node": {
         "logError": true

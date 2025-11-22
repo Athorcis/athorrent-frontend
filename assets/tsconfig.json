@@ -6,7 +6,7 @@
         "module": "esnext",
         "target": "es2023",
         "esModuleInterop": true,
-        "types": ["bootstrap"]
+        "types": ["bootstrap", "dropzone", "jquery"]
     },
     "include": [
         "./js/"

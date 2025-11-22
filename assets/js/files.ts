@@ -48,7 +48,7 @@ class FilesPage extends AbstractPage {
     }
 
     async updateFileList() {
-        const data = await this.sendRequest<string>('listFiles', { path: Router.parseQueryParameters().path });
+        const data = await this.sendRequest<string>('listFiles', { path: Router.parseQueryParameters()['path'] });
         document.querySelector('.file-list').innerHTML = data;
     }
 
@@ -97,7 +97,7 @@ class FilesPage extends AbstractPage {
 
         const dropdown = target.closest('.dropdown') as HTMLDivElement;
 
-        if (dropdown.classList.contains('open') || dropdown.dataset.mimeTypeChecked) {
+        if (dropdown.classList.contains('open') || dropdown.dataset['mimeTypeChecked']) {
             return;
         }
 
@@ -112,7 +112,7 @@ class FilesPage extends AbstractPage {
             }
         }
 
-        dropdown.dataset.mimeTypeChecked = "true";
+        dropdown.dataset['mimeTypeChecked'] = "true";
     }
 
     detectMediaTypeSupport(mimeType: string): CanPlayTypeResult {

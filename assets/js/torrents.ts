@@ -17,7 +17,7 @@ class Updater {
 
     private intervalId = -1;
 
-    private data$: AbortablePromise<unknown>;
+    private data$: AbortablePromise<string>;
 
     constructor(
         private router: Router,
@@ -85,12 +85,13 @@ class TabsPanel {
 
     private panel: HTMLElement;
 
-    private $tabs: HTMLElement;
-
     constructor(selector: string) {
         this.tabMap = {};
         this.panel = document.querySelector(selector);
 
+        this.panel.addEventListener('click', (event: MouseEvent) => event.stopPropagation(
+
+        ))
         on(this.panel, 'click', '.nav-tabs a', this.onClick);
     }
 
@@ -210,7 +211,7 @@ class TorrentPanelTab extends Tab {
         }
     }
 
-    onShow() {
+    override onShow() {
         this.setHash((this.parent as TorrentPanel).getHash());
         super.onShow();
     }
