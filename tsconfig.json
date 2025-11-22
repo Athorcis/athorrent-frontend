@@ -1,11 +1,7 @@
 {
-    "compilerOptions": {
-        "incremental": true,
-        "module": "nodenext",
-        "noImplicitAny": true,
-        "target": "ES2024"
-    },
-    "ts-node": {
-        "logError": true
-    }
+    "files": [],
+    "references": [
+        { "path": "./assets" },
+        { "path": "./scripts" }
+    ]
 }

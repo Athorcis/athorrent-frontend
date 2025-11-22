@@ -1,11 +1,10 @@
 {
+    "extends": "../tsconfig.settings.json",
     "compilerOptions": {
-        "lib": ["dom", "es2018"],
-        "noImplicitAny": true,
+        "lib": ["dom", "es2023"],
         "moduleResolution": "bundler",
         "module": "esnext",
-        "target": "es2017",
-        "incremental": true,
+        "target": "es2023",
         "esModuleInterop": true,
         "types": ["bootstrap"]
     },
