@@ -1,0 +1,11 @@
+{
+    "extends": "../tsconfig.settings.json",
+    "compilerOptions": {
+        "lib": ["esnext"],
+        "module": "nodenext",
+        "target": "esnext"
+    },
+    "ts-node": {
+        "logError": true
+    }
+}

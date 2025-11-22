@@ -21,6 +21,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
     "@eslint/js": "^9.39.1",
     "@symfony/webpack-encore": "^5.3.1",
     "@types/bootstrap": "^3.4.0",
@@ -58,7 +59,7 @@
     "yargs": "^18.0.0"
   },
   "scripts": {
-    "font-awesome": "node --loader ts-node/esm --loader ./.pnp.loader.mjs --no-deprecation scripts/subset-font-awesome.ts",
+    "font-awesome": "ts-node-esm scripts/subset-font-awesome.ts",
     "dev-server": "yarn font-awesome && encore dev-server",
     "dev": "yarn font-awesome && encore dev",
     "watch": "yarn font-awesome && encore dev --watch",
