@@ -1,9 +1,9 @@
-import {decode} from 'js-base64';
 import '../css/files.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
 import {Router} from './core/router';
+import {decodeBase64} from "./core/utils";
 
 class FilesPage extends AbstractPage {
 
@@ -18,7 +18,7 @@ class FilesPage extends AbstractPage {
     }
 
     getFilePath(element: HTMLElement) {
-        return decode(this.getItemId('file', element));
+        return decodeBase64(this.getItemId('file', element));
     }
 
     getSharingToken(element: HTMLElement, selector: string) {
