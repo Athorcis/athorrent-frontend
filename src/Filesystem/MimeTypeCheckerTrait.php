@@ -40,7 +40,7 @@ trait MimeTypeCheckerTrait
     public function isPlayable(): bool
     {
         $mimeType = $this->getMimeType();
-        return str_starts_with($mimeType, 'audio/mpeg') || str_starts_with($mimeType, 'video/mp4');
+        return str_starts_with($mimeType, 'audio/') || str_starts_with($mimeType, 'video/');
     }
 
     public function isDisplayable(): bool

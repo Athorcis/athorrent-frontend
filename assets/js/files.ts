@@ -13,6 +13,7 @@ class FilesPage extends AbstractPage {
             ['.sharing-remove', this.onSharingRemove],
             ['.sharing-link', this.onSharingLink],
             ['.file-remove', this.onFileRemove],
+            ['.dropdown-toggle', this.onDropDownButtonClicked]
         ]));
     }
 
@@ -26,6 +27,20 @@ class FilesPage extends AbstractPage {
 
     getFileName(element: HTMLElement) {
         return this.getItemAttr('file', element, 'name');
+    }
+
+    getFileMimeType(element: HTMLElement) {
+        return this.getItemData('file', element, 'mime');
+    }
+
+    isFilePlayable(element: HTMLElement): CanPlayTypeResult {
+        const mimeType = this.getFileMimeType(element);
+
+        if (!mimeType) {
+            return "";
+        }
+
+        return this.detectMediaTypeSupport(mimeType);
     }
 
     modalSharingLink(link: string) {
@@ -75,6 +90,42 @@ class FilesPage extends AbstractPage {
 
             this.getItem('file', target).remove();
         }
+    }
+
+    onDropDownButtonClicked = (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
+
+        const dropdown = target.closest('.dropdown') as HTMLDivElement;
+
+        if (dropdown.classList.contains('open') || dropdown.dataset.mimeTypeChecked) {
+            return;
+        }
+
+        const playable = this.isFilePlayable(target);
+
+        if (playable === "") {
+            const button = target.closest('.dropdown-toggle');
+            const playItem = button.nextElementSibling.querySelector('.play-item') as HTMLElement|undefined;
+
+            if (playItem) {
+                playItem.style.display = 'none';
+            }
+        }
+
+        dropdown.dataset.mimeTypeChecked = "true";
+    }
+
+    detectMediaTypeSupport(mimeType: string): CanPlayTypeResult {
+        const match = mimeType.match(/^(audio|video)\//);
+
+        if (match) {
+            const type = match[1] as 'audio' | 'video';
+            const mediaEl = document.createElement(type);
+
+            return mediaEl.canPlayType(mimeType);
+        }
+
+        return "";
     }
 }
 

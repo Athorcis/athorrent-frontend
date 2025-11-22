@@ -23,4 +23,14 @@ export class DataManager {
 
         return null;
     }
+
+    getItemData(type: string, element: HTMLElement, name: string, selector: string = null) {
+        const item = this.getItem(type, element, selector);
+
+        if (item) {
+            return item.dataset[name];
+        }
+
+        return null;
+    }
 }

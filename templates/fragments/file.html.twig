@@ -8,7 +8,7 @@
     {% set name = file.name %}
 {% endif %}
 
-<tr class="file" id="file-{{ base64_encode(file.path) }}">
+<tr class="file" id="file-{{ base64_encode(file.path) }}" {% if file.isFile %}data-mime="{{ file.mimeType }}"{% endif %}>
     <td class="file-icon">
         <span class="fa-fw {{ icon }}"></span>
     </td>
@@ -39,7 +39,7 @@
                             </a>
                         </li>
                         {% if file.isPlayable %}
-                            <li>
+                            <li class="play-item">
                                 <a href="{{ path('playFile', { path: file.path }) }}">
                                     <span class="fa fa-fw fa-play"></span>{{ 'files.play'|trans }}
                                 </a>
