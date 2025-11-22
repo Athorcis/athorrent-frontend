@@ -16,7 +16,7 @@ export class Application {
 
     private translator: Translator;
 
-    constructor(private config: Partial<AppConfig>) {
+    constructor(config: Partial<AppConfig>) {
         this.router = new Router(config.routes, config.routeParameters, config.action);
         this.securityManager = new SecurityManager(this.router.getHttpClient());
         this.translator = new Translator(config.strings);
@@ -40,7 +40,7 @@ export class Application {
 
     static create() {
         let data: AppConfig;
-        const json = document.body.dataset.athorrent;
+        const json = document.body.dataset['athorrent'];
 
         if (json !== undefined) {
             try {

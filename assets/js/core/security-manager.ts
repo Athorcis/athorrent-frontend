@@ -54,7 +54,7 @@ export class SecurityManager {
 
         if (!this.csrfCookie && this.nameCheck.test(this.csrfToken)) {
             this.csrfCookie = this.csrfToken;
-            this.csrfToken = btoa(String.fromCharCode.apply(null, crypto.getRandomValues(new Uint8Array(CSRF_TOKEN_LENGTH))));
+            this.csrfToken = btoa(String.fromCharCode.apply(null, Array.from(crypto.getRandomValues(new Uint8Array(CSRF_TOKEN_LENGTH)))));
         }
 
         if (this.csrfCookie && this.tokenCheck.test(this.csrfToken)) {

@@ -89,7 +89,7 @@ export class Router {
 
     protected createRequestFromRoute(route: Route, params: Params): Request {
 
-        if (route.prefixId === this.routeParameters._prefixId) {
+        if (route.prefixId === this.routeParameters['_prefixId']) {
             if (route.name === this.action) {
                 params = {...this.routeParameters, ...this.queryParams, ...params};
             }
@@ -111,7 +111,7 @@ export class Router {
 
     protected getRoute(name: string): Route {
 
-        let prefixId = this.routeParameters._prefixId as string;
+        let prefixId = this.routeParameters['_prefixId'] as string;
 
         if (!this.routes.hasOwnProperty(name)) {
             throw new Error(`cannot find route with name: ${name}`);

@@ -40,5 +40,5 @@ export function on<E extends Event>(
                 }
             }
         }
-    });
+    } as unknown as ((event: Event) => void));
 }
