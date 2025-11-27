@@ -56,7 +56,8 @@ readonly class FilesystemValueResolver implements ValueResolverInterface
         }
 
         $attributes = $argument->getAttributes(Requirements::class);
+        $path = $request->query->get('path') ?? $request->request->get('path');
 
-        return [$this->getEntry($filesystem, $request->get('path'), $attributes[0] ?? new Requirements())];
+        return [$this->getEntry($filesystem, $path, $attributes[0] ?? new Requirements())];
     }
 }
