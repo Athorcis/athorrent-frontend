@@ -33,3 +33,7 @@ footer {
 .alert {
     margin-top: 20px;
 }
+
+.btn-xs > .fa {
+    --fa-width: 0.833em;
+}
