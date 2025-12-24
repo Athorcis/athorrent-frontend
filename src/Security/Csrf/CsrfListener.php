@@ -41,7 +41,7 @@ readonly class CsrfListener implements EventSubscriberInterface
             $csrfEnabled = $csrfOption === true;
 
             if ($csrfEnabled) {
-                $tokenValue = $request->headers->get('X-Csrf-Token', $request->get('_token'));
+                $tokenValue = $request->headers->get('X-Csrf-Token', $request->request->get('_token'));
                 $token = new CsrfToken('xhr', $tokenValue);
 
                 if ($tokenValue === null || !$this->tokenManager->isTokenValid($token)) {
