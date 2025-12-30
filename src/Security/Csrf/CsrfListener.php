@@ -25,7 +25,7 @@ readonly class CsrfListener implements EventSubscriberInterface
         $routeAttributes = $event->getAttributes(Route::class);
 
         foreach ($routeAttributes as $attribute) {
-            $routeOptions = array_merge($routeOptions, $attribute->getOptions());
+            $routeOptions = array_merge($routeOptions, $attribute->options);
         }
 
         return $routeOptions;
