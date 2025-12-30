@@ -170,7 +170,7 @@ class BackendManager
         }
 
         $promise = sleep($time);
-        $this->sleepPromises->attach($promise);
+        $this->sleepPromises->offsetSet($promise);
 
         try {
             await($promise);
@@ -181,7 +181,7 @@ class BackendManager
             }
         }
         finally {
-            $this->sleepPromises->detach($promise);
+            $this->sleepPromises->offsetUnset($promise);
         }
 
         return !$this->stopping;
