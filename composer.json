@@ -20,26 +20,26 @@
         "react/promise-timer": "^1.11.0",
         "rize/uri-template": "0.4 as 0.3.8",
         "seld/signal-handler": "^2.0.2",
-        "symfony/console": "7.4.*",
-        "symfony/css-selector": "7.4.*",
-        "symfony/dom-crawler": "7.4.*",
-        "symfony/dotenv": "7.4.*",
+        "symfony/console": "8.0.*",
+        "symfony/css-selector": "8.0.*",
+        "symfony/dom-crawler": "8.0.*",
+        "symfony/dotenv": "8.0.*",
         "symfony/flex": "^2.2.2",
-        "symfony/form": "7.4.*",
-        "symfony/framework-bundle": "7.4.*",
-        "symfony/http-client": "7.4.*",
-        "symfony/lock": "7.4.*",
-        "symfony/mime": "7.4.*",
+        "symfony/form": "8.0.*",
+        "symfony/framework-bundle": "8.0.*",
+        "symfony/http-client": "8.0.*",
+        "symfony/lock": "8.0.*",
+        "symfony/mime": "8.0.*",
         "symfony/monolog-bundle": "^4.0",
-        "symfony/process": "7.4.*",
-        "symfony/rate-limiter": "7.4.*",
-        "symfony/runtime": "7.4.*",
-        "symfony/security-bundle": "7.4.*",
-        "symfony/translation": "7.4.*",
-        "symfony/twig-bundle": "7.4.*",
-        "symfony/validator": "7.4.*",
+        "symfony/process": "8.0.*",
+        "symfony/rate-limiter": "8.0.*",
+        "symfony/runtime": "8.0.*",
+        "symfony/security-bundle": "8.0.*",
+        "symfony/translation": "8.0.*",
+        "symfony/twig-bundle": "8.0.*",
+        "symfony/validator": "8.0.*",
         "symfony/webpack-encore-bundle": "^v2.1.1",
-        "symfony/yaml": "7.4.*",
+        "symfony/yaml": "8.0.*",
         "twig/twig": "^2.12|^3.0",
         "twig/cache-extra": "^3.13",
         "twig/extra-bundle": "^3.13"
@@ -47,9 +47,9 @@
     "minimum-stability": "stable",
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "symfony/debug-bundle": "7.4.*",
-        "symfony/stopwatch": "7.4.*",
-        "symfony/web-profiler-bundle": "7.4.*"
+        "symfony/debug-bundle": "8.0.*",
+        "symfony/stopwatch": "8.0.*",
+        "symfony/web-profiler-bundle": "8.0.*"
     },
     "config": {
         "preferred-install": {
@@ -94,7 +94,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "7.4.*"
+            "require": "8.0.*"
         }
     },
     "repositories": [
