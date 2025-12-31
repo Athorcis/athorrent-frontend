@@ -22,6 +22,12 @@ RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases
 
 COPY docker/conf/php/base.ini /usr/local/etc/php/conf.d/
 
+ARG RUN_USER
+RUN set -ex ;\
+    mkdir -p /var/lib/php/session ;\
+    chown $RUN_USER /var/lib/php/session
+VOLUME ["/var/lib/php/session"]
+
 FROM base AS builder
 
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
