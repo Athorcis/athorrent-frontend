@@ -55,9 +55,8 @@ class EditAccountType extends AbstractType
                     'invalid_message' => 'error.passwordsDiffer',
                     'label' => 'account.edit.new_password',
                     'required' => false,
-                    'first_options'  => ['label' => 'account.edit.new_password'],
+                    'first_options'  => ['label' => 'account.edit.new_password', 'hash_property_path' => 'password'],
                     'second_options' => ['label' => 'account.edit.password_confirm'],
-                    'hash_property_path' => 'password',
                     'mapped' => false,
                 ]
             )
