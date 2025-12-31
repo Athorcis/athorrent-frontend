@@ -7,6 +7,7 @@ use Athorrent\Filesystem\AbstractFilesystemEntry;
 use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\View;
+use Athorrent\View\ViewType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,7 +54,7 @@ abstract class AbstractFileController extends AbstractController
 
         usort($entries, [AbstractFilesystemEntry::class, 'compare']);
 
-        return new View([
+        return new View(ViewType::Dynamic, [
             'title' => $title,
             'breadcrumb' => $breadcrumb,
             'files' => $entries,
@@ -109,7 +110,7 @@ abstract class AbstractFileController extends AbstractController
         $path = $entry->getPath();
         $breadcrumb = $this->getBreadcrumb($path);
 
-        return new View([
+        return new View(ViewType::Page, [
             'name' => $entry->getName(),
             'breadcrumb' => $breadcrumb,
             'mediaTag' => $mediaTag,
@@ -139,7 +140,7 @@ abstract class AbstractFileController extends AbstractController
             $data['src'] = $relativePath;
         }
 
-        return new View($data);
+        return new View(ViewType::Page, $data);
     }
 
     #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]

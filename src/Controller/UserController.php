@@ -10,6 +10,7 @@ use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
 use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
+use Athorrent\View\ViewType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
@@ -58,7 +59,7 @@ class UserController extends AbstractController
             return new SuccessNotification('users.add.success', 'listUsers');
         }
 
-        return new View(['form' => $form]);
+        return new View(ViewType::Page, ['form' => $form]);
     }
 
     /**

@@ -27,7 +27,7 @@ class PaginatedView extends View
             throw new NotFoundHttpException();
         }
 
-        parent::__construct([
+        parent::__construct(ViewType::Page, [
             'action' => $request->attributes->get('_action'),
             'pagination' => [
                 'entities' => iterator_to_array($paginator),

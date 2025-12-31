@@ -4,6 +4,7 @@ namespace Athorrent\Controller;
 
 use Athorrent\Utils\Search\JackettApi;
 use Athorrent\View\View;
+use Athorrent\View\ViewType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
@@ -28,7 +29,7 @@ class SearchController extends AbstractController
             $results = $jackett->getResults($query, $source);
         }
 
-        return new View([
+        return new View(ViewType::Page, [
             'query' => $query,
             'source' => $source,
             'sources' => $sources,

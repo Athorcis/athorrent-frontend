@@ -88,7 +88,7 @@ class RoutingListener implements EventSubscriberInterface
         $result = $event->getControllerResult();
         $request = $event->getRequest();
 
-        if ($result instanceof View && !$request->isXmlHttpRequest()) {
+        if ($result instanceof View && $result->isPageView($request)) {
             $result->setJsVar('routeParameters', $request->attributes->get('_route_params'));
             $result->setJsVar('routes', $this->routeDescriptors);
         }

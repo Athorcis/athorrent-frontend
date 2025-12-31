@@ -2,8 +2,8 @@
 
 namespace Athorrent\View;
 
+use Exception;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -42,34 +42,12 @@ readonly class Renderer
      * @throws RuntimeError
      * @throws LoaderError
      */
-    public function renderFragment(string $name, array $parameters = []): string
+    public function render(ViewType $type, string $name, array $parameters = []): string
     {
-        return $this->renderTemplate('fragments/' . $name, $parameters);
-    }
-
-    /**
-     * @throws SyntaxError
-     * @throws RuntimeError
-     * @throws LoaderError
-     */
-    public function renderPage(string $name, array $parameters = []): string
-    {
-        return $this->renderTemplate('pages/' . $name, $parameters);
-    }
-
-    /**
-     * @throws SyntaxError
-     * @throws RuntimeError
-     * @throws LoaderError
-     */
-    public function render(Request $request, string $name, array $parameters = []): string
-    {
-        if ($request->isXmlHttpRequest()) {
-            $html = $this->renderFragment($name, $parameters);
-        } else {
-            $html = $this->renderPage($name, $parameters);
+        if (!in_array($type, [ViewType::Page, ViewType::Fragment])) {
+            throw new Exception('unsupported view type: ' . $type->value);
         }
 
-        return $html;
+        return $this->renderTemplate($type->value . 's/' . $name, $parameters);
     }
 }
