@@ -25,16 +25,15 @@ readonly class ViewListener implements EventSubscriberInterface
 
     public function onEarlyKernelView(ViewEvent $event): void
     {
-        $request = $event->getRequest();
-        $xhr = $request->isXmlHttpRequest();
-
-        if (!$xhr) {
-            return;
-        }
-
         $result = $event->getControllerResult();
 
         if ($result instanceof View) {
+            $request = $event->getRequest();
+
+            if ($result->isPageView($request)) {
+                return;
+            }
+
             $data = $result->render($request, $this->translator, $this->renderer);
         } elseif ($result === null || is_array($result)) {
             $data = $result;

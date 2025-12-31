@@ -30,7 +30,7 @@ class RequestListener implements EventSubscriberInterface
         if ($result instanceof View) {
             $request = $event->getRequest();
 
-            if (!$request->isXmlHttpRequest()) {
+            if ($result->isPageView($request)) {
                 $vars = [
                     'debug' => (bool)$_SERVER['APP_DEBUG'],
                 ];

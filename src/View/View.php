@@ -2,14 +2,31 @@
 
 namespace Athorrent\View;
 
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class View
 {
-    public function __construct(private array $data = [], private readonly ?string $name = null)
+    public function __construct(
+        private readonly ViewType $type,
+        private array $data = [],
+        private readonly ?string $name = null,
+    )
     {
+    }
+
+    protected function resolveViewType(Request $request): ViewType
+    {
+        if ($this->type === ViewType::Dynamic) {
+            return $request->isXmlHttpRequest() ? ViewType::Fragment : ViewType::Page;
+        }
+
+        return $this->type;
+    }
+
+    public function isPageView(Request $request): bool
+    {
+        return $this->resolveViewType($request) === ViewType::Page;
     }
 
     public function has(string $key): bool
@@ -53,6 +70,6 @@ class View
             }
         }
 
-        return $renderer->render($request, $name, $data);
+        return $renderer->render($this->resolveViewType($request), $name, $data);
     }
 }

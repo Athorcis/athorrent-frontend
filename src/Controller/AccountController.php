@@ -7,6 +7,7 @@ use Athorrent\Form\Type\EditAccountType;
 use Athorrent\Notification\Notification;
 use Athorrent\Notification\SuccessNotification;
 use Athorrent\View\View;
+use Athorrent\View\ViewType;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,6 +59,6 @@ class AccountController extends AbstractController
             return new SuccessNotification('account.edit.success');
         }
 
-        return new View(['form' => $form, 'form_label_size' => 3]);
+        return new View(ViewType::Page, ['form' => $form, 'form_label_size' => 3]);
     }
 }

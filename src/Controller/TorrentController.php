@@ -6,6 +6,7 @@ use Athorrent\Backend\BackendState;
 use Athorrent\Backend\BackendUnavailableException;
 use Athorrent\Utils\TorrentManager;
 use Athorrent\View\View;
+use Athorrent\View\ViewType;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,7 +59,7 @@ class TorrentController extends AbstractController
             $alertLevel = $backendStarting || $backendUpdating ? 'warning' : 'error';
         }
 
-        return new View([
+        return new View(ViewType::Dynamic, [
             'torrents' => $torrents,
             'backend_available' => $backendAvailable,
             'backend_starting' => $backendStarting,
@@ -87,7 +88,7 @@ class TorrentController extends AbstractController
             }
         }
 
-        return new View(['trackers' => $trackers]);
+        return new View(ViewType::Fragment, ['trackers' => $trackers]);
     }
 
     /**
