@@ -30,7 +30,11 @@ export class Router {
                 return body.data;
             }
 
-            throw new Error(body.message);
+            if (body.code === 'LOGIN_REQUIRED') {
+                location.reload();
+            }
+
+            throw new Error(body.message ?? body.code);
         }) as AbortablePromise<R>;
 
         body$.abort = function () {
