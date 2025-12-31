@@ -1,15 +1,5 @@
-import {getLogoutButton} from "../support/commands";
-
-function createUser(username: string, password: string) {
-    cy.visit('/administration/users/add');
-
-    cy.get('#add_user_username').type(username);
-    cy.get('#add_user_plainPassword').type(password);
-    cy.get('#add_user_role').select(0);
-    cy.get('#add_user_add').click();
-
-    cy.get('#user-2 > .user-name').should('have.text', 'test');
-}
+import {DEFAULT_USERNAME, getLogoutButton} from "../support/commands";
+import {createAltUser} from "../support/utils";
 
 describe('user-management', () => {
     beforeEach(() => {
@@ -20,17 +10,17 @@ describe('user-management', () => {
     it('should list users', () => {
         cy.visit('/administration/users/');
 
-        cy.get('#user-1 > .user-name').should('have.text', 'admin');
+        cy.get('#user-1 > .user-name').should('have.text', DEFAULT_USERNAME);
     });
 
     it('should create a user', () => {
-        createUser('test', 'password');
+        createAltUser();
     });
 
     // @TODO need to find a way to make it work in test env
     /*
     it('should switch between users', () => {
-        createUser('test', 'password');
+        createAltUser();
 
         cy.visit('/administration/users/');
 
@@ -46,12 +36,12 @@ describe('user-management', () => {
         cy.get('.user-reset-password').click();
         cy.get('.modal-body').then($modal => {
             const password = $modal.text();
-            cy.login('admin', password);
+            cy.login(DEFAULT_USERNAME, password);
         })
     });
 
     it('should remove a user', () => {
-        createUser('test', 'password');
+        createAltUser();
 
         cy.visit('/administration/users/');
         cy.get('.user-remove').click();
