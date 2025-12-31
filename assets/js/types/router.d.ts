@@ -22,9 +22,16 @@ interface Routes {
 interface Abortable { abort(): void; }
 type AbortablePromise<T> = Promise<T> & Abortable;
 
-interface ApiResponse<T> {
-    status: string;
-    data?: T;
-    message?: string;
+interface ApiSuccessResponse<T> {
+    status: 'success';
+    data: T;
     csrfToken?: string;
 }
+
+interface ApiErrorResponse {
+    status: 'error';
+    code?: string;
+    message?: string;
+}
+
+type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;

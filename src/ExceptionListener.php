@@ -11,19 +11,31 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 use Twig\Environment;
 
 readonly class ExceptionListener implements EventSubscriberInterface
 {
-    public function __construct(private TranslatorInterface $translator, private Environment $twig, private LoggerInterface $logger)
+    public function __construct(
+        private TranslatorInterface $translator,
+        private Environment $twig,
+        private LoggerInterface $logger,
+        private TokenStorageInterface $tokenStorage,
+    )
     {
     }
 
     public static function getSubscribedEvents(): array
     {
-        return [KernelEvents::EXCEPTION => 'onKernelException'];
+        return [
+            KernelEvents::EXCEPTION => [
+                ['onKernelException', 0],
+                ['onEarlyKernelException', 10],
+            ]
+        ];
     }
 
     /**
@@ -73,6 +85,21 @@ readonly class ExceptionListener implements EventSubscriberInterface
         }
 
         return $response;
+    }
+
+    public function onEarlyKernelException(ExceptionEvent $event): void
+    {
+        $throwable = $event->getThrowable();
+
+        if ($throwable instanceof AccessDeniedException) {
+            if ($this->tokenStorage->getToken() === null && $event->getRequest()->isXmlHttpRequest()) {
+                $event->allowCustomResponseCode();
+                $event->setResponse(new JsonResponse([
+                    'status' => 'error',
+                    'code' => 'LOGIN_REQUIRED',
+                ]));
+            }
+        }
     }
 
     public function onKernelException(ExceptionEvent $event): void
