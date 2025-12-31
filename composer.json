@@ -18,7 +18,7 @@
         "nelmio/security-bundle": "^3.0",
         "react/async": "^4.3",
         "react/promise-timer": "^1.11.0",
-        "rize/uri-template": "0.4 as 0.3.8",
+        "rize/uri-template": "0.4.1 as 0.3.8",
         "seld/signal-handler": "^2.0.2",
         "symfony/console": "8.0.*",
         "symfony/css-selector": "8.0.*",
