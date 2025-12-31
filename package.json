@@ -36,7 +36,6 @@
     "exports-loader": "^5.0.0",
     "file-loader": "^6.2.0",
     "fontawesome-subset": "^4.6.0",
-    "jiti": "^2.6.1",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
     "postcss-media-minmax": "^5.0.0",
@@ -53,9 +52,7 @@
     "typescript-eslint": "^8.51.0",
     "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1",
-    "webpack-notifier": "^1.15.0",
-    "webpack-runtime-public-path-plugin": "^1.1.2",
-    "yargs": "^18.0.0"
+    "webpack-notifier": "^1.15.0"
   },
   "scripts": {
     "font-awesome": "ts-node-esm scripts/subset-font-awesome.ts",
