@@ -10,8 +10,11 @@ declare namespace Cypress {
     }
 }
 
-const DEFAULT_USERNAME = 'admin';
-const DEFAULT_PASSWORD = 'test';
+export const DEFAULT_USERNAME = 'admin';
+export const DEFAULT_PASSWORD = 'test';
+
+export const ALT_USERNAME = 'test';
+export const ALT_PASSWORD = 'password';
 
 Cypress.Commands.add('elementExists', function (selector: string) {
     cy.get('body').then(($body) => {
@@ -52,5 +55,3 @@ Cypress.Commands.add('logout', function () {
     getLogoutButton().click();
     Cypress.session.clearAllSavedSessions();
 });
-
-import './torrent.commands';
