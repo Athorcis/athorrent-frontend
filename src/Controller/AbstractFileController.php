@@ -8,16 +8,19 @@ use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\View;
 use Athorrent\View\ViewType;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractFileController extends AbstractController
 {
-    public function __construct(protected TranslatorInterface $translator)
+    public function __construct(protected TranslatorInterface $translator, protected LoggerInterface $logger)
     {
     }
 
@@ -80,6 +83,46 @@ abstract class AbstractFileController extends AbstractController
         return $response;
     }
 
+    protected function getContentDisposition($disposition, $filename): string
+    {
+        $response = new BinaryFileResponse(__FILE__);
+        $response->setContentDisposition($disposition, $filename);
+
+        return $response->headers->get('Content-Disposition');
+    }
+
+    protected function sendDirectory(UserFilesystemEntry $entry, $contentDisposition): StreamedResponse
+    {
+        $headers = [
+            'Content-Type' => 'application/x-gzip',
+            'Content-Disposition' => $this->getContentDisposition($contentDisposition, $entry->getName() . '.tar.gz'),
+            'X-Accel-Buffering' => 'no',
+        ];
+
+        return new StreamedResponse(function () use ($entry) {
+
+            $process = Process::fromShellCommandline('tar --create --gzip --file - *', $entry->getRealPath());
+            $process->setTimeout(null);
+
+            $process->start(function ($type, $buffer) {
+                if (Process::OUT === $type) {
+                    echo $buffer;
+                    flush();
+                }
+            });
+
+            $process->wait();
+
+            if (!$process->isSuccessful()) {
+                $this->logger->error("directory download failed", [
+                    'status' => $process->getExitCode(),
+                    'stderr' => $process->getErrorOutput(),
+                    'signal' => $process->getStopSignal(),
+                ]);
+            }
+        }, 200, $headers);
+    }
+
     #[Route(path: '/open', methods: 'GET')]
     public function openFile(Request $request, #[Requirements(path: true, file: true)] UserFilesystemEntry $entry): BinaryFileResponse
     {
@@ -87,8 +130,12 @@ abstract class AbstractFileController extends AbstractController
     }
 
     #[Route(path: '/download', methods: 'GET')]
-    public function downloadFile(Request $request, #[Requirements(path: true, file: true)] UserFilesystemEntry $entry): BinaryFileResponse
+    public function downloadFile(Request $request, #[Requirements(path: true)] UserFilesystemEntry $entry): BinaryFileResponse|StreamedResponse
     {
+        if ($entry->isDirectory()) {
+            return $this->sendDirectory($entry, 'attachment');
+        }
+
         return $this->sendFile($request, $entry,'attachment');
     }
 

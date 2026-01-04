@@ -25,6 +25,11 @@ class SubFilesystemEntry extends AbstractFilesystemEntry
         $this->internalEntry = $internalEntry;
     }
 
+    public function getRealPath(): string
+    {
+        return $this->internalEntry->getRealPath();
+    }
+
     public function isRoot(): bool
     {
         return $this->filesystem->getRoot() === $this->internalEntry->path;

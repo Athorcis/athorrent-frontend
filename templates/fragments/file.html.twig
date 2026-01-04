@@ -32,12 +32,12 @@
                             <span class="far fa-fw {{ icon }}"></span>{{ 'files.open'|trans }}
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ path('downloadFile', { path: file.path }) }}">
+                            <span class="fa fa-fw fa-download"></span>{{ 'files.download'|trans }}
+                        </a>
+                    </li>
                     {% if file.isFile %}
-                        <li>
-                            <a href="{{ path('downloadFile', { path: file.path }) }}">
-                                <span class="fa fa-fw fa-download"></span>{{ 'files.download'|trans }}
-                            </a>
-                        </li>
                         {% if file.isPlayable %}
                             <li class="play-item">
                                 <a href="{{ path('playFile', { path: file.path }) }}">
