@@ -15,6 +15,11 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
         return $this->path;
     }
 
+    public function getRealPath(): string
+    {
+        return $this->path;
+    }
+
     public function isRoot(): bool
     {
         return $this->filesystem->getRoot() === $this->path;

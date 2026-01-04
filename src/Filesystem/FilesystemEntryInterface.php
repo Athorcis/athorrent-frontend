@@ -8,6 +8,8 @@ interface FilesystemEntryInterface
 {
     public function getPath(): string;
 
+    public function getRealPath(): string;
+
     public function getName(): string;
 
     public function isRoot(): bool;
