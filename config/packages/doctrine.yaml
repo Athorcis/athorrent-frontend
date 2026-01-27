@@ -30,11 +30,19 @@ when@test:
 when@prod:
     doctrine:
         orm:
-            second_level_cache:
-                enabled: true
-                region_cache_driver:
-                    type: pool
-                    pool: doctrine.second_level_cache_pool
+            # Disabling it for now since it's buggy
+            # it hydrates two times the User::hasRoles collection on certain conditions
+            # to reproduce in dev :
+            # - login
+            # - change app.cache to apcu
+            # - reload
+            # - then the next reload hydrates twice
+            # It causes logout because roles between refreshedUser and stored user doesn't match
+            #second_level_cache:
+            #    enabled: true
+            #    region_cache_driver:
+            #        type: pool
+            #        pool: doctrine.second_level_cache_pool
             metadata_cache_driver:
                 type: pool
                 pool: doctrine.system_cache_pool
