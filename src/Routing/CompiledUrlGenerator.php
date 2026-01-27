@@ -61,16 +61,15 @@ class CompiledUrlGenerator extends UrlGenerator
         }
 
         if (!isset($this->compiledRoutes[$name])) {
-
             $prefixId = $this->getPrefixId($name, $parameters);
+            $name = $prefixId . $name;
+        }
 
-            if ($locale === $this->defaultLocale) {
-                $name = $prefixId . $name;
-                unset($parameters['_locale']);
-            } else {
-                $name = $prefixId . $name . '|i18n';
-                $parameters['_locale'] = $locale;
-            }
+        if ($locale === $this->defaultLocale) {
+            unset($parameters['_locale']);
+        } else {
+            $name .= '|i18n';
+            $parameters['_locale'] = $locale;
         }
 
         if (!isset($this->compiledRoutes[$name])) {
