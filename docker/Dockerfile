@@ -115,6 +115,16 @@ RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases
 
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates
 
+RUN cat <<EOF > /usr/local/etc/php/conf.d/xdebug.ini
+xdebug.mode=develop,debug
+xdebug.idekey=PHPSTORM
+xdebug.start_with_request=trigger
+xdebug.log=/tmp/xdebug.log
+xdebug.log_level=3
+xdebug.client_port=9003
+xdebug.client_host=172.27.0.1
+EOF
+
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
