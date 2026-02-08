@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Cache;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Length;
@@ -23,7 +24,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'error.usernameAlreadyUsed')]
 #[Cache(usage: 'NONSTRICT_READ_WRITE')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface, LegacyPasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: 'integer', options: ['unsigned' => true])]
