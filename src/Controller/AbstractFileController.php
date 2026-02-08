@@ -197,7 +197,7 @@ abstract class AbstractFileController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        if (!$entry->isWritable()) {
+        if (!$entry->isDeletable()) {
             throw $this->createAccessDeniedException();
         }
 
