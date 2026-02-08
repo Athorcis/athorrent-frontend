@@ -26,6 +26,11 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
         return $this->filesystem->isWritable();
     }
 
+    public function isDeletable(): bool
+    {
+        return $this->filesystem->isWritable();
+    }
+
     public function isCachable(): bool
     {
         return true;

@@ -9,6 +9,8 @@ class TorrentFilesystemEntry extends UserFilesystemEntry
 {
     private ?bool $torrent = null;
 
+    private ?bool $torrentBound = null;
+
     public function __construct(TorrentFilesystem $filesystem, string $path, FilesystemEntry|null $internalEntry = null)
     {
         parent::__construct($filesystem, $path, $internalEntry);
@@ -19,7 +21,15 @@ class TorrentFilesystemEntry extends UserFilesystemEntry
      */
     public function isTorrent(): bool
     {
-        return $this->torrent ??= $this->filesystem->isTorrent($this->internalEntry->path);
+        return $this->torrent ??= $this->filesystem->matchTorrent($this->internalEntry->path, TorrentFilesystem::MATCH_TORRENT_IS);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isTorrentBound(): bool
+    {
+        return $this->torrentBound ??= $this->filesystem->matchTorrent($this->internalEntry->path, TorrentFilesystem::MATCH_TORRENT_ANY);
     }
 
     /**
@@ -30,11 +40,16 @@ class TorrentFilesystemEntry extends UserFilesystemEntry
         return parent::isWritable() && !$this->isTorrent();
     }
 
+    public function isDeletable(): bool
+    {
+        return parent::isDeletable() && !$this->isTorrentBound();
+    }
+
     /**
      * @throws Exception
      */
     public function isCachable(): bool
     {
-        return !$this->isTorrent();
+        return !$this->isTorrentBound();
     }
 }

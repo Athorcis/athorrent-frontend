@@ -11,6 +11,10 @@ use Symfony\Component\Filesystem\Path;
 
 class TorrentFilesystem extends UserFilesystem
 {
+    public const int MATCH_TORRENT_CONTAINS = 1;
+    public const int MATCH_TORRENT_IS = 2;
+    public const int MATCH_TORRENT_ANY = 3;
+
     protected TorrentManager $torrentManager;
 
     protected bool $torrentManagerFailed = false;
@@ -44,7 +48,7 @@ class TorrentFilesystem extends UserFilesystem
     /**
      * @throws Exception
      */
-    protected function isTorrentImplementation(string $path): bool
+    protected function matchTorrentImplementation(string $path, int $mode): bool
     {
         if ($this->torrentManagerFailed) {
             return true;
@@ -58,11 +62,19 @@ class TorrentFilesystem extends UserFilesystem
             return true;
         }
 
-        $path = Path::canonicalize($path);
-        $index = -strlen($path);
+        // We add a trailing slash to avoid partial matches
+        $path = Path::canonicalize($path) . '/';
+
+        foreach ($torrentPaths as &$torrentPath) {
+            $torrentPath .= '/';
+        }
+        unset($torrentPath);
 
         foreach ($torrentPaths as $torrentPath) {
-            if (strrpos($path, $torrentPath, $index) !== false) {
+            if ($mode & self::MATCH_TORRENT_IS && str_starts_with($path, $torrentPath)) {
+                return true;
+            }
+            elseif ($mode & self::MATCH_TORRENT_CONTAINS && str_starts_with($torrentPath, $path) && $path !== $torrentPath) {
                 return true;
             }
         }
@@ -73,12 +85,12 @@ class TorrentFilesystem extends UserFilesystem
     /**
      * @throws Exception
      */
-    public function isTorrent(string $path): bool
+    public function matchTorrent(string $path, int $mode): bool
     {
-        if (!isset($this->torrentsMap[$path])) {
-            $this->torrentsMap[$path] = $this->isTorrentImplementation($path);
+        if (!isset($this->torrentsMap[$path . $mode])) {
+            $this->torrentsMap[$path . $mode] = $this->matchTorrentImplementation($path, $mode);
         }
 
-        return $this->torrentsMap[$path];
+        return $this->torrentsMap[$path . $mode];
     }
 }
