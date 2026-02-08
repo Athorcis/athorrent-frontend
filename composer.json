@@ -16,7 +16,7 @@
         "ext-sockets": "*",
         "clue/docker-react": "1.x-dev#6915d97 as v1.5.1",
         "doctrine/doctrine-bundle": "^3.2.2",
-        "doctrine/orm": "^3.6.1",
+        "doctrine/orm": "^3.6.2",
         "nelmio/security-bundle": "^3.8",
         "react/async": "^4.3",
         "react/promise-timer": "^1.11.0",
