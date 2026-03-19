@@ -17,7 +17,7 @@
         "clue/docker-react": "1.x-dev#6915d97 as v1.5.1",
         "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/orm": "^3.6.2",
-        "nelmio/security-bundle": "^3.8",
+        "nelmio/security-bundle": "^3.9",
         "react/async": "^4.3",
         "react/promise-timer": "^1.11.0",
         "seld/signal-handler": "^2.0.2",
@@ -41,9 +41,9 @@
         "symfony/validator": "8.0.*",
         "symfony/webpack-encore-bundle": "^2.4.0",
         "symfony/yaml": "8.0.*",
-        "twig/twig": "^3.23",
-        "twig/cache-extra": "^3.23",
-        "twig/extra-bundle": "^3.23"
+        "twig/twig": "^3.24",
+        "twig/cache-extra": "^3.24",
+        "twig/extra-bundle": "^3.24"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
