@@ -14,7 +14,7 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-sockets": "*",
-        "clue/docker-react": "1.x-dev#6915d97 as v1.5.1",
+        "clue/docker-react": "^1.6.0",
         "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/orm": "^3.6.3",
         "nelmio/security-bundle": "^3.9",
@@ -97,11 +97,5 @@
             "allow-contrib": true,
             "require": "8.0.*"
         }
-    },
-    "repositories": [
-        {
-            "url": "https://github.com/clue/reactphp-docker",
-            "type": "vcs"
-        }
-    ]
+    }
 }
