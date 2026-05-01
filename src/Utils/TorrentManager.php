@@ -9,50 +9,30 @@ use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-readonly class TorrentManager
+readonly class TorrentManager extends AbstractTorrentManager
 {
     private Backend $service;
 
     /**
      * TorrentManager constructor.
      */
-    public function __construct(private Filesystem $fs, private User $user)
+    public function __construct(Filesystem $fs, User $user)
     {
+        parent::__construct($fs, $user);
         $this->service = new Backend($user);
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    public function getTorrentsDirectory(): string
-    {
-        return $this->user->getNewTorrentsPath();
     }
 
     /**
      * S'assure que le dossier d'upload des fichiers torrents existe et retourne son chemin
      */
-    public function ensureTorrentsDirExists(): string
+    protected function ensureTorrentsDirExists(): string
     {
         $torrentsDir = $this->getTorrentsDirectory();
         $this->fs->mkdir($torrentsDir);
 
         return $torrentsDir;
-    }
-
-    protected function makePathRelative(string $path): string
-    {
-        $backendDir = $this->user->getBackendPath();
-        return str_replace($backendDir, '<workdir>', $path);
-    }
-
-    protected function makePathAbsolute(string $path): string
-    {
-        $backendDir = $this->user->getBackendPath();
-        return str_replace('<workdir>', $backendDir, $path);
     }
 
     /**
@@ -67,6 +47,12 @@ readonly class TorrentManager
         file_put_contents($path, file_get_contents($url));
 
         return $this->addTorrentFromFile($path);
+    }
+
+    public function storeUploadedTorrentFile(UploadedFile $file): void
+    {
+        $torrentsDir = $this->ensureTorrentsDirExists();
+        $file->move($torrentsDir, $file->getClientOriginalName());
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Athorrent\Controller;
 
 use Athorrent\Backend\BackendState;
 use Athorrent\Backend\BackendUnavailableException;
-use Athorrent\Utils\TorrentManager;
+use Athorrent\Utils\TorrentManagerInterface;
 use Athorrent\View\View;
 use Athorrent\View\ViewType;
 use Exception;
@@ -32,7 +32,7 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
-    public function listTorrents(TorrentManager $torrentManager): View
+    public function listTorrents(TorrentManagerInterface $torrentManager): View
     {
         try {
             $torrents = $torrentManager->getTorrents();
@@ -74,7 +74,7 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/{hash}/trackers', methods: 'GET', options: ['expose' => true])]
-    public function listTrackers(TorrentManager $torrentManager, string $hash): View
+    public function listTrackers(TorrentManagerInterface $torrentManager, string $hash): View
     {
         $trackers = $torrentManager->listTrackers($hash);
 
@@ -97,7 +97,7 @@ class TorrentController extends AbstractController
     #[Route(path: '/files', methods: 'POST', options: ['expose' => true])]
     public function uploadTorrent(
         Request $request,
-        TorrentManager $torrentManager,
+        TorrentManagerInterface $torrentManager,
         ValidatorInterface $validator,
     ): array
     {
@@ -120,8 +120,7 @@ class TorrentController extends AbstractController
             throw new BadRequestException($violations[0]->getMessage());
         }
 
-        $torrentsDir = $torrentManager->ensureTorrentsDirExists();
-        $file->move($torrentsDir, $file->getClientOriginalName());
+        $torrentManager->storeUploadedTorrentFile($file);
 
         return [];
     }
@@ -131,7 +130,7 @@ class TorrentController extends AbstractController
      */
     #[Route(path: '/magnet', methods: 'GET')]
     public function addMagnet(
-        TorrentManager $torrentManager,
+        TorrentManagerInterface $torrentManager,
         #[MapQueryParameter] ?string $magnet = null,
         ): RedirectResponse
     {
@@ -146,7 +145,7 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
-    public function addTorrents(Request $request, TorrentManager $torrentManager): array
+    public function addTorrents(Request $request, TorrentManagerInterface $torrentManager): array
     {
         $files = $request->request->all('add-torrent-files');
         $magnets = $request->request->all('add-torrent-magnets');
@@ -184,7 +183,7 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/{hash}/pause', methods: 'PUT', options: ['expose' => true])]
-    public function pauseTorrent(TorrentManager $torrentManager, string $hash): array
+    public function pauseTorrent(TorrentManagerInterface $torrentManager, string $hash): array
     {
         $torrentManager->pauseTorrent($hash);
         return [];
@@ -194,7 +193,7 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/{hash}/resume', methods: 'PUT', options: ['expose' => true])]
-    public function resumeTorrent(TorrentManager $torrentManager, string $hash): array
+    public function resumeTorrent(TorrentManagerInterface $torrentManager, string $hash): array
     {
         $torrentManager->resumeTorrent($hash);
         return [];
@@ -204,7 +203,7 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/{hash}', methods: 'DELETE', options: ['expose' => true])]
-    public function removeTorrent(TorrentManager $torrentManager, string $hash): array
+    public function removeTorrent(TorrentManagerInterface $torrentManager, string $hash): array
     {
         $torrentManager->removeTorrent($hash);
         return [];

@@ -5,7 +5,7 @@ namespace Athorrent\Filesystem;
 
 use Athorrent\Backend\BackendUnavailableException;
 use Athorrent\Database\Entity\User;
-use Athorrent\Utils\TorrentManager;
+use Athorrent\Utils\TorrentManagerInterface;
 use Exception;
 use Symfony\Component\Filesystem\Path;
 
@@ -15,7 +15,7 @@ class TorrentFilesystem extends UserFilesystem
     public const int MATCH_TORRENT_IS = 2;
     public const int MATCH_TORRENT_ANY = 3;
 
-    protected TorrentManager $torrentManager;
+    protected TorrentManagerInterface $torrentManager;
 
     protected bool $torrentManagerFailed = false;
 
@@ -25,7 +25,7 @@ class TorrentFilesystem extends UserFilesystem
     /** @var bool[] */
     protected ?array $torrentsMap = null;
 
-    public function __construct(TorrentManager $torrentManager, ?User $accessor, string $path = '')
+    public function __construct(TorrentManagerInterface $torrentManager, ?User $accessor, string $path = '')
     {
         parent::__construct($torrentManager->getUser(), $accessor, $path);
         $this->torrentManager = $torrentManager;

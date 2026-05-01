@@ -7,14 +7,14 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class TorrentManagerFactory
 {
-    /** @var TorrentManager[] */
+    /** @var TorrentManagerInterface[] */
     private array $instances = [];
 
     public function __construct(private readonly Filesystem $fs)
     {
     }
 
-    public function create(User $user): TorrentManager
+    public function create(User $user): TorrentManagerInterface
     {
         $userId = $user->getId();
 

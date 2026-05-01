@@ -4,11 +4,11 @@ namespace Athorrent\Filesystem;
 
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Database\Entity\User;
-use Athorrent\Utils\TorrentManager;
+use Athorrent\Utils\TorrentManagerInterface;
 
 class SharedFilesystem extends TorrentFilesystem
 {
-    public function __construct(TorrentManager $torrentManager, ?User $accessor, Sharing $sharing)
+    public function __construct(TorrentManagerInterface $torrentManager, ?User $accessor, Sharing $sharing)
     {
         parent::__construct($torrentManager, $accessor, $sharing->getPath());
     }
