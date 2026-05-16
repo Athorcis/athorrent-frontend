@@ -80,6 +80,7 @@ files:
 
 torrents:
     title: Torrents
+    advanced: Avancé
     dropzone: Déposez des fichiers ou cliquez pour les sélectionner
     add: Ajouter
     size: Taille
@@ -106,6 +107,9 @@ torrents:
         finished: Terminé
         seeding: En upload
         disabled: Désactivé
+        moving: Déplacement des fichiers
+        error: Erreur
+        missing_files: Fichiers manquants
 
     tabMain:
         title: Général

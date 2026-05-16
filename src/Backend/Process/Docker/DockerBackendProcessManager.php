@@ -5,10 +5,12 @@ namespace Athorrent\Backend\Process\Docker;
 use Athorrent\Backend\Process\BackendProcessManagerInterface;
 use Athorrent\Database\Entity\User;
 use Clue\React\Docker\Client;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use React\Http\Message\ResponseException;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
 use function React\Async\await;
 
@@ -20,12 +22,15 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     public function __construct(
         private readonly Client $docker,
         private readonly LoggerInterface $logger,
-        #[Autowire('%env(BACKEND_DOCKER_IMAGE)%')]
-        private readonly string $imageTag,
+        #[Autowire('%env(BACKEND_DOCKER_LEGACY_IMAGE)%')]
+        private readonly string $legacyImageTag,
+        #[Autowire('%env(BACKEND_DOCKER_QBITTORRENT_IMAGE)%')]
+        private readonly string $qbittorrentImageTag,
         #[Autowire('%env(BACKEND_DOCKER_MOUNT_TYPE)%')]
         private readonly string $mountType,
         #[Autowire('%env(BACKEND_DOCKER_MOUNT_SRC)%')]
         private readonly string $mountSrc,
+        private readonly EntityManagerInterface $entityManager,
     )
     {}
 
@@ -41,16 +46,32 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
 
     public function requestUpdate(): void
     {
-        $this->pullImage($this->imageTag);
-        $imageId = await($this->docker->imageInspect($this->imageTag))['Id'];
+        $this->pullImage($this->legacyImageTag);
+        $this->pullImage($this->qbittorrentImageTag);
+
+        $legacyImageId = await($this->docker->imageInspect($this->legacyImageTag))['Id'];
+        $qbittorrentImageId = await($this->docker->imageInspect($this->qbittorrentImageTag))['Id'];
 
         $updateCount = 0;
 
         foreach ($this->processes as $process) {
             try {
+                $requestRestart = false;
                 $processImageId = $process->getImageId();
+                $processClientType = $process->getClientType();
 
-                if ($processImageId !== $imageId) {
+                if ($processClientType === User::CLIENT_TYPE_LEGACY) {
+                    if ($processImageId !== $legacyImageId) {
+                        $requestRestart = true;
+                    }
+                }
+                elseif ($processClientType === User::CLIENT_TYPE_QBITTORRENT) {
+                    if ($processImageId !== $qbittorrentImageId) {
+                        $requestRestart = true;
+                    }
+                }
+
+                if ($requestRestart) {
                     $process->requestRestartToUpdate();
                     ++$updateCount;
                 }
@@ -128,24 +149,31 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         }
     }
 
-    public function create(User $user): DockerBackendProcess
+    protected function createContainer(User $user, array $config)
     {
+        $this->pullImageIfNotExists($config['Image']);
+
         $userId = $user->getId();
-        $port = $user->getPort();
+        $config['Labels']['com.athorrent.user'] = "$userId";
 
-        $this->pullImageIfNotExists($this->imageTag);
+        $container = await($this->docker->containerCreate($config, 'athorrentd_' . $userId));
 
-        $mountSubpath = $userId . '/backend';
+        await($this->docker->containerStart($container['Id']));
 
+        return new DockerBackendProcess($this->docker, $container['Id']);
+    }
+
+    protected function getMountConfig($source, $target, $readOnly = true): array
+    {
         if ($this->mountType === 'bind') {
-            $mountSource = $this->mountSrc . '/' . $mountSubpath;
+            $mountSource = $this->mountSrc . '/' . $source;
             $mountExtra = [];
         }
         elseif ($this->mountType === 'volume') {
             $mountSource = $this->mountSrc;
             $mountExtra = [
                 'VolumeOptions' => [
-                    'Subpath' => $mountSubpath,
+                    'Subpath' => $source,
                 ]
             ];
         }
@@ -153,16 +181,22 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             throw new RuntimeException('Unsupported mount type ' . $this->mountType);
         }
 
-        $mount = [
+        return [
             'Type' => $this->mountType,
             'Source' => $mountSource,
-            'Target' => '/var/lib/athorrent-backend',
-            'ReadOnly' => false,
+            'Target' => $target,
+            'ReadOnly' => $readOnly,
             ...$mountExtra,
         ];
+    }
 
-        $container = await($this->docker->containerCreate([
-            'Image' => $this->imageTag,
+    protected function createLegacy(User $user): DockerBackendProcess
+    {
+        $userId = $user->getId();
+        $port = $user->getPort();
+
+        return $this->createContainer($user, [
+            'Image' => $this->legacyImageTag,
             'Cmd' => ['--port', "$port"],
             'User' => 'www-data',
             'WorkingDir' => '/var/lib/athorrent-backend',
@@ -171,18 +205,90 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             ],
             'HostConfig' => [
                 'NetworkMode' => 'host',
-                'Mounts' => [$mount],
+                'Mounts' => [
+                    $this->getMountConfig(
+                        $userId . '/backend',
+                        '/var/lib/athorrent-backend',
+                        false,
+                    )
+                ],
             ],
             'Labels' => [
-                'com.athorrent.user' => "$userId",
+                'com.athorrent.client_type' => User::CLIENT_TYPE_LEGACY
             ]
-        ], 'athorrentd_' . $userId));
+        ]);
+    }
 
-        await($this->docker->containerStart($container['Id']));
+    protected function createQBittorrent(User $user): DockerBackendProcess
+    {
+        $userId = $user->getId();
+        $port = $user->getPort();
 
-        $this->processes[$userId] = new DockerBackendProcess($this->docker, $container['Id']);
+        $fs = new Filesystem();
 
-        return $this->processes[$userId];
+        $fs->mkdir([
+            $user->getBackendPath('qbittorrent'),
+            $user->getBackendPath('files'),
+        ]);
+
+        return $this->createContainer($user, [
+            'Image' => $this->qbittorrentImageTag,
+            'Cmd' => ["--torrenting-port=$port"],
+            'User' => 'www-data',
+            'HostConfig' => [
+                'NetworkMode' => 'athorrent-test_default',
+                'PortBindings' => [
+                    "$port/tcp" => [[
+                        "HostPort" => "$port",
+                    ]],
+                    "$port/udp" => [[
+                        "HostPort" => "$port",
+                    ]]
+                ],
+                'Mounts' => [
+                    $this->getMountConfig(
+                        $userId . '/backend/qbittorrent',
+                        '/config',
+                        false
+                    ),
+                    $this->getMountConfig(
+                        $userId . '/backend/files',
+                        '/downloads',
+                        false,
+                    ),
+                ],
+            ],
+            'Labels' => [
+                'com.athorrent.client_type' => User::CLIENT_TYPE_QBITTORRENT
+            ]
+        ]);
+    }
+
+    public function create(User $user): DockerBackendProcess
+    {
+        $clientType = $user->getClientType();
+
+        if ($clientType === User::CLIENT_TYPE_LEGACY) {
+            $process = $this->createLegacy($user);
+        }
+        elseif ($clientType === User::CLIENT_TYPE_QBITTORRENT) {
+            $process = $this->createQBittorrent($user);
+        }
+        else {
+            throw new RuntimeException('Unsupported user type ' . $clientType);
+        }
+
+        $clientIp = $process->getClientIp();
+
+        if (!empty($clientIp)) {
+            sleep(1);
+            $user->setClientIp($clientIp);
+            $this->entityManager->flush();
+        }
+
+        $this->processes[$user->getId()] = $process;
+
+        return $process;
     }
 
     protected function doClean(DockerBackendProcess $process, int $userId): void

@@ -11,9 +11,11 @@ class DockerBackendProcess implements BackendProcessInterface
 {
     private bool $restartToUpdate = false;
 
-    public function __construct(private readonly Client $docker, private readonly string $containerId)
-    {
-    }
+    public function __construct(
+        private readonly Client $docker,
+        private readonly string $containerId,
+    )
+    {}
 
     public function isRunning(): bool
     {
@@ -34,6 +36,20 @@ class DockerBackendProcess implements BackendProcessInterface
     {
         $data = await($this->docker->containerInspect($this->containerId));
         return $data['Image'];
+    }
+
+    public function getClientType(): string
+    {
+        $data = await($this->docker->containerInspect($this->containerId));
+        return $data['Labels']['com.athorrent.client_type'] ?? 'legacy';
+    }
+
+    public function getClientIp(): string
+    {
+        $data = await($this->docker->containerInspect($this->containerId));
+        $network = array_values($data['NetworkSettings']['Networks'])[0];
+
+        return $network['IPAddress'];
     }
 
     public function stop(): void

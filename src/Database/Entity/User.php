@@ -26,6 +26,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Cache(usage: 'NONSTRICT_READ_WRITE')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface, LegacyPasswordAuthenticatedUserInterface
 {
+    public const CLIENT_TYPE_LEGACY = 'legacy';
+    public const CLIENT_TYPE_QBITTORRENT = 'qbittorrent';
+
     #[ORM\Id]
     #[ORM\Column(type: 'integer', options: ['unsigned' => true])]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -40,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     private string $password;
 
     #[ORM\Column(length: 32, nullable: true, options: ['fixed' => true])]
-    private string $salt;
+    private ?string $salt = null;
 
     #[ORM\Column]
     private DateTimeImmutable $creationDateTime;
@@ -64,6 +67,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     #[ORM\Column]
     private int $port;
+
+    #[ORM\Column]
+    private string $clientType = self::CLIENT_TYPE_LEGACY;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $clientIp = null;
 
     public function __construct()
     {
@@ -175,6 +184,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     public function setPort(int $port): void
     {
         $this->port = $port;
+    }
+
+    public function getClientType(): string
+    {
+        return $this->clientType;
+    }
+
+    public function setClientType(string $clientType): void
+    {
+        $this->clientType = $clientType;
+    }
+
+    public function getClientIp(): ?string
+    {
+        return $this->clientIp;
+    }
+
+    public function setClientIp(string $clientIp): void
+    {
+        $this->clientIp = $clientIp;
     }
 
     #[Deprecated]

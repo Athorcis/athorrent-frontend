@@ -81,6 +81,7 @@ files:
 
 torrents:
     title: Torrents
+    advanced: Advanced
     dropzone: Drop files here or click to select them
     add: Add
     size: Size
@@ -108,6 +109,9 @@ torrents:
         finished: Finished
         seeding: Seeding
         disabled: Disabled
+        moving: Moving files
+        error: Error
+        missing_files: Missing files
 
     tabMain:
         title: Main

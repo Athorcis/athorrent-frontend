@@ -6,8 +6,8 @@ use Athorrent\Backend\Process\BackendProcessFailedException;
 use Athorrent\Backend\Process\BackendProcessInterface;
 use Athorrent\Backend\Process\BackendProcessManagerFactory;
 use Athorrent\Backend\Process\BackendProcessManagerInterface;
+use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
-use Athorrent\Ipc\Exception\IpcException;
 use Psr\Log\LoggerInterface;
 use React\EventLoop\Loop;
 use React\Promise\Promise;
@@ -16,6 +16,7 @@ use RuntimeException;
 use SplObjectStorage;
 use SplQueue;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 use function React\Async\async;
 use function React\Async\await;
@@ -34,16 +35,16 @@ class BackendManager
     /** @var SplObjectStorage<PromiseInterface> */
     private SplObjectStorage $sleepPromises;
 
-    /** @var array<int, Backend>  */
+    /** @var array<int, BackendInterface>  */
     private array $backends;
 
-    /** @var SplQueue<Backend>  */
+    /** @var SplQueue<BackendInterface>  */
     private SplQueue $startQueue;
 
-    /** @var SplQueue<Backend>  */
+    /** @var SplQueue<BackendInterface>  */
     private SplQueue $heartbeatQueue;
 
-    /** @var SplQueue<Backend>  */
+    /** @var SplQueue<BackendInterface>  */
     private SplQueue $nextHeartbeatQueue;
 
     private bool $stopping = false;
@@ -53,6 +54,7 @@ class BackendManager
         private readonly LoggerInterface $logger,
         private readonly UserRepository $userRepo,
         private readonly RateLimiterFactoryInterface $backendRestartLimiter,
+        private readonly BackendFactory $backendFactory,
     ) {
         $this->sleepPromises = new SplObjectStorage();
     }
@@ -187,7 +189,7 @@ class BackendManager
         return !$this->stopping;
     }
 
-    protected function processStart(Backend $backend): void
+    protected function processStart(BackendInterface $backend): void
     {
         $user = $backend->getUser();
 
@@ -229,15 +231,14 @@ class BackendManager
         }
     }
 
-    protected function processHeartbeat(Backend $backend): void
+    protected function processHeartbeat(BackendInterface $backend): void
     {
         $this->logger->debug(sprintf('Sending heartbeat to %s...', $backend));
         try {
-            $pingResult = $backend->ping();
-            $restart = $pingResult !== 'pong';
+            $restart = !$backend->ping();
 
             if ($restart) {
-                $this->logger->error(sprintf('Heartbeat to %s returned an unexpected value %s', $backend, $pingResult));
+                $this->logger->error(sprintf('Heartbeat to %s failed', $backend));
             }
         } catch (Throwable $e) {
             $this->logger->error(sprintf('Fail to send heartbeat to %s : %s', $backend, $e->getMessage()), ['exception' => $e]);
@@ -289,7 +290,7 @@ class BackendManager
     }
 
     /**
-     * @return array<int, Backend>
+     * @return array<int, BackendInterface>
      */
     protected function initializeBackends(): array
     {
@@ -297,7 +298,15 @@ class BackendManager
         $users = $this->userRepo->findAll();
 
         foreach ($users as $user) {
-            $backends[$user->getId()] = new Backend($user);
+            try {
+                $backend = $this->backendFactory->create($user);
+            }
+            catch (\Exception) {
+                $this->logger->error(sprintf('Unknown client type: %s', $user->getClientType()));
+                continue;
+            }
+
+            $backends[$user->getId()] = $backend;
         }
 
         $processes = $this->backendProcessManager->listRunningProcesses();
@@ -319,24 +328,17 @@ class BackendManager
         return $backends;
     }
 
-    protected function cleanProcess(Backend $backend): void
+    protected function cleanProcess(BackendInterface $backend): void
     {
         $this->backendProcessManager->clean($backend->getUser());
 
-        $socketPath = $backend->getEndpoint();
-
-        if (file_exists($socketPath)) {
-            unlink($socketPath);
-        }
-
-        // @TODO remove fastresume if needed
-        // @TODO remove torrent data if needed
+        $backend->clean();
     }
 
     /**
      * @throws BackendProcessFailedException
      */
-    protected function createProcess(Backend $backend): BackendProcessInterface
+    protected function createProcess(BackendInterface $backend): BackendProcessInterface
     {
         $this->logger->info(sprintf("Cleaning up %s...", $backend));
         $this->cleanProcess($backend);
@@ -354,12 +356,9 @@ class BackendManager
         $startTs = microtime(true);
 
         while (true) {
-            try {
-                if ($backend->ping() === 'pong') {
-                    break;
-                }
+            if ($backend->ping()) {
+                break;
             }
-            catch (IpcException) {}
 
             if (!$process->isRunning()) {
                 throw new BackendProcessFailedException('process failed while starting', $backend, $process->getErrorInfo());
