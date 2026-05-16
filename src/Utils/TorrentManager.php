@@ -2,7 +2,7 @@
 
 namespace Athorrent\Utils;
 
-use Athorrent\Backend\Backend;
+use Athorrent\Backend\LegacyBackend;
 use Athorrent\Database\Entity\User;
 use Athorrent\Filesystem\FileUtils;
 use Exception;
@@ -13,15 +13,15 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 readonly class TorrentManager extends AbstractTorrentManager
 {
-    private Backend $service;
+    private LegacyBackend $backend;
 
     /**
      * TorrentManager constructor.
      */
-    public function __construct(Filesystem $fs, User $user)
+    public function __construct(Filesystem $fs, User $user, LegacyBackend $backend)
     {
         parent::__construct($fs, $user);
-        $this->service = new Backend($user);
+        $this->backend = $backend;
     }
 
     /**
@@ -66,7 +66,7 @@ readonly class TorrentManager extends AbstractTorrentManager
 
         rename($oldFile, $newFile);
 
-        $result = $this->service->callGuarded('addTorrentFromFile', [
+        $result = $this->backend->call('addTorrentFromFile', [
             'file' => $this->makePathRelative($newFile)
         ]);
 
@@ -81,7 +81,7 @@ readonly class TorrentManager extends AbstractTorrentManager
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromMagnet(string $magnet): array
     {
-        return $this->service->callGuarded('addTorrentFromMagnet', ['magnet' => $magnet]);
+        return $this->backend->call('addTorrentFromMagnet', ['magnet' => $magnet]);
     }
 
     /**
@@ -95,7 +95,7 @@ readonly class TorrentManager extends AbstractTorrentManager
      */
     public function getTorrents(): array
     {
-        return $this->service->callGuarded('getTorrents');
+        return $this->backend->call('getTorrents');
     }
 
     /**
@@ -104,7 +104,7 @@ readonly class TorrentManager extends AbstractTorrentManager
      */
     public function getPaths(): array
     {
-        $paths = $this->service->callGuarded('getPaths');
+        $paths = $this->backend->call('getPaths');
 
         foreach ($paths as $index => $path) {
             $paths[$index] = Path::canonicalize($this->makePathAbsolute($path));
@@ -118,7 +118,7 @@ readonly class TorrentManager extends AbstractTorrentManager
      */
     public function pauseTorrent(string $hash): string
     {
-        return $this->service->callGuarded('pauseTorrent', ['hash' => $hash]);
+        return $this->backend->call('pauseTorrent', ['hash' => $hash]);
     }
 
     /**
@@ -126,7 +126,7 @@ readonly class TorrentManager extends AbstractTorrentManager
      */
     public function resumeTorrent(string $hash): string
     {
-        return $this->service->callGuarded('resumeTorrent', ['hash' => $hash]);
+        return $this->backend->call('resumeTorrent', ['hash' => $hash]);
     }
 
     /**
@@ -134,7 +134,7 @@ readonly class TorrentManager extends AbstractTorrentManager
      */
     public function removeTorrent(string $hash): string
     {
-        return $this->service->callGuarded('removeTorrent', ['hash' => $hash]);
+        return $this->backend->call('removeTorrent', ['hash' => $hash]);
     }
 
     /**
@@ -143,6 +143,6 @@ readonly class TorrentManager extends AbstractTorrentManager
      */
     public function listTrackers(string $hash): array
     {
-        return $this->service->callGuarded('listTrackers', ['hash' => $hash]);
+        return $this->backend->call('listTrackers', ['hash' => $hash]);
     }
 }

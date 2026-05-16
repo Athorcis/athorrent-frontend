@@ -2,17 +2,17 @@
 
 namespace Athorrent\Backend\Process;
 
-use Athorrent\Backend\Backend;
+use Athorrent\Backend\BackendInterface;
 use Exception;
 
 class BackendProcessFailedException extends Exception
 {
-    public function __construct(string $message, private readonly Backend $backend, private readonly array $errorInfo)
+    public function __construct(string $message, private readonly BackendInterface $backend, private readonly array $errorInfo)
     {
         parent::__construct($message);
     }
 
-    public function getBackend(): Backend
+    public function getBackend(): BackendInterface
     {
         return $this->backend;
     }

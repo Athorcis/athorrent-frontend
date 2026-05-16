@@ -13,7 +13,15 @@
 
 {% block content %}
 {% include "fragments/addTorrents.html.twig" %}
-    <h1>{{ 'torrents.title'|trans }}</h1>
+    <h1>
+        {{ 'torrents.title'|trans }}
+
+        {% if app.user.clientType === 'qbittorrent' %}
+            <a href="{{ path('proxyToQBittorrent', { path: ''}) }}" target="_blank" class="btn btn-default">
+                {{ 'torrents.advanced'|trans }}
+            </a>
+        {% endif %}
+    </h1>
 
     <div class="torrent-list">
         {% include "fragments/listTorrents.html.twig" %}

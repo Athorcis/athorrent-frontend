@@ -34,6 +34,7 @@ readonly class UserManager
         $this->setPlainPassword($user, $password);
         $user->setRoles($roles);
         $user->setPort($this->userRepository->getNextAvailablePort());
+        $user->setClientType(User::CLIENT_TYPE_QBITTORRENT);
 
         $this->validator->validate($user);
 

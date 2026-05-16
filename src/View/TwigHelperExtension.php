@@ -63,6 +63,8 @@ class TwigHelperExtension extends AbstractExtension
             $class = 'success';
         } elseif ($state === 'disabled') {
             $class = 'disabled';
+        } elseif ($state === 'missing_files' || $state === 'error') {
+            $class = 'danger';
         } else {
             $class = 'info';
         }
