@@ -83,7 +83,7 @@ class TabsPanel {
 
     private tabMap: { [key: string]: Tab };
 
-    private panel: HTMLElement;
+    protected panel: HTMLElement;
 
     constructor(selector: string) {
         this.tabMap = {};
@@ -109,7 +109,7 @@ class TabsPanel {
     }
 
     isVisible() {
-        return this.panel.offsetParent != null;
+        return this.panel.clientHeight > 0;
     }
 
     show() {
@@ -172,7 +172,19 @@ class TorrentPanel extends TabsPanel {
 
     constructor() {
         super('.torrent-panel');
+        on(this.panel, 'click', '.torrent-panel-close', this.onClose);
     }
+
+    /**
+     * Ferme le volet des détails torrent.
+     *
+     * @param {MouseEvent} event - Clic sur le bouton fermer
+     * @returns {void}
+     */
+    onClose = (event: MouseEvent): void => {
+        event.preventDefault();
+        this.hide();
+    };
 
     toggleHash(hash: string) {
         if (this.isVisible()) {

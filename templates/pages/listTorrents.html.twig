@@ -28,11 +28,16 @@
     </div>
 
     <div class="torrent-panel panel-fixed-bottom">
-        <ul class="nav nav-tabs">
-            {#<li role="presentation"><a href="#torrent-general">{{ 'torrents.tabMain.title'|trans }}</a></li>#}
-            <li role="presentation"  class="active"><a href="#torrent-trackers">{{ 'torrents.tabTrackers.title'|trans }}</a></li>
-            <li role="presentation"><a href="#torrent-peers">{{ 'torrents.tabPeers.title'|trans }}</a></li>
-        </ul>
+        <div class="torrent-panel-header">
+            <ul class="nav nav-tabs">
+                {#<li role="presentation"><a href="#torrent-general">{{ 'torrents.tabMain.title'|trans }}</a></li>#}
+                <li role="presentation" class="active"><a href="#torrent-trackers">{{ 'torrents.tabTrackers.title'|trans }}</a></li>
+                <li role="presentation"><a href="#torrent-peers">{{ 'torrents.tabPeers.title'|trans }}</a></li>
+            </ul>
+            <button type="button" class="close torrent-panel-close" aria-label="{{ 'torrents.panelClose'|trans }}">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
 
         <div class="tab-content">
             {#<div role="tabpanel" class="tab-pane" id="torrent-general">...</div>#}

@@ -82,6 +82,7 @@ files:
 torrents:
     title: Torrents
     advanced: Advanced
+    panelClose: Close
     dropzone: Drop files here or click to select them
     add: Add
     size: Size
