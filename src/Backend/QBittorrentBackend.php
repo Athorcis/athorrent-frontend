@@ -4,6 +4,7 @@ namespace Athorrent\Backend;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Utils\QBittorrentClient;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -44,6 +45,11 @@ class QBittorrentBackend implements BackendInterface
 
     public function clean(): void
     {
-        // TODO: Implement clean() method.
+        $fs = new Filesystem();
+
+        $fs->remove([
+            $this->user->getBackendPath('qbittorrent/qBittorrent/config/ipc-socket'),
+            $this->user->getBackendPath('qbittorrent/qBittorrent/config/lockfile'),
+        ]);
     }
 }
