@@ -81,6 +81,7 @@ files:
 torrents:
     title: Torrents
     advanced: Avancé
+    panelClose: Fermer
     dropzone: Déposez des fichiers ou cliquez pour les sélectionner
     add: Ajouter
     size: Taille

@@ -4,11 +4,26 @@
     bottom: 0;
     left: 0;
     min-height: 300px;
+    max-height: 70vh;
     position: fixed;
     width: 100%;
 
-    > .nav-tabs {
+    > .torrent-panel-header {
+        align-items: center;
         background-color: #f9f9f9;
+        display: flex;
+        justify-content: space-between;
+
+        > .nav-tabs {
+            border-bottom: 0;
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .torrent-panel-close {
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
     }
 }
 
