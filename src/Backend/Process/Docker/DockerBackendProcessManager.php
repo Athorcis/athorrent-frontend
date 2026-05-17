@@ -30,6 +30,8 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         private readonly string $mountType,
         #[Autowire('%env(BACKEND_DOCKER_MOUNT_SRC)%')]
         private readonly string $mountSrc,
+        #[Autowire('%env(BACKEND_DOCKER_NETWORK)%')]
+        private readonly string $network,
         private readonly EntityManagerInterface $entityManager,
     )
     {}
@@ -236,7 +238,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             'Cmd' => ["--torrenting-port=$port"],
             'User' => 'www-data',
             'HostConfig' => [
-                'NetworkMode' => 'athorrent-test_default',
+                'NetworkMode' => $this->network,
                 'PortBindings' => [
                     "$port/tcp" => [[
                         "HostPort" => "$port",
