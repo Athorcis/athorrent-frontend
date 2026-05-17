@@ -33,8 +33,13 @@ class QBittorrentBackend implements BackendInterface
 
     public function ping(): bool
     {
-        $response = $this->client->request('GET', '/api/v2/app/version');
-        return $response->getStatusCode() === 200;
+        try {
+            $response = $this->client->request('GET', '/api/v2/app/version');
+            return $response->getStatusCode() === 200;
+        }
+        catch (ExceptionInterface $e) {
+            return false;
+        }
     }
 
     public function clean(): void
