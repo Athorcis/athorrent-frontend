@@ -68,10 +68,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     #[ORM\Column]
     private int $port;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 32)]
     private string $clientType = self::CLIENT_TYPE_LEGACY;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 15, nullable: true)]
     private ?string $clientIp = null;
 
     public function __construct()
