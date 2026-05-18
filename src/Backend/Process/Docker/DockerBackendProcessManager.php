@@ -4,13 +4,13 @@ namespace Athorrent\Backend\Process\Docker;
 
 use Athorrent\Backend\Process\BackendProcessManagerInterface;
 use Athorrent\Database\Entity\User;
+use Athorrent\Security\UserManager;
 use Clue\React\Docker\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use React\Http\Message\ResponseException;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
 use function React\Async\await;
 
@@ -33,6 +33,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         #[Autowire('%env(BACKEND_DOCKER_NETWORK)%')]
         private readonly string $network,
         private readonly EntityManagerInterface $entityManager,
+        private readonly UserManager $userManager,
     )
     {}
 
@@ -226,12 +227,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         $userId = $user->getId();
         $port = $user->getPort();
 
-        $fs = new Filesystem();
-
-        $fs->mkdir([
-            $user->getBackendPath('qbittorrent'),
-            $user->getBackendPath('files'),
-        ]);
+        $this->userManager->initUserDirs($user);
 
         return $this->createContainer($user, [
             'Image' => $this->qbittorrentImageTag,
