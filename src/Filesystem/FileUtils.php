@@ -31,6 +31,22 @@ class FileUtils extends \Symfony\Component\Filesystem\Filesystem
         return $size;
     }
 
+    public function mkdirAs(string|iterable $dirs, int|string $user, int $mode = 0o777): void
+    {
+        $this->mkdir($dirs, $mode);
+
+        if (is_int($user)) {
+            $chown = posix_getuid() !== $user;
+        }
+        else {
+            $chown = posix_getpwuid(posix_getuid()) !== $user;
+        }
+
+        if ($chown) {
+            $this->chown($dirs, $user);
+        }
+    }
+
     private function toIterable($files): iterable
     {
         return is_iterable($files) ? $files : [$files];

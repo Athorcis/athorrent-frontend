@@ -42,19 +42,18 @@ class UserController extends AbstractController
     }
 
     #[Route(path: '/add', methods: ['GET', 'POST'], options: ['csrf' => 'delegate'])]
-    public function addUser(Request $request, EntityManagerInterface $em): View|Notification
+    public function addUser(Request $request, UserManager $userManager): View|Notification
     {
-        $user = new User();
-        $form = $this->createForm(AddUserType::class, $user);
+        $form = $this->createForm(AddUserType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setRoles([$form->get('role')->getData()]);
-            $user->setPort($this->userRepository->getNextAvailablePort());
-
-            $em->persist($user);
-            $em->flush();
+            $userManager->createUser(
+                $form->get('username')->getData(),
+                $form->get('plainPassword')->getData(),
+                $form->get('role')->getData(),
+            );
 
             return new SuccessNotification('users.add.success', 'listUsers');
         }

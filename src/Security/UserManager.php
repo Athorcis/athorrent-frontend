@@ -4,8 +4,9 @@ namespace Athorrent\Security;
 
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
+use Athorrent\Database\Type\UserRole;
+use Athorrent\Filesystem\FileUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -20,11 +21,11 @@ readonly class UserManager
     }
 
     /**
-     * @param string|string[] $roles
+     * @param string|UserRole|UserRole[]|string[] $roles
      */
-    public function createUser(string $username, string $password, string|array$roles): void
+    public function createUser(string $username, string $password, mixed $roles): void
     {
-        if (is_string($roles)) {
+        if (!is_array($roles)) {
             $roles = [$roles];
         }
 
@@ -41,9 +42,18 @@ readonly class UserManager
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $fs = new Filesystem();
-        $fs->mkdir($user->getFilesPath());
-        $fs->mkdir($user->getNewTorrentsPath());
+        $this->initUserDirs($user);
+    }
+
+    public function initUserDirs(User $user): void
+    {
+        $fs = new FileUtils();
+
+        $fs->mkdirAs([
+            $user->getFilesPath(),
+            $user->getNewTorrentsPath(),
+            $user->getQBittorrentConfigPath(),
+        ], 'www-data');
     }
 
     public function setPlainPassword(User $user, string $password): void
