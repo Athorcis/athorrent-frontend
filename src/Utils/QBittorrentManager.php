@@ -27,7 +27,7 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     /**
      * @throws ExceptionInterface
      */
-    protected function request(string $method, string $path, array $options = [])
+    protected function request(string $method, string $path, array $options = [], $json = true)
     {
         $response = $this->backend->request($method, $path, $options);
 
@@ -37,7 +37,11 @@ readonly class QBittorrentManager extends AbstractTorrentManager
             return null;
         }
 
-        return json_decode($body, true);
+        if ($json) {
+            return json_decode($body, true);
+        }
+
+        return $body;
     }
 
     #[ArrayShape(['hash' => 'string'])]
@@ -132,15 +136,47 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         $torrents = $this->request('GET', '/api/v2/torrents/info');
         $paths = [];
 
+        $qbRoot = $this->getDownloadPath();
+        $filesDir = $this->user->getFilesPath();
+
         foreach ($torrents as $torrent) {
             $contentPath = (string) ($torrent['content_path'] ?? '');
 
             if ($contentPath !== '') {
-                $paths[] = Path::canonicalize($contentPath);
+                try {
+                    $relativePath = $this->fs->makePathRelative($contentPath, $qbRoot);
+                }
+                catch (\InvalidArgumentException $e) {
+                    if (str_starts_with($contentPath, $qbRoot)) {
+                        $relativePath = substr($contentPath, strlen($qbRoot) + 1);
+                    }
+                    else {
+                        throw $e;
+                    }
+                }
+
+                $paths[] = Path::canonicalize(Path::join($filesDir, $relativePath));
             }
         }
 
         return array_values(array_unique($paths));
+    }
+
+    /**
+     * Récupère le chemin du dossier de téléchargement par défaut
+     * configuré dans qBittorrent.
+     *
+     * @throws ExceptionInterface
+     */
+    public function getDownloadPath(): string
+    {
+        $path = $this->request('GET', '/api/v2/app/defaultSavePath', [], false);
+
+        if ($path === '') {
+            return '';
+        }
+
+        return Path::canonicalize($path);
     }
 
     public function pauseTorrent(string $hash): string
@@ -296,9 +332,3 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         return in_array($qbitState, ['stoppedDL', 'stoppedUP'], true);
     }
 }
-/**
- * unknown: -1,
- * moving: 16,
- * missingFiles: 17,
- * error: 18
- */

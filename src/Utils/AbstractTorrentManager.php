@@ -7,7 +7,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 readonly abstract class AbstractTorrentManager implements TorrentManagerInterface
 {
-    protected function __construct(protected Filesystem $fs, private User $user)
+    protected function __construct(protected Filesystem $fs, protected User $user)
     {
     }
 
