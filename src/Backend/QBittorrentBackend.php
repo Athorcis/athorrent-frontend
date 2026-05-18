@@ -7,6 +7,7 @@ use Athorrent\Utils\QBittorrentClient;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class QBittorrentBackend implements BackendInterface
 {
@@ -20,7 +21,7 @@ class QBittorrentBackend implements BackendInterface
         $this->initBackend($user);
     }
 
-    public function request(string $method, string $path, array $options = [])
+    public function request(string $method, string $path, array $options = []): ResponseInterface
     {
         $state = $this->ensureRunningState();
 
