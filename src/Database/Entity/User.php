@@ -26,8 +26,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Cache(usage: 'NONSTRICT_READ_WRITE')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface, LegacyPasswordAuthenticatedUserInterface
 {
-    public const CLIENT_TYPE_LEGACY = 'legacy';
-    public const CLIENT_TYPE_QBITTORRENT = 'qbittorrent';
+    public const string CLIENT_TYPE_LEGACY = 'legacy';
+    public const string CLIENT_TYPE_QBITTORRENT = 'qbittorrent';
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer', options: ['unsigned' => true])]

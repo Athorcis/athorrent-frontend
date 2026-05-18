@@ -264,11 +264,11 @@ readonly class QBittorrentManager extends AbstractTorrentManager
             return 'disabled';
         }
 
-        if ($qbitState === 'checkingDL') {
+        if ($qbitState === 'checkingUP' || $qbitState === 'checkingDL') {
             return 'checking_files';
         }
 
-        if ($qbitState === 'checkingResumeData' || $qbitState === 'checkingUP' || $qbitState === 'checkingDL') {
+        if ($qbitState === 'checkingResumeData') {
             return 'checking_resume_data';
         }
 

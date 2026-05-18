@@ -152,7 +152,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         }
     }
 
-    protected function createContainer(User $user, array $config)
+    protected function createContainer(User $user, array $config): DockerBackendProcess
     {
         $this->pullImageIfNotExists($config['Image']);
 

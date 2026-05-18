@@ -13,10 +13,10 @@ class QBittorrentClient
 {
     private string $baseUrl;
 
-    private const CACHE_NAMESPACE = 'qb_client';
-    private const SID_CACHE_PREFIX = 'qb_sid_';
+    private const string CACHE_NAMESPACE = 'qb_client';
+    private const string SID_CACHE_PREFIX = 'qb_sid_';
 
-    public function __construct(private HttpClientInterface $http, private User $user)
+    public function __construct(private readonly HttpClientInterface $http, private readonly User $user)
     {
     }
 
