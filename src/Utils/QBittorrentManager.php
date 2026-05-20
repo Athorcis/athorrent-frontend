@@ -53,11 +53,9 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     protected function addTorrents(array $body, string $torrent): array
     {
         try {
-            $response = $this->request('POST', '/api/v2/torrents/add', [
+            $data = $this->request('POST', '/api/v2/torrents/add', [
                 'body' => $body,
             ]);
-
-            $data = json_decode($response->getContent());
 
             return $data['added_torrent_ids'];
         } catch (ClientExceptionInterface $e) {
