@@ -41,7 +41,7 @@
         "symfony/validator": "8.0.*",
         "symfony/webpack-encore-bundle": "^2.4.0",
         "symfony/yaml": "8.0.*",
-        "twig/twig": "^3.25",
+        "twig/twig": "^3.26",
         "twig/cache-extra": "^3.24",
         "twig/extra-bundle": "^3.24"
     },
