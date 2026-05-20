@@ -9,6 +9,7 @@ use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 readonly class QBittorrentManager extends AbstractTorrentManager
@@ -44,15 +45,34 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         return $body;
     }
 
+    /**
+     * @return string[]
+     * @throws ExceptionInterface
+     * @throws TorrentAlreadyAdded
+     */
+    protected function addTorrents(array $body, string $torrent): array
+    {
+        try {
+            $response = $this->request('POST', '/api/v2/torrents/add', [
+                'body' => $body,
+            ]);
+
+            $data = json_decode($response->getContent());
+
+            return $data['added_torrent_ids'];
+        } catch (ClientExceptionInterface $e) {
+            if ($e->getCode() === 409) {
+                throw new TorrentAlreadyAdded($torrent, $e);
+            }
+
+            throw $e;
+        }
+    }
+
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromUrl(string $url): array
     {
-        $beforeHashes = $this->getCurrentHashes();
-        $this->request('POST', '/api/v2/torrents/add', [
-            'body' => ['urls' => $url],
-        ]);
-
-        return $this->resolveAddedHash($beforeHashes);
+        return $this->addTorrents(['urls' => $url], $url);
     }
 
     public function storeUploadedTorrentFile(UploadedFile $file): void
@@ -64,7 +84,6 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromFile(string $path): array
     {
-        $beforeHashes = $this->getCurrentHashes();
         $absolutePath = Path::canonicalize($path);
         $torrentFile = fopen($absolutePath, 'rb');
 
@@ -73,29 +92,20 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         }
 
         try {
-            $this->request('POST', '/api/v2/torrents/add', [
-                'body' => [
-                    'torrents' => $torrentFile,
-                ],
-            ]);
-        } finally {
+            return $this->addTorrents(['torrents' => $torrentFile,], basename($path));
+        }
+        finally {
             if (is_resource($torrentFile)) {
                 fclose($torrentFile);
+                unlink($absolutePath);
             }
         }
-
-        return $this->resolveAddedHash($beforeHashes);
     }
 
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromMagnet(string $magnet): array
     {
-        $beforeHashes = $this->getCurrentHashes();
-        $this->request('POST', '/api/v2/torrents/add', [
-            'body' => ['urls' => $magnet],
-        ]);
-
-        return $this->resolveAddedHash($beforeHashes);
+        return $this->addTorrentFromUrl($magnet);
     }
 
     public function getTorrents(): array
@@ -242,35 +252,6 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         $this->fs->mkdir($torrentsDir);
 
         return $torrentsDir;
-    }
-
-    private function getCurrentHashes(): array
-    {
-        $torrents = $this->request('GET', '/api/v2/torrents/info');
-        $hashes = [];
-
-        foreach ($torrents as $torrent) {
-            $hash = (string) ($torrent['hash'] ?? '');
-
-            if ($hash !== '') {
-                $hashes[] = $hash;
-            }
-        }
-
-        return $hashes;
-    }
-
-    #[ArrayShape(['hash' => 'string'])]
-    private function resolveAddedHash(array $beforeHashes): array
-    {
-        $afterHashes = $this->getCurrentHashes();
-        $newHashes = array_values(array_diff($afterHashes, $beforeHashes));
-
-        if ($newHashes === []) {
-            return ['hash' => ''];
-        }
-
-        return ['hash' => $newHashes[0]];
     }
 
     private function normalizeState(string $qbitState): string
