@@ -15,7 +15,7 @@ const torrentListTimeout = 2000,
 
 class Updater {
 
-    private intervalId = -1;
+    private timeoutId = -1;
 
     private data$: AbortablePromise<string>;
 
@@ -29,19 +29,23 @@ class Updater {
     }
 
     start(fireNow = false) {
-        if (this.intervalId === -1) {
-            if (fireNow) {
-                this.intervalCallback();
-            }
+        if (this.timeoutId === -1) {
+            const run = async (fire = true) => {
+                if (fire) {
+                    await this.intervalCallback();
+                }
 
-            this.intervalId = window.setInterval(this.intervalCallback.bind(this), this.interval);
+                this.timeoutId = window.setTimeout(run, this.interval);
+            };
+
+            void run(fireNow);
         }
     }
 
     stop() {
-        if (this.intervalId > -1) {
-            clearInterval(this.intervalId);
-            this.intervalId = -1;
+        if (this.timeoutId > -1) {
+            clearTimeout(this.timeoutId);
+            this.timeoutId = -1;
 
             if (this.data$) {
                 this.data$.abort();
@@ -51,7 +55,7 @@ class Updater {
     }
 
     update() {
-        if (this.intervalId > -1) {
+        if (this.timeoutId > -1) {
             this.stop();
             this.start(true);
         }
@@ -64,7 +68,12 @@ class Updater {
 
         this.data$ = this.router.sendRequest(this.action, this.parameters)
 
-        this.data$.then(this.internalSuccess.bind(this));
+        try {
+            this.internalSuccess(await this.data$);
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     internalSuccess(data: string) {
