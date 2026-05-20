@@ -4,6 +4,7 @@ namespace Athorrent\Controller;
 
 use Athorrent\Backend\BackendState;
 use Athorrent\Backend\BackendUnavailableException;
+use Athorrent\Utils\TorrentAlreadyAdded;
 use Athorrent\Utils\TorrentManagerInterface;
 use Athorrent\View\View;
 use Athorrent\View\ViewType;
@@ -153,12 +154,26 @@ class TorrentController extends AbstractController
         $torrentsDir = $torrentManager->getTorrentsDirectory();
 
         $torrentIds = [];
+        $usedFileHashes = [];
 
         foreach ($files as $file) {
             $torrentPath = Path::join($torrentsDir, $file);
 
             if (file_exists($torrentPath)) {
-                $result = $torrentManager->addTorrentFromFile($torrentPath);
+                $fileHash = md5_file($torrentPath);
+
+                if (in_array($fileHash, $usedFileHashes, true)) {
+                    continue;
+                }
+
+                try {
+                    $result = $torrentManager->addTorrentFromFile($torrentPath);
+                }
+                catch (TorrentAlreadyAdded) {
+                    // NOOP
+                }
+
+                $usedFileHashes[] = $fileHash;
 
                 if (isset($result['hash'])) {
                     $torrentIds[] = $result['hash'];
@@ -166,8 +181,21 @@ class TorrentController extends AbstractController
             }
         }
 
+        $usedMagnets = [];
+
         foreach ($magnets as $magnet) {
-            $result = $torrentManager->addTorrentFromMagnet($magnet);
+            if (in_array($magnet, $usedMagnets, true)) {
+                continue;
+            }
+
+            try {
+                $result = $torrentManager->addTorrentFromMagnet($magnet);
+            }
+            catch (TorrentAlreadyAdded) {
+                // NOOP
+            }
+
+            $usedMagnets[] = $magnet;
 
             if (isset($result['hash'])) {
                 $torrentIds[] = $result['hash'];
