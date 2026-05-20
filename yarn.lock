@@ -3375,7 +3375,7 @@ __metadata:
     sass-loader: "npm:^16.0.8"
     stylelint: "npm:~17.11.0"
     stylelint-config-standard-scss: "npm:^17.0.0"
-    stylelint-scss: "npm:^7.1.0"
+    stylelint-scss: "npm:^7.1.1"
     stylelint-webpack-plugin: "npm:^5.1.0"
     ts-loader: "npm:^9.5.7"
     tsx: "npm:^4.21.0"
@@ -8146,9 +8146,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylelint-scss@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "stylelint-scss@npm:7.1.0"
+"stylelint-scss@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "stylelint-scss@npm:7.1.1"
   dependencies:
     "@csstools/css-calc": "npm:^3.2.0"
     "@csstools/css-parser-algorithms": "npm:^4.0.0"
@@ -8163,7 +8163,7 @@ __metadata:
     postcss-value-parser: "npm:^4.2.0"
   peerDependencies:
     stylelint: ^16.8.2 || ^17.0.0
-  checksum: 10/2b8ddcc6fb2573fdf31e7d3dbc69470f538e1015c7c69508ffbf7a75f68c5bccb8c425a09464990460f6a812dc30032b1607db7afe533191bebd36692542bbc4
+  checksum: 10/e6c6e92e05867bcc0e2ec5428b59ccc3f66002b20aac00775789e643d6c7240bc8ab5baf12709f5cc83543ba5a362b1bb706b67f66ca05b80fa38eba7ac176e5
   languageName: node
   linkType: hard
 
