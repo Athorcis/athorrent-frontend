@@ -36,6 +36,9 @@ class BackendManager
     /** @var array<int, BackendInterface>  */
     private array $backends;
 
+    /** @var SplObjectStorage<BackendInterface> */
+    private SplObjectStorage $failedBackends;
+
     /** @var SplQueue<BackendInterface>  */
     private SplQueue $startQueue;
 
@@ -62,6 +65,7 @@ class BackendManager
         $this->backendProcessManager = $this->factory->get($_ENV['BACKEND_TYPE'] ?? 'foreground');
 
         $this->backends = $this->initializeBackends();
+        $this->failedBackends = new SplObjectStorage();
 
         $this->startQueue = new SplQueue();
         $this->startQueue->setIteratorMode(SplQueue::IT_MODE_DELETE);
@@ -206,6 +210,7 @@ class BackendManager
         else {
             $this->logger->error(sprintf("Failed to start %s too many times", $backend));
             $backend->setState(BackendState::Failed);
+            $this->failedBackends->attach($backend);
             $this->cleanProcess($backend);
         }
     }
@@ -373,5 +378,15 @@ class BackendManager
         $this->logger->info(sprintf("Started %s", $backend));
 
         return $process;
+    }
+
+    public function getBackendCount(): int
+    {
+        return count($this->backends);
+    }
+
+    public function getFailedBackendsCount(): int
+    {
+        return $this->failedBackends->count();
     }
 }
