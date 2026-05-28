@@ -54,7 +54,7 @@ class QBittorrentProxyController extends AbstractController
 
         $response = new Response($content, $status);
         foreach ($respHeaders as $name => $values) {
-            if (strtolower($name) === 'set-cookie' || strtolower($name) === 'content-length') {
+            if (in_array(strtolower($name), ['set-cookie', 'content-length', 'date'])) {
                 continue; // ne pas renvoyer cookie qB au navigateur
             }
             foreach ($values as $value) {
