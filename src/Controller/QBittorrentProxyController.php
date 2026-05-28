@@ -49,7 +49,11 @@ class QBittorrentProxyController extends AbstractController
         $status = $qbResponse->getStatusCode();
         $respHeaders = $qbResponse->getHeaders(false);
 
-        $content = str_replace('<head>', '<head><base href="' . $urlGenerator->generate('proxyToQBittorrent') . '/">', $content);
+        $content = str_replace(
+            '<head>',
+            '<head><base href="' . $urlGenerator->generate('proxyToQBittorrent') . '/">' . ($_ENV['ANALYTICS_TAG'] ?? ''),
+            $content,
+        );
 
 
         $response = new Response($content, $status);
