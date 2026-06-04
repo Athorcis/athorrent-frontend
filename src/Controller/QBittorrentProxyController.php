@@ -54,7 +54,7 @@ class QBittorrentProxyController extends AbstractController
         $status = $qbResponse->getStatusCode();
         $respHeaders = $qbResponse->getHeaders(false);
 
-        if ($respHeaders['content-type'][0] === 'text/html') {
+        if ($respHeaders['content-type'][0] === 'text/html' && str_contains($content, '<!DOCTYPE html>')) {
             $newLine = "\n    ";
             $content = str_replace(
                 '<head>',
@@ -68,6 +68,12 @@ class QBittorrentProxyController extends AbstractController
                 $respHeaders['content-security-policy'][0] = str_replace(
                     "default-src 'self';",
                     "default-src 'self' " . $_ENV['ADDITIONAL_CSP_ORIGIN'] .";",
+                    $respHeaders['content-security-policy'][0],
+                );
+
+                $respHeaders['content-security-policy'][0] = str_replace(
+                    "script-src 'self' 'unsafe-inline';",
+                    "script-src 'self' 'unsafe-inline' " . $_ENV['ADDITIONAL_CSP_ORIGIN'] .";",
                     $respHeaders['content-security-policy'][0],
                 );
             }
