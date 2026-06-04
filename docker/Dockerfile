@@ -21,6 +21,7 @@ RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases
       apcu bcmath intl pcntl pdo_mysql pdo_pgsql pdo_sqlite sockets sysvsem
 
 COPY docker/conf/php/base.ini /usr/local/etc/php/conf.d/
+COPY docker/conf/php/zz-fpm-base.ini /usr/local/etc/php-fpm.d/
 
 ARG RUN_USER
 RUN set -ex ;\
@@ -143,6 +144,7 @@ HEALTHCHECK --interval=5s --timeout=1s \
     CMD FCGI_CONNECT=localhost:9001 php-fpm-healthcheck --listen-queue=10 || exit 1
 
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
+COPY docker/conf/php/zz-fpm-prod.ini /usr/local/etc/php-fpm.d/
 
 ARG RUN_USER
 USER $RUN_USER
