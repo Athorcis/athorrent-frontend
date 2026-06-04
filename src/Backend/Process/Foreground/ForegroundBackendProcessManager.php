@@ -6,9 +6,11 @@ use Athorrent\Backend\Process\BackendProcessInterface;
 use Athorrent\Backend\Process\BackendProcessManagerInterface;
 use Athorrent\Database\Entity\User;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Process\Process;
 
+#[AsTaggedItem('foreground')]
 class ForegroundBackendProcessManager implements BackendProcessManagerInterface
 {
     /** @var array<int, ForegroundBackendProcess>  */
@@ -55,10 +57,5 @@ class ForegroundBackendProcessManager implements BackendProcessManagerInterface
     public function listRunningProcesses(): array
     {
         return [];
-    }
-
-    public static function getType(): string
-    {
-        return 'foreground';
     }
 }

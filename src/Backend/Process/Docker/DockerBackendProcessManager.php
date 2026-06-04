@@ -10,10 +10,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use React\Http\Message\ResponseException;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Throwable;
 use function React\Async\await;
 
+#[AsTaggedItem('docker')]
 class DockerBackendProcessManager implements BackendProcessManagerInterface
 {
     /** @var array<int, DockerBackendProcess>  */
@@ -321,10 +323,5 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         if (isset($process)) {
             $this->doClean($process, $userId);
         }
-    }
-
-    public static function getType(): string
-    {
-        return 'docker';
     }
 }

@@ -14,6 +14,7 @@ use React\Promise\PromiseInterface;
 use RuntimeException;
 use SplObjectStorage;
 use SplQueue;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Throwable;
 use function React\Async\async;
@@ -54,6 +55,7 @@ class BackendManager
         private readonly BackendProcessManagerFactory $factory,
         private readonly LoggerInterface $logger,
         private readonly UserRepository $userRepo,
+        #[Target('backend_restart')]
         private readonly RateLimiterFactoryInterface $backendRestartLimiter,
         private readonly BackendFactory $backendFactory,
     ) {

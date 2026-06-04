@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 readonly class BackendProcessManagerFactory
 {
     public function __construct(
-        #[AutowireLocator(BackendProcessManagerInterface::class, defaultIndexMethod: 'getType')]
+        #[AutowireLocator(BackendProcessManagerInterface::class)]
         private ContainerInterface $serviceLocator
     ) {}
 

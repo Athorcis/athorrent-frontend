@@ -22,6 +22,4 @@ interface BackendProcessManagerInterface
     public function supportsUpdate(): bool;
 
     public function requestUpdate(): void;
-
-    public static function getType(): string;
 }
