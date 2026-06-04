@@ -36,9 +36,14 @@ class QBittorrentProxyController extends AbstractController
 
         $body = $this->resolveProxyBody($request);
         $headers = $this->extractForwardedHeaders($request);
+
+        $headersToRemove = ['accept-encoding'];
+
         if (is_array($body)) {
-            $headers = $this->withoutContentTypeHeader($headers);
+            $headersToRemove[] = 'content-type';
         }
+
+        $headers = $this->removeHeaders($headers, $headersToRemove);
 
         $qbResponse = $backend->request($request->getMethod(), '/' . ltrim($path, '/'), [
             'headers' => $headers,
@@ -49,16 +54,20 @@ class QBittorrentProxyController extends AbstractController
         $status = $qbResponse->getStatusCode();
         $respHeaders = $qbResponse->getHeaders(false);
 
+        $newLine = "\n    ";
         $content = str_replace(
             '<head>',
-            '<head><base href="' . $urlGenerator->generate('proxyToQBittorrent') . '/">' . ($_ENV['ANALYTICS_TAG'] ?? ''),
+            '<head>' . $newLine .
+            '<base href="' . $urlGenerator->generate('proxyToQBittorrent') . '">' .
+            ($_ENV['ANALYTICS_TAG'] ?? ''),
             $content,
         );
 
 
         $response = new Response($content, $status);
         foreach ($respHeaders as $name => $values) {
-            if (in_array(strtolower($name), ['set-cookie', 'content-length', 'date'])) {
+            // Despite not returning gzip content-encoding is still set with gzip value
+            if (in_array(strtolower($name), ['set-cookie', 'content-encoding', 'content-length', 'date'])) {
                 continue; // ne pas renvoyer cookie qB au navigateur
             }
             foreach ($values as $value) {
@@ -161,15 +170,14 @@ class QBittorrentProxyController extends AbstractController
     }
 
     /**
-     * Retire Content-Type pour laisser HttpClient fixer boundary / encoding.
-     *
      * @param array<string, string> $headers - En-têtes à filtrer
+     * @param string[] $toRemove
      * @return array<string, string>
      */
-    private function withoutContentTypeHeader(array $headers): array
+    private function removeHeaders(array $headers, array $toRemove): array
     {
-        foreach (array_keys($headers) as $name) {
-            if (strtolower($name) === 'content-type') {
+        foreach ($headers as $name => $value) {
+            if (in_array(strtolower($name), $toRemove, true)) {
                 unset($headers[$name]);
             }
         }
