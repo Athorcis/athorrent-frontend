@@ -28,4 +28,12 @@ class Kernel extends BaseKernel
 
         return $this->projectDir;
     }
+
+    /**
+     * @return list<string> An array of allowed values for APP_ENV
+     */
+    private function getAllowedEnvs(): array
+    {
+        return ['prod', 'dev', 'test'];
+    }
 }
