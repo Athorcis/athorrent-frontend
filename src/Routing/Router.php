@@ -151,11 +151,11 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
-        if (null === $this->inner->getOption('cache_dir')) {
-            return [];
-        }
-
         $warmed = $this->inner->warmUp($cacheDir, $buildDir);
+
+        if (null === $this->inner->getOption('cache_dir')) {
+            return $warmed;
+        }
 
         $warmed[] = $this->generateActionMapCache($buildDir ?? $cacheDir);
 
