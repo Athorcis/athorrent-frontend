@@ -62,15 +62,8 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
             $this->actionMap = $dumper->generateActionMap();
         }
         else {
-            $cache = $this->getConfigCacheFactory()->cache($cacheDir.'/action-map.php',
-                function (ConfigCacheInterface $cache) {
-                    $dumper = $this->getActionMapDumperInstance();
-
-                    $cache->write($dumper->dump(), $this->baseRouter->getRouteCollection()->getResources());
-                }
-            );
-
-            $this->actionMap = self::readCache($cache->getPath());
+            $path = $this->generateActionMapCache($cacheDir);
+            $this->actionMap = self::readCache($path);
         }
 
         return $this->actionMap;
@@ -89,6 +82,28 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
         }
 
         return $generator;
+    }
+
+    /**
+     * Génère et écrit le cache action-map.php.
+     *
+     * @param string $cacheDir - Répertoire de cache cible
+     */
+    private function generateActionMapCache(string $cacheDir): string
+    {
+        $configCache = $this->getConfigCacheFactory()->cache(
+            $cacheDir.'/action-map.php',
+            function (ConfigCacheInterface $cache): void {
+                $dumper = $this->getActionMapDumperInstance();
+
+                $cache->write(
+                    $dumper->dump(),
+                    $this->baseRouter->getRouteCollection()->getResources()
+                );
+            }
+        );
+
+        return $configCache->getPath();
     }
 
     /**
@@ -145,6 +160,14 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
-        return $this->baseRouter->warmUp($cacheDir, $buildDir);
+        if (null === $this->baseRouter->getOption('cache_dir')) {
+            return [];
+        }
+
+        $warmed = $this->baseRouter->warmUp($cacheDir, $buildDir);
+
+        $warmed[] = $this->generateActionMapCache($buildDir ?? $cacheDir);
+
+        return $warmed;
     }
 }
