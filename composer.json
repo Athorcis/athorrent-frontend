@@ -15,7 +15,7 @@
         "ext-json": "*",
         "ext-sockets": "*",
         "clue/docker-react": "^1.6.0",
-        "doctrine/doctrine-bundle": "^3.2.2",
+        "doctrine/doctrine-bundle": "^3.2.3",
         "doctrine/orm": "^3.6.7",
         "nelmio/security-bundle": "^3.9",
         "react/async": "^4.3",
