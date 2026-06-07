@@ -2,12 +2,11 @@
 
 namespace Athorrent\Routing;
 
-use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -21,10 +20,9 @@ use function ini_get;
 use const FILTER_VALIDATE_BOOL;
 use const PHP_SAPI;
 
+#[AsDecorator('router')]
 class Router implements RouterInterface, RequestMatcherInterface, WarmableInterface
 {
-    protected BaseRouter $baseRouter;
-
     protected ?array $actionMap = null;
 
     private ?ConfigCacheFactoryInterface $configCacheFactory = null;
@@ -32,21 +30,14 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
     private static ?array $cache = [];
 
     public function __construct(
-        ContainerInterface $container,
-        mixed $resource,
-        array $options = [],
-        ?RequestContext $context = null,
-        ?ContainerInterface $parameters = null,
-        ?LoggerInterface $logger = null,
-        ?string $defaultLocale = null
+        private BaseRouter $inner
     ) {
-        $options['generator_class'] = CompiledUrlGenerator::class;
-        $this->baseRouter = new BaseRouter($container, $resource, $options, $context, $parameters, $logger, $defaultLocale);
+        $this->inner->setOption('generator_class', CompiledUrlGenerator::class);
     }
 
     protected function getActionMapDumperInstance(): ActionMapDumper
     {
-        return new ActionMapDumper($this->baseRouter->getRouteCollection());
+        return new ActionMapDumper($this->inner->getRouteCollection());
     }
 
     public function getActionMap(): array
@@ -55,7 +46,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
             return $this->actionMap;
         }
 
-        $cacheDir = $this->baseRouter->getOption('cache_dir');
+        $cacheDir = $this->inner->getOption('cache_dir');
 
         if (null === $cacheDir) {
             $dumper = $this->getActionMapDumperInstance();
@@ -75,7 +66,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
             return $this->generator;
         }
 
-        $generator = $this->baseRouter->getGenerator();
+        $generator = $this->inner->getGenerator();
 
         if ($generator instanceof CompiledUrlGenerator) {
             $generator->setActionMap($this->getActionMap());
@@ -98,7 +89,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
 
                 $cache->write(
                     $dumper->dump(),
-                    $this->baseRouter->getRouteCollection()->getResources()
+                    $this->inner->getRouteCollection()->getResources()
                 );
             }
         );
@@ -112,7 +103,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
      */
     private function getConfigCacheFactory(): ConfigCacheFactoryInterface
     {
-        return $this->configCacheFactory ??= new ConfigCacheFactory($this->baseRouter->getOption('debug'));
+        return $this->configCacheFactory ??= new ConfigCacheFactory($this->inner->getOption('debug'));
     }
 
     private static function readCache(string $path): array
@@ -130,17 +121,17 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
 
     public function setContext(RequestContext $context): void
     {
-        $this->baseRouter->setContext($context);
+        $this->inner->setContext($context);
     }
 
     public function getContext(): RequestContext
     {
-        return $this->baseRouter->getContext();
+        return $this->inner->getContext();
     }
 
     public function getRouteCollection(): RouteCollection
     {
-        return $this->baseRouter->getRouteCollection();
+        return $this->inner->getRouteCollection();
     }
 
     public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
@@ -150,21 +141,21 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
 
     public function match(string $pathinfo): array
     {
-        return $this->baseRouter->match($pathinfo);
+        return $this->inner->match($pathinfo);
     }
 
     public function matchRequest(Request $request): array
     {
-        return $this->baseRouter->matchRequest($request);
+        return $this->inner->matchRequest($request);
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
-        if (null === $this->baseRouter->getOption('cache_dir')) {
+        if (null === $this->inner->getOption('cache_dir')) {
             return [];
         }
 
-        $warmed = $this->baseRouter->warmUp($cacheDir, $buildDir);
+        $warmed = $this->inner->warmUp($cacheDir, $buildDir);
 
         $warmed[] = $this->generateActionMapCache($buildDir ?? $cacheDir);
 

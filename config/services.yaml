@@ -26,23 +26,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    Athorrent\Routing\Router:
-        decorates: router
-        arguments:
-            $container: '@service_container'
-            $resource: 'kernel::loadRoutes'
-            $options:
-                cache_dir: '%kernel.cache_dir%'
-                debug: '%kernel.debug%'
-                generator_class: Symfony\Component\Routing\Generator\CompiledUrlGenerator
-                generator_dumper_class: Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper
-                matcher_class: Symfony\Bundle\FrameworkBundle\Routing\RedirectableCompiledUrlMatcher
-                matcher_dumper_class: Symfony\Component\Routing\Matcher\Dumper\CompiledUrlMatcherDumper
-                strict_requirements: true
-                resource_type: 'service'
-            $parameters: null
-            $defaultLocale: '%kernel.default_locale%'
-
     Athorrent\Database\Repository\SharingRepository:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments: [Athorrent\Database\Entity\Sharing]
