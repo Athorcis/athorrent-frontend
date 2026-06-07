@@ -4,7 +4,7 @@ namespace Athorrent\Utils;
 
 use Athorrent\Database\Entity\User;
 use Exception;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -13,10 +13,12 @@ class QBittorrentClient
 {
     private string $baseUrl;
 
-    private const string CACHE_NAMESPACE = 'qb_client';
-    private const string SID_CACHE_PREFIX = 'qb_sid_';
+    private const string SID_CACHE_PREFIX = 'qb_client_sid_';
 
-    public function __construct(private readonly HttpClientInterface $http, private readonly User $user)
+    public function __construct(
+        private readonly CacheInterface $cache,
+        private readonly HttpClientInterface $http,
+        private readonly User $user)
     {
     }
 
@@ -61,9 +63,8 @@ class QBittorrentClient
      */
     private function getSid(): string
     {
-        $cache = new FilesystemAdapter(self::CACHE_NAMESPACE);
         $cacheKey = self::SID_CACHE_PREFIX . $this->user->getId();
-        $item = $cache->getItem($cacheKey);
+        $item = $this->cache->getItem($cacheKey);
 
         if ($item->isHit()) {
             return (string) $item->get();
@@ -78,7 +79,7 @@ class QBittorrentClient
                 $sid = $matches[1];
                 $item->set($sid);
                 $item->expiresAfter(60 * 30);
-                $cache->save($item);
+                $this->cache->save($item);
 
                 return $sid;
             }
@@ -89,8 +90,7 @@ class QBittorrentClient
 
     private function clearSidCache(): void
     {
-        $cache = new FilesystemAdapter(self::CACHE_NAMESPACE);
         $cacheKey = self::SID_CACHE_PREFIX . $this->user->getId();
-        $cache->deleteItem($cacheKey);
+        $this->cache->deleteItem($cacheKey);
     }
 }

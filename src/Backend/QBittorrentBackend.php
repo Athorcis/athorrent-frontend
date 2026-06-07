@@ -5,6 +5,7 @@ namespace Athorrent\Backend;
 use Athorrent\Database\Entity\User;
 use Athorrent\Utils\QBittorrentClient;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -15,9 +16,9 @@ class QBittorrentBackend implements BackendInterface
 
     private QBittorrentClient $client;
 
-    public function __construct(HttpClientInterface $http, User $user)
+    public function __construct(CacheInterface $cache, HttpClientInterface $http, User $user)
     {
-        $this->client = new QBittorrentClient($http, $user);
+        $this->client = new QBittorrentClient($cache, $http, $user);
         $this->initBackend($user);
     }
 
