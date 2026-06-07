@@ -105,7 +105,11 @@ COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
 COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 
 ARG SYMFONY_APP_ENV
-RUN php bin/console cache:warmup --env=$SYMFONY_APP_ENV
+RUN set -ex ;\
+    # If we don't create the database first warmup doesn't create all metadata cache \
+    APP_SECRET=dummy php bin/console doctrine:schema:create --env=$SYMFONY_APP_ENV -v ;\
+    php bin/console cache:warmup --env=$SYMFONY_APP_ENV -v;\
+    rm -R "var/data_$SYMFONY_APP_ENV.db" "var/log/"*
 
 FROM builder AS dev
 
