@@ -3,12 +3,10 @@
 namespace Athorrent\Controller;
 
 use Athorrent\Backend\BackendFactory;
-use Athorrent\Database\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -21,13 +19,7 @@ class QBittorrentProxyController extends AbstractController
     #[Route('/user/qb/{path}', requirements: ['path' => '.*'], methods: ['GET','POST','PUT','PATCH','DELETE'], options: ['csrf' => false])]
     public function proxyToQBittorrent(Request $request, string $path, UrlGeneratorInterface $urlGenerator): Response
     {
-        $user = $this->getUser();
-
-        if (!($user instanceof User) || $user->getClientType() !== User::CLIENT_TYPE_QBITTORRENT) {
-            throw new AccessDeniedHttpException('unsupported client type');
-        }
-
-        $backend = $this->backendFactory->create($user);
+        $backend = $this->backendFactory->create($this->getUser());
         $blocked = ['api/v2/auth/login'];
 
         if (in_array($path, $blocked, true)) {

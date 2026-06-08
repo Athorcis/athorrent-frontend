@@ -24,8 +24,6 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     public function __construct(
         private readonly Client $docker,
         private readonly LoggerInterface $logger,
-        #[Autowire('%env(BACKEND_DOCKER_LEGACY_IMAGE)%')]
-        private readonly string $legacyImageTag,
         #[Autowire('%env(BACKEND_DOCKER_QBITTORRENT_IMAGE)%')]
         private readonly string $qbittorrentImageTag,
         #[Autowire('%env(BACKEND_DOCKER_MOUNT_TYPE)%')]
@@ -51,10 +49,8 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
 
     public function requestUpdate(): void
     {
-        $this->pullImage($this->legacyImageTag);
         $this->pullImage($this->qbittorrentImageTag);
 
-        $legacyImageId = await($this->docker->imageInspect($this->legacyImageTag))['Id'];
         $qbittorrentImageId = await($this->docker->imageInspect($this->qbittorrentImageTag))['Id'];
 
         $updateCount = 0;
@@ -63,17 +59,9 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             try {
                 $requestRestart = false;
                 $processImageId = $process->getImageId();
-                $processClientType = $process->getClientType();
 
-                if ($processClientType === User::CLIENT_TYPE_LEGACY) {
-                    if ($processImageId !== $legacyImageId) {
-                        $requestRestart = true;
-                    }
-                }
-                elseif ($processClientType === User::CLIENT_TYPE_QBITTORRENT) {
-                    if ($processImageId !== $qbittorrentImageId) {
-                        $requestRestart = true;
-                    }
+                if ($processImageId !== $qbittorrentImageId) {
+                    $requestRestart = true;
                 }
 
                 if ($requestRestart) {
@@ -195,35 +183,6 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         ];
     }
 
-    protected function createLegacy(User $user): DockerBackendProcess
-    {
-        $userId = $user->getId();
-        $port = $user->getPort();
-
-        return $this->createContainer($user, [
-            'Image' => $this->legacyImageTag,
-            'Cmd' => ['--port', "$port"],
-            'User' => 'www-data',
-            'WorkingDir' => '/var/lib/athorrent-backend',
-            'Healthcheck' => [
-                'Test' => ["NONE"]
-            ],
-            'HostConfig' => [
-                'NetworkMode' => 'host',
-                'Mounts' => [
-                    $this->getMountConfig(
-                        $userId . '/backend',
-                        '/var/lib/athorrent-backend',
-                        false,
-                    )
-                ],
-            ],
-            'Labels' => [
-                'com.athorrent.client_type' => User::CLIENT_TYPE_LEGACY
-            ]
-        ]);
-    }
-
     protected function createQBittorrent(User $user): DockerBackendProcess
     {
         $userId = $user->getId();
@@ -258,26 +217,12 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
                     ),
                 ],
             ],
-            'Labels' => [
-                'com.athorrent.client_type' => User::CLIENT_TYPE_QBITTORRENT
-            ]
         ]);
     }
 
     public function create(User $user): DockerBackendProcess
     {
-        $clientType = $user->getClientType();
-
-        if ($clientType === User::CLIENT_TYPE_LEGACY) {
-            $process = $this->createLegacy($user);
-        }
-        elseif ($clientType === User::CLIENT_TYPE_QBITTORRENT) {
-            $process = $this->createQBittorrent($user);
-        }
-        else {
-            throw new RuntimeException('Unsupported user type ' . $clientType);
-        }
-
+        $process = $this->createQBittorrent($user);
         $clientIp = $process->getClientIp();
 
         if (!empty($clientIp)) {

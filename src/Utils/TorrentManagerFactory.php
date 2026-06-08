@@ -19,18 +19,8 @@ class TorrentManagerFactory
 
     protected function doCreate(User $user): TorrentManagerInterface
     {
-        $clientType = $user->getClientType();
         $backend = $this->backendFactory->create($user);
-
-        if ($clientType === User::CLIENT_TYPE_LEGACY) {
-            return new TorrentManager($this->fs, $user, $backend);
-        }
-
-        if ($clientType === User::CLIENT_TYPE_QBITTORRENT) {
-            return new QBittorrentManager($this->fs, $user, $backend);
-        }
-
-        throw new \RuntimeException(sprintf('Unsupported client type "%s"', $clientType));
+        return new QBittorrentManager($this->fs, $user, $backend);
     }
 
     public function create(User $user): TorrentManagerInterface

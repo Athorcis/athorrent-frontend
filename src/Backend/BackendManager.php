@@ -64,7 +64,7 @@ class BackendManager
 
     public function run(): void
     {
-        $this->backendProcessManager = $this->factory->get($_ENV['BACKEND_TYPE'] ?? 'foreground');
+        $this->backendProcessManager = $this->factory->get('docker');
 
         $this->backends = $this->initializeBackends();
         $this->failedBackends = new SplObjectStorage();
