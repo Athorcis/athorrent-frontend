@@ -38,12 +38,6 @@ class DockerBackendProcess implements BackendProcessInterface
         return $data['Image'];
     }
 
-    public function getClientType(): string
-    {
-        $data = await($this->docker->containerInspect($this->containerId));
-        return $data['Labels']['com.athorrent.client_type'] ?? 'legacy';
-    }
-
     public function getClientIp(): string
     {
         $data = await($this->docker->containerInspect($this->containerId));

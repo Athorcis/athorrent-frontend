@@ -40,7 +40,7 @@ class QBittorrentBackend implements BackendInterface
             $response = $this->client->request('GET', '/api/v2/app/version');
             return $response->getStatusCode() === 200;
         }
-        catch (ExceptionInterface $e) {
+        catch (ExceptionInterface) {
             return false;
         }
     }

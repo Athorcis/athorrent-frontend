@@ -26,7 +26,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Cache(usage: 'NONSTRICT_READ_WRITE')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKeyGetterInterface, LegacyPasswordAuthenticatedUserInterface
 {
-    public const string CLIENT_TYPE_LEGACY = 'legacy';
     public const string CLIENT_TYPE_QBITTORRENT = 'qbittorrent';
 
     #[ORM\Id]
@@ -69,7 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     private int $port;
 
     #[ORM\Column(length: 32)]
-    private string $clientType = self::CLIENT_TYPE_LEGACY;
+    private string $clientType = self::CLIENT_TYPE_QBITTORRENT;
 
     #[ORM\Column(length: 15, nullable: true)]
     private ?string $clientIp = null;

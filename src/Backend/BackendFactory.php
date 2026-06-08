@@ -17,29 +17,17 @@ class BackendFactory
 
     protected function doCreate(User $user): BackendInterface
     {
-        $clientType = $user->getClientType();
-
-        if ($clientType === User::CLIENT_TYPE_LEGACY) {
-            return new LegacyBackend($user);
-        }
-
-        if ($clientType === User::CLIENT_TYPE_QBITTORRENT) {
-            return new QBittorrentBackend($this->cache, $this->http, $user);
-        }
-
-        throw new \RuntimeException(sprintf('Unsupported client type "%s"', $clientType));
+        return new QBittorrentBackend($this->cache, $this->http, $user);
     }
 
     public function create(User $user): BackendInterface
     {
         $userId = $user->getId();
-        $clientType = $user->getClientType();
-        $key = $clientType . '_' . $userId;
 
-        if (!isset($this->instances[$key])) {
-            $this->instances[$key] = $this->doCreate($user);
+        if (!isset($this->instances[$userId])) {
+            $this->instances[$userId] = $this->doCreate($user);
         }
 
-        return $this->instances[$key];
+        return $this->instances[$userId];
     }
 }
