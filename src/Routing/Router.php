@@ -30,7 +30,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
     private static ?array $cache = [];
 
     public function __construct(
-        private BaseRouter $inner
+        private readonly BaseRouter $inner
     ) {
         $this->inner->setOption('generator_class', CompiledUrlGenerator::class);
     }
