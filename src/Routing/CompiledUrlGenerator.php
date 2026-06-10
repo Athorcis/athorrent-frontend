@@ -67,7 +67,8 @@ class CompiledUrlGenerator extends UrlGenerator
 
         if ($locale === $this->defaultLocale) {
             unset($parameters['_locale']);
-        } else {
+        }
+        elseif (isset($this->compiledRoutes[$name . '|i18n'])) {
             $name .= '|i18n';
             $parameters['_locale'] = $locale;
         }
