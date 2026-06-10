@@ -2,6 +2,7 @@
 
 namespace Athorrent\Controller;
 
+use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Symfony\Component\Filesystem\Filesystem;
@@ -38,6 +39,24 @@ class FileController extends AbstractFileController
         }
 
         $file->move($dirPath, basename($relativePath));
+
+        return [];
+    }
+
+    #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]
+    public function removeFile(#[Requirements(path: true)] UserFilesystemEntry $entry, SharingRepository $sharingRepository): array
+    {
+        if ($entry->isRoot()) {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$entry->isDeletable()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $entry->remove();
+
+        $sharingRepository->deleteByUserAndRoot($entry->getOwner(), $entry->getPath());
 
         return [];
     }

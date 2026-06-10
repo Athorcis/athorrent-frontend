@@ -2,7 +2,6 @@
 
 namespace Athorrent\Controller;
 
-use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\AbstractFilesystemEntry;
 use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
@@ -217,23 +216,5 @@ abstract class AbstractFileController extends AbstractController
         return [
             'exists' => $exists,
         ];
-    }
-
-    #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]
-    public function removeFile(#[Requirements(path: true)] UserFilesystemEntry $entry, SharingRepository $sharingRepository): array
-    {
-        if ($entry->isRoot()) {
-            throw $this->createNotFoundException();
-        }
-
-        if (!$entry->isDeletable()) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $entry->remove();
-
-        $sharingRepository->deleteByUserAndRoot($entry->getOwner(), $entry->getPath());
-
-        return [];
     }
 }
