@@ -9,7 +9,7 @@ export class UiManager {
         this.modalTemplate = document.querySelector('#template-modal');
     }
 
-    showModal(title: string, content: string) {
+    prepareModal(title: string, content: string, removeWhenClose: boolean = true) {
         const fragment: DocumentFragment = this.modalTemplate.content.cloneNode(true) as DocumentFragment;
 
         fragment.querySelector('.modal-title').textContent = this.translator.translate(title);
@@ -17,11 +17,21 @@ export class UiManager {
 
         const modal = fragment.firstElementChild;
 
-        $(modal).on('hidden.bs.modal', function () {
-            document.body.removeChild(modal);
-        });
+        if (removeWhenClose) {
+            $(modal).on('hidden.bs.modal', function () {
+                document.body.removeChild(modal);
+            });
+        }
 
         document.body.append(modal);
+
+        return modal as HTMLDivElement;
+    }
+
+    showModal(title: string, content: string, removeWhenClose: boolean = true) {
+        const modal = this.prepareModal(title, content,removeWhenClose);
         $(modal).modal('show');
+
+        return modal;
     }
 }

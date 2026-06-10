@@ -16,6 +16,7 @@ const iconsMap = {
         'unlink',
         'info',
         'pause',
+        'plus',
         'magnet',
         'sign-out-alt',
         'user',

@@ -10,6 +10,14 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
     {
     }
 
+    /**
+     * @return AbstractFilesystem
+     */
+    public function getFilesystem(): AbstractFilesystem
+    {
+        return $this->filesystem;
+    }
+
     public function getPath(): string
     {
         return $this->path;

@@ -12,11 +12,41 @@
 {% endblock %}
 
 {% block content %}
-    <h1 title="{{ title}}">{{ title }}</h1>
+    <header class="main-header">
+        <h1 title="{{ title}}">{{ title }}</h1>
+
+        {% if dir.writable %}
+            <div class="dropdown">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="fa fa-plus"></span>{{ 'files.add'|trans }}
+                </button>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a href="#" class="add-file">
+                            <span class="far fa-file"></span>{{ 'files.addFile'|trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="add-directory">
+                            <span class="far fa-folder-open"></span>{{ 'files.addDirectory'|trans }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </header>
 
     {% include 'fragments/breadcrumb.html.twig' %}
 
     <table class="file-list">
         {% include 'fragments/listFiles.html.twig' %}
     </table>
+{% endblock %}
+
+{% block templates %}
+    {{ parent() }}
+
+    <template id="template-dropzone-preview">
+        {% include "fragments/dropzonePreview.html.twig" %}
+    </template>
 {% endblock %}
