@@ -9,6 +9,7 @@ use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
@@ -17,6 +18,7 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     private QBittorrentBackend $backend;
 
     public function __construct(
+        private CacheInterface $cache,
         Filesystem $fs,
         User $user,
         QBittorrentBackend $backend,
@@ -178,13 +180,15 @@ readonly class QBittorrentManager extends AbstractTorrentManager
      */
     public function getDownloadPath(): string
     {
-        $path = $this->request('GET', '/api/v2/app/defaultSavePath', [], false);
+        return $this->cache->get('qb_save_path_' . $this->user->getId(), function () {
+            $path = $this->request('GET', '/api/v2/app/defaultSavePath', [], false);
 
-        if ($path === '') {
-            return '';
-        }
+            if ($path === '') {
+                return '';
+            }
 
-        return Path::canonicalize($path);
+            return Path::canonicalize($path);
+        });
     }
 
     public function pauseTorrent(string $hash): string
