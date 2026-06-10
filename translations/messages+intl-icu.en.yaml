@@ -77,7 +77,7 @@ files:
     removeSharing: Remove sharing
     share: Share
     none: no files to display
-    removalConfirmation: Êtes-vous sur de vouloir supprimer "{entry}" ?
+    removalConfirmation: Are you sure you want to delete "{entry}"?
     add: Add
     addFile: Add a file
     addDirectory: Add a folder
