@@ -101,6 +101,12 @@ export class Router {
                 params = {...this.routeParameters, ...params};
             }
         }
+        else {
+            params = {
+                ...params,
+                _locale: this.routeParameters['_locale'],
+            };
+        }
 
         const url = this.prepareUrl(route, params);
 
