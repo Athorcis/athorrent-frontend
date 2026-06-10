@@ -78,6 +78,11 @@ files:
     share: Share
     none: no files to display
     removalConfirmation: Êtes-vous sur de vouloir supprimer "{entry}" ?
+    add: Add
+    addFile: Add a file
+    addDirectory: Add a folder
+    upload: Upload files
+    overwriteConfirm: One or more files already exist. Do you want to replace them?
 
 torrents:
     title: Torrents

@@ -10,6 +10,8 @@ use Athorrent\View\View;
 use Athorrent\View\ViewType;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -60,10 +62,15 @@ abstract class AbstractFileController extends AbstractController
         return new View(ViewType::Dynamic, [
             'title' => $title,
             'breadcrumb' => $breadcrumb,
+            'dir' => $dirEntry,
             'files' => $entries,
             '_strings' => [
                 'files.sharingLink',
                 'files.removalConfirmation',
+                'files.upload',
+                'files.overwriteConfirm',
+                'error.fileTooBig',
+                'error.serverError',
             ]
         ], 'listFiles');
     }
@@ -188,6 +195,28 @@ abstract class AbstractFileController extends AbstractController
         }
 
         return new View(ViewType::Page, $data);
+    }
+
+    #[Route(path: '/exists', methods: 'POST', options: ['expose' => true])]
+    public function doesFilesExist(Request $request, #[Requirements(dir: true)] UserFilesystemEntry $entry): array
+    {
+        $fs = new Filesystem();
+        $rootPath = $entry->getRealPath();
+
+        $filenames = $request->request->all('filenames');
+        $exists = [];
+
+        foreach ($filenames as $filename) {
+            $path = Path::join($rootPath, $filename);
+
+            if ($fs->exists($path)) {
+                $exists[] = $filename;
+            }
+        }
+
+        return [
+            'exists' => $exists,
+        ];
     }
 
     #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]

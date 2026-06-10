@@ -77,6 +77,11 @@ files:
     share: Partager
     none: Aucun fichier à afficher
     removalConfirmation: Êtes-vous sur de vouloir supprimer "{entry}" ?
+    add: Ajouter
+    addFile: Ajouter un fichier
+    addDirectory: Ajouter un dossier
+    upload: Upload des fichiers
+    overwriteConfirm: Un ou plusieurs fichiers existent déjà, voulez-vous les remplacer?
 
 torrents:
     title: Torrents

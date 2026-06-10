@@ -4,6 +4,10 @@ import {Application} from './core/application';
 import {on} from './core/events';
 import {Router} from './core/router';
 import {decodeBase64} from "./core/utils";
+import Dropzone, {DropzoneFile} from 'dropzone';
+import $ from 'jquery';
+
+type DropzoneType = 'file'|'directory';
 
 class FilesPage extends AbstractPage {
 
@@ -13,7 +17,9 @@ class FilesPage extends AbstractPage {
             ['.sharing-remove', this.onSharingRemove],
             ['.sharing-link', this.onSharingLink],
             ['.file-remove', this.onFileRemove],
-            ['.dropdown-toggle', this.onDropDownButtonClicked]
+            ['.dropdown-toggle', this.onDropDownButtonClicked],
+            ['.add-file', this.onAddFile],
+            ['.add-directory', this.onAddDirectory],
         ]));
     }
 
@@ -126,6 +132,123 @@ class FilesPage extends AbstractPage {
         }
 
         return "";
+    }
+
+    protected dropzoneMap = new Map<DropzoneType, [Dropzone, HTMLDivElement]>();
+
+    protected createDropzone(type: DropzoneType): [Dropzone, HTMLDivElement] {
+        const path = Router.parseQueryParameters()['path'] as string ?? '';
+
+        const modal = this.ui.prepareModal(this.translator.translate('files.upload'), `<div class="upload-area"></div>`);
+        modal.classList.add('hide-close');
+
+        const dropzone = new Dropzone(modal.querySelector<HTMLDivElement>('.upload-area'), {
+            url: this.router.generateUrl('addFile'),
+            paramName: 'file',
+            dictFileTooBig: this.translate('error.fileTooBig'),
+            dictResponseError: this.translate('error.serverError'),
+            previewTemplate: document.querySelector('#template-dropzone-preview').innerHTML,
+            parallelUploads: 1,
+            maxFilesize: 1000,
+            autoQueue: false,
+            init: function() {
+                if (type === 'directory') {
+                    enableDirectoryUpload(this);
+                }
+            }
+        });
+
+        function enableDirectoryUpload(dropzone: Dropzone) {
+            // This allows the file picker to select folders instead of files
+            dropzone.hiddenFileInput.setAttribute("webkitdirectory", 'true');
+        }
+
+        dropzone.on('addedfiles', async (files: DropzoneFile[]) => {
+
+            if (type === 'directory') {
+                // input gets recreated after each change
+                setTimeout(() => enableDirectoryUpload(dropzone));
+            }
+
+            $(modal).modal('show');
+
+            // files is typed as an array in dropzone despite being a FileFile at runtime
+            const filenames = Array.from(files).map(file => file.webkitRelativePath || file.name);
+
+            const result = await this.sendRequest<{ exists: string[] }>('doesFilesExist', {
+                path,
+                filenames,
+            });
+
+            if (result.exists.length > 0 && !confirm(this.translator.translate('files.overwriteConfirm'))) {
+                $(modal).modal('hide');
+                return;
+            }
+
+            dropzone.enqueueFiles(files);
+        });
+
+        dropzone.on('sending', (file: DropzoneFile, xhr: XMLHttpRequest, formData: FormData) => {
+            formData.append('_token', this.securityManager.initializeCsrfToken());
+            formData.append('path', path);
+            formData.append('relativePath', file.webkitRelativePath || file.name);
+            formData.append('overwrite', 'true');
+        });
+
+        dropzone.on('uploadprogress', (file: DropzoneFile, progress: number) => {
+
+            if (file.status === 'uploading' && progress === 100) {
+                const progressBar = file.previewElement.querySelector('.progress-bar');
+
+                progressBar.classList.add('progress-bar-striped', 'active');
+            }
+        });
+
+        dropzone.on('success', (file: DropzoneFile) => {
+            const progressBar = file.previewElement.querySelector('.progress-bar');
+
+            progressBar.classList.add('progress-bar-success');
+            progressBar.classList.remove('progress-bar-info', 'progress-bar-striped', 'active');
+            this.securityManager.removeCsrfCookie();
+        });
+
+        dropzone.on('error', () => {
+            this.securityManager.removeCsrfCookie();
+        });
+
+        dropzone.on('queuecomplete', () => {
+            $(modal).modal('hide');
+        });
+
+        $(modal).on('hidden.bs.modal', function () {
+            dropzone.removeAllFiles();
+        });
+
+        return [dropzone, modal];
+    }
+
+    protected toggleDropzone(type: DropzoneType) {
+        let data: [Dropzone, HTMLDivElement];
+
+        if (this.dropzoneMap.has(type)) {
+            data = this.dropzoneMap.get(type);
+        }
+        else {
+            data = this.createDropzone(type);
+            this.dropzoneMap.set(type, data);
+        }
+
+        const [, modal] = data;
+
+        modal.querySelector('.upload-area').dispatchEvent(new MouseEvent('click'));
+    }
+
+    onAddFile = () => {
+        this.toggleDropzone('file');
+    }
+
+    onAddDirectory = () => {
+        this.toggleDropzone('directory');
     }
 }
 

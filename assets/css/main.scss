@@ -37,3 +37,11 @@ footer {
 .btn-xs > .fa {
     --fa-width: 0.833em;
 }
+
+.modal {
+    &.hide-close {
+        .modal-header .close {
+            display: none;
+        }
+    }
+}

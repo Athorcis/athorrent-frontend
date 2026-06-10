@@ -1,7 +1,14 @@
+@import "dropzone";
+
+.main-header {
+    display: flex;
+    align-items: center;
+}
 
 h1 {
     font-size: 2em;
     margin-bottom: 20px;
+    margin-right: auto;
 }
 
 .dirsize {
@@ -39,17 +46,17 @@ h1 {
     width: 80px;
 }
 
+.dropdown {
+    display: inline-block;
+
+    .fa, .far {
+        margin-right: 10px;
+    }
+}
+
 .file-buttons {
     text-align: right;
     width: 66px;
-
-    > .dropdown {
-        display: inline-block;
-
-        .fa, .far {
-            margin-right: 10px;
-        }
-    }
 
     > .btn {
         margin-left: 10px;
@@ -60,4 +67,13 @@ h1 {
     .file-size {
         display: none;
     }
+}
+
+.upload-area {
+    height: 200px;
+    pointer-events: none;
+}
+
+.dz-remove {
+    display: none;
 }
