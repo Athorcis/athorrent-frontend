@@ -1,6 +1,5 @@
 import {DEFAULT_PASSWORD, DEFAULT_USERNAME, getLogoutButton} from "../support/commands";
 import {createAltUser} from "../support/utils";
-import * as assert from "node:assert";
 
 describe('user-management', () => {
     beforeEach(() => {
@@ -38,7 +37,7 @@ describe('user-management', () => {
         cy.get('.modal-body').then($modal => {
             const password = $modal.text();
 
-            assert.notStrictEqual(password, DEFAULT_PASSWORD);
+            assert.notEqual(password, DEFAULT_PASSWORD);
 
             cy.login(DEFAULT_USERNAME, password);
         });
