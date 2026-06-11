@@ -212,7 +212,7 @@ class BackendManager
         else {
             $this->logger->error(sprintf("Failed to start %s too many times", $backend));
             $backend->setState(BackendState::Failed);
-            $this->failedBackends->attach($backend);
+            $this->failedBackends->offsetSet($backend);
             $this->cleanProcess($backend);
         }
     }
