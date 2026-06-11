@@ -77,11 +77,11 @@ class UserController extends AbstractController
     /**
      * @throws Exception
      */
-    #[Route(path: '/{userId}', methods: 'DELETE', requirements: ['userId' => '\d+'], options: ['expose' => true])]
-    public function removeUser(int $userId): array
+    #[Route(path: '/{userId}', methods: 'DELETE', options: ['expose' => true])]
+    public function removeUser(#[MapEntity(id: 'userId')] User $user): array
     {
         try {
-            $this->userRepository->delete($userId);
+            $this->userManager->removeUser($user);
         }
         catch (ORMException $exception) {
             throw new RuntimeException('error.cannotRemoveUser', 0, $exception);

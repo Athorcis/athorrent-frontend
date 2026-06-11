@@ -30,4 +30,13 @@ class BackendFactory
 
         return $this->instances[$userId];
     }
+
+    public function remove(User $user): void
+    {
+        $userId = $user->getId();
+
+        if (isset($this->instances[$userId])) {
+            unset($this->instances[$userId]);
+        }
+    }
 }
