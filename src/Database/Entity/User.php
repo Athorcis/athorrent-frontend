@@ -245,7 +245,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getQBittorrentConfigPath(): string
     {
-        return $this->getBackendPath('qBittorrent');
+        return $this->getBackendPath('qbittorrent');
     }
 
     public static function as(mixed $user): static
