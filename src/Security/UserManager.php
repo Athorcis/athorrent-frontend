@@ -2,6 +2,7 @@
 
 namespace Athorrent\Security;
 
+use Athorrent\Backend\BackendManagerProxy;
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
@@ -17,6 +18,7 @@ readonly class UserManager
         private UserRepository $userRepository,
         private ValidatorInterface $validator,
         private UserPasswordHasherInterface $hasher,
+        private BackendManagerProxy $backendManager,
     ) {
     }
 
@@ -43,6 +45,8 @@ readonly class UserManager
         $this->entityManager->flush();
 
         $this->initUserDirs($user);
+
+        $this->backendManager->addUser($user);
     }
 
     public function initUserDirs(User $user): void
@@ -59,5 +63,16 @@ readonly class UserManager
     public function setPlainPassword(User $user, string $password): void
     {
         $user->setPassword($this->hasher->hashPassword($user, $password));
+    }
+
+    public function removeUser(User $user): void
+    {
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+
+        $this->backendManager->removeUser($user);
+
+        $fs = new FileUtils();
+        $fs->remove($user->getPath(''));
     }
 }

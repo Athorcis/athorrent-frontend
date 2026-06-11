@@ -12,6 +12,8 @@ use Seld\Signal\SignalHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Throwable;
 use function React\Promise\resolve;
 
 class BackendManagerCommand extends Command
@@ -63,15 +65,46 @@ class BackendManagerCommand extends Command
     protected function registerHealthEndpoint(OutputInterface $output): callable
     {
         $server = new HttpServer(function (ServerRequestInterface $request) {
-            if ($request->getUri()->getPath() === '/healthz') {
-                $backendCount = $this->backendManager->getBackendCount();
-                $failedBackendsCount = $this->backendManager->getFailedBackendsCount();
+            $path = $request->getUri()->getPath();
 
-                return Response::json([
-                    'status' => $failedBackendsCount > 0 ? 'error' : 'ok',
-                    'count' => $backendCount,
-                    'fail_count' => $failedBackendsCount,
-                ]);
+            try {
+                if ($path === '/healthz' && $request->getMethod() === 'GET') {
+                    $backendCount = $this->backendManager->getBackendCount();
+                    $failedBackendsCount = $this->backendManager->getFailedBackendsCount();
+
+                    return Response::json([
+                        'status' => $failedBackendsCount > 0 ? 'error' : 'ok',
+                        'count' => $backendCount,
+                        'fail_count' => $failedBackendsCount,
+                    ]);
+                }
+                elseif ($path === '/user/add' && $request->getMethod() === 'POST') {
+                    $this->backendManager->addUser((int)$request->getQueryParams()['id']);
+
+                    return Response::json([
+                        'status' => 'ok',
+                    ]);
+                }
+                elseif ($path === '/user/remove' && $request->getMethod() === 'DELETE') {
+                    $this->backendManager->removeUser((int)$request->getQueryParams()['id']);
+
+                    return Response::json([
+                        'status' => 'ok',
+                    ]);
+                }
+                elseif ($path === '/clear' && $request->getMethod() === 'DELETE') {
+                    $this->backendManager->clear();
+
+                    return Response::json([
+                        'status' => 'ok',
+                    ]);
+                }
+            } catch (HttpExceptionInterface $e) {
+                return Response::json(['status' => 'error', 'message' => $e->getMessage()])->withStatus($e->getStatusCode());
+            }
+            catch (Throwable $e) {
+                dump($e);
+                return Response::json(['status' => 'error', 'message' => $e->getMessage()])->withStatus(500);
             }
 
             return Response::plaintext("Not Found\n")->withStatus(404);

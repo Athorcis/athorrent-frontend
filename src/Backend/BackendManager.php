@@ -6,7 +6,9 @@ use Athorrent\Backend\Process\BackendProcessFailedException;
 use Athorrent\Backend\Process\BackendProcessInterface;
 use Athorrent\Backend\Process\BackendProcessManagerFactory;
 use Athorrent\Backend\Process\BackendProcessManagerInterface;
+use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use React\EventLoop\Loop;
 use React\Promise\Promise;
@@ -15,12 +17,15 @@ use RuntimeException;
 use SplObjectStorage;
 use SplQueue;
 use Symfony\Component\DependencyInjection\Attribute\Target;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Throwable;
 use function React\Async\async;
 use function React\Async\await;
 use function React\Async\delay;
 use function React\Async\parallel;
+use function React\Promise\all;
 use function React\Promise\resolve;
 use function React\Promise\Timer\sleep;
 use function React\Promise\Timer\timeout;
@@ -49,6 +54,11 @@ class BackendManager
     /** @var SplQueue<BackendInterface>  */
     private SplQueue $nextHeartbeatQueue;
 
+    private array $addingUser = [];
+    private array $removingUser = [];
+
+    private array $stopRequested = [];
+
     private bool $stopping = false;
 
     public function __construct(
@@ -58,6 +68,7 @@ class BackendManager
         #[Target('backend_restart')]
         private readonly RateLimiterFactoryInterface $backendRestartLimiter,
         private readonly BackendFactory $backendFactory,
+        private readonly EntityManagerInterface $entityManager,
     ) {
         $this->sleepPromises = new SplObjectStorage();
     }
@@ -75,14 +86,7 @@ class BackendManager
         $this->heartbeatQueue = new SplQueue();
         $this->nextHeartbeatQueue = new SplQueue();
 
-        foreach ($this->backends as $backend) {
-            if ($backend->getProcess() === null) {
-                $this->startQueue->enqueue($backend);
-            }
-            else {
-                $this->nextHeartbeatQueue->enqueue($backend);
-            }
-        }
+        $this->enqueueCreatedBackends($this->backends);
 
         $this->runPromise = parallel([
             async($this->processHeartbeatQueue(...)),
@@ -193,8 +197,18 @@ class BackendManager
         return !$this->stopping;
     }
 
-    protected function processStart(BackendInterface $backend): void
+    protected function isStopRequested(BackendInterface $backend): bool
     {
+        return $this->stopRequested[$backend->getUser()->getId()] ?? false;
+    }
+
+    protected function startProcess(BackendInterface $backend): void
+    {
+        if ($this->isStopRequested($backend)) {
+            $backend->setState(BackendState::Stopping);
+            return;
+        }
+
         $user = $backend->getUser();
 
         $limiter = $this->backendRestartLimiter->create($user->getId());
@@ -221,7 +235,7 @@ class BackendManager
     {
         while (true) {
             foreach ($this->startQueue as $backend) {
-                $this->processStart($backend);
+                $this->startProcess($backend);
 
                 if ($this->stopping) {
                     return;
@@ -238,7 +252,13 @@ class BackendManager
 
     protected function processHeartbeat(BackendInterface $backend): void
     {
+        if ($this->isStopRequested($backend)) {
+            $backend->setState(BackendState::Stopping);
+            return;
+        }
+
         $this->logger->debug(sprintf('Sending heartbeat to %s...', $backend));
+
         try {
             $restart = !$backend->ping();
 
@@ -299,8 +319,17 @@ class BackendManager
      */
     protected function initializeBackends(): array
     {
-        $backends = [];
         $users = $this->userRepo->findAll();
+        return $this->initializeBackendsForUsers($users);
+    }
+
+    /**
+     * @param User[] $users
+     * @return BackendInterface[]
+     */
+    protected function initializeBackendsForUsers(array $users, $keepAll = false): array
+    {
+        $backends = [];
 
         foreach ($users as $user) {
             try {
@@ -321,7 +350,7 @@ class BackendManager
                 $this->logger->info(sprintf('Found process for %s...', $backends[$userId]));
                 $backends[$userId]->setProcess($process);
             }
-            else {
+            elseif (!$keepAll) {
                 $process->stop();
             }
         }
@@ -331,6 +360,114 @@ class BackendManager
         }
 
         return $backends;
+    }
+
+    protected function enqueueCreatedBackends(array $backends): void
+    {
+        foreach ($backends as $backend) {
+            if ($backend->getProcess() === null) {
+                $this->startQueue->enqueue($backend);
+            }
+            else {
+                $this->nextHeartbeatQueue->enqueue($backend);
+            }
+        }
+    }
+
+    public function addUser(int $id)
+    {
+        if (isset($this->backends[$id])) {
+            throw new BadRequestHttpException(sprintf('A backend is already managed for user %d', $id));
+        }
+
+        if (isset($this->addingUser[$id])) {
+            throw new BadRequestHttpException(sprintf('A backend for user %d is already being added', $id));
+        }
+
+        $this->addingUser[$id] = true;
+
+        try {
+            $this->logger->info("Adding backend $id...");
+            $user = $this->userRepo->find($id);
+
+            if ($user === null) {
+                throw new NotFoundHttpException(sprintf('User %s does not exist', $id));
+            }
+
+            $backends = $this->initializeBackendsForUsers([$user], true);
+
+            foreach ($backends as $backend) {
+                $this->backends[$id] = $backend;
+            }
+
+            $this->enqueueCreatedBackends($backends);
+        }
+        finally {
+            unset($this->addingUser[$id]);
+        }
+    }
+
+    protected function waitForState(BackendInterface $backend, BackendState $state): void
+    {
+        while ($backend->getState() !== $state) {
+            if (!$this->sleep(5)) {
+                return;
+            }
+        }
+    }
+
+    public function removeUser(int $id)
+    {
+        if (!isset($this->backends[$id])) {
+            throw new NotFoundHttpException(sprintf('No backend found for user %d', $id));
+        }
+
+        if (isset($this->removingUser[$id])) {
+            throw new BadRequestHttpException(sprintf('Backend for user %d is already being removed', $id));
+        }
+
+        $this->removingUser[$id] = true;
+
+        try {
+            $this->logger->info("Removing backend $id...");
+            $backend = $this->backends[$id];
+            $state = $backend->getState();
+
+            if (in_array($state, [BackendState::Starting, BackendState::Updating, BackendState::Running], true)) {
+                $this->stopRequested[$id] = true;
+                $this->waitForState($backend, BackendState::Stopping);
+            } elseif ($state === BackendState::Failed) {
+                $this->failedBackends->offsetUnset($backend);
+            }
+
+            $this->cleanProcess($backend);
+            unset($this->backends[$id], $this->stopRequested[$id]);
+
+            $user = $backend->getUser();
+            $this->backendFactory->remove($user);
+            $this->entityManager->detach($user);
+        } finally {
+            unset($this->removingUser[$id]);
+        }
+    }
+
+    public function clear()
+    {
+        $this->logger->info('Clearing backends...');
+        $promises = [];
+
+        foreach ($this->backends as $id => $backend) {
+            $promises[] = async(function () use ($id) {
+                try {
+                    $this->removeUser($id);
+                }
+                catch (Throwable $e) {
+                    dump($e);
+                }
+            })();
+        }
+
+        await(all($promises));
     }
 
     protected function cleanProcess(BackendInterface $backend): void

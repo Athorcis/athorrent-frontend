@@ -2,17 +2,19 @@
 
 namespace Athorrent\Command;
 
+use Athorrent\Backend\BackendManagerProxy;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Attribute\Lazy;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class ResetTestsDataCommand extends Command
 {
-    public function __construct()
+    public function __construct(#[Lazy] private BackendManagerProxy $backendManager)
     {
         parent::__construct('tests:data:reset');
     }
@@ -23,18 +25,18 @@ class ResetTestsDataCommand extends Command
             throw new RuntimeException('This command can only be run in test environment');
         }
 
+        $this->backendManager->clear();
+
         $this->runCommand($output, new ArrayInput([
             'command' => 'doctrine:schema:drop',
             '--force' => true,
         ]));
 
-        // @TODO notify backend manager
+        $this->removeUserDirectoryContent();
 
         $this->runCommand($output, new ArrayInput([
             'command' => 'doctrine:schema:create',
         ]));
-
-        $this->removeUserDirectoryContent();
 
         $this->runCommand($output, new ArrayInput([
             'command' => 'user:create',

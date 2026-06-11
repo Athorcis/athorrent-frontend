@@ -8,5 +8,6 @@ enum BackendState: string {
     case Running = 'running';
     case Updating = 'updating';
     case Failed = 'failed';
+    case Stopping = 'stopping';
     case Stopped = 'stopped';
 }
