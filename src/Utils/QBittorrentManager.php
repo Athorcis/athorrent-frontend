@@ -72,7 +72,13 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromUrl(string $url): array
     {
-        return $this->addTorrents(['urls' => $url], $url);
+        $ids = $this->addTorrents(['urls' => $url], $url);
+
+        if (count($ids) > 0 ){
+            return ['hash' => $ids[0]];
+        }
+
+        return [];
     }
 
     public function storeUploadedTorrentFile(UploadedFile $file): void
@@ -92,7 +98,13 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         }
 
         try {
-            return $this->addTorrents(['torrents' => $torrentFile,], basename($path));
+            $ids = $this->addTorrents(['torrents' => $torrentFile,], basename($path));
+
+            if (count($ids) > 0 ){
+                return ['hash' => $ids[0]];
+            }
+
+            return [];
         }
         finally {
             if (is_resource($torrentFile)) {
