@@ -445,9 +445,15 @@ class BackendManager
             $user = $backend->getUser();
             $this->backendFactory->remove($user);
             $this->entityManager->detach($user);
+            $this->resetRestartLimiter($id);
         } finally {
             unset($this->removingUser[$id]);
         }
+    }
+
+    protected function resetRestartLimiter(int $id): void
+    {
+        $this->backendRestartLimiter->create($id)->reset();
     }
 
     public function clear()
