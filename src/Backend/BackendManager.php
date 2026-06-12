@@ -356,7 +356,12 @@ class BackendManager
         }
 
         foreach ($backends as $backend) {
-            $backend->setState($backend->getProcess() ? BackendState::Running : BackendState::Starting);
+            if ($backend->getProcess() && $backend->ping()) {
+                $backend->setState(BackendState::Running);
+            }
+            else {
+                $backend->setState(BackendState::Starting);
+            }
         }
 
         return $backends;
@@ -396,20 +401,28 @@ class BackendManager
 
             $backends = $this->initializeBackendsForUsers([$user], true);
 
-            $this->backends[$id] = $backends[$id];
+            $this->backends[$id] = $backend = $backends[$id];
             $this->enqueueCreatedBackends($backends);
 
-            $this->waitForState($backends[$id], BackendState::Running);
+            $this->waitForState($backend, [BackendState::Running, BackendState::Failed]);
+
+            if ($backend->getState() === BackendState::Failed) {
+                throw new \Exception('failed to start backend');
+            }
         }
         finally {
             unset($this->addingUser[$id]);
         }
     }
 
-    protected function waitForState(BackendInterface $backend, BackendState $state): void
+    /**
+     * @param BackendState[] $states
+     * @return void
+     */
+    protected function waitForState(BackendInterface $backend, array $states): void
     {
-        while ($backend->getState() !== $state) {
-            if (!$this->sleep(5)) {
+        while (!in_array($backend->getState(), $states, true)) {
+            if (!$this->sleep(1)) {
                 return;
             }
         }
@@ -432,9 +445,9 @@ class BackendManager
             $backend = $this->backends[$id];
             $state = $backend->getState();
 
-            if (in_array($state, [BackendState::Starting, BackendState::Updating, BackendState::Running], true)) {
+            if (in_array($state, [BackendState::Starting, BackendState::Updating, BackendState::Running, BackendState::Unknown], true)) {
                 $this->stopRequested[$id] = true;
-                $this->waitForState($backend, BackendState::Stopping);
+                $this->waitForState($backend, [BackendState::Stopping]);
             } elseif ($state === BackendState::Failed) {
                 $this->failedBackends->offsetUnset($backend);
             }
