@@ -160,7 +160,7 @@ class BackendManager
         $this->stopping = true;
 
         return new Promise(function ($resolve, $reject) use ($keepBackends) {
-            Loop::futureTick(function () use ($keepBackends, $resolve, $reject) {
+            Loop::futureTick(async(function () use ($keepBackends, $resolve, $reject) {
                 try {
                     $this->stopping = false;
                     $this->stop($keepBackends);
@@ -169,7 +169,7 @@ class BackendManager
                 catch (Throwable $e) {
                     $reject($e);
                 }
-            });
+            }));
         });
     }
 
