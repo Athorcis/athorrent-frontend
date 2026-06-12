@@ -158,6 +158,8 @@ class FilesPage extends AbstractPage {
             }
         });
 
+        let filesUploaded: number;
+
         function enableDirectoryUpload(dropzone: Dropzone) {
             // This allows the file picker to select folders instead of files
             dropzone.hiddenFileInput.setAttribute("webkitdirectory", 'true');
@@ -170,6 +172,7 @@ class FilesPage extends AbstractPage {
                 setTimeout(() => enableDirectoryUpload(dropzone));
             }
 
+            filesUploaded = 0;
             $(modal).modal('show');
 
             // files is typed as an array in dropzone despite being a FileFile at runtime
@@ -210,6 +213,8 @@ class FilesPage extends AbstractPage {
             progressBar.classList.add('progress-bar-success');
             progressBar.classList.remove('progress-bar-info', 'progress-bar-striped', 'active');
             this.securityManager.removeCsrfCookie();
+
+            ++filesUploaded;
         });
 
         dropzone.on('error', () => {
@@ -217,7 +222,13 @@ class FilesPage extends AbstractPage {
         });
 
         dropzone.on('queuecomplete', () => {
-            $(modal).modal('hide');
+
+            if (filesUploaded > 0) {
+                location.reload();
+            }
+            else {
+                $(modal).modal('hide');
+            }
         });
 
         $(modal).on('hidden.bs.modal', function () {
