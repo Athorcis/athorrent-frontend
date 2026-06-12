@@ -109,7 +109,13 @@ RUN set -ex ;\
     # If we don't create the database first warmup doesn't create all metadata cache \
     APP_SECRET=dummy php bin/console doctrine:schema:create --env=$SYMFONY_APP_ENV -v ;\
     php bin/console cache:warmup --env=$SYMFONY_APP_ENV -v;\
-    rm -R "var/data_$SYMFONY_APP_ENV.db" "var/log/"*
+    rm -rf "var/data_$SYMFONY_APP_ENV.db" "var/log/"*
+
+ARG RUN_USER
+RUN set -ex ;\
+    mkdir -p var/user ;\
+    chown $RUN_USER var/user
+VOLUME ["$RUN_DIR/var/user"]
 
 FROM builder AS dev
 
