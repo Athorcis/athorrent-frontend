@@ -396,11 +396,10 @@ class BackendManager
 
             $backends = $this->initializeBackendsForUsers([$user], true);
 
-            foreach ($backends as $backend) {
-                $this->backends[$id] = $backend;
-            }
-
+            $this->backends[$id] = $backends[$id];
             $this->enqueueCreatedBackends($backends);
+
+            $this->waitForState($backends[$id], BackendState::Running);
         }
         finally {
             unset($this->addingUser[$id]);
