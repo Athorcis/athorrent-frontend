@@ -67,12 +67,13 @@ readonly class UserManager
 
     public function removeUser(User $user): void
     {
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
-
         $this->backendManager->removeUser($user);
 
         $fs = new FileUtils();
         $fs->remove($user->getPath(''));
+
+        // we delete the entity last because we need the entity to contain the id
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
     }
 }
