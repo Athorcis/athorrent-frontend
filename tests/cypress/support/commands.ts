@@ -7,6 +7,8 @@ declare namespace Cypress {
         elementExists(selectior: string): Chainable<null>;
         login(username: string, password: string): Chainable<null>;
         logout(): Chainable<null>;
+        dropdownItem(selector: string, parentSelector: string): Chainable<null>;
+        dropdownItem(selector: string, parentSelector: string, skipOpen: boolean): Chainable<null>;
     }
 }
 
@@ -54,4 +56,13 @@ Cypress.Commands.add('logout', function () {
     cy.visit('/');
     getLogoutButton().click();
     Cypress.session.clearAllSavedSessions();
+});
+
+Cypress.Commands.add('dropdownItem', function (selector: string, parentSelector: string, skipOpen = false) {
+
+    if (!skipOpen) {
+        cy.get(`${parentSelector} .dropdown > button`).click();
+    }
+
+    cy.get(`${parentSelector} .dropdown ${selector}`);
 });
