@@ -37,6 +37,7 @@ jobs:
               with:
                   working-directory: tests
                   install-command: yarn install --immutable
+                  command-prefix: yarn
                   command: yarn cypress run
 
             - name: Dump docker logs on failure
