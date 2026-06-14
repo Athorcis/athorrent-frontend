@@ -269,4 +269,13 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             $this->doClean($process, $userId);
         }
     }
+
+    public function detach(User $user): void
+    {
+        $userId = $user->getId();
+
+        if (isset($this->processes[$userId])) {
+            unset($this->processes[$userId]);
+        }
+    }
 }

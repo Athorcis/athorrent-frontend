@@ -25,7 +25,7 @@ readonly class UserManager
     /**
      * @param string|UserRole|UserRole[]|string[] $roles
      */
-    public function createUser(string $username, string $password, mixed $roles): void
+    public function createUser(string $username, string $password, mixed $roles, ?string $clientIp = null): void
     {
         if (!is_array($roles)) {
             $roles = [$roles];
@@ -38,6 +38,10 @@ readonly class UserManager
         $user->setRoles($roles);
         $user->setPort($this->userRepository->getNextAvailablePort());
         $user->setClientType(User::CLIENT_TYPE_QBITTORRENT);
+
+        if ($clientIp) {
+            $user->setClientIp($clientIp);
+        }
 
         $this->validator->validate($user);
 

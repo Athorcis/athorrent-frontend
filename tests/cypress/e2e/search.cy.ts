@@ -12,7 +12,7 @@ function searchTorrents(query: string, source: string) {
 
 describe('search', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data');
+        cy.request('POST', '/tests/reset-data?clear-all=false');
         cy.login();
     });
 

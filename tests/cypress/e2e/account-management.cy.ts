@@ -3,7 +3,7 @@ import {checkIfFieldHasError, createUser} from "../support/utils";
 
 describe('account-management', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data');
+        cy.request('POST', '/tests/reset-data?clear-all=false');
         cy.login();
     });
 

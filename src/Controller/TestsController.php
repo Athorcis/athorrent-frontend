@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -15,13 +16,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class TestsController extends AbstractController
 {
     #[Route(path: "/reset-data", methods: "POST")]
-    public function resetData(KernelInterface $kernel): Response
+    public function resetData(KernelInterface $kernel, #[MapQueryParameter] bool $clearAll = false): Response
     {
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
         $input = new ArrayInput([
             'command' => 'tests:data:reset',
+            '--clear-all' => $clearAll,
         ]);
 
         // You can use NullOutput() if you don't need the output

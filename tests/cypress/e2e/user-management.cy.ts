@@ -3,7 +3,7 @@ import {createAltUser} from "../support/utils";
 
 describe('user-management', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data');
+        cy.request('POST', '/tests/reset-data?clear-all=false');
         cy.login();
     });
 

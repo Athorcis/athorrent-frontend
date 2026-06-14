@@ -2,7 +2,7 @@ import {uploadFile, uploadFiles} from "../support/commands";
 
 describe('user-files', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data');
+        cy.request('POST', '/tests/reset-data?clear-all=false');
         cy.login();
         cy.visit('/user/files');
     });

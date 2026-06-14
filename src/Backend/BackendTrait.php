@@ -55,8 +55,10 @@ trait BackendTrait
         if ($this->state !== $state) {
             $this->state = $state;
 
-            $fs = new Filesystem();
-            $fs->dumpFile($this->statePath, $state->value);
+            if ($state !== BackendState::Stopping) {
+                $fs = new Filesystem();
+                $fs->dumpFile($this->statePath, $state->value);
+            }
         }
     }
 
