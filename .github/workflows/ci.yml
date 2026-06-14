@@ -5,12 +5,42 @@ on:
     push:
         branches:
             - master
+    pull_request:
+        branches:
+            - master
     workflow_dispatch:
 
 env:
     REGISTRY: ghcr.io
 
 jobs:
+    e2e:
+        runs-on: ubuntu-latest
+        timeout-minutes: 90
+
+        permissions:
+            contents: read
+            packages: read
+
+        steps:
+
+            - name: Configure local hosts
+              run: echo "127.0.0.1 athorrent.local"  | sudo tee -a /etc/hosts
+
+            - name: Start test environment
+              run: bash docker/scripts/up-test-env.sh
+
+            - name: Run Cypress tests
+              uses: cypress-io/github-action@v6
+              with:
+                  working-directory: tests
+                  install-command: corepack enable && yarn install --immutable
+                  command: yarn cypress run
+
+            - name: Dump docker logs on failure
+              if: failure()
+              run: cat backend-manager.log
+
     build:
         runs-on: ubuntu-latest
 
