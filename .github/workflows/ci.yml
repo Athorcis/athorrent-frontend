@@ -38,6 +38,8 @@ jobs:
                   working-directory: tests
                   install-command: yarn install --immutable
                   command: yarn run --binaries-only cypress run
+              env:
+                  YARN_ENABLE_SCRIPTS: "true"
 
             - name: Dump docker logs on failure
               if: failure()
