@@ -1,44 +1,4 @@
-
-function getBasename(path: string): string {
-    return path.replace(/^(?:.*\/)?([^/]+)$/, '$1');
-}
-
-function uploadFiles(paths: string[], relativePaths: string[] = [], asDirectory = false) {
-    cy.visit('/user/files');
-    cy.get('.add-button').click();
-
-    if (asDirectory) {
-        cy.get('.add-directory').click();
-    }
-    else {
-        cy.get('.add-file').click();
-    }
-
-    cy.get('.dz-hidden-input').selectFile(paths.map((path, index) => {
-
-        return {
-            contents: path,
-            fileName: relativePaths[index] ?? getBasename(path),
-        };
-    }), { force: true });
-
-    const result = paths.map((path, index) => {
-        const basename = getBasename(relativePaths[index] ?? path);
-        const selector = `[id="file-${btoa(basename)}"]`;
-
-        return { basename, selector };
-    });
-
-    for (const { selector } of result) {
-        cy.get(`${selector}`).should('exist');
-    }
-
-    return result;
-}
-
-function uploadFile(path: string) {
-    return uploadFiles([path])[0];
-}
+import {uploadFile, uploadFiles} from "../support/commands";
 
 describe('user-files', () => {
     beforeEach(() => {
