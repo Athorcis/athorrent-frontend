@@ -17,7 +17,7 @@
         {{ 'torrents.title'|trans }}
 
         {% if app.user.clientType === 'qbittorrent' %}
-            <a href="{{ path('proxyToQBittorrent', { path: ''}) }}" target="_blank" class="btn btn-default">
+            <a href="{{ path('proxyToQBittorrent', { path: ''}) }}" target="_blank" class="btn btn-default open-qbittorrent-ui">
                 {{ 'torrents.advanced'|trans }}
             </a>
         {% endif %}
