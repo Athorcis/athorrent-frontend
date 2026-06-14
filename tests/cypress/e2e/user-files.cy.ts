@@ -1,5 +1,13 @@
 import {uploadFile, uploadFiles} from "../support/commands";
 
+function waitForPlayerStart(selector: string) {
+    cy.get(selector).then(async ($audio) => {
+        await new Promise((resolve) => {
+            $audio[0].addEventListener('playing', resolve, {once: true});
+        });
+    });
+}
+
 describe('user-files', () => {
     beforeEach(() => {
         cy.request('POST', '/tests/reset-data?clear-all=false');
@@ -75,6 +83,7 @@ describe('user-files', () => {
         cy.dropdownItem('.play-file', selector).click();
         cy.get('h1').should('have.text', basename);
 
+        waitForPlayerStart('audio');
         cy.wait(1500);
         cy.get('.mejs__pause > button').click();
         cy.get('.mejs__currenttime').should('have.text', '00:01');
@@ -86,6 +95,7 @@ describe('user-files', () => {
         cy.dropdownItem('.play-file', selector).click();
         cy.get('h1').should('have.text', basename);
 
+        waitForPlayerStart('video');
         cy.wait(1500);
         cy.get('.mejs__pause > button').click();
         cy.get('.mejs__currenttime').should('have.text', '00:01');
