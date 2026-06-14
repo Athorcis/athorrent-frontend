@@ -23,6 +23,8 @@ jobs:
             packages: read
 
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
             - name: Configure local hosts
               run: echo "127.0.0.1 athorrent.local"  | sudo tee -a /etc/hosts
