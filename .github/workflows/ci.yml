@@ -33,10 +33,10 @@ jobs:
               run: bash docker/scripts/up-test-env.sh
 
             - name: Run Cypress tests
-              uses: cypress-io/github-action@v6
+              uses: cypress-io/github-action@v7
               with:
                   working-directory: tests
-                  install-command: corepack enable && yarn install --immutable
+                  install-command: yarn install --immutable
                   command: yarn cypress run
 
             - name: Dump docker logs on failure
