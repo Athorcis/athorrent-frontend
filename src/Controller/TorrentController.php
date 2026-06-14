@@ -4,6 +4,7 @@ namespace Athorrent\Controller;
 
 use Athorrent\Backend\BackendState;
 use Athorrent\Backend\BackendUnavailableException;
+use Athorrent\UserVisibleException;
 use Athorrent\Utils\TorrentAlreadyAdded;
 use Athorrent\Utils\TorrentManagerInterface;
 use Athorrent\View\View;
@@ -12,6 +13,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -171,6 +173,13 @@ class TorrentController extends AbstractController
                 }
                 catch (TorrentAlreadyAdded) {
                     // NOOP
+                }
+                catch (ClientException $e) {
+                    if ($e->getResponse()->getStatusCode() === 415) {
+                        throw new UserVisibleException("error.invalidTorrentFile");
+                    }
+
+                    throw $e;
                 }
 
                 $usedFileHashes[] = $fileHash;

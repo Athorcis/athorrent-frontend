@@ -4,6 +4,7 @@ namespace Athorrent\Utils;
 
 use Athorrent\Backend\QBittorrentBackend;
 use Athorrent\Database\Entity\User;
+use Athorrent\UserVisibleException;
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Filesystem\Filesystem;
@@ -114,9 +115,30 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         }
     }
 
+    protected function parseMagnet(string $uri): ?array
+    {
+        $uriParts = parse_url($uri);
+
+        if (!(count($uriParts) === 2  && isset($uriParts['scheme']) && $uriParts['scheme'] === 'magnet' && isset($uriParts['query']))) {
+            return null;
+        }
+
+        parse_str($uriParts['query'], $params);
+
+        if (!(isset($params['xt']) && preg_match('/urn:btih:([0-9a-fA-F]{32}|[0-9a-fA-F]{40})/', $params['xt']))) {
+            return null;
+        }
+
+        return $params;
+    }
+
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromMagnet(string $magnet): array
     {
+        if ($this->parseMagnet($magnet) === null) {
+            throw new UserVisibleException('error.invalidMagnetUri');
+        }
+
         return $this->addTorrentFromUrl($magnet);
     }
 
