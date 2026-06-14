@@ -93,6 +93,13 @@ class BackendManagerCommand extends Command
                     'status' => 'ok',
                 ]);
             }
+            elseif ($path === '/user/detach' && $request->getMethod() === 'DELETE') {
+                $this->backendManager->detachUser((int)$request->getQueryParams()['id']);
+
+                return Response::json([
+                    'status' => 'ok',
+                ]);
+            }
             elseif ($path === '/clear' && $request->getMethod() === 'DELETE') {
                 $this->backendManager->clear();
 

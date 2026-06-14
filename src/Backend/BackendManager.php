@@ -173,6 +173,19 @@ class BackendManager
         });
     }
 
+    protected function dottedSleep(float $time): bool
+    {
+        for ($i = 0; $i < $time; $i++) {
+            if (!$this->sleep(1)) return false;
+
+            if (count($this->stopRequested) > 0) {
+                break;
+            }
+        }
+
+        return true;
+    }
+
     protected function sleep(float $time): bool
     {
         if ($this->stopping) {
@@ -245,7 +258,7 @@ class BackendManager
             }
 
             if ($this->startQueue->isEmpty()) {
-                if (!$this->sleep(5)) return;
+                if (!$this->dottedSleep(5)) return;
             }
         }
     }
@@ -310,7 +323,7 @@ class BackendManager
                 }
             }
 
-            if (!$this->sleep(10)) return;
+            if (!$this->dottedSleep(10)) return;
         }
     }
 
@@ -442,23 +455,58 @@ class BackendManager
 
         try {
             $this->logger->info("Removing backend $id...");
-            $backend = $this->backends[$id];
-            $state = $backend->getState();
-
-            if (in_array($state, [BackendState::Starting, BackendState::Updating, BackendState::Running, BackendState::Unknown], true)) {
-                $this->stopRequested[$id] = true;
-                $this->waitForState($backend, [BackendState::Stopping]);
-            } elseif ($state === BackendState::Failed) {
-                $this->failedBackends->offsetUnset($backend);
-            }
+            $backend = $this->initiateBackendStop($id);
 
             $this->cleanProcess($backend);
-            unset($this->backends[$id], $this->stopRequested[$id]);
+            $this->finalizeBackendStop($id, $backend);
+        } finally {
+            unset($this->removingUser[$id]);
+        }
+    }
 
-            $user = $backend->getUser();
-            $this->backendFactory->remove($user);
-            $this->entityManager->detach($user);
-            $this->resetRestartLimiter($id);
+    protected function initiateBackendStop(int $id): BackendInterface
+    {
+        $backend = $this->backends[$id];
+        $state = $backend->getState();
+
+        if (in_array($state, [BackendState::Starting, BackendState::Updating, BackendState::Running, BackendState::Unknown], true)) {
+            $this->stopRequested[$id] = true;
+            $this->waitForState($backend, [BackendState::Stopping]);
+        } elseif ($state === BackendState::Failed) {
+            $this->failedBackends->offsetUnset($backend);
+        }
+
+        return $backend;
+    }
+
+    public function finalizeBackendStop(int $id, BackendInterface $backend): void
+    {
+        unset($this->backends[$id], $this->stopRequested[$id]);
+
+        $user = $backend->getUser();
+        $this->backendFactory->remove($user);
+        $this->entityManager->detach($user);
+        $this->resetRestartLimiter($id);
+    }
+
+    public function detachUser(int $id)
+    {
+        if (!isset($this->backends[$id])) {
+            throw new NotFoundHttpException(sprintf('No backend found for user %d', $id));
+        }
+
+        if (isset($this->removingUser[$id])) {
+            throw new BadRequestHttpException(sprintf('Backend for user %d is already being detached', $id));
+        }
+
+        $this->removingUser[$id] = true;
+
+        try {
+            $this->logger->info("Detaching backend $id...");
+            $backend = $this->initiateBackendStop($id);
+
+            $this->detachProcess($backend);
+            $this->finalizeBackendStop($id, $backend);
         } finally {
             unset($this->removingUser[$id]);
         }
@@ -493,6 +541,11 @@ class BackendManager
         $this->backendProcessManager->clean($backend->getUser());
 
         $backend->clean();
+    }
+
+    protected function detachProcess(BackendInterface $backend): void
+    {
+        $this->backendProcessManager->detach($backend->getUser());
     }
 
     /**

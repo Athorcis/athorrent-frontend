@@ -1,7 +1,7 @@
 
 describe('Cypress Studio Demo', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data');
+        cy.request('POST', '/tests/reset-data?clear-all=false');
         cy.login();
         cy.visit('/user/torrents/');
     });

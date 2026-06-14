@@ -31,6 +31,9 @@ class CreateUserCommand extends Command
             ->addArgument(
                 'role',
                 InputArgument::REQUIRED
+            )
+            ->addOption(
+                'client-ip',
             );
     }
 
@@ -39,8 +42,9 @@ class CreateUserCommand extends Command
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
         $role = $input->getArgument('role');
+        $clientIp = $input->getOption('client-ip');
 
-        $this->userManager->createUser($username, $password, $role);
+        $this->userManager->createUser($username, $password, $role, $clientIp);
 
         return 0;
     }

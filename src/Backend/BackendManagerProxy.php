@@ -46,6 +46,11 @@ class BackendManagerProxy
         $this->request('DELETE', '/user/remove', ['query' => ['id' => $user->getId()]]);
     }
 
+    public function detachUser(User $user)
+    {
+        $this->request('DELETE', '/user/detach', ['query' => ['id' => $user->getId()]]);
+    }
+
     public function clear()
     {
         $this->request('DELETE', '/clear');

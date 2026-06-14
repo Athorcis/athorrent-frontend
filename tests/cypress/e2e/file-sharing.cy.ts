@@ -15,7 +15,7 @@ function uploadAndShare(path) {
 
 describe('file-sharing', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data');
+        cy.request('POST', '/tests/reset-data?clear-all=false');
         cy.login();
     });
 

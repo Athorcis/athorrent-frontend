@@ -12,6 +12,8 @@ interface BackendProcessManagerInterface
 
     public function clean(User $user): void;
 
+    public function detach(User $user): void;
+
     /**
      * @return BackendProcessInterface[]
      */
