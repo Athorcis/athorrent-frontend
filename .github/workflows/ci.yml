@@ -30,7 +30,7 @@ jobs:
               run: echo "127.0.0.1 athorrent.local"  | sudo tee -a /etc/hosts
 
             - name: Start test environment
-              run: bash docker/scripts/up-test-env.sh
+              run: bash docker/scripts/up-env.sh test
 
             - name: Run Cypress tests
               uses: cypress-io/github-action@v7
@@ -43,7 +43,7 @@ jobs:
 
             - name: Dump docker logs on failure
               if: failure()
-              run: cat backend-manager.log
+              run: docker logs athorrent-test-backend-manager-1
 
     build:
         runs-on: ubuntu-latest

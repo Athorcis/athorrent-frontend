@@ -16,7 +16,12 @@ upEnv() {
         exit 1
     fi
 
-    docker compose -f "$composeFilePath" up -d --build
+    if [ "$env" = test ]
+    then
+        docker compose -f "$composeFilePath" run --rm --build -e APP_INIT=true php php bin/console tests:data:reset -v
+    fi
+
+    docker compose -f "$composeFilePath" up --pull always -d --build
 }
 
 upEnv "$@"

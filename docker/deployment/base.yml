@@ -3,6 +3,14 @@ configs:
     caddy_config:
         file: ./conf/caddy/Caddyfile
 
+x-php-base: &php-base
+    build:
+        context: ../..
+        dockerfile: docker/Dockerfile
+        target: php
+    env_file:
+        - ../../.env
+
 services:
     jackett:
         image: linuxserver/jackett:latest
@@ -20,18 +28,19 @@ services:
                 exec /init
             "
 
+    backend-manager:
+        <<: *php-base
+        user: root
+        entrypoint: php
+        command: [ 'bin/console', 'backend-manager:run', '-vv' ]
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+
     php:
-        build:
-            context: ../..
-            dockerfile: docker/Dockerfile
-            target: php
+        <<: *php-base
         hostname: athorrent-php
         depends_on:
             - jackett
-        env_file:
-            - ../../.env
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
 
     nginx:
         build:
