@@ -41,16 +41,20 @@ class ResetTestsDataCommand extends Command
             throw new RuntimeException('This command can only be run in test environment');
         }
 
-        $clearAll = $input->getOption('clear-all');
+        $rootUser = null;
 
-        if ($clearAll) {
-            $rootUser = null;
+        if (($_ENV['APP_INIT'] ?? 'false') === 'true') {
+            $clearAll = true;
         }
         else {
-            $rootUser = $this->detachAndCleanRootUser();
-        }
+            $clearAll = $input->getOption('clear-all');
 
-        $this->backendManager->clear();
+            if (!$input->getOption('clear-all')) {
+                $rootUser = $this->detachAndCleanRootUser();
+            }
+
+            $this->backendManager->clear();
+        }
 
         $this->runCommand($output, new ArrayInput([
             'command' => 'doctrine:schema:drop',

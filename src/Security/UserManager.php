@@ -50,7 +50,9 @@ readonly class UserManager
 
         $this->initUserDirs($user);
 
-        $this->backendManager->addUser($user);
+        if (($_ENV['APP_INIT'] ?? 'false') === 'false') {
+            $this->backendManager->addUser($user);
+        }
     }
 
     public function initUserDirs(User $user): void
