@@ -18,7 +18,7 @@ class BackendManagerProxy
     protected function request(string $method, string $path, array $options = [])
     {
         try {
-            $this->http->request($method, 'http://127.0.0.1:8080' . $path, $options);
+            $this->http->request($method, sprintf('http://%s:8080', $_ENV['BACKEND_MANAGER_HOST']) . $path, $options);
         }
         catch (TransportExceptionInterface $e) {
             if (str_starts_with($e->getMessage(), 'Failed to connect to')) {
