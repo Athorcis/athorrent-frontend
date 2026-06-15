@@ -1,0 +1,13 @@
+
+services:
+    backend-manager:
+        image: ${ATHORRENT_PHP_IMAGE}
+        build: !reset null
+
+    php:
+        image: ${ATHORRENT_PHP_IMAGE}
+        build: !reset null
+
+    nginx:
+        image: ${ATHORRENT_NGINX_IMAGE}
+        build: !reset null

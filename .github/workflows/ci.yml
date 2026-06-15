@@ -14,37 +14,6 @@ env:
     REGISTRY: ghcr.io
 
 jobs:
-    e2e:
-        runs-on: ubuntu-latest
-        timeout-minutes: 90
-
-        permissions:
-            contents: read
-            packages: read
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-
-            - name: Configure local hosts
-              run: echo "127.0.0.1 athorrent.local"  | sudo tee -a /etc/hosts
-
-            - name: Start test environment
-              run: bash docker/scripts/up-env.sh test
-
-            - name: Run Cypress tests
-              uses: cypress-io/github-action@v7
-              with:
-                  working-directory: tests
-                  install-command: yarn install --immutable
-                  command: yarn run --binaries-only cypress run
-              env:
-                  YARN_ENABLE_SCRIPTS: "true"
-
-            - name: Dump docker logs on failure
-              if: failure()
-              run: docker logs athorrent-test-backend-manager-1
-
     build:
         runs-on: ubuntu-latest
 
@@ -62,6 +31,9 @@ jobs:
                     - target: nginx
 
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Log in to the Container registry
               uses: docker/login-action@v3
               with:
@@ -76,15 +48,60 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ github.repository }}-${{matrix.target}}
+                  images: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.target }}
 
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
               with:
                   push: true
                   file: docker/Dockerfile
-                  target: ${{matrix.target}}
-                  tags: ${{ steps.meta.outputs.tags }}
+                  target: ${{ matrix.target }}
+                  tags: |
+                      ${{ steps.meta.outputs.tags }}
+                      ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.target }}:${{ github.sha }}
                   labels: ${{ steps.meta.outputs.labels }}
                   cache-from: type=gha,scope=build-${{ github.ref_name }}
                   cache-to: type=gha,mode=max,scope=build-${{ github.ref_name }}
+
+    e2e:
+        needs: build
+        runs-on: ubuntu-latest
+        timeout-minutes: 90
+
+        permissions:
+            contents: read
+            packages: read
+
+        env:
+            ATHORRENT_PHP_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-php:${{ github.sha }}
+            ATHORRENT_NGINX_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-nginx:${{ github.sha }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Log in to the Container registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure local hosts
+              run: echo "127.0.0.1 athorrent.local"  | sudo tee -a /etc/hosts
+
+            - name: Start test environment
+              run: bash docker/scripts/up-env.sh test ci
+
+            - name: Run Cypress tests
+              uses: cypress-io/github-action@v7
+              with:
+                  working-directory: tests
+                  install-command: yarn install --immutable
+                  command: yarn run --binaries-only cypress run
+              env:
+                  YARN_ENABLE_SCRIPTS: "true"
+
+            - name: Dump docker logs on failure
+              if: failure()
+              run: docker logs athorrent-test-backend-manager-1
