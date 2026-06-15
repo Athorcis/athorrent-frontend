@@ -86,6 +86,7 @@ class ResetTestsDataCommand extends Command
             $rootUser = $this->userRepository->find(1);
 
             if ($rootUser instanceof User) {
+                $this->entityManager->detach($rootUser);
                 $this->backendManager->detachUser($rootUser);
             }
 
