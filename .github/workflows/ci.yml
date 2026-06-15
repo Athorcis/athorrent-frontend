@@ -86,5 +86,5 @@ jobs:
                   target: ${{matrix.target}}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
-                  cache-from: type=gha,scope=${{matrix.target}}
-                  cache-to: type=gha,mode=max,scope=${{matrix.target}}
+                  cache-from: type=gha,scope=build-${{ github.ref_name }}
+                  cache-to: type=gha,mode=max,scope=build-${{ github.ref_name }}
