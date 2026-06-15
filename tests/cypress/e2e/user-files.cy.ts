@@ -1,9 +1,16 @@
 import {uploadFile, uploadFiles} from "../support/commands";
 
+
 function waitForPlayerStart(selector: string) {
-    cy.get(selector).then(async ($audio) => {
-        await new Promise((resolve) => {
-            $audio[0].addEventListener('playing', resolve, {once: true});
+    cy.get(selector).then(async ($media) => {
+        const media = $media[0] as HTMLMediaElement;
+
+        if (!media.paused && !media.ended) {
+            return;
+        }
+
+        return new Promise<void>((resolve) => {
+            media.addEventListener('playing', () => resolve(), {once: true});
         });
     });
 }
