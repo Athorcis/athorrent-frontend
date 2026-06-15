@@ -12,8 +12,6 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    ATHORRENT_PHP_IMAGE: ghcr.io/${{ github.repository }}-php:${{ github.sha }}
-    ATHORRENT_NGINX_IMAGE: ghcr.io/${{ github.repository }}-nginx:${{ github.sha }}
 
 jobs:
     build:
@@ -51,6 +49,10 @@ jobs:
               uses: docker/metadata-action@v5
               with:
                   images: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.target }}
+                  tags: |
+                      type=ref,event=branch
+                      type=ref,event=pr
+                      type=sha,format=long,prefix=
 
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
@@ -58,9 +60,7 @@ jobs:
                   push: true
                   file: docker/Dockerfile
                   target: ${{ matrix.target }}
-                  tags: |
-                      ${{ steps.meta.outputs.tags }}
-                      ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.target }}:${{ github.sha }}
+                  tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   cache-from: type=gha,scope=build-${{ github.ref_name }}
                   cache-to: type=gha,mode=max,scope=build-${{ github.ref_name }}
@@ -85,10 +85,27 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Extract metadata for php image
+              id: meta-php
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ github.repository }}-php
+                  tags: type=sha,format=long,prefix=
+
+            - name: Extract metadata for nginx image
+              id: meta-nginx
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ github.repository }}-nginx
+                  tags: type=sha,format=long,prefix=
+
             - name: Configure local hosts
               run: echo "127.0.0.1 athorrent.local"  | sudo tee -a /etc/hosts
 
             - name: Start test environment
+              env:
+                  ATHORRENT_PHP_IMAGE: ${{ steps.meta-php.outputs.tags }}
+                  ATHORRENT_NGINX_IMAGE: ${{ steps.meta-nginx.outputs.tags }}
               run: bash docker/scripts/up-env.sh test ci
 
             - name: Run Cypress tests
