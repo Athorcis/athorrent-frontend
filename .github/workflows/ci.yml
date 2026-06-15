@@ -12,6 +12,8 @@ on:
 
 env:
     REGISTRY: ghcr.io
+    ATHORRENT_PHP_IMAGE: ghcr.io/${{ github.repository }}-php:${{ github.sha }}
+    ATHORRENT_NGINX_IMAGE: ghcr.io/${{ github.repository }}-nginx:${{ github.sha }}
 
 jobs:
     build:
@@ -71,10 +73,6 @@ jobs:
         permissions:
             contents: read
             packages: read
-
-        env:
-            ATHORRENT_PHP_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-php:${{ github.sha }}
-            ATHORRENT_NGINX_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-nginx:${{ github.sha }}
 
         steps:
             - name: Checkout code
