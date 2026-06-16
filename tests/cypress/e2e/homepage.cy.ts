@@ -21,4 +21,12 @@ describe('homepage', () => {
         cy.logout();
         getLogoutButton().should('not.exist');
     });
+
+    it('localized pages should be accessible', () => {
+        cy.visit('/en/');
+
+        cy.login();
+
+        cy.visit('/en/');
+    });
 });
