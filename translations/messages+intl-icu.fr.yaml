@@ -6,6 +6,7 @@ error:
     pageNotFound: Page introuvable
     sharingNotFound: Partage introuvable
     fileRequired: La requête doit contenir un fichier
+    fileExists: Le fichier existe déjà
     notATorrent: Ce fichier n'est pas un torrent
     fileTooBig: Ce fichier est trop grand
     notPlayable: Le fichier n'est ni un fichier audio, ni un fichier vidéo
@@ -16,7 +17,10 @@ error:
     loginFailure: Nom d'utilisateur ou mot de passe invalide
     invalidMagnetUri: Lien magnet invalide
     invalidTorrentFile: Fichier torrent invalide
-    invalidCsrfToken: La page doit être rechargée (invalid csrf token)
+    invalidCsrfToken: La page doit être rechargée (jeton csrf invalide)
+
+common:
+    close: Fermer
 
 app:
     name: Athorrent
@@ -103,10 +107,10 @@ torrents:
         stopped: Le gestionnaire de torrents est arrêté, contactez l'administrateur.
 
     state:
-        allocating: Allocating # to translate
+        allocating: Allocation de l'espace disque
         queued_for_checking: En attente de vérification
         checking_files: Vérification des fichiers
-        checking_resume_data: Checking resume data # to translate
+        checking_resume_data: Vérification des données de reprise
         downloading_metadata: Téléchargement des métadonnées
         downloading: En téléchargement
         paused: En pause
@@ -116,6 +120,7 @@ torrents:
         moving: Déplacement des fichiers
         error: Erreur
         missing_files: Fichiers manquants
+        unknown: Inconnu
 
     tabMain:
         title: Général

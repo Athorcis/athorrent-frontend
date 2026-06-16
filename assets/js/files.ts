@@ -88,7 +88,7 @@ class FilesPage extends AbstractPage {
     onFileRemove = async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
-        if (this.confirm(this.translate('files.removalConfirmation', { entry: this.getFileName(target) }))) {
+        if (this.confirm('files.removalConfirmation', { entry: this.getFileName(target) })) {
 
             await this.sendRequest('removeFile',{
                 path: this.getFilePath(target)
@@ -139,7 +139,7 @@ class FilesPage extends AbstractPage {
     protected createDropzone(type: DropzoneType): [Dropzone, HTMLDivElement] {
         const path = Router.parseQueryParameters()['path'] as string ?? '';
 
-        const modal = this.ui.prepareModal(this.translator.translate('files.upload'), `<div class="upload-area"></div>`);
+        const modal = this.ui.prepareModal('files.upload', `<div class="upload-area"></div>`);
         modal.classList.add('hide-close');
 
         const dropzone = new Dropzone(modal.querySelector<HTMLDivElement>('.upload-area'), {
@@ -183,7 +183,7 @@ class FilesPage extends AbstractPage {
                 filenames,
             });
 
-            if (result.exists.length > 0 && !confirm(this.translator.translate('files.overwriteConfirm'))) {
+            if (result.exists.length > 0 && !this.confirm('files.overwriteConfirm')) {
                 $(modal).modal('hide');
                 return;
             }
