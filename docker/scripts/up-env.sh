@@ -3,8 +3,8 @@
 set -eu
 
 upEnv() {
-    local env=$1
-    local addon=$2
+    local env=${1:-dev}
+    local addon=${2:-}
     local scriptDir
     scriptDir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")
 
@@ -21,7 +21,8 @@ upEnv() {
 
     if [ -n "$addon" ]
     then
-        local addonPath=$(dirname -- "$scriptDir")/deployment/base.$addon.yml
+        local addonPath
+        addonPath=$(dirname -- "$scriptDir")/deployment/base.$addon.yml
 
         if [ ! -f  "$addonPath" ]
         then
