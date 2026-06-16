@@ -1,6 +1,6 @@
 {% extends 'skeleton.html.twig' %}
 
-{% block title %}{% if title %}{{ title }}{% else %}Fichiers{% endif %} - {{ 'app.name'|trans }}{% endblock %}
+{% block title %}{{ title }} - {{ 'app.name'|trans }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
