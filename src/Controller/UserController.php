@@ -8,6 +8,7 @@ use Athorrent\Form\Type\AddUserType;
 use Athorrent\Notification\Notification;
 use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
+use Athorrent\UserVisibleException;
 use Athorrent\View\PaginatedView;
 use Athorrent\View\View;
 use Athorrent\View\ViewType;
@@ -84,7 +85,7 @@ class UserController extends AbstractController
             $this->userManager->removeUser($user);
         }
         catch (ORMException $exception) {
-            throw new RuntimeException('error.cannotRemoveUser', 0, $exception);
+            throw new UserVisibleException('error.cannotRemoveUser', 0, $exception);
         }
 
         return [];
