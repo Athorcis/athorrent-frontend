@@ -99,7 +99,7 @@ export function uploadFiles(paths: string[], relativePaths: string[] = [], asDir
 
     const result = paths.map((path, index) => {
         const basename = getBasename(relativePaths[index] ?? path);
-        const selector = `[data-name="${btoa(basename)}"]`;
+        const selector = getFileSelector(basename);
 
         return { basename, selector };
     });
@@ -113,4 +113,8 @@ export function uploadFiles(paths: string[], relativePaths: string[] = [], asDir
 
 export function uploadFile(path: string) {
     return uploadFiles([path])[0];
+}
+
+export function getFileSelector(filename: string) {
+    return `[data-name="${btoa(filename)}"]`;
 }

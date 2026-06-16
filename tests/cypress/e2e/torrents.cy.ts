@@ -1,3 +1,4 @@
+import {getFileSelector} from "../support/commands";
 
 describe('Cypress Studio Demo', () => {
     beforeEach(() => {
@@ -26,6 +27,18 @@ describe('Cypress Studio Demo', () => {
         cy.torrentFile('sintel.torrent')
 
             .torrentClick('.torrent-remove');
+    });
+
+    it('should not allow to remove file bound to torrents', function () {
+        cy.torrentFile('sintel.torrent')
+            .torrentStatus('En téléchargement');
+
+        cy.visit('/user/files');
+
+        const selector = getFileSelector('Sintel');
+
+        cy.get(selector).should('exist');
+        cy.get(`${selector} .file-remove`).should('not.exist');
     });
 
     it('should fail for invalid torrent file', function() {
