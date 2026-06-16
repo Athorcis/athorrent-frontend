@@ -3,17 +3,23 @@ configs:
     php_spx_config:
         file: ./conf/php/spx.ini
 
+x-php-base: &php-base
+    build:
+        target: dev
+    env_file:
+        - ../../.env.dev
+    volumes:
+        - ../..:/var/www/athorrent
+    configs:
+        -   source: php_spx_config
+            target: /usr/local/etc/php/conf.d/spx.ini
+
 services:
+    backend-manager:
+        <<: *php-base
+
     php:
-        build:
-            target: dev
-        env_file:
-            - ../../.env.dev
-        volumes:
-            - ../..:/var/www/athorrent
-        configs:
-            - source: php_spx_config
-              target: /usr/local/etc/php/conf.d/spx.ini
+        <<: *php-base
 
     nginx:
         build:
