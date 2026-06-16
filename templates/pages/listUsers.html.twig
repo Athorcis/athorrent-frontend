@@ -40,7 +40,7 @@
                     <td>{{ user.roles[0]|trans }}</td>
                     <td>
                         {% if user.connectionTimestamp %}
-                            {{ user.connectionTimestamp|date('d/m/Y H:i:s') }}
+                            {{ user.connectionTimestamp|format_datetime }}
                         {% else %}
                             {{ 'users.lastConnectionNone'|trans }}
                         {% endif %}

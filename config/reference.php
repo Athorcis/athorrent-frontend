@@ -1590,7 +1590,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: false
  *     },
  *     intl?: bool|array{
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *     },
  *     cssinliner?: bool|array{
  *         enabled?: bool|Param, // Default: false
@@ -1673,7 +1673,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         framework?: FrameworkConfig,
  *         twig?: TwigConfig,
  *         doctrine?: DoctrineConfig,
- *         web_profiler?: WebProfilerConfig,
  *         monolog?: MonologConfig,
  *         security?: SecurityConfig,
  *         webpack_encore?: WebpackEncoreConfig,
