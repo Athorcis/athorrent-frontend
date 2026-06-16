@@ -6,6 +6,7 @@ error:
     pageNotFound: Page not found
     sharingNotFound: Sharing not found
     fileRequired: The request must contain a file
+    fileExists: File already exists
     notATorrent: This file is not a torrent
     fileTooBig: This file is too big
     notPlayable: This file is neither an audio file nor a video file
@@ -17,6 +18,9 @@ error:
     invalidMagnetUri: Invalid Magnet URI
     invalidTorrentFile: Invalid torrent file
     invalidCsrfToken: The page needs to be reloaded (invalid csrf token)
+
+common:
+    close: Close
 
 app:
     name: Athorrent
@@ -96,7 +100,6 @@ torrents:
     ratio: Ratio
     seeders: Seeders
     leechers: Leechers
-    managerUpdating: The torrent manager is being updated
     none: no torrents to display
     unavailable:
         starting: The torrent manager is starting
@@ -118,6 +121,7 @@ torrents:
         moving: Moving files
         error: Error
         missing_files: Missing files
+        unknown: Unknown
 
     tabMain:
         title: Main

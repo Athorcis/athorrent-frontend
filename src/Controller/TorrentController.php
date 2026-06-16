@@ -69,7 +69,7 @@ class TorrentController extends AbstractController
             'backend_updating' => $backendUpdating,
             'backend_stopped' => $backendStopped,
             'alert_level' => $alertLevel,
-            '_strings' => ['torrents.dropzone', 'error.unknownError', 'error.notATorrent', 'error.fileTooBig', 'error.serverError']
+            '_strings' => ['torrents.dropzone', 'error.unknownError', 'error.notATorrent', 'error.fileTooBig', 'error.serverError', 'error.title']
         ]);
     }
 

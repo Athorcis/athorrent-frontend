@@ -352,9 +352,9 @@ class AddTorrentForm {
         this.router.sendRequest('addTorrents', params).then(this.afterSubmit, (error: Response<{ status: string; error: string; }>) => {
 
             if (error.body instanceof Object) {
-                this.ui.showModal('Erreur', error.body.error);
+                this.ui.showModal('error.title', error.body.error);
             }else {
-                this.ui.showModal('Erreur', this.translator.translate('error.unknownError'))
+                this.ui.showModal('error.title', this.translator.translate('error.unknownError'))
             }
         });
 
