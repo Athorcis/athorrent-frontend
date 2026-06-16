@@ -5,6 +5,7 @@ namespace Athorrent\Controller;
 use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
+use Athorrent\UserVisibleException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -26,7 +27,7 @@ class FileController extends AbstractFileController
         $path = Path::join($rootPath, $relativePath);
 
         if (file_exists($path) &&  $request->request->get('overwrite') !== 'true') {
-            throw new \Exception('error.fileExists');
+            throw new UserVisibleException('error.fileExists');
         }
 
         $dirPath = dirname($path);

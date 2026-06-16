@@ -46,7 +46,7 @@ readonly class ExceptionListener implements EventSubscriberInterface
         if ($throwable instanceof HttpException) {
             $statusCode = $throwable->getStatusCode();
 
-            if ($throwable instanceof NotFoundHttpException) {
+            if ($throwable instanceof NotFoundHttpException && !str_starts_with($throwable->getMessage(), 'error.')) {
                 $message = 'error.pageNotFound';
             }
         } else {
