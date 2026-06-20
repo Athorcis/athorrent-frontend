@@ -66,8 +66,11 @@ jobs:
               with:
                   push: true
                   file: docker/build-bake.hcl
-                  tags: ${{ steps.meta.outputs.tags }}
-                  labels: ${{ steps.meta.outputs.labels }}
+                  set: |
+                      php.tags=${{ steps.meta-php.outputs.tags }}
+                      php.labels=${{ steps.meta-php.outputs.labels }}
+                      nginx.tags=${{ steps.meta-nginx.outputs.tags }}
+                      nginx.labels=${{ steps.meta-nginx.outputs.labels }}
                   cache-from: type=gha,scope=build-${{ github.ref_name }}
                   cache-to: type=gha,mode=max,scope=build-${{ github.ref_name }}
 
