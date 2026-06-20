@@ -140,18 +140,6 @@ WORKDIR $RUN_DIR
 
 FROM base AS php
 
-RUN --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt \
-    set -eux ;\
-    apt-get update ;\
-    apt-get install -y --no-install-recommends \
-        libfcgi-bin ;\
-    curl -so /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/a2d45de918787f761754b96b94a59f4f6acebc25/php-fpm-healthcheck ;\
-    chmod +x /usr/local/bin/php-fpm-healthcheck
-
-HEALTHCHECK --interval=5s --timeout=1s \
-    CMD FCGI_CONNECT=localhost:9001 php-fpm-healthcheck --listen-queue=10 || exit 1
-
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 COPY docker/conf/php/zz-fpm-prod.ini /usr/local/etc/php-fpm.d/
 
