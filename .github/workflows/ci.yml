@@ -66,11 +66,12 @@ jobs:
             - name: Build and push Docker image
               uses: docker/bake-action@v7
               with:
+                  source: .
                   push: true
                   files: |
-                        docker/build-bake.hcl
-                        ${{ steps.meta-php.outputs.bake-file }}
-                        ${{ steps.meta-nginx.outputs.bake-file }}
+                      docker/build-bake.hcl
+                      cwd://${{ steps.meta-php.outputs.bake-file }}
+                      cwd://${{ steps.meta-nginx.outputs.bake-file }}
                   set: |
                       *.cache-from: type=gha,scope=build-${{ github.ref_name }}
                       *.cache-to: type=gha,mode=max,scope=build-${{ github.ref_name }}
