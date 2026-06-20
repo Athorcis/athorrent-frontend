@@ -1,6 +1,6 @@
 import {getFileSelector} from "../support/commands";
 
-describe('Cypress Studio Demo', () => {
+describe('torrents', () => {
     beforeEach(() => {
         cy.request('POST', '/tests/reset-data?clear-all=false');
         cy.login();
