@@ -78,16 +78,12 @@ ARG UID
 ARG GID
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
-    --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/cache \
-    --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/unplugged \
     yarn install --immutable
 
 COPY --chown=$RUN_USER --parents assets scripts/subset-font-awesome.ts scripts/tsconfig.json .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.ts tsconfig.json tsconfig.settings.json webpack.config.mjs $BUILD_DIR/
 
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
-    --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/cache \
-    --mount=type=cache,uid=$UID,gid=$GID,target=$BUILD_DIR/.yarn/unplugged \
     yarn build
 
 FROM builder AS full-build
