@@ -68,6 +68,7 @@ jobs:
               with:
                   source: .
                   push: true
+                  provenance: mode=max
                   files: |
                       docker/build-bake.hcl
                       cwd://${{ steps.meta-php.outputs.bake-file }}
