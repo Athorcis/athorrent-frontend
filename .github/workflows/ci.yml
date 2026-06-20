@@ -73,8 +73,8 @@ jobs:
                       cwd://${{ steps.meta-php.outputs.bake-file }}
                       cwd://${{ steps.meta-nginx.outputs.bake-file }}
                   set: |
-                      *.cache-from: type=gha,scope=build-${{ github.ref_name }}
-                      *.cache-to: type=gha,mode=max,scope=build-${{ github.ref_name }}
+                      *.cache-from=type=gha,scope=build-${{ github.ref_name }}
+                      *.cache-to=type=gha,mode=max,scope=build-${{ github.ref_name }}
 
     e2e:
         needs: build
