@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Database\Entity;
 
 use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
@@ -225,7 +227,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getPath(string $path): string
     {
-        return Path::join(USER_ROOT_DIR, $this->id, $path);
+        return Path::join(USER_ROOT_DIR, (string)$this->id, $path);
     }
 
     public function getBackendPath(string $path = ''): string

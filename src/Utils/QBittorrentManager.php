@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Utils;
 
 use Athorrent\Backend\QBittorrentBackend;
 use Athorrent\Database\Entity\User;
 use Athorrent\UserVisibleException;
 use Exception;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -190,7 +193,7 @@ readonly class QBittorrentManager extends AbstractTorrentManager
                 try {
                     $relativePath = $this->fs->makePathRelative($contentPath, $qbRoot);
                 }
-                catch (\InvalidArgumentException $e) {
+                catch (InvalidArgumentException $e) {
                     if (str_starts_with($contentPath, $qbRoot)) {
                         $relativePath = substr($contentPath, strlen($qbRoot) + 1);
                     }

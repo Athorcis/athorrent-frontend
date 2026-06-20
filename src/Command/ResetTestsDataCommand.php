@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Command;
 
 use Athorrent\Backend\BackendManagerProxy;
@@ -72,7 +74,7 @@ class ResetTestsDataCommand extends Command
             'username' => 'admin',
             'password' => 'test',
             'role' => 'ROLE_ADMIN',
-            '--client-ip' => $rootUser?->getClientIp(),
+            '--client-ip' => $rootUser?->getClientIp() ?? '',
         ]));
 
         return Command::SUCCESS;

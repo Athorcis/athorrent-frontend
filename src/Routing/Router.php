@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Routing;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;

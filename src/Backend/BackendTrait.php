@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Backend;
 
 use Athorrent\Backend\Process\BackendProcessInterface;
@@ -31,6 +33,11 @@ trait BackendTrait
     protected function readState(): BackendState
     {
         $state = @file_get_contents($this->statePath);
+
+        if ($state === false) {
+            $state = '';
+        }
+
         return BackendState::tryFrom($state) ?? BackendState::Unknown;
     }
 

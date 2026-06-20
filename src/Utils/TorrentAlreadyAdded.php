@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Utils;
 
+use Exception;
 use Throwable;
 
-class TorrentAlreadyAdded extends \Exception
+class TorrentAlreadyAdded extends Exception
 {
     public function __construct(readonly string $torrent, ?Throwable $previous = null)
     {

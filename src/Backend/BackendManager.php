@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Backend;
 
 use Athorrent\Backend\Process\BackendProcessFailedException;
@@ -9,6 +11,7 @@ use Athorrent\Backend\Process\BackendProcessManagerInterface;
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
 use React\EventLoop\Loop;
 use React\Promise\Promise;
@@ -224,7 +227,7 @@ class BackendManager
 
         $user = $backend->getUser();
 
-        $limiter = $this->backendRestartLimiter->create($user->getId());
+        $limiter = $this->backendRestartLimiter->create((string)$user->getId());
 
         if ($limiter->consume()->isAccepted()) {
             try {
@@ -348,7 +351,7 @@ class BackendManager
             try {
                 $backend = $this->backendFactory->create($user);
             }
-            catch (\Exception) {
+            catch (Exception) {
                 $this->logger->error(sprintf('Unknown client type: %s', $user->getClientType()));
                 continue;
             }
@@ -420,7 +423,7 @@ class BackendManager
             $this->waitForState($backend, [BackendState::Running, BackendState::Failed]);
 
             if ($backend->getState() === BackendState::Failed) {
-                throw new \Exception('failed to start backend');
+                throw new Exception('failed to start backend');
             }
         }
         finally {
@@ -514,7 +517,7 @@ class BackendManager
 
     protected function resetRestartLimiter(int $id): void
     {
-        $this->backendRestartLimiter->create($id)->reset();
+        $this->backendRestartLimiter->create((string)$id)->reset();
     }
 
     public function clear()

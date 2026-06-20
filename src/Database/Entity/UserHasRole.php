@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Database\Entity;
 
 use Athorrent\Database\Type\UserRole;
