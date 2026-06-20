@@ -3,6 +3,7 @@
 namespace Athorrent;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,8 +25,9 @@ readonly class ExceptionListener implements EventSubscriberInterface
         private Environment $twig,
         private LoggerInterface $logger,
         private TokenStorageInterface $tokenStorage,
-    )
-    {
+        #[Autowire(env: 'APP_DEBUG')]
+        private bool $debug,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -104,7 +106,7 @@ readonly class ExceptionListener implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        if ($_SERVER['APP_DEBUG'] && !$event->getRequest()->isXmlHttpRequest()) {
+        if ($this->debug && !$event->getRequest()->isXmlHttpRequest()) {
             return;
         }
 

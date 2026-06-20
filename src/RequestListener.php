@@ -3,6 +3,7 @@
 namespace Athorrent;
 
 use Athorrent\View\View;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -11,6 +12,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class RequestListener implements EventSubscriberInterface
 {
+    public function __construct(
+        #[Autowire(env: 'APP_DEBUG')]
+        private bool $debug,
+    ) {
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -32,7 +39,7 @@ class RequestListener implements EventSubscriberInterface
 
             if ($result->isPageView($request)) {
                 $vars = [
-                    'debug' => (bool)$_SERVER['APP_DEBUG'],
+                    'debug' => $this->debug,
                 ];
 
                 $result->setJsVars($vars);
