@@ -46,6 +46,7 @@ jobs:
               uses: docker/metadata-action@v6
               with:
                   images: ${{ env.REGISTRY }}/${{ github.repository }}-php
+                  bake-target: php
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
@@ -56,6 +57,7 @@ jobs:
               uses: docker/metadata-action@v6
               with:
                   images: ${{ env.REGISTRY }}/${{ github.repository }}-nginx
+                  bake-target: nginx
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
@@ -65,12 +67,11 @@ jobs:
               uses: docker/bake-action@v7
               with:
                   push: true
-                  files: docker/build-bake.hcl
+                  files: |
+                        docker/build-bake.hcl
+                        ${{ steps.meta-php.outputs.bake-file }}
+                        ${{ steps.meta-nginx.outputs.bake-file }}
                   set: |
-                      php.tags=${{ steps.meta-php.outputs.tags }}
-                      php.labels=${{ steps.meta-php.outputs.labels }}
-                      nginx.tags=${{ steps.meta-nginx.outputs.tags }}
-                      nginx.labels=${{ steps.meta-nginx.outputs.labels }}
                       *.cache-from: type=gha,scope=build-${{ github.ref_name }}
                       *.cache-to: type=gha,mode=max,scope=build-${{ github.ref_name }}
 
