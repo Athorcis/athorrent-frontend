@@ -13,6 +13,10 @@ on:
 env:
     REGISTRY: ghcr.io
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -74,6 +78,7 @@ jobs:
         permissions:
             contents: read
             packages: read
+            actions: write
 
         steps:
             - name: Checkout code
@@ -117,6 +122,16 @@ jobs:
                   command: yarn run --binaries-only cypress run
               env:
                   YARN_ENABLE_SCRIPTS: "true"
+
+            - name: Upload Cypress artifacts
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: cypress-artifacts
+                  path: |
+                      tests/cypress/screenshots
+                      tests/cypress/videos
+                  if-no-files-found: ignore
 
             - name: Dump docker logs on failure
               if: failure()
