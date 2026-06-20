@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Form\Type;
 
 use Athorrent\Database\Entity\User;

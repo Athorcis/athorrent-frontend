@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Notification;
 
 use Athorrent\View\View;
@@ -86,7 +88,7 @@ class NotificationListener implements EventSubscriberInterface
         }
 
         return new RedirectResponse($url, 302, [
-            'set-cookie' => new Cookie('notification', 1),
+            'set-cookie' => new Cookie('notification', '1'),
         ]);
     }
 }

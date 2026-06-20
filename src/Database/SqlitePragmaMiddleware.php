@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Database;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsMiddleware;

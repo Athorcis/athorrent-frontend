@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Athorrent\Command;
 
 use Athorrent\Security\UserManager;
@@ -34,6 +36,8 @@ class CreateUserCommand extends Command
             )
             ->addOption(
                 'client-ip',
+                null,
+                InputArgument::REQUIRED,
             );
     }
 
