@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -161,7 +162,11 @@ class TorrentController extends AbstractController
         $usedFileHashes = [];
 
         foreach ($files as $file) {
-            $torrentPath = Path::join($torrentsDir, $file);
+            $torrentPath = Path::makeAbsolute($file, $torrentsDir);
+
+            if (!Path::isBasePath($torrentsDir, $torrentPath)) {
+                throw new AccessDeniedHttpException();
+            }
 
             if (file_exists($torrentPath)) {
                 $fileHash = md5_file($torrentPath);
