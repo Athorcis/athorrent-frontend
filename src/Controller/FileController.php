@@ -12,6 +12,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/user/files', name: 'files')]
@@ -26,7 +27,11 @@ class FileController extends AbstractFileController
         $rootPath = $rootEntry->getRealPath();
         $relativePath = $request->request->get('relativePath');
 
-        $path = Path::join($rootPath, $relativePath);
+        $path = Path::makeAbsolute($relativePath, $rootPath);
+
+        if (!Path::isBasePath($rootPath, $path)) {
+            throw new AccessDeniedHttpException();
+        }
 
         if (file_exists($path) &&  $request->request->get('overwrite') !== 'true') {
             throw new UserVisibleException('error.fileExists');
