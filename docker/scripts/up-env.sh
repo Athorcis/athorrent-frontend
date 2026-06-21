@@ -33,14 +33,14 @@ upEnv() {
         composeArgs+=("-f" "$addonPath")
     fi
 
-    local buildArgs=(--build --pull always)
+    docker compose "${composeArgs[@]}" create --build --pull always
 
     if [ "$env" = test ]
     then
-        docker compose "${composeArgs[@]}" run --rm "${buildArgs[@]}" -e APP_INIT=true php php bin/console tests:data:reset -v
+        docker compose "${composeArgs[@]}" run --rm -e APP_INIT=true php php bin/console tests:data:reset -v
     fi
 
-    docker compose "${composeArgs[@]}" up "${buildArgs[@]}" -d
+    docker compose "${composeArgs[@]}" up -d
 }
 
 upEnv "$@"
