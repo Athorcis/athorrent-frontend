@@ -7,8 +7,8 @@ namespace Athorrent\Filesystem;
 use AssertionError;
 use Athorrent\Database\Entity\User;
 use Athorrent\Database\Repository\SharingRepository;
+use Athorrent\SharingNotFoundException;
 use Athorrent\Utils\TorrentManagerFactory;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -35,7 +35,7 @@ readonly class FilesystemFactory
         $sharing = $this->sharingRepository->find(Uuid::fromString($id));
 
         if ($sharing === null) {
-            throw new NotFoundHttpException('error.sharingNotFound');
+            throw new SharingNotFoundException();
         }
 
         $torrentManager = $this->torrentManagerFactory->create($sharing->getUser());

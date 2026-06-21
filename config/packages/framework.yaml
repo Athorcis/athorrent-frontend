@@ -24,6 +24,10 @@ framework:
             policy: 'sliding_window'
             limit: 5
             interval: '10 minutes'
+        sharing_not_found:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '5 minute'
 
     property_info:
         with_constructor_extractor: false
