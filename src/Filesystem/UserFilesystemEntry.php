@@ -11,7 +11,7 @@ use Athorrent\Database\Entity\User;
 /** @property UserFilesystem $filesystem */
 class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterInterface
 {
-    private ?string $sharingToken = null;
+    private ?Sharing $sharing = null;
 
     public function __construct(UserFilesystem $filesystem, string $path, FilesystemEntry|null $internalEntry = null)
     {
@@ -43,14 +43,25 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
         return $this->filesystem->isWritable();
     }
 
-    public function getSharingToken(): string
+    private function findSharing(): ?Sharing
     {
-        return $this->sharingToken ??= Sharing::generateToken($this->getOwner(), $this->path);
+        if ($this->sharing !== null) {
+            return $this->sharing;
+        }
+
+        return $this->sharing = $this->getOwner()->getSharings()[$this->path] ?? null;
+    }
+
+    public function getSharingId(): ?string
+    {
+        $sharing = $this->findSharing();
+
+        return $sharing?->getId()->toRfc4122();
     }
 
     public function isShared(): bool
     {
-        return isset($this->getOwner()->getSharings()[$this->getSharingToken()]);
+        return $this->findSharing() !== null;
     }
 
     public function getCacheKey(): string

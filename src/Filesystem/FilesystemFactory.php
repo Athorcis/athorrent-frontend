@@ -10,6 +10,7 @@ use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Utils\TorrentManagerFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Uid\Uuid;
 
 readonly class FilesystemFactory
 {
@@ -29,9 +30,9 @@ readonly class FilesystemFactory
         return User::as($user);
     }
 
-    public function createSharedFilesystem(string $token): SharedFilesystem
+    public function createSharedFilesystem(string $id): SharedFilesystem
     {
-        $sharing = $this->sharingRepository->findOneBy(['token' => $token]);
+        $sharing = $this->sharingRepository->find(Uuid::fromString($id));
 
         if ($sharing === null) {
             throw new NotFoundHttpException('error.sharingNotFound');

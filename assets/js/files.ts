@@ -27,7 +27,7 @@ class FilesPage extends AbstractPage {
         return decodeBase64(this.getItemId('file', element));
     }
 
-    getSharingToken(element: HTMLElement, selector: string) {
+    getSharingId(element: HTMLElement, selector: string) {
         return this.getItemId('sharing', element, selector);
     }
 
@@ -73,7 +73,7 @@ class FilesPage extends AbstractPage {
         const target = event.target as HTMLElement;
 
         await this.sendRequest('removeSharing', {
-            token: this.getSharingToken(target, '.sharing-remove')
+            id: this.getSharingId(target, '.sharing-remove')
         });
 
         this.updateFileList();

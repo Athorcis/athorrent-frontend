@@ -51,8 +51,8 @@ readonly class FilesystemValueResolver implements ValueResolverInterface
             return [];
         }
 
-        if ($request->attributes->has('token')) {
-            $filesystem = $this->filesystemFactory->createSharedFilesystem($request->attributes->get('token'));
+        if ($request->attributes->has('id') && str_starts_with($request->getPathInfo(), '/sharings/')) {
+            $filesystem = $this->filesystemFactory->createSharedFilesystem($request->attributes->get('id'));
         } else {
             $filesystem = $this->filesystemFactory->createTorrentFilesystem();
         }

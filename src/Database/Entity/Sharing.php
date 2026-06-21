@@ -8,6 +8,7 @@ use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Database\Repository\SharingRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table]
 #[ORM\Index(columns: ['creation_date_time'])]
@@ -16,8 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Sharing implements CacheKeyGetterInterface
 {
     #[ORM\Id]
-    #[ORM\Column(length: 32, options:  ['fixed' => true])]
-    private string $token;
+    #[ORM\Column(type: 'uuid')]
+    private Uuid $id;
 
     #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'sharings')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -31,20 +32,20 @@ class Sharing implements CacheKeyGetterInterface
 
     public function __construct(User $user, string $path)
     {
-        $this->token = self::generateToken($user, $path);
+        $this->id = Uuid::v7();
         $this->user = $user;
         $this->path = $path;
         $this->creationDateTime = new DateTimeImmutable();
     }
 
-    public function getToken(): string
+    public function getId(): Uuid
     {
-        return $this->token;
+        return $this->id;
     }
 
     public function getCacheKey(): string
     {
-        return $this->token;
+        return $this->id->toRfc4122();
     }
 
     public function getUser(): User
@@ -60,10 +61,5 @@ class Sharing implements CacheKeyGetterInterface
     public function getCreationDateTime(): DateTimeImmutable
     {
         return $this->creationDateTime;
-    }
-
-    public static function generateToken(User $user, $path): string
-    {
-        return md5($user->getId() . '/' . $path);
     }
 }

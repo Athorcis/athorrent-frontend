@@ -26,9 +26,9 @@
             <tbody>
                 {% for sharing in sharings %}
                     {% cache cache_key('sharing', sharing) %}
-                    <tr class="sharing" id="sharing-{{ sharing.token }}">
+                    <tr class="sharing" id="sharing-{{ sharing.id }}">
                         <td class="user-name">
-                            <a href="{{ path('listFiles', { token: sharing.token, _prefixId: 'sharings' }) }}">{{ sharing.path }}</a>
+                            <a href="{{ path('listFiles', { id: sharing.id, _prefixId: 'sharings' }) }}">{{ sharing.path }}</a>
                         </td>
                         <td class="text-right">
                             <button class="btn btn-xs btn-danger sharing-remove">

@@ -8,7 +8,7 @@ class SharingsPage extends AbstractPage {
         on(document, 'click', '.sharing-remove', this.onSharingRemove);
     }
 
-    getSharingToken(element: HTMLElement, selector: string = null): string {
+    getSharingId(element: HTMLElement, selector: string = null): string {
         return this.getItemId('sharing', element, selector);
     }
 
@@ -16,7 +16,7 @@ class SharingsPage extends AbstractPage {
         const target = event.target as HTMLElement;
 
         await this.sendRequest('removeSharing', {
-            token: this.getSharingToken(target)
+            id: this.getSharingId(target)
         });
 
         this.getItem('sharing', target).remove();

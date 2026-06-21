@@ -37,6 +37,7 @@
         "symfony/runtime": "8.1.*",
         "symfony/security-bundle": "8.1.*",
         "symfony/translation": "8.1.*",
+        "symfony/uid": "8.1.*",
         "symfony/twig-bundle": "8.1.*",
         "symfony/validator": "8.1.*",
         "symfony/webpack-encore-bundle": "^2.4.0",

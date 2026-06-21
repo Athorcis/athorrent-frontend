@@ -12,13 +12,14 @@ use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\PaginatedView;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 #[Route(path: '/user/sharings', name: 'sharings')]
 class SharingController extends AbstractController
@@ -44,21 +45,23 @@ class SharingController extends AbstractController
         $this->entityManager->persist($sharing);
         $this->entityManager->flush();
 
-        return [$this->generateUrl('listFiles', ['token' => $sharing->getToken(), '_prefixId' => 'sharings'], UrlGeneratorInterface::ABSOLUTE_URL)];
+        return [$this->generateUrl('listFiles', [
+            'id' => $sharing->getId()->toRfc4122(),
+            '_prefixId' => 'sharings',
+        ], UrlGeneratorInterface::ABSOLUTE_URL)];
     }
 
     /**
      * @throws ORMException
      */
-    #[Route(path: '/{token}', methods: 'DELETE', options: ['expose' => true])]
-    public function removeSharing(string $token): array
+    #[Route(
+        path: '/{id}',
+        requirements: ['id' => Requirement::UUID],
+        methods: 'DELETE',
+        options: ['expose' => true],
+    )]
+    public function removeSharing(#[MapEntity] Sharing $sharing): array
     {
-        $sharing = $this->sharingRepository->findOneBy(['token' => $token]);
-
-        if ($sharing === null) {
-            throw new NotFoundHttpException();
-        }
-
         if ($sharing->getUser() !== $this->getUser()) {
             throw new AccessDeniedHttpException();
         }
