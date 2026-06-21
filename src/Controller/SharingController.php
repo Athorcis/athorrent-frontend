@@ -15,6 +15,8 @@ use Doctrine\ORM\Exception\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -51,7 +53,19 @@ class SharingController extends AbstractController
     #[Route(path: '/{token}', methods: 'DELETE', options: ['expose' => true])]
     public function removeSharing(string $token): array
     {
-        $this->sharingRepository->delete($token);
+        $sharing = $this->sharingRepository->findOneBy(['token' => $token]);
+
+        if ($sharing === null) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($sharing->getUser() !== $this->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $this->entityManager->remove($sharing);
+        $this->entityManager->flush();
+
         return [];
     }
 }
