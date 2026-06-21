@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace Athorrent\Controller;
 
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
-#[Route(path: '/sharings/{token}/files', name: 'sharings')]
+#[Route(
+    path: '/sharings/{id}/files',
+    name: 'sharings',
+    requirements: ['id' => Requirement::UUID],
+)]
 class SharingFileController extends AbstractFileController
 {
 }

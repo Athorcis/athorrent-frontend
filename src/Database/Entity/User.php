@@ -62,7 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     /**
      * @var Sharing[]|Collection
      */
-    #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'token', cascade: ['detach'], fetch: 'LAZY')]
+    #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'path', cascade: ['detach'], fetch: 'LAZY')]
     #[Cache(usage: 'NONSTRICT_READ_WRITE')]
     private array|Collection $sharings;
 
