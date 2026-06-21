@@ -14,9 +14,6 @@ x-php-base: &php-base
         target: php
     env_file:
         - ../../.env
-    volumes:
-        - db_data:/var/www/athorrent/var/lib
-        - user_data:/var/www/athorrent/var/user
 
 services:
     jackett:
@@ -41,11 +38,16 @@ services:
         entrypoint: php
         command: [ 'bin/console', 'backend-manager:run', '-vv' ]
         volumes:
+            - db_data:/var/www/athorrent/var/lib
+            - user_data:/var/www/athorrent/var/user
             - /var/run/docker.sock:/var/run/docker.sock
 
     php:
         <<: *php-base
         hostname: athorrent-php
+        volumes:
+            - db_data:/var/www/athorrent/var/lib
+            - user_data:/var/www/athorrent/var/user
         depends_on:
             - jackett
 
