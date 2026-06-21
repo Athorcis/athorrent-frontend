@@ -7,16 +7,9 @@ volumes:
     db_data:
     user_data:
 
-x-php-base: &php-base
-    build:
-        context: ../..
-        dockerfile: docker/Dockerfile
-        target: php
-    env_file:
-        - ../../.env
-    volumes:
-        - db_data:/var/www/athorrent/var/lib
-        - user_data:/var/www/athorrent/var/user
+include:
+    - path:
+        - _php-common.yml
 
 services:
     jackett:
@@ -36,7 +29,6 @@ services:
             "
 
     backend-manager:
-        <<: *php-base
         user: root
         entrypoint: php
         command: [ 'bin/console', 'backend-manager:run', '-vv' ]
@@ -44,7 +36,6 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
 
     php:
-        <<: *php-base
         hostname: athorrent-php
         depends_on:
             - jackett
