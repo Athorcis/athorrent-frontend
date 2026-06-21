@@ -13,6 +13,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/user/files', name: 'files')]
@@ -23,6 +24,10 @@ class FileController extends AbstractFileController
     {
         /** @var UploadedFile $file */
         $file = $request->files->get('file');
+
+        if ($file === null) {
+            throw new BadRequestHttpException('missing parameter file');
+        }
 
         $rootPath = $rootEntry->getRealPath();
         $relativePath = $request->request->get('relativePath');
