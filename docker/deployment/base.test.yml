@@ -1,8 +1,4 @@
 
-volumes:
-    db_data:
-    user_data:
-
 x-php-base: &php-base
     build:
         args: &build_args
@@ -10,9 +6,6 @@ x-php-base: &php-base
             - COMPOSER_ARGS=
     env_file:
         - ../../.env.test
-    volumes:
-        - db_data:/var/www/athorrent/var/lib
-        - user_data:/var/www/athorrent/var/user
 
 services:
     backend-manager:
@@ -24,5 +17,4 @@ services:
     nginx:
         build:
             args: *build_args
-        volumes:
-            - user_data:/var/www/athorrent/var/user:ro
+
