@@ -16,6 +16,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
@@ -208,7 +209,11 @@ abstract class AbstractFileController extends AbstractController
         $exists = [];
 
         foreach ($filenames as $filename) {
-            $path = Path::join($rootPath, $filename);
+            $path = Path::makeAbsolute($filename, $rootPath);
+
+            if (!Path::isBasePath($rootPath, $path)) {
+                throw new AccessDeniedHttpException();
+            }
 
             if ($fs->exists($path)) {
                 $exists[] = $filename;
