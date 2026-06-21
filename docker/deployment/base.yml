@@ -3,6 +3,10 @@ configs:
     caddy_config:
         file: ./conf/caddy/Caddyfile
 
+volumes:
+    db_data:
+    user_data:
+
 x-php-base: &php-base
     build:
         context: ../..
@@ -10,6 +14,9 @@ x-php-base: &php-base
         target: php
     env_file:
         - ../../.env
+    volumes:
+        - db_data:/var/www/athorrent/var/lib
+        - user_data:/var/www/athorrent/var/user
 
 services:
     jackett:
@@ -48,6 +55,8 @@ services:
             dockerfile: docker/Dockerfile
             target: nginx
         hostname: athorrent-nginx
+        volumes:
+            - user_data:/var/www/athorrent/var/user:ro
         depends_on:
             - php
 
