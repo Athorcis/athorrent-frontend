@@ -35,9 +35,12 @@ readonly class SharingNotFoundRateLimitListener implements EventSubscriberInterf
         $throwable = $event->getThrowable();
 
         if ($throwable instanceof SharingNotFoundException) {
-            return;
+            $this->processSharingNotFoundException($event);
         }
+    }
 
+    protected function processSharingNotFoundException($event)
+    {
         $limiter = $this->sharingNotFoundLimiter->create(
             $event->getRequest()->getClientIp() ?? 'unknown',
         );
