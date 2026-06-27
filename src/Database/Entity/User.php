@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     public const string CLIENT_TYPE_QBITTORRENT = 'qbittorrent';
 
     #[ORM\Id]
-    #[ORM\Column(type: 'integer', options: ['unsigned' => true])]
+    #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 

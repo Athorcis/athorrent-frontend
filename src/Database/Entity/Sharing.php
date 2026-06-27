@@ -12,10 +12,12 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table]
 #[ORM\Index(columns: ['creation_date_time'])]
-#[ORM\Index(columns: ['user_id', 'path'], options:['lengths' => [null, 50]])]
+#[ORM\Index(columns: ['user_id', 'path_prefix'])]
 #[ORM\Entity(repositoryClass: SharingRepository::class)]
 class Sharing implements CacheKeyGetterInterface
 {
+    public const int PATH_PREFIX_LENGTH = 50;
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid')]
     private Uuid $id;
@@ -27,6 +29,9 @@ class Sharing implements CacheKeyGetterInterface
     #[ORM\Column(type: 'text')]
     private string $path;
 
+    #[ORM\Column(length: self::PATH_PREFIX_LENGTH)]
+    private string $pathPrefix;
+
     #[ORM\Column]
     private DateTimeImmutable $creationDateTime;
 
@@ -35,6 +40,7 @@ class Sharing implements CacheKeyGetterInterface
         $this->id = Uuid::v7();
         $this->user = $user;
         $this->path = $path;
+        $this->pathPrefix = mb_substr($path, 0, self::PATH_PREFIX_LENGTH);
         $this->creationDateTime = new DateTimeImmutable();
     }
 
