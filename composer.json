@@ -40,7 +40,7 @@
         "symfony/uid": "8.1.*",
         "symfony/twig-bundle": "8.1.*",
         "symfony/validator": "8.1.*",
-        "symfony/webpack-encore-bundle": "^2.4.0",
+        "symfony/webpack-encore-bundle": "^2.4.1",
         "symfony/yaml": "8.1.*",
         "twig/twig": "^3.27.1",
         "twig/cache-extra": "^3.24",
