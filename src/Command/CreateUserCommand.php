@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Athorrent\Command;
 
+use Athorrent\Database\Type\UserRole;
 use Athorrent\Security\UserManager;
+use Symfony\Component\Console\Attribute\Argument;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand('user:create', 'Create a user')]
 class CreateUserCommand extends Command
 {
     public function __construct(protected UserManager $userManager)
@@ -17,39 +18,16 @@ class CreateUserCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
+    public function __invoke(
+        #[Argument] string $username,
+        #[Argument] string $password,
+        #[Argument(suggestedValues: [self::class, 'suggestRoles'])] array $roles,
+    ): int
     {
-        $this
-            ->setName('user:create')
-            ->setDescription('Create a user')
-            ->addArgument(
-                'username',
-                InputArgument::REQUIRED
-            )
-            ->addArgument(
-                'password',
-                InputArgument::REQUIRED
-            )
-            ->addArgument(
-                'role',
-                InputArgument::REQUIRED
-            )
-            ->addOption(
-                'client-ip',
-                null,
-                InputArgument::REQUIRED,
-            );
-    }
+        $roles = array_map(UserRole::from(...), $roles);
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $username = $input->getArgument('username');
-        $password = $input->getArgument('password');
-        $role = $input->getArgument('role');
-        $clientIp = $input->getOption('client-ip');
+        $this->userManager->createUser($username, $password, $roles);
 
-        $this->userManager->createUser($username, $password, $role, $clientIp);
-
-        return 0;
+        return Command::SUCCESS;
     }
 }
