@@ -1,9 +1,9 @@
 import {DEFAULT_PASSWORD, DEFAULT_USERNAME, getLogoutButton} from "../support/commands";
-import {createAltUser} from "../support/utils";
+import {createAltUser, resetTestData} from "../support/utils";
 
 describe('user-management', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data?clear-all=false');
+        resetTestData();
         cy.login();
     });
 

@@ -3,23 +3,34 @@ configs:
     php_spx_config:
         file: ./conf/php/spx.ini
 
+volumes:
+    jackett_data:
+    session_data:
+
 x-php-base: &php-base
     build:
         target: dev
     env_file:
         - ../../.env.dev
-    volumes:
-        - ../..:/var/www/athorrent
     configs:
         -   source: php_spx_config
             target: /usr/local/etc/php/conf.d/spx.ini
 
 services:
+    jackett:
+        volumes:
+            - jackett_data:/config
+
     backend-manager:
         <<: *php-base
+        volumes:
+            - ../..:/var/www/athorrent
 
     php:
         <<: *php-base
+        volumes:
+            - ../..:/var/www/athorrent
+            - session_data:/var/lib/php/session
 
     nginx:
         build:

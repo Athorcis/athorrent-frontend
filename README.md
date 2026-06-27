@@ -88,6 +88,9 @@ From the project root:
 bash docker/scripts/up-env.sh dev
 ```
 
+This builds the images, runs `app:init` to create the database schema on first
+start (skipped if the database already exists), then starts the stack.
+
 The stack includes:
 
 - **reverse-proxy** (Caddy) — HTTPS termination at `https://athorrent.local`
@@ -119,13 +122,24 @@ composer install
 yarn install
 ```
 
-### 7. Initialize the database and create an admin user
+### 7. Database and admin user
 
-From the container shell:
+Database initialization is handled by `app:init`, which `up-env.sh` runs
+automatically before starting the stack. On first start, it creates the
+schema and a default `admin` / `test` account.
+
+To run it manually from the container shell:
 
 ```sh
-php bin/console doctrine:schema:create
-php bin/console user:create admin your-password ROLE_ADMIN
+php bin/console app:init
+```
+
+If the database is already initialized, the command does nothing.
+
+To create additional users:
+
+```sh
+php bin/console user:create username your-password ROLE_USER
 ```
 
 Available roles: `ROLE_USER`, `ROLE_ADMIN`.
@@ -150,8 +164,8 @@ Production build:
 yarn build
 ```
 
-Open [https://athorrent.local](https://athorrent.local) and log in with the
-account created above.
+Open [https://athorrent.local](https://athorrent.local) and log in with
+`admin` / `test` (or the account you created above).
 
 ## Dev container
 
@@ -171,7 +185,11 @@ Compose stack.
 bash docker/scripts/up-env.sh test
 ```
 
-This resets the test database and creates a default `admin` / `test` account.
+This runs `app:init --reset=full`, which drops and recreates the test
+database, clears user data, and creates a default `admin` / `test` account.
+
+During Cypress runs, each test suite resets data via `POST /tests/reset-data`,
+which performs a quicker reset that preserves the root user directory.
 
 Add `athorrent.local` to your hosts file (see above) if it is not already
 configured.

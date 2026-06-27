@@ -1,4 +1,5 @@
 import {uploadFile} from "../support/commands";
+import {resetTestData} from "../support/utils";
 
 function uploadAndShare(path) {
     const { basename, selector } = uploadFile(path);
@@ -15,7 +16,7 @@ function uploadAndShare(path) {
 
 describe('file-sharing', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data?clear-all=false');
+        resetTestData();
         cy.login();
     });
 

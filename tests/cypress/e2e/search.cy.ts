@@ -1,3 +1,4 @@
+import {resetTestData} from "../support/utils";
 
 function searchTorrents(query: string, source: string) {
     cy.visit('/search/');
@@ -12,7 +13,7 @@ function searchTorrents(query: string, source: string) {
 
 describe('search', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data?clear-all=false');
+        resetTestData();
         cy.login();
     });
 

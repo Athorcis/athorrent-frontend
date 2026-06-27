@@ -1,9 +1,9 @@
 import {ALT_PASSWORD, ALT_USERNAME, DEFAULT_PASSWORD, DEFAULT_USERNAME} from "../support/commands";
-import {checkIfFieldHasError, createUser} from "../support/utils";
+import {checkIfFieldHasError, createUser, resetTestData} from "../support/utils";
 
 describe('account-management', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data?clear-all=false');
+        resetTestData();
         cy.login();
     });
 

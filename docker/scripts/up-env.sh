@@ -34,11 +34,14 @@ upEnv() {
     fi
 
     docker compose "${composeArgs[@]}" create --build --pull always
+    local initArgs=()
 
     if [ "$env" = test ]
     then
-        docker compose "${composeArgs[@]}" run --rm -e APP_INIT=true php php bin/console tests:data:reset -v
+        initArgs+=(--reset=full)
     fi
+
+    docker compose "${composeArgs[@]}" run --user www-data --rm php php bin/console app:init "${initArgs[@]}" -v
 
     docker compose "${composeArgs[@]}" up -d
 }
