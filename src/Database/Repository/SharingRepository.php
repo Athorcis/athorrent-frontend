@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Athorrent\Database\Repository;
 
+use Athorrent\Database\Entity\Sharing;
 use Athorrent\Database\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -24,6 +25,7 @@ class SharingRepository extends EntityRepository implements DeletableRepositoryI
 
         $qb->where(
             $qb->expr()->eq('s.user', ':user'),
+            $qb->expr()->like('s.pathPrefix', ':pathPrefix'),
             $qb->expr()->orX(
                 $qb->expr()->eq('s.path', ':path'),
                 $qb->expr()->like('s.path', ':root')
@@ -31,6 +33,7 @@ class SharingRepository extends EntityRepository implements DeletableRepositoryI
         );
 
         $qb->setParameter('user', $user);
+        $qb->setParameter('pathPrefix', mb_substr($root, 0, Sharing::PATH_PREFIX_LENGTH) . '%');
         $qb->setParameter('path', $root);
         $qb->setParameter('root', $root . '/%');
 
