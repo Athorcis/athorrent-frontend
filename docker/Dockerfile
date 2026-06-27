@@ -29,6 +29,12 @@ RUN set -ex ;\
     chown $RUN_USER /var/lib/php/session
 VOLUME ["/var/lib/php/session"]
 
+ARG RUN_DIR
+RUN set -ex ;\
+    mkdir -p "$RUN_DIR/var/lib" "$RUN_DIR/var/user" ;\
+    chown $RUN_USER -R $RUN_DIR
+VOLUME ["$RUN_DIR/var/lib", "$RUN_DIR/var/user"]
+
 FROM base AS builder
 
 RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
@@ -103,14 +109,10 @@ COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public
 ARG RUN_USER
 ARG SYMFONY_APP_ENV
 RUN set -ex ;\
-    mkdir -p var/lib var/user ;\
-    chown $RUN_USER var/lib var/user ;\
     # If we don't create the database first warmup doesn't create all metadata cache \
     APP_SECRET=dummy php bin/console doctrine:schema:create --env=$SYMFONY_APP_ENV -v ;\
     php bin/console cache:warmup --env=$SYMFONY_APP_ENV -v;\
     rm -rf "var/lib/"* "var/log/"*
-
-VOLUME ["$RUN_DIR/var/lib", "$RUN_DIR/var/user"]
 
 FROM builder AS dev
 

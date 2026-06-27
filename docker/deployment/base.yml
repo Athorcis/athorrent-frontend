@@ -48,8 +48,6 @@ services:
         volumes:
             - db_data:/var/www/athorrent/var/lib
             - user_data:/var/www/athorrent/var/user
-        depends_on:
-            - jackett
 
     nginx:
         build:

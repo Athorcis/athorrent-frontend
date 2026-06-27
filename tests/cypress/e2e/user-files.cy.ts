@@ -1,4 +1,5 @@
 import {uploadFile, uploadFiles} from "../support/commands";
+import {resetTestData} from "../support/utils";
 
 
 function waitForPlayerStart(selector: string) {
@@ -17,7 +18,7 @@ function waitForPlayerStart(selector: string) {
 
 describe('user-files', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data?clear-all=false');
+        resetTestData();
         cy.login();
         cy.visit('/user/files');
     });

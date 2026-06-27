@@ -1,8 +1,9 @@
 import {getFileSelector} from "../support/commands";
+import {resetTestData} from "../support/utils";
 
 describe('torrents', () => {
     beforeEach(() => {
-        cy.request('POST', '/tests/reset-data?clear-all=false');
+        resetTestData();
         cy.login();
         cy.visit('/user/torrents/');
     });

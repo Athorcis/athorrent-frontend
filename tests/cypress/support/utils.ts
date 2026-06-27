@@ -1,5 +1,11 @@
 import {ALT_PASSWORD, ALT_USERNAME} from "./commands";
 
+export function resetTestData() {
+    cy.request('POST', '/tests/reset-data').then((response) => {
+        expect(response.status).to.eq(200);
+    });
+}
+
 export function createUser(username: string, password: string) {
     cy.visit('/administration/users/add');
 

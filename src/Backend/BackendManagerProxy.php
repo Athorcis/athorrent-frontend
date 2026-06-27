@@ -5,16 +5,25 @@ declare(strict_types=1);
 namespace Athorrent\Backend;
 
 use Athorrent\Database\Entity\User;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Throwable;
 
 class BackendManagerProxy
 {
-    public function __construct(private HttpClientInterface $http)
+    private bool $allowTransportExceptions = false;
+
+    public function __construct(
+        private HttpClientInterface $http,
+        private LoggerInterface $logger,
+    )
     {
 
+    }
+
+    public function setAllowTransportExceptions(bool $allowTransportExceptions): void
+    {
+        $this->allowTransportExceptions = $allowTransportExceptions;
     }
 
     protected function request(string $method, string $path, array $options = [])
@@ -23,17 +32,11 @@ class BackendManagerProxy
             $this->http->request($method, sprintf('http://%s:8080', $_ENV['BACKEND_MANAGER_HOST']) . $path, $options);
         }
         catch (TransportExceptionInterface $e) {
-            if (str_starts_with($e->getMessage(), 'Failed to connect to')) {
+            if ($this->allowTransportExceptions) {
+                $this->logger->notice(sprintf('Failed to connect to backend manager : %s', $e->getMessage()));
                 return;
             }
 
-            throw $e;
-        }
-        catch (ServerExceptionInterface $e) {
-            dump($e->getResponse()->getContent(false));
-        }
-        catch (Throwable $e) {
-            dump($e);
             throw $e;
         }
     }
