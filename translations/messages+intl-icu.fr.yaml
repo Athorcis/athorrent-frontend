@@ -21,6 +21,7 @@ error:
 
 common:
     close: Fermer
+    cancel: Annuler
 
 app:
     name: Athorrent
@@ -32,12 +33,10 @@ nav:
     torrents: Torrents
     sharings: Partages
     search: Recherche
-    administration: Administration
-
-    nickname: Pseudo
-    password: Mot de passe
+    users: Utilisateurs
+    menu: Menu
     account: Mon compte
-    login: Connexion
+    mySpace: Mon espace
     logout: Déconnexion
     exit: Retour
 
@@ -68,8 +67,18 @@ home:
         content: |
             Vous aimez le logiciel libre? Nous aussi, c'est pour cette raison que nous avons décidé de publier le code source d'Athorrent sur {a_start}GitHub{a_end}, pour que vous puissiez l'utiliser sur votre propre serveur ou même tout simplement contribuer au projet.
 
+login:
+    title: Connexion
+    username: Nom d'utilisateur
+    password: Mot de passe
+    remember_me: Se souvenir de moi
+    submit: Connexion
+
 files:
     title: Fichiers
+    name: Nom
+    size: Taille
+    uploaded: Envoyé
     root: Racine
     parentDirectory: Dossier parent
     open: Ouvrir
@@ -89,10 +98,15 @@ files:
 
 torrents:
     title: Torrents
-    advanced: Avancé
+    advanced: Interface avancée
     panelClose: Fermer
     dropzone: Déposez des fichiers ou cliquez pour les sélectionner
     add: Ajouter
+    addTorrent: Ajouter un torrent
+    addMagnet: Ajouter un magnet
+    magnetModal:
+        title: Ajouter un lien magnet
+        subtitle: Collez un ou plusieurs liens magnet, un par ligne.
     size: Taille
     dl: DL
     ul: UL
@@ -121,20 +135,6 @@ torrents:
         error: Erreur
         missing_files: Fichiers manquants
         unknown: Inconnu
-
-    tabMain:
-        title: Général
-
-    tabTrackers:
-        title: Trackers
-        url: URL
-        state: Etat
-        peers: Peers
-        seeds: Seeds
-        message: Message
-
-    tabPeers:
-        title: Peers
 
 search:
     title: Recherche

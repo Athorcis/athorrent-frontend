@@ -10,68 +10,52 @@
 {% endif %}
 
 {% cache cache_key('nav', roles) %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{{ path('home') }}">{{ 'app.name'|trans }}</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                {% if is_granted('ROLE_USER') %}
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="{{ path('listFiles', { _prefixId: 'files' }) }}">{{ 'nav.files'|trans }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('listTorrents') }}">{{ 'nav.torrents'|trans }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('listSharings') }}">{{ 'nav.sharings'|trans }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('showSearch') }}">{{ 'nav.search'|trans }}</a>
-                        </li>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li>
-                                <a href="{{ path('listAdministrationModules') }}">{{ 'nav.administration'|trans }}</a>
-                            </li>
-                        {% endif %}
-                    </ul>
 
-                    <div class="navbar-form navbar-right">
-                        <span class="btn-group">
-                            <a href="{{ path('editAccount') }}" class="btn btn-success">{{ 'nav.account'|trans }}</a>
+    <nav class="sidebar" id="sidebar-nav">
+        <header>
+            <a class="brand" href="{{ path('home') }}">
+                <img src="{{ asset('build/logo-small.png') }}" />
+                {{ 'app.name'|trans }}
+            </a>
+        </header>
 
-                            {% if is_granted('IS_IMPERSONATOR') %}
-                                <a href="{{ impersonation_exit_path() }}" class="btn btn-danger" title="{{ 'nav.exit'|trans }}">
-                                    <span class="fa fa-sign-out-alt"></span>
-                                </a>
-                            {% else %}
-                                <a href="{{ path('_logout_main') }}" class="btn btn-danger" title="{{ 'nav.logout'|trans }}">
-                                    <span class="fa fa-sign-out-alt"></span>
-                                </a>
-                            {% endif %}
-                        </span>
-                    </div>
-                {% else %}
-                    <form class="navbar-form navbar-right" action="{{ path('login_check') }}" method="post">
-                        <div class="form-group">
-                            <input type="text" placeholder="{{ 'nav.nickname'|trans }}" class="form-control" name="_username" />
-                        </div>
-                        <div class="form-group">
-                            <input type="password" placeholder="{{ 'nav.password'|trans }}" class="form-control" name="_password" />
-                        </div>
+        {% set navItems = [
+            { route: 'files_listFiles', activePrefix: 'files_', icon: 'directory', label: 'nav.files' },
+            { route: 'listTorrents', activePrefix: 'torrents_', icon: 'torrents', label: 'nav.torrents' },
+            { route: 'showSearch', activePrefix: 'search_', icon: 'search', label: 'nav.search' },
+            { route: 'listSharings', activePrefix: 'sharings_', icon: 'link', label: 'nav.sharings' },
+        ] %}
 
-                        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}" />
+        {% if is_granted('ROLE_ADMIN') %}
+            {% set navItems = navItems|merge([
+                { route: 'listUsers', activePrefix: 'users_', icon: 'users', label: 'nav.users' },
+            ]) %}
+        {% endif %}
 
-                        <button type="submit" class="btn btn-success">{{ 'nav.login'|trans }}</button>
-                    </form>
-                {% endif %}
-            </div>
-        </div>
+        <ul>
+            {% set currentPrefix = app.request.attributes.get('_prefixId') %}
+            {% for item in navItems %}
+                <li>
+                    <a class="button {% if currentPrefix === item.activePrefix %}active{% endif %}" href="{{ path(item.route) }}">{{ ux_icon(item.icon) }}{{ item.label|trans }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <footer>
+            <a href="{{ path('editAccount') }}" class="button account-button">
+                <span class="user-icon">{{ ux_icon('user') }}</span>
+                {{ 'nav.account'|trans }}
+            </a>
+
+            {% if is_granted('IS_IMPERSONATOR') %}
+                <a href="{{ impersonation_exit_path() }}" class="button icon-only exit-impersonation-button" title="{{ 'nav.exit'|trans }}">
+                    {{ ux_icon('sign-out') }}
+                </a>
+            {% else %}
+                <a href="{{ path('_logout_main') }}" class="button icon-only logout-button" title="{{ 'nav.logout'|trans }}">
+                    {{ ux_icon('sign-out') }}
+                </a>
+            {% endif %}
+        </footer>
     </nav>
 {% endcache %}

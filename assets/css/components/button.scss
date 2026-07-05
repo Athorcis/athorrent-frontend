@@ -1,0 +1,55 @@
+@use "../vars" as *;
+@use "input" as *;
+
+button,
+.button {
+    @extend %input;
+
+    border: 0;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.462em;
+    font-weight: 500;
+    transition: background,color  0.15s ease;
+
+    --bg-color: transparent;
+    --color: #{$color-text-muted};
+    --hover-bg-color: #{$color-surface-14};
+    --hover-color: #{$color-text};
+
+    &:hover {
+        text-decoration: none;
+        background-color: var(--hover-bg-color);
+        color: var(--hover-color);
+    }
+
+    &[disabled] {
+        cursor: not-allowed;
+        background-color: transparent;
+        color: $color-text-disabled;
+    }
+
+    &.primary {
+        --bg-color: #{$color-primary};
+        --color: #{$color-white};
+        --hover-bg-color: #{color-mix(in srgb, $color-primary 88%, $color-text)};
+        --hover-color: #{$color-white};
+    }
+
+    &.danger {
+        --color: #{$color-danger};
+        --hover-bg-color: #{$color-danger};
+        --hover-color: #{$color-white};
+    }
+
+    &.icon-only {
+        width: 2.154em;
+        padding: 0 0.577em;
+    }
+
+    svg {
+        width: 1em; height: 1em;
+    }
+}

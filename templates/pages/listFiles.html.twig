@@ -16,31 +16,27 @@
         <h1 title="{{ title}}">{{ title }}</h1>
 
         {% if dir.writable %}
-            <div class="dropdown">
-                <button type="button" class="btn btn-default dropdown-toggle add-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="fa fa-plus"></span>{{ 'files.add'|trans }}
-                </button>
-                <ul class="dropdown-menu pull-right">
-                    <li>
-                        <a href="#" class="add-file">
-                            <span class="far fa-file"></span>{{ 'files.addFile'|trans }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="add-directory">
-                            <span class="far fa-folder-open"></span>{{ 'files.addDirectory'|trans }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <button class="primary add-button" popovertarget="add-button-popover">
+                {{ ux_icon('plus') }}{{ 'files.add'|trans }}
+            </button>
+            <ul class="dropdown-menu" id="add-button-popover" popover>
+                <li>
+                    <button class="add-file">
+                        {{ ux_icon('file') }}{{ 'files.addFile'|trans }}
+                    </button>
+                </li>
+                <li>
+                    <button class="add-directory">
+                        {{ ux_icon('directory') }}{{ 'files.addDirectory'|trans }}
+                    </button>
+                </li>
+            </ul>
         {% endif %}
+
+        {% include 'fragments/breadcrumb.html.twig' %}
     </header>
 
-    {% include 'fragments/breadcrumb.html.twig' %}
-
-    <table class="file-list">
-        {% include 'fragments/listFiles.html.twig' %}
-    </table>
+    {% include 'fragments/listFiles.html.twig' %}
 {% endblock %}
 
 {% block templates %}

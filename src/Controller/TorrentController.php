@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route(path: '/user/torrents', name: 'torrents')]
+#[Route(path: '/user/torrents', name: 'torrents_')]
 class TorrentController extends AbstractController
 {
     public function __construct(private readonly LoggerInterface $logger)
@@ -72,29 +72,19 @@ class TorrentController extends AbstractController
             'backend_updating' => $backendUpdating,
             'backend_stopped' => $backendStopped,
             'alert_level' => $alertLevel,
-            '_strings' => ['torrents.dropzone', 'error.unknownError', 'error.notATorrent', 'error.fileTooBig', 'error.serverError', 'error.title']
+            '_strings' => [
+                'torrents.dropzone',
+                'torrents.magnetModal.title',
+                'torrents.magnetModal.subtitle',
+                'torrents.add',
+                'common.cancel',
+                'error.unknownError',
+                'error.notATorrent',
+                'error.fileTooBig',
+                'error.serverError',
+                'error.title',
+            ]
         ]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    #[Route(path: '/{hash}/trackers', methods: 'GET', options: ['expose' => true])]
-    public function listTrackers(TorrentManagerInterface $torrentManager, string $hash): View
-    {
-        $trackers = $torrentManager->listTrackers($hash);
-
-        foreach ($trackers as &$tracker) {
-            if ($tracker['peers'] === -1) {
-                $tracker['peers'] = '-';
-            }
-
-            if ($tracker['seeds'] === -1) {
-                $tracker['seeds'] = '-';
-            }
-        }
-
-        return new View(ViewType::Fragment, ['trackers' => $trackers]);
     }
 
     /**
@@ -108,7 +98,7 @@ class TorrentController extends AbstractController
     ): array
     {
         /** @var UploadedFile $file */
-        $file = $request->files->get('upload-torrent-file');
+        $file = $request->files->get('file');
 
         $violations = $validator->validate($file, [
             new Assert\NotBlank(message: 'error.fileRequired'),
@@ -126,9 +116,23 @@ class TorrentController extends AbstractController
             throw new BadRequestException($violations[0]->getMessage());
         }
 
-        $torrentManager->storeUploadedTorrentFile($file);
+        $path = $file->getRealPath();
 
-        return [];
+        try {
+            $result = $torrentManager->addTorrentFromFile($path);
+        }
+        catch (TorrentAlreadyAdded) {
+            // NOOP
+        }
+        catch (ClientException $e) {
+            if ($e->getResponse()->getStatusCode() === 415) {
+                throw new UserVisibleException("error.invalidTorrentFile");
+            }
+
+            throw $e;
+        }
+
+        return ['hash' => $result['hash'] ?? null];
     }
 
     /**
@@ -136,67 +140,23 @@ class TorrentController extends AbstractController
      */
     #[Route(path: '/magnet', methods: 'GET')]
     public function addMagnet(
-        TorrentManagerInterface $torrentManager,
         #[MapQueryParameter] ?string $magnet = null,
-        ): RedirectResponse
+    ): RedirectResponse
     {
-        if ($magnet) {
-            $torrentManager->addTorrentFromMagnet($magnet);
-        }
+        $parameters = $magnet !== null ? ['magnet' => $magnet] : [];
 
-        return new RedirectResponse($this->generateUrl('listTorrents', [], UrlGeneratorInterface::RELATIVE_PATH));
+        return new RedirectResponse($this->generateUrl('listTorrents', $parameters, UrlGeneratorInterface::RELATIVE_PATH));
     }
 
     /**
      * @throws Exception
      */
-    #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
-    public function addTorrents(Request $request, TorrentManagerInterface $torrentManager): array
+    #[Route(path: '/magnets', methods: 'POST', options: ['expose' => true])]
+    public function addMagnets(Request $request, TorrentManagerInterface $torrentManager): array
     {
-        $files = $request->request->all('add-torrent-files');
-        $magnets = $request->request->all('add-torrent-magnets');
-
-        $torrentsDir = $torrentManager->getTorrentsDirectory();
+        $magnets = $request->request->all('magnets');
 
         $torrentIds = [];
-        $usedFileHashes = [];
-
-        foreach ($files as $file) {
-            $torrentPath = Path::makeAbsolute($file, $torrentsDir);
-
-            if (!Path::isBasePath($torrentsDir, $torrentPath)) {
-                throw new AccessDeniedHttpException();
-            }
-
-            if (file_exists($torrentPath)) {
-                $fileHash = md5_file($torrentPath);
-
-                if (in_array($fileHash, $usedFileHashes, true)) {
-                    continue;
-                }
-
-                try {
-                    $result = $torrentManager->addTorrentFromFile($torrentPath);
-                }
-                catch (TorrentAlreadyAdded) {
-                    // NOOP
-                }
-                catch (ClientException $e) {
-                    if ($e->getResponse()->getStatusCode() === 415) {
-                        throw new UserVisibleException("error.invalidTorrentFile");
-                    }
-
-                    throw $e;
-                }
-
-                $usedFileHashes[] = $fileHash;
-
-                if (isset($result['hash'])) {
-                    $torrentIds[] = $result['hash'];
-                }
-            }
-        }
-
         $usedMagnets = [];
 
         foreach ($magnets as $magnet) {

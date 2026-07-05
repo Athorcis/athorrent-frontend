@@ -1,15 +1,25 @@
-{% for file in files %}
-    {% if file.isCachable %}
-        {% cache cache_key('file', file) %}
-            {% include 'fragments/file.html.twig' %}
-        {% endcache %}
-    {% else %}
-        {% include 'fragments/file.html.twig' %}
-    {% endif %}
+{% if files|length > 0 %}
+    <table class="file-list">
+        <thead>
+        <tr>
+            <th></th>
+            <th class="file-name text-left">{{ 'files.name'|trans }}</th>
+            <th class="file-size">{{ 'files.size'|trans }}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+                {% if file.isCachable %}
+                    {% cache cache_key('file', file) %}
+                        {% include 'fragments/file.html.twig' %}
+                    {% endcache %}
+                {% else %}
+                    {% include 'fragments/file.html.twig' %}
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
 {% else %}
-    <tr>
-        <td>
-            <div class="alert alert-info" role="alert">{{ 'files.none'|trans }}</div>
-        </td>
-    </tr>
-{% endfor %}
+    <div class="alert alert-info" role="alert">{{ 'files.none'|trans }}</div>
+{% endif %}

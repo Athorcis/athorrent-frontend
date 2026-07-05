@@ -1,0 +1,26 @@
+@use "../vars" as *;
+
+%input-like {
+    --bg-color: #{$color-surface-8};
+    --color: #{$color-text};
+
+    border-radius: $radius-control;
+    height: 2.154em;
+    border: $border;
+    background: var(--bg-color);
+    color: var(--color);
+    font-size: $font-size-base;
+    padding: 0 0.769em;
+}
+
+%focusable {
+    &:focus-visible {
+        outline: 1px solid $color-primary;
+        outline-offset: 2px;
+    }
+}
+
+%input {
+    @extend %input-like;
+    @extend %focusable;
+}

@@ -39,12 +39,12 @@ describe('torrents', () => {
         const selector = getFileSelector('Sintel');
 
         cy.get(selector).should('exist');
-        cy.get(`${selector} .file-remove`).should('not.exist');
+        cy.get(`${selector} .file-remove`).should('be.disabled');
     });
 
     it('should fail for invalid torrent file', function() {
         cy.torrentFile('invalid.torrent', false);
-        cy.expectModal('Fichier torrent invalide');
+        cy.expectModal('Fichier torrent invalide', '.file-upload__error');
     });
 
 
@@ -58,13 +58,6 @@ describe('torrents', () => {
     it ('should fail for invalid magnet uri', function() {
         cy.torrentMagnet('magnet:?', false);
         cy.expectModal('Lien magnet invalide');
-    });
-
-    it('should show list of trackers', function() {
-        cy.torrentFile('sintel.torrent');
-
-        cy.get('.torrent-detail').click();
-        cy.get('#torrent-trackers tbody').should('have.descendants', 'tr');
     });
 
     it('should allow access to qbittorrent web version', function () {

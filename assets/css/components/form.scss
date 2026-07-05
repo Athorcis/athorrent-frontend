@@ -1,0 +1,72 @@
+@use "../vars" as *;
+@use "input" as *;
+
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+    @extend %input;
+}
+
+input[type="checkbox"] {
+    @extend %focusable;
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-field {
+    label {
+        color: $color-text-muted;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+        display: block;
+        width: 100%;
+    }
+
+    &.has-error {
+        input[type="text"],
+        input[type="password"],
+        select,
+        textarea {
+            border-color: $color-alert-danger-border;
+            --bg-color: #{$color-alert-danger-bg};
+        }
+    }
+}
+
+.form-field-error {
+    color: $color-danger;
+    font-size: $font-size-sm;
+    line-height: 1.4;
+    margin-top: 5px;
+    list-style: none;
+
+    li + li {
+        margin-top: 2px;
+    }
+}
+
+.form-control {
+    margin-left: auto;
+    margin-top: 6px;
+}
+
+.form-field-checkbox {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+
+    label {
+        margin-bottom: 0;
+        margin-left: 7px;
+    }
+}

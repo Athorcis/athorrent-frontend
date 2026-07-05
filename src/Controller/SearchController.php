@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 
-#[Route(path: '/search', name: 'search')]
+#[Route(path: '/search', name: 'search_')]
 class SearchController extends AbstractController
 {
     #[Route(path: '/', methods: 'GET')]
@@ -35,7 +35,11 @@ class SearchController extends AbstractController
             'query' => $query,
             'source' => $source,
             'sources' => $sources,
-            'results' => $results
+            'results' => $results,
+            '_strings' => [
+                'torrents.magnetModal.title',
+                'error.unknownError',
+            ],
         ], 'showSearch');
     }
 }

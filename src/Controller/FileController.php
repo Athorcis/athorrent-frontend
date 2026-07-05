@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route(path: '/user/files', name: 'files')]
+#[Route(path: '/user/files', name: 'files_')]
 class FileController extends AbstractFileController
 {
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]

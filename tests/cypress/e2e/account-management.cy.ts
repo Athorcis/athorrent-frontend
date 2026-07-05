@@ -49,7 +49,7 @@ describe('account-management', () => {
         cy.get('#edit_account_current_password').type(DEFAULT_PASSWORD);
         cy.get('#edit_account_update').click();
 
-        checkIfFieldHasError('#edit_account_username_error1');
+        checkIfFieldHasError('#edit_account_username');
     });
 
     it('should validate password', () => {

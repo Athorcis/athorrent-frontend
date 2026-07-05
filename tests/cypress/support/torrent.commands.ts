@@ -16,14 +16,13 @@ declare namespace Cypress {
 function addTorrent(callback: () => void, shouldExist: boolean): Chainable<number|undefined> {
     cy.url().should('contain', '/user/torrents');
 
-    cy.intercept('POST', '/user/torrents').as('addTorrents');
-
     callback();
 
     const res = cy.wait('@addTorrents').then(interception => {
 
         if (interception.response.statusCode === 200) {
-            return interception.response.body.data.torrentIds[0] ?? null;
+            const {data} = interception.response.body;
+            return data.torrentIds?.[0] ?? data.hash ?? null;
         }
 
         return null;
@@ -39,17 +38,16 @@ function addTorrent(callback: () => void, shouldExist: boolean): Chainable<numbe
 }
 
 function submitTorrentFile(filename: string) {
-    cy.get('#add-torrent-file').click();
+    cy.intercept('POST', '/user/torrents/files').as('addTorrents');
+    cy.dropdownItem('.add-torrent', '.main-header').click();
     cy.get('input[type="file"]').selectFile(`cypress/fixtures/torrents/${filename}`, { force: true });
-    cy.get('#add-torrent-file-counter').should('have.text', '(1)');
-    cy.get('#add-torrent-submit').click();
 }
 
 function submitMagnetUri(uri: string) {
-    cy.get('#add-torrent-magnet').click();
-    cy.get('#add-torrent-magnet-input').type(uri, { delay: 0 });
-    cy.get('#add-torrent-magnet-counter').should('have.text', '(1)');
-    cy.get('#add-torrent-submit').click();
+    cy.intercept('POST', '/user/torrents/magnets').as('addTorrents');
+    cy.dropdownItem('.add-magnet', '.main-header').click();
+    cy.get('dialog textarea').type(uri, { delay: 0 });
+    cy.get('dialog button.primary').click();
 }
 
 function getTorrentElement(id: number) {

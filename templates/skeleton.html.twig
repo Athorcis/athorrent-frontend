@@ -34,17 +34,26 @@
             data-athorrent="{{ js_vars|json_encode }}"
         {% endif %}
     >
-        {% include 'nav.html.twig' %}
+        {% set navbar_visible = is_auth_required() %}
+        {% include 'top-bar.html.twig' %}
 
-        <div class="container">
-            <div class="alert-stack">
+        <div class="main-layout">
+            {% if navbar_visible %}
+                {% include 'nav.html.twig' %}
+                <div class="sidebar-backdrop"></div>
+            {% endif %}
+
+            <div class="container">
                 {% if notifications is defined %}
-                    {% include 'notifications.html.twig' %}
+                    <div class="alert-stack">
+                        {% include 'notifications.html.twig' %}
+                    </div>
                 {% endif %}
-            </div>
 
-            {% block content %}{% endblock %}
+                {% block content %}{% endblock %}
+            </div>
         </div>
+
 
         {% cache cache_key('footer', route) %}
             {% block templates %}

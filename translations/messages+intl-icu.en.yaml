@@ -21,6 +21,7 @@ error:
 
 common:
     close: Close
+    cancel: Cancel
 
 app:
     name: Athorrent
@@ -32,12 +33,11 @@ nav:
     torrents: Torrents
     sharings: Sharings
     search: Search
-    administration: Administration
+    users: Users
 
-    nickname: Nickname
-    password: Password
+    menu: Menu
     account: My account
-    login: Login
+    mySpace: My space
     logout: Logout
     exit: Exit
 
@@ -69,8 +69,18 @@ home:
             Do you like open source? So do we, that's why we decided to publish the source code of Athorrent on {a_start}GitHub{a_end},
             so that you can use it on your own server or just contribute to the project.
 
+login:
+    title: Login
+    username: Username
+    password: Password
+    remember_me: Remember me
+    submit: Login
+
 files:
     title: Files
+    name: Name
+    size: Size
+    uploaded: Uploaded
     root: Root
     parentDirectory: Parent directory
     open: Open
@@ -90,10 +100,15 @@ files:
 
 torrents:
     title: Torrents
-    advanced: Advanced
+    advanced: Advanced interface
     panelClose: Close
     dropzone: Drop files here or click to select them
     add: Add
+    addTorrent: Add a torrent
+    addMagnet: Add a magnet
+    magnetModal:
+        title: Add a magnet link
+        subtitle: Paste one or more magnet links, one per line.
     size: Size
     dl: DL
     ul: UL
@@ -122,20 +137,6 @@ torrents:
         error: Error
         missing_files: Missing files
         unknown: Unknown
-
-    tabMain:
-        title: Main
-
-    tabTrackers:
-        title: Trackers
-        url: URL
-        state: State
-        peers: Peers
-        seeds: Seeds
-        message: Message
-
-    tabPeers:
-        title: Peers
 
 search:
     title: Search

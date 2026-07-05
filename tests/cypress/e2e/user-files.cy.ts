@@ -1,4 +1,4 @@
-import {uploadFile, uploadFiles} from "../support/commands";
+    import {uploadFile, uploadFiles} from "../support/commands";
 import {resetTestData} from "../support/utils";
 
 
@@ -81,7 +81,7 @@ describe('user-files', () => {
             cy.dropdownItem('.display-file', selector, true).click();
 
             cy.get('h1').should('have.text', basename);
-            cy.get('img').should('have.attr', 'src').and('equal', href);
+            cy.get('.container img').should('have.attr', 'src').and('equal', href);
         });
     });
 

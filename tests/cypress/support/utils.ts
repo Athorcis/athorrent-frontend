@@ -22,5 +22,5 @@ export function createAltUser() {
 }
 
 export function checkIfFieldHasError(selector: string) {
-    cy.get(selector).parents('.form-group').should('have.class', 'has-error');
+    cy.get(selector).parents('.form-field').should('have.class', 'has-error');
 }

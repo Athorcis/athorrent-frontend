@@ -12,19 +12,19 @@
 {% endblock %}
 
 {% block content %}
-    <form method="get" class="input-group search-control">
-        <select class="form-control" name="source">
+    <header class="main-header">
+        <h1>{{ 'search.title'|trans }}</h1>
+    </header>
+
+    <form method="get" class="search-control">
+        <select name="source">
             <option value="all"{% if source == 'all' %} selected{% endif %}>{{ 'search.all-sources'|trans }}</option>
             {% for s in sources %}
                 <option value="{{ s.id }}"{% if s.id == source %} selected{% endif %}>{{ s.name }}</option>
             {% endfor %}
         </select>
-        <div class="input-expander">
-            <input type="text" class="form-control" name="q" placeholder="{{ 'search.keywords'|trans }}" value="{{ query }}" />
-        </div>
-        <span class="input-group-btn">
-            <button class="btn btn-default">{{ 'search.submit'|trans }}</button>
-        </span>
+        <input type="text" name="q" placeholder="{{ 'search.keywords'|trans }}" value="{{ query }}" />
+        <button class="primary">{{ 'search.submit'|trans }}</button>
     </form>
 
     {% if query is not empty %}

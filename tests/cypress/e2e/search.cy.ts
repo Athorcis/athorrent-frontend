@@ -33,7 +33,9 @@ describe('search', () => {
         searchTorrents('debian');
 
         cy.get('tbody > tr:first-child td:first-child a').invoke('text').then(function (name) {
+            cy.intercept('POST', '/user/torrents/magnets').as('addTorrents');
             cy.get('tbody > tr:first-child .col-add-magnet > a').click();
+            cy.wait('@addTorrents');
             cy.get('.torrent-name').should('have.text', name);
         });
     });

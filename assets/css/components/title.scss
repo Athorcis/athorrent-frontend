@@ -1,0 +1,9 @@
+@use "../vars" as *;
+
+h1 {
+    font-size: $font-size-2xl;
+    line-height: 30px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

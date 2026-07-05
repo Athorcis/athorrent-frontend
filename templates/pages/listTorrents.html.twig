@@ -12,38 +12,36 @@
 {% endblock %}
 
 {% block content %}
-{% include "fragments/addTorrents.html.twig" %}
-    <h1>
-        {{ 'torrents.title'|trans }}
+    <header class="main-header">
+        <h1>
+            {{ 'torrents.title'|trans }}
+        </h1>
 
         {% if app.user.clientType === 'qbittorrent' %}
-            <a href="{{ path('proxyToQBittorrent', { path: ''}) }}" target="_blank" class="btn btn-default open-qbittorrent-ui">
-                {{ 'torrents.advanced'|trans }}
+            <a href="{{ path('proxyToQBittorrent', { path: ''}) }}" target="_blank" class="button open-qbittorrent-ui">
+                {{ ux_icon('open') }}{{ 'torrents.advanced'|trans }}
             </a>
         {% endif %}
-    </h1>
+
+        <button class="primary add-button" popovertarget="add-button-popover">
+            {{ ux_icon('plus') }}{{ 'files.add'|trans }}
+        </button>
+        <ul class="dropdown-menu" id="add-button-popover" popover>
+            <li>
+                <button class="add-torrent">
+                    {{ ux_icon('file') }}{{ 'torrents.addTorrent'|trans }}
+                </button>
+            </li>
+            <li>
+                <button class="add-magnet">
+                    {{ ux_icon('magnet') }}{{ 'torrents.addMagnet'|trans }}
+                </button>
+            </li>
+        </ul>
+    </header>
 
     <div class="torrent-list">
         {% include "fragments/listTorrents.html.twig" %}
-    </div>
-
-    <div class="torrent-panel panel-fixed-bottom">
-        <div class="torrent-panel-header">
-            <ul class="nav nav-tabs">
-                {#<li role="presentation"><a href="#torrent-general">{{ 'torrents.tabMain.title'|trans }}</a></li>#}
-                <li role="presentation" class="active"><a href="#torrent-trackers">{{ 'torrents.tabTrackers.title'|trans }}</a></li>
-                <li role="presentation"><a href="#torrent-peers">{{ 'torrents.tabPeers.title'|trans }}</a></li>
-            </ul>
-            <button type="button" class="close torrent-panel-close" aria-label="{{ 'torrents.panelClose'|trans }}">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-        <div class="tab-content">
-            {#<div role="tabpanel" class="tab-pane" id="torrent-general">...</div>#}
-            <div role="tabpanel" class="tab-pane active" id="torrent-trackers"></div>
-            <div role="tabpanel" class="tab-pane" id="torrent-peers">...</div>
-        </div>
     </div>
 {% endblock %}
 

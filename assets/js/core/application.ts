@@ -2,8 +2,6 @@ import {Translator} from './translator';
 import {Router} from './router';
 import {SecurityManager} from './security-manager';
 import {AbstractPage} from './abstract-page';
-import 'jquery';
-import 'bootstrap-sass';
 import {UiManager} from './ui-manager';
 
 export class Application {

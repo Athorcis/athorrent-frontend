@@ -1,4 +1,3 @@
-import '../css/users.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
@@ -40,7 +39,7 @@ class UsersPage extends AbstractPage {
                 userId: this.getUserId(target)
             });
 
-            this.ui.showModal('users.newPasswordModalTitle', data.password);
+            this.ui.showModal({ title: 'users.newPasswordModalTitle', content: data.password });
         }
     }
 }

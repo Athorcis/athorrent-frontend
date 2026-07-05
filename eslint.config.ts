@@ -10,7 +10,8 @@ export default tseslint.config(
             "no-magic-numbers": ["warn", { "ignore": [-1, 0, 1] }],
             "prefer-const": ["error", {
                 "destructuring": "all"
-            }]
+            }],
+            "@typescript-eslint/no-unused-vars": ["error", { "args": "none" }]
         },
     }
 );

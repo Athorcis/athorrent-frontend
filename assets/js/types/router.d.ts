@@ -31,7 +31,7 @@ interface ApiSuccessResponse<T> {
 interface ApiErrorResponse {
     status: 'error';
     code?: string;
-    message?: string;
+    error?: string;
 }
 
 type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;

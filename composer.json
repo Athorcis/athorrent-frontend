@@ -37,15 +37,16 @@
         "symfony/runtime": "8.1.*",
         "symfony/security-bundle": "8.1.*",
         "symfony/translation": "8.1.*",
-        "symfony/uid": "8.1.*",
         "symfony/twig-bundle": "8.1.*",
+        "symfony/uid": "8.1.*",
+        "symfony/ux-icons": "^3.2",
         "symfony/validator": "8.1.*",
         "symfony/webpack-encore-bundle": "^2.4.1",
         "symfony/yaml": "8.1.*",
-        "twig/twig": "^3.27.1",
         "twig/cache-extra": "^3.24",
         "twig/extra-bundle": "^3.24",
-        "twig/intl-extra": "^3.26"
+        "twig/intl-extra": "^3.26",
+        "twig/twig": "^3.27.1"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

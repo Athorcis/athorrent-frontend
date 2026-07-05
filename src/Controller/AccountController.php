@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[Route(path: '/user/account', name: 'account')]
+#[Route(path: '/user/account', name: 'account_')]
 class AccountController extends AbstractController
 {
     public function __construct(protected EntityManagerInterface $entityManager, protected UserRepository $userLoader)

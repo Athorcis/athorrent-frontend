@@ -1,6 +1,5 @@
 .idea
 .git
-assets/fonts/font-awesome
 assets/images/icon.ai
 bin
 !bin/console

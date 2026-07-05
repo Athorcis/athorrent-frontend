@@ -9,7 +9,7 @@ declare namespace Cypress {
         logout(): Chainable<null>;
         dropdownItem(selector: string, parentSelector: string): Chainable<null>;
         dropdownItem(selector: string, parentSelector: string, skipOpen: boolean): Chainable<null>;
-        expectModal(text: string): Chainable<null>;
+        expectModal(text: string, selector?: string): Chainable<null>;
     }
 }
 
@@ -28,17 +28,15 @@ Cypress.Commands.add('elementExists', function (selector: string) {
 Cypress.Commands.add('login', function (username: string = DEFAULT_USERNAME, password: string = DEFAULT_PASSWORD) {
 
     cy.session([username, password], () => {
-        cy.visit('/');
+        cy.visit('/login');
 
-        cy.get('.navbar-form input[name=_username]').clear().type(username);
-        cy.get('.navbar-form input[name=_password]').clear().type(password);
-        cy.get('.navbar-form button').click();
+        cy.get('form input[name=_username]').clear().type(username);
+        cy.get('form input[name=_password]').clear().type(password);
+        cy.get('form button').click();
 
         cy.url().should('contain', '/user/files');
     }, {
         validate: () => {
-            cy.visit('/');
-
             cy.elementExists(LOGOUT_BUTTON_SELECTOR).then(exists => {
                 if (!exists) {
                     throw new Error('Login failed');
@@ -48,13 +46,13 @@ Cypress.Commands.add('login', function (username: string = DEFAULT_USERNAME, pas
     });
 });
 
-const LOGOUT_BUTTON_SELECTOR = '.navbar-form .btn-danger';
+const LOGOUT_BUTTON_SELECTOR = '.logout-button';
 
 export function getLogoutButton() {
     return cy.get(LOGOUT_BUTTON_SELECTOR);
 }
 Cypress.Commands.add('logout', function () {
-    cy.visit('/');
+    cy.visit('/user/files');
     getLogoutButton().click();
     Cypress.session.clearAllSavedSessions();
 });
@@ -62,15 +60,15 @@ Cypress.Commands.add('logout', function () {
 Cypress.Commands.add('dropdownItem', function (selector: string, parentSelector: string, skipOpen = false) {
 
     if (!skipOpen) {
-        cy.get(`${parentSelector} .dropdown > button`).click();
+        cy.get(`${parentSelector} [popovertarget]:has(+ .dropdown-menu)`).click();
     }
 
-    cy.get(`${parentSelector} .dropdown ${selector}`);
+    cy.get(`${parentSelector} .dropdown-menu ${selector}`);
 });
 
-Cypress.Commands.add('expectModal', function (text: string) {
-    cy.get('.modal-body').should('have.text', text);
-    cy.get('.modal button.close').click();
+Cypress.Commands.add('expectModal', function (text: string, selector?: string) {
+    cy.get('dialog:open .modal-body' + (selector ? ' ' + selector : '')).should('have.text', text);
+    cy.get('dialog:open button.close').click();
 });
 
 

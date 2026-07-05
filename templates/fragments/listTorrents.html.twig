@@ -1,61 +1,51 @@
 {% for torrent in torrents %}
-    <div class="torrent" id="torrent-{{ torrent.hash }}">
-        <h2 class="torrent-header">
-            <span class="torrent-name">{{ torrent.name }}</span> (<span class="torrent-progress">{{ (100 * torrent.progress)|round  }}</span>%)
-        </h2>
+    <article class="torrent torrent--{{ torrent.state }}" id="torrent-{{ torrent.hash }}">
+        <header class="torrent-header">
+            <h2 class="torrent-name">{{ torrent.name }}</h2>
+            <div class="torrent-state">{{ ('torrents.state.' ~ torrent.state)|trans }}</div>
+        </header>
         <div class="torrent-middle-container">
-            <div class="torrent-controls">
-                <button type="button" class="btn btn-default btn-xs torrent-detail">
-                    <span class="fa fa-info"></span>
-                </button>
+            <progress value="{{ torrent.progress }}"></progress>
 
+            <div class="torrent-info">
+                <span class="torrent-info-value">{{ format_bytes(torrent.size) }}</span>
+
+                {% if torrent.state == 'downloading' %}
+                    <span class="torrent-info-value">
+                        {{ ux_icon('downloading-arrow') }}
+                        {{ format_bytes(torrent.dlspeed) }}/s
+                    </span>
+
+                    <span class="torrent-info-value">
+                        {{ ux_icon('hourglass') }}
+                        {{ torrent.eta }}
+                    </span>
+                {% elseif torrent.state == 'seeding' %}
+                    <span class="torrent-info-value">
+                        {{ ux_icon('uploading-arrow') }}
+                        <span >{{ format_bytes(torrent.upspeed) }}/s</span>
+                    </span>
+
+                    <span class="torrent-info-value">
+                        {{ ux_icon('exchange') }}
+                        {{ torrent.ratio }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="torrent-controls">
                 {% if torrent.state != 'disabled' %}
-                    <button type="button" class="btn btn-default btn-xs torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
-                        <span class="fa fa-{% if torrent.paused %}play{% else %}pause{% endif %}"></span>
+                    <button class="icon-only torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
+                        {{ ux_icon(torrent.paused ? 'play' : 'pause') }}
                     </button>
                 {% endif %}
 
-                <button type="button" class="btn btn-default btn-xs torrent-remove">
-                    <span class="fa fa-times"></span>
+                <button class="icon-only danger torrent-remove">
+                    {{ ux_icon('close') }}
                 </button>
             </div>
-            <div class="progress torrent-progress-bar">
-                <div class="progress-bar progress-bar-{{ torrentStateToClass(torrent) }}" role="progressbar" aria-valuenow="{{ 100 * torrent.progress  }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ 100 * torrent.progress  }}%">
-                </div>
-            </div>
         </div>
-        <div class="torrent-info">
-            <h3 class="torrent-info-key">{{ 'torrents.size'|trans }}:</h3>
-            <span class="torrent-info-value">{{ format_bytes(torrent.size) }}</span>
-        </div>
-        <div class="torrent-info">
-            <h3 class="torrent-info-key">{{ 'torrents.dl'|trans }}:</h3>
-            <span class="torrent-info-value">{{ format_bytes(torrent.download_payload_rate) }}/s</span>
-        </div>
-        <div class="torrent-info">
-            <h3 class="torrent-info-key">{{ 'torrents.ul'|trans }}:</h3>
-            <span class="torrent-info-value">{{ format_bytes(torrent.upload_payload_rate) }}/s</span>
-        </div>
-        <div class="torrent-info">
-            <h3 class="torrent-info-key">{{ 'torrents.ratio'|trans }}:</h3>
-            <span class="torrent-info-value">
-                {%if torrent.progress == 0 or torrent.size == 0 %}
-                    0
-                {% else %}
-                    {{ (torrent.total_payload_upload / (torrent.progress * torrent.size))|round(2) }}
-                {% endif %}
-            </span>
-        </div>
-        <div class="torrent-info">
-            <h3 class="torrent-info-key">{{ 'torrents.seeders'|trans }}:</h3>
-            <span class="torrent-info-value">{{ torrent.num_seeds }} ({{ torrent.list_seeds }})</span>
-        </div>
-        <div class="torrent-info">
-            <h3 class="torrent-info-key">{{ 'torrents.leechers'|trans }}:</h3>
-            <span class="torrent-info-value">{{ torrent.num_peers }} ({{ torrent.list_peers }})</span>
-        </div>
-        <span class="label torrent-state label-{{ torrentStateToClass(torrent) }}">{{ ('torrents.state.' ~ torrent.state)|trans }}</span>
-    </div>
+    </article>
 {% else %}
     {% if not backend_available %}
         <div class="alert alert-{% if alert_level == 'error' %}danger{% else%}warning{% endif %} backend-alert" role="alert">
