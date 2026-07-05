@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Requirement\Requirement;
 
-#[Route(path: '/user/sharings', name: 'sharings')]
+#[Route(path: '/user/sharings', name: 'sharings_')]
 class SharingController extends AbstractController
 {
     public function __construct(protected EntityManagerInterface $entityManager, protected SharingRepository $sharingRepository)
@@ -45,9 +45,8 @@ class SharingController extends AbstractController
         $this->entityManager->persist($sharing);
         $this->entityManager->flush();
 
-        return [$this->generateUrl('listFiles', [
+        return [$this->generateUrl('sharedFiles_listFiles', [
             'id' => $sharing->getId()->toRfc4122(),
-            '_prefixId' => 'sharings',
         ], UrlGeneratorInterface::ABSOLUTE_URL)];
     }
 

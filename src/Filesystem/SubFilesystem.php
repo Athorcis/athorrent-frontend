@@ -17,6 +17,11 @@ class SubFilesystem extends AbstractFilesystem
         $this->internalFilesystem = new Filesystem('/');
     }
 
+    public function isWritable(): bool
+    {
+        return $this->internalFilesystem->isWritable();
+    }
+
     public function getSize(string $path): int
     {
         return $this->internalFilesystem->getSize($this->getInternalPath($path));

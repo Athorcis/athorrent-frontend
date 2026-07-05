@@ -5,6 +5,9 @@
         "selector-pseudo-element-colon-notation": null,
         "declaration-block-no-redundant-longhand-properties": null,
         "scss/double-slash-comment-empty-line-before": null,
-        "scss/double-slash-comment-whitespace-inside": null
+        "scss/double-slash-comment-whitespace-inside": null,
+        "selector-class-pattern": null,
+        "scss/dollar-variable-empty-line-before": null,
+        "custom-property-empty-line-before": null
     }
 }

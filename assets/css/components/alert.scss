@@ -1,0 +1,46 @@
+@use "../vars" as *;
+
+.alert-stack {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+
+    &:has(.alert) {
+        display: flex;
+    }
+}
+
+.alert {
+    border: 1px solid $color-white;
+    padding: 10px 12px;
+    border-radius: $radius-md;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: left;
+
+    .close {
+        margin-left: auto;
+    }
+}
+
+.alert-info {
+    background: $color-alert-info-bg;
+    border: 1px solid $color-alert-info-border;
+}
+
+.alert-success {
+    background: $color-alert-success-bg;
+    border: 1px solid $color-alert-success-border;
+}
+
+.alert-warning {
+    background: $color-alert-warning-bg;
+    border: 1px solid $color-alert-warning-border;
+}
+
+.alert-danger {
+    background: $color-alert-danger-bg;
+    border: 1px solid $color-alert-danger-border;
+}

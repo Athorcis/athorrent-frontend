@@ -22,6 +22,8 @@ interface FilesystemEntryInterface
 
     public function isFile(): bool;
 
+    public function isFilesystemWritable(): bool;
+
     public function getModificationTimestamp(): int;
 
     public function getSize(): int;

@@ -12,9 +12,10 @@
 {% endblock %}
 
 {% block content %}
-    <h1 title="{{ name }}">{{ name }}</h1>
-
-    {% include 'fragments/breadcrumb.html.twig' %}
+    <header class="main-header">
+        <h1 title="{{ name }}">{{ name }}</h1>
+        {% include 'fragments/breadcrumb.html.twig' %}
+    </header>
 
     <div class="media-container">
         <{{ mediaTag }} autoplay controls>

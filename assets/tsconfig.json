@@ -1,12 +1,12 @@
 {
-    "extends": "../tsconfig.settings.json",
+    "extends": "../tsconfig.json",
     "compilerOptions": {
         "lib": ["dom", "es2023"],
         "moduleResolution": "bundler",
         "module": "esnext",
         "target": "es2023",
         "esModuleInterop": true,
-        "types": ["bootstrap", "dropzone", "jquery"]
+        "types": ["dropzone"]
     },
     "include": [
         "./js/"

@@ -1,0 +1,65 @@
+// Colors
+$color-text: rgb(20 20 20);
+$color-bg: rgb(252 252 252);
+$color-white: rgb(255 255 255);
+
+$color-primary: rgb(54 133 191);
+
+$color-danger: rgb(207 45 86 / 80%);
+$color-success: rgb(31 138 101);
+
+$color-torrent-paused: rgb(192 133 50);
+$color-torrent-disabled: rgb(20 20 20 / 54%);
+
+$color-text-disabled: rgb(20 20 20 / 36%);
+$color-text-secondary: rgb(20 20 20 / 54%);
+$color-text-muted: rgb(20 20 20 / 74%);
+
+$color-surface-6: rgb(20 20 20 / 6%);
+$color-surface-8: rgb(20 20 20 / 8%);
+$color-border: rgb(20 20 20 / 12%);
+$border: 1px solid $color-border;
+$color-surface-14: rgb(20 20 20 / 14%);
+
+$color-shadow: rgb(0 0 0 / 18%);
+$color-overlay: rgb(0 0 0 / 40%);
+
+$color-alert-info-bg: #eef4fa;
+$color-alert-info-border: #a8cce4;
+$color-alert-success-bg: #eef7f3;
+$color-alert-success-border: #a8d9c8;
+$color-alert-warning-bg: #faf4eb;
+$color-alert-warning-border: #e0c9a0;
+$color-alert-danger-bg: #fceef2;
+$color-alert-danger-border: #eaa8b8;
+
+$color-pre-bg: #f5f5f5;
+$color-pre-border: #ccc;
+
+// Typography
+$font-family-base: "-apple-system", "BlinkMacSystemFont", "Segoe WPC", "Segoe UI", "system-ui", "Ubuntu", "Droid Sans", sans-serif;
+
+$font-size-sm: 11px;
+$font-size-md: 12px;
+$font-size-base: 14px;
+$font-size-xl: 16px;
+$font-size-2xl: 24px;
+$font-size-3xl: 32px;
+
+// Layout
+$breakpoint-mobile: 768px;
+
+$spacing-gutter: 36px;
+$spacing-gutter-wide: 40px;
+$spacing-gutter-mobile: 14px;
+$spacing-page-y: 28px;
+$spacing-page-y-mobile: 20px;
+$spacing-section: 40px;
+$spacing-section-mobile: 24px;
+
+// Border radius
+$radius-xs: 2px;
+$radius-md: 5px;
+$radius-xl: 8px;
+$radius-full: 50%;
+$radius-control: 0.385em;

@@ -16,6 +16,11 @@ class Filesystem extends AbstractFilesystem
         $this->fileUtils = new FileUtils();
     }
 
+    public function isWritable(): bool
+    {
+        return true;
+    }
+
     public function getSize(string $path): int
     {
         return $this->fileUtils->getSize($path);

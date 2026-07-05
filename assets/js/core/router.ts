@@ -34,7 +34,7 @@ export class Router {
                 location.reload();
             }
 
-            throw new Error(body.message ?? body.code);
+            throw new Error(body.error ?? body.code);
         }) as AbortablePromise<R>;
 
         body$.abort = function () {
@@ -58,6 +58,12 @@ export class Router {
     }
 
     protected prepareUrl(route: Route, params: Params): string {
+
+        params = {
+            _locale: this.routeParameters['_locale'],
+            ...params
+        };
+
         return route.pattern.replace(/{(_?[A-Za-z]+)}/g, (match, name) => {
             let result;
 
@@ -92,22 +98,6 @@ export class Router {
     }
 
     protected createRequestFromRoute(route: Route, params: Params): Request {
-
-        if (route.prefixId === this.routeParameters['_prefixId']) {
-            if (route.name === this.action) {
-                params = {...this.routeParameters, ...this.queryParams, ...params};
-            }
-             else {
-                params = {...this.routeParameters, ...params};
-            }
-        }
-        else {
-            params = {
-                ...params,
-                _locale: this.routeParameters['_locale'],
-            };
-        }
-
         const url = this.prepareUrl(route, params);
 
         for (const key of Object.keys(params)) {

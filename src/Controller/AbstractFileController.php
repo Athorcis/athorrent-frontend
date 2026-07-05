@@ -39,6 +39,10 @@ abstract class AbstractFileController extends AbstractController
         $currentPath = '';
 
         foreach ($parts as $currentName) {
+            if ($path === '') {
+                continue;
+            }
+
             $currentPath .= $currentName;
             $breadcrumb[$currentName] = $currentPath;
             $currentPath .= DIRECTORY_SEPARATOR;
@@ -48,7 +52,7 @@ abstract class AbstractFileController extends AbstractController
     }
 
     #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
-    public function listFiles(UserFilesystemEntry $dirEntry): View
+    public function listFiles(UserFilesystemEntry $dirEntry, Request $request): View
     {
         if ($this instanceof FileController && $dirEntry->isRoot()) {
             $title = $this->translator->trans('files.title');

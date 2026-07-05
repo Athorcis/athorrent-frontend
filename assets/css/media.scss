@@ -1,9 +1,4 @@
 
-h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-}
-
 img {
     max-width: 100%;
 }
@@ -14,4 +9,8 @@ img {
     > img {
         display: inline-block;
     }
+}
+
+.mejs__container {
+    max-height: 85vh;
 }

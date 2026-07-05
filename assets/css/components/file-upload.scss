@@ -1,0 +1,115 @@
+@use "../vars" as *;
+
+.file-upload-list {
+    border: $border;
+    border-radius: $radius-md;
+    overflow: hidden;
+}
+
+.file-upload {
+    display: flex;
+    flex-flow: column;
+    padding: 9px 12px;
+
+    &:nth-child(odd) {
+        background: $color-surface-14;
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    svg {
+        color: $color-text-secondary;
+        flex-shrink: 0;
+    }
+
+    h3 {
+        flex: 1 1 0;
+        min-width: 0;
+        font-size: $font-size-md;
+        line-height: 18px;
+        font-weight: normal;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .file-upload__status {
+        font-size: $font-size-sm;
+    }
+
+    .file-upload__status__success,
+    .file-upload__status__error {
+        display: none;
+    }
+
+    .file-upload__status__progress {
+        color: $color-text-secondary;
+    }
+
+    .file-upload__status__success {
+        color: $color-success;
+    }
+
+    .file-upload__status__error {
+        color: $color-danger;
+    }
+
+    progress,
+    .file-upload__error {
+        margin-left: 21px;
+        margin-top: 5px;
+    }
+
+    progress {
+        width: auto;
+
+        --progress-color: #{$color-primary};
+    }
+
+    .file-upload__error {
+        display: none;
+        color: $color-danger;
+        font-size: $font-size-sm;
+        line-height: 18px;
+    }
+
+    &.dz-success {
+        .file-upload__status__progress {
+            display: none;
+        }
+
+        .file-upload__status__success {
+            display: inline-block;
+        }
+
+        progress {
+            --progress-color: #{$color-success};
+        }
+    }
+
+    &.dz-error {
+        svg {
+            color: $color-danger;
+        }
+
+        .file-upload__status__progress {
+            display: none;
+        }
+
+        .file-upload__status__error {
+            display: inline-block;
+        }
+
+        progress {
+            display: none;
+        }
+
+        .file-upload__error {
+            display: block;
+        }
+    }
+}

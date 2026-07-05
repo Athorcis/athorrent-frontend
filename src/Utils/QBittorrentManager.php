@@ -154,24 +154,9 @@ readonly class QBittorrentManager extends AbstractTorrentManager
             $qbitState = (string) ($torrent['state'] ?? '');
 
             $normalizedTorrents[] = [
-                'name' => (string) ($torrent['name'] ?? ''),
+                ...$torrent,
                 'state' => $this->normalizeState($qbitState),
                 'paused' => $this->isPausedState($qbitState),
-                'total_payload_download' => (int) ($torrent['downloaded'] ?? 0),
-                'total_payload_upload' => (int) ($torrent['uploaded'] ?? 0),
-                'size' => (int) ($torrent['size'] ?? 0),
-                'progress' => (float) ($torrent['progress'] ?? 0),
-                'download_rate' => (float) ($torrent['dlspeed'] ?? 0),
-                'download_payload_rate' => (float) ($torrent['dlspeed'] ?? 0),
-                'upload_rate' => (float) ($torrent['upspeed'] ?? 0),
-                'upload_payload_rate' => (float) ($torrent['upspeed'] ?? 0),
-                'num_seeds' => (int) ($torrent['num_seeds'] ?? 0),
-                'num_peers' => (int) ($torrent['num_leechs'] ?? 0),
-                'num_complete' => (int) ($torrent['num_complete'] ?? 0),
-                'num_incomplete' => (int) ($torrent['num_incomplete'] ?? 0),
-                'list_seeds' => (int) ($torrent['num_complete'] ?? 0),
-                'list_peers' => (int) ($torrent['num_incomplete'] ?? 0),
-                'hash' => (string) ($torrent['hash'] ?? ''),
             ];
         }
 
@@ -256,33 +241,6 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         ]);
 
         return 'ok';
-    }
-
-    public function listTrackers(string $hash): array
-    {
-        $trackers = $this->request('GET', '/api/v2/torrents/trackers', [
-            'query' => ['hash' => $hash],
-        ]);
-        $normalizedTrackers = [];
-
-        foreach ($trackers as $tracker) {
-            $url = (string) ($tracker['url'] ?? '');
-
-            if ($url === '' || str_starts_with($url, '**')) {
-                continue;
-            }
-
-            $normalizedTrackers[] = [
-                'id' => md5($url),
-                'url' => $url,
-                'state' => (string) ($tracker['status'] ?? ''),
-                'peers' => (int) ($tracker['num_peers'] ?? -1),
-                'seeds' => (int) ($tracker['num_seeds'] ?? -1),
-                'message' => (string) ($tracker['msg'] ?? ''),
-            ];
-        }
-
-        return $normalizedTrackers;
     }
 
     protected function ensureTorrentsDirExists(): string

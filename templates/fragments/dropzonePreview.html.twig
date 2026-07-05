@@ -1,6 +1,13 @@
-<div class="progress dz-progress">
-    <div class="dz-filename" data-dz-name></div>
-    <div class="dz-error-message" data-dz-errormessage></div>
-    <span class="fa fa-fw fa-times dz-remove" data-dz-remove></span>
-    <div class="progress-bar progress-bar-info" data-dz-uploadprogress></div>
-</div>
+<article class="file-upload">
+    <header>
+        {{ ux_icon('file') }}
+        <h3 data-dz-name></h3>
+        <span class="file-upload__status">
+            <span class="file-upload__status__progress"></span>
+            <span class="file-upload__status__success">✓ {{ 'files.uploaded'|trans }}</span>
+            <span class="file-upload__status__error">{{ 'error.title'|trans }}</span>
+        </span>
+    </header>
+    <progress max="100" data-dz-uploadprogress></progress>
+    <p class="file-upload__error" data-dz-errormessage></p>
+</article>

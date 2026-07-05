@@ -86,7 +86,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
     yarn install --immutable
 
-COPY --chown=$RUN_USER --parents assets scripts/subset-font-awesome.ts scripts/tsconfig.json .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.ts tsconfig.json tsconfig.settings.json webpack.config.mjs $BUILD_DIR/
+COPY --chown=$RUN_USER --parents assets .browserlistrc .postcssrc.json .stylelintrc.json eslint.config.ts tsconfig.json webpack.config.mjs $BUILD_DIR/
 
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
@@ -100,7 +100,7 @@ USER $RUN_USER
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
-COPY --chown=$RUN_USER --parents bin config migrations public src templates translations .env $RUN_DIR
+COPY --chown=$RUN_USER --parents assets/icons bin config migrations public src templates translations .env $RUN_DIR
 
 ARG BUILD_DIR
 COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor

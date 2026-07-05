@@ -1,0 +1,29 @@
+@use "../vars" as *;
+
+.dropdown-menu {
+    background: $color-bg;
+    border: $border;
+    border-radius: $radius-md;
+    padding: 3px;
+    list-style-type: none;
+
+    &:popover-open {
+        position-area: bottom span-left;
+        margin-top: 3px;
+    }
+
+    a, button {
+        display: flex;
+        gap: 8px;
+        padding: 6px 10px;
+        line-height: 18px;
+
+        --color: #{$color-text};
+    }
+
+    hr {
+        border: 0;
+        border-top: $border;
+        margin: 3px 0;
+    }
+}

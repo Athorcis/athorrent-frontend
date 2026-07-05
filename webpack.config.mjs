@@ -1,8 +1,6 @@
-import path from 'path';
 import Encore from '@symfony/webpack-encore';
 import StyleLintPlugin from 'stylelint-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
-import { fileURLToPath } from 'url';
 import CompressionPlugin from "compression-webpack-plugin";
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -10,9 +8,6 @@ import CompressionPlugin from "compression-webpack-plugin";
 if (!Encore.isRuntimeEnvironmentConfigured()) {
     Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 Encore
     // directory where compiled assets will be stored
@@ -36,18 +31,12 @@ Encore
     .addEntry('torrents', './assets/js/torrents.ts')
     .addEntry('users', './assets/js/users.ts')
 
-    .addStyleEntry('administration', './assets/css/administration.scss')
     .addStyleEntry('home', './assets/css/home.scss')
     .addStyleEntry('main', './assets/css/main.scss')
 
     .copyFiles({
         from: './assets/images',
         pattern: /\.(ico|png)$/
-    })
-
-    .addAliases({
-        fonts: path.resolve(__dirname, 'assets/fonts'),
-        jquery: 'jquery/dist/jquery.slim'
     })
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
@@ -81,7 +70,6 @@ Encore
     // enables Sass/SCSS support
     .enableSassLoader(function (options) {
         options.sassOptions.quietDeps = true;
-        options.sassOptions.silenceDeprecations = ['import'];
     })
 
     .enablePostCssLoader()
@@ -105,9 +93,6 @@ Encore
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
     .enableIntegrityHashes(Encore.isProduction())
-
-    // uncomment if you're having problems with a jQuery plugin
-    .autoProvidejQuery()
 
     .addRule({
         test: /mediaelement[\\\/]build[\\\/]mediaelement-and-player\.js$/,

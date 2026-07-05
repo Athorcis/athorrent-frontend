@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Athorrent\Filesystem;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
@@ -35,6 +36,11 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
         return $this->filesystem->getRoot() === $this->path;
     }
 
+    public function isFilesystemWritable(): bool
+    {
+        return $this->filesystem->isWritable();
+    }
+
     public function getName(): string
     {
         return basename($this->path);
@@ -48,7 +54,7 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
         $entries = [];
 
         if ($includeParentDirectory) {
-            $entries[] = new static($this->filesystem, $this->path . '/..');
+            $entries[] = new static($this->filesystem, Path::canonicalize($this->path . '/..'));
         }
 
         foreach ($this->filesystem->readDirectory($this->path) as $path) {

@@ -1,0 +1,119 @@
+@use "../vars" as *;
+
+nav.sidebar {
+    border-right: $border;
+    width: 210px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+
+    header {
+        border-bottom: $border;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        height: 52px;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    footer {
+        border-top: $border;
+        flex-shrink: 0;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 6px 8px;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    li {
+        margin-bottom: 1px;
+
+        > .button {
+            padding: 7px 10px;
+            display: flex;
+            gap: 9px;
+
+            svg {
+                width: 15px; height: 15px;
+            }
+
+            &.active {
+                background-color: var(--hover-bg-color);
+                color: var(--hover-color);
+            }
+        }
+    }
+}
+
+.sidebar-backdrop {
+    display: none;
+}
+
+.account-button {
+    padding-left: 0;
+    margin-right: auto;
+
+    --hover-bg-color: #{$color-primary};
+    --hover-color: #{$color-white};
+}
+
+.user-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: $radius-full;
+    background: $color-primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+        width: 13px;
+        color: $color-white;
+    }
+}
+
+.logout-button,
+.exit-impersonation-button {
+    margin-right: -0.577em;
+}
+
+@media (width < $breakpoint-mobile) {
+    nav.sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: $color-bg;
+        transition: transform 0.2s ease;
+        transform: translateX(-100%);
+        z-index: 100;
+        box-shadow: none;
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+
+        nav.sidebar {
+            transform: translateX(0);
+            box-shadow: 2px 0 12px $color-shadow;
+        }
+
+        .sidebar-backdrop {
+            display: block;
+            position: fixed;
+            inset: 0;
+            background: $color-overlay;
+            z-index: 99;
+        }
+    }
+}

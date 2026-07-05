@@ -1,47 +1,115 @@
+@use "vars" as *;
 
-@use "./font-awesome";
+@use "components/alert";
+@use "components/title";
+@use "components/form";
+@use "components/button";
+@use "components/table";
+@use "components/dropdown";
+@use "components/breadcrumb";
+@use "components/dialog";
+@use "components/progress";
+@use "components/top-bar";
+@use "components/nav";
+@use "components/login-form";
 
-$icon-font-path: "../../fonts/bootstrap/";
-@import "bootstrap-sass/assets/stylesheets/bootstrap";
-@import "bootstrap-sass/assets/stylesheets/bootstrap/theme";
+@use "components/file-upload";
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 html {
-    font-size: initial;
     height: 100%;
 }
 
 body {
-    min-height: 100%;
-    padding-bottom: 20px;
-    padding-top: 50px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: $color-bg;
+    color: $color-text;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    height: 100%;
 }
 
-h1 {
-    overflow: hidden;
-    text-overflow: ellipsis;
+.main-layout {
+    flex: 1;
+    display: flex;
+    max-height: 100vh;
 }
 
-footer {
-    background-color: #eee;
-    bottom: 0;
-    padding: 20px 0;
-    position: absolute;
-    width: 100%;
+.container {
+    padding: $spacing-page-y $spacing-gutter;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow-y: auto;
+
+    @media (width < $breakpoint-mobile) {
+        padding: $spacing-page-y-mobile $spacing-gutter-mobile;
+        gap: 16px;
+    }
 }
 
-.alert {
-    margin-top: 20px;
+.brand {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-text;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.btn-xs > .fa {
-    --fa-width: 0.833em;
-}
+.main-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 
-.modal {
-    &.hide-close {
-        .modal-header .close {
-            display: none;
+    h1 {
+        flex: 1 1 0;
+
+        + button,
+        + .button {
+            margin-left: auto;
         }
     }
+
+    @media (width < $breakpoint-mobile) {
+        h1 {
+            flex-basis: max-content;
+        }
+    }
+}
+
+a {
+    text-decoration: none;
+    color: $color-primary;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.text-left {
+    text-align: left;
+}
+
+pre {
+    line-height: 1.4286;
+    margin-bottom: 10px;
+    padding: 9.5px;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    background-color: $color-pre-bg;
+    border: 1px solid $color-pre-border;
+    border-radius: $radius-md;
 }

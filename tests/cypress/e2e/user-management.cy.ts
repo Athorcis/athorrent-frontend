@@ -47,7 +47,7 @@ describe('user-management', () => {
         createAltUser();
 
         cy.visit('/administration/users/');
-        cy.get('.user-remove').click();
+        cy.get('#user-2 .user-remove').click();
 
         cy.get('#user-2 > .user-name').should('not.exist');
     });

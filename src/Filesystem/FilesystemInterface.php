@@ -8,6 +8,8 @@ interface FilesystemInterface
 {
     public function getRoot(): string;
 
+    public function isWritable(): bool;
+
     public function getSize(string $path): int;
 
     /**

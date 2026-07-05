@@ -1,0 +1,57 @@
+@use "../vars" as *;
+
+dialog {
+    min-width: 300px;
+    max-width: 90vw;
+    background: $color-bg;
+    border: $border;
+    border-radius: $radius-xl;
+    padding: 20px 24px;
+    box-shadow: $color-shadow 0 8px 32px;
+    margin: auto;
+    flex-direction: column;
+    gap: 16px;
+
+    &:open {
+        display: flex;
+    }
+
+    &.hide-close > header > .close {
+        display: none;
+    }
+
+    > header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        > .close {
+            position: relative;
+            right: -10px;
+        }
+    }
+
+    h2 {
+        font-size: $font-size-xl;
+        font-weight: 600;
+        margin-right: auto;
+    }
+
+    .modal-subtitle {
+        font-size: $font-size-base;
+        color: $color-text-secondary;
+        flex-basis: 100%;
+    }
+
+    .modal-controls {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        gap: 8px;
+    }
+
+    @media (width < $breakpoint-mobile) {
+        padding: 16px;
+        gap: 12px;
+    }
+}

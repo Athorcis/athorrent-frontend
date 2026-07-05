@@ -1,16 +1,16 @@
 
-<table class="table table-bordered">
+<table>
     <thead>
         <tr>
-            <th>{{ 'search.torrents.name'|trans }}</th>
+            <th class="text-left">{{ 'search.torrents.name'|trans }}</th>
             <th class="col-tracker">{{ 'search.torrents.tracker'|trans }}</th>
             <th class="col-size">{{ 'search.torrents.size'|trans }}</th>
             <th class="col-age">{{ 'search.torrents.age'|trans }}</th>
             <th class="col-seeders">
-                <span class="fa fa-arrow-up"></span>
+                 {{ ux_icon('uploading-arrow') }}
             </th>
             <th class="col-leechers">
-                <span class="fa fa-arrow-down"></span>
+                {{ ux_icon('downloading-arrow') }}
             </th>
             <th class="col-add-magnet"></th>
         </tr>
@@ -18,7 +18,7 @@
     <tbody>
     {% for result in results %}
         <tr>
-            <td>
+            <td class="col-title text-left">
                 <a href="{{ result.Details }}" target="_blank">{{ result.Title }}</a>
             </td>
             <td class="col-tracker">{{ result.Tracker }}</td>
@@ -27,8 +27,8 @@
             <td class="col-seeders">{{ result.Seeders }}</td>
             <td class="col-leechers">{{ result.Peers }}</td>
             <td class="col-add-magnet">
-                <a href="{{ path('addMagnet', { magnet: result.MagnetUri }) }}">
-                    <span class="fa fa-flip-vertical fa-magnet"></span>
+                <a href="{{ result.MagnetUri }}">
+                    {{ ux_icon('magnet') }}
                 </a>
             </td>
         </tr>

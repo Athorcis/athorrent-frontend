@@ -5,10 +5,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "patch:@fortawesome/fontawesome-free@npm%3A7.2.0#~/.yarn/patches/@fortawesome-fontawesome-free-npm-7.2.0-904430164a.patch",
-    "bootstrap-sass": "~3.4.3",
     "dropzone": "~6.0.0-beta.2",
-    "jquery": "~3.7.1",
     "mediaelement": "~7.1.0",
     "query-string": "~9.4.0",
     "typescript-http-client": "~0.10.5"
@@ -23,9 +20,7 @@
     "@babel/preset-typescript": "^7.29.7",
     "@eslint/js": "^10.0.1",
     "@symfony/webpack-encore": "^6.0.0",
-    "@types/bootstrap": "^3.4.0",
     "@types/dropzone": "^5.7.9",
-    "@types/jquery": "^3.5.34",
     "@types/node": "^24.13.2",
     "autoprefixer": "^10.5.0",
     "compression-webpack-plugin": "^12.0.0",
@@ -35,7 +30,6 @@
     "eslint-webpack-plugin": "^6.0.0",
     "exports-loader": "^5.0.0",
     "file-loader": "^6.2.0",
-    "fontawesome-subset": "^4.6.0",
     "jiti": "^2.7.0",
     "postcss": "^8.5.15",
     "postcss-loader": "^8.2.1",
@@ -48,7 +42,6 @@
     "stylelint-scss": "^7.2.0",
     "stylelint-webpack-plugin": "^5.1.0",
     "ts-loader": "^9.6.1",
-    "tsx": "^4.22.4",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.61.1",
     "webpack": "^5.107.2",
@@ -56,10 +49,9 @@
     "webpack-notifier": "^1.15.0"
   },
   "scripts": {
-    "font-awesome": "tsx scripts/subset-font-awesome.ts",
-    "dev-server": "yarn font-awesome && encore dev-server",
-    "dev": "yarn font-awesome && encore dev",
-    "watch": "yarn font-awesome && encore dev --watch",
-    "build": "yarn font-awesome && encore production --progress"
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
   }
 }

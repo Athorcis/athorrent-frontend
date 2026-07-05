@@ -1,17 +1,12 @@
-import $ from 'jquery';
-import Dropzone, {DropzoneFile} from 'dropzone';
 import '../css/torrents.scss';
 import {Router} from './core/router';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
-import {SecurityManager} from './core/security-manager';
-import {Translator} from './core/translator';
-import {UiManager} from './core/ui-manager';
 import {on} from './core/events';
+import {UploadManager} from "./core/upload-manager";
 import { Response } from 'typescript-http-client';
 
-const torrentListTimeout = 2000,
-    trackerListTimeout = 5000;
+const torrentListTimeout = 2000;
 
 class Updater {
 
@@ -87,507 +82,33 @@ class Updater {
     }
 }
 
-
-class TabsPanel {
-
-    private tabMap: { [key: string]: Tab };
-
-    protected panel: HTMLElement;
-
-    constructor(selector: string) {
-        this.tabMap = {};
-        this.panel = document.querySelector(selector);
-
-        this.panel.addEventListener('click', (event: MouseEvent) => event.stopPropagation(
-
-        ))
-        on(this.panel, 'click', '.nav-tabs a', this.onClick);
-    }
-
-    addTab(id: string, tab: Tab) {
-        this.tabMap[id] = tab;
-    }
-
-    getCurrentTab() {
-        return this.tabMap[this.panel.querySelector('.nav-tabs li.active a').getAttribute('href').substring(1)];
-    }
-
-    onClick = (event: MouseEvent) => {
-        event.preventDefault();
-        $(event.target).tab('show');
-    }
-
-    isVisible() {
-        return this.panel.clientHeight > 0;
-    }
-
-    show() {
-        this.panel.style.display = 'block';
-        (document.querySelector('body > .container') as HTMLElement).style.marginBottom = `${ this.panel.clientHeight }px`;
-        $(this.panel).find('.nav-tabs li.active a').trigger('show.bs.tab');
-    }
-
-    hide() {
-        $(this.panel).find('.nav-tabs li.active a').trigger('hide.bs.tab');
-        (document.querySelector('body > .container') as HTMLElement).style.marginBottom = '';
-        this.panel.style.display = 'none';
-    }
-}
-
-class Tab {
-
-    protected parent: TabsPanel;
-
-    private $tab: JQuery;
-
-    private container: HTMLElement;
-
-    private updater;
-
-    constructor(router: Router, parent: TabsPanel, id: string, action: string, parameters: Params, interval: number) {
-        this.$tab = $(`[href="#${id}"]`);
-        this.container = document.querySelector(`#${id}`);
-        this.updater = new Updater(router, action, parameters, this.onUpdate.bind(this), interval);
-
-        if (parent) {
-            this.parent = parent;
-            parent.addTab(id, this);
-        }
-
-        this.$tab.on('show.bs.tab', this.onShow.bind(this));
-        this.$tab.on('hide.bs.tab', this.onHide.bind(this));
-    }
-
-    setParameters(parameters: {[key: string]: string}) {
-        this.updater.setParameters(parameters);
-    }
-
-    onUpdate(data: string) {
-        this.container.innerHTML = data;
-    }
-
-    onShow() {
-        this.updater.start(true);
-    }
-
-    onHide() {
-        this.updater.stop();
-    }
-}
-
-class TorrentPanel extends TabsPanel {
-
-    private hash: string;
-
-    constructor() {
-        super('.torrent-panel');
-        on(this.panel, 'click', '.torrent-panel-close', this.onClose);
-    }
-
-    /**
-     * Ferme le volet des détails torrent.
-     *
-     * @param {MouseEvent} event - Clic sur le bouton fermer
-     * @returns {void}
-     */
-    onClose = (event: MouseEvent): void => {
-        event.preventDefault();
-        this.hide();
-    };
-
-    toggleHash(hash: string) {
-        if (this.isVisible()) {
-            if (this.hash === hash) {
-                this.hide();
-            } else {
-                this.hash = hash;
-                (this.getCurrentTab() as TorrentPanelTab).setHash(hash);
-            }
-        } else {
-            this.setHash(hash);
-            this.show();
-        }
-    }
-
-    setHash(hash: string) {
-        if (this.hash !== hash) {
-            this.hash = hash;
-            (this.getCurrentTab() as TorrentPanelTab).setHash(hash);
-        }
-    }
-
-    getHash() {
-        return this.hash;
-    }
-}
-
-class TorrentPanelTab extends Tab {
-
-    private hash: string;
-
-    setHash(hash: string) {
-        if (this.hash !== hash) {
-            this.hash = hash;
-            this.setParameters({ hash });
-        }
-    }
-
-    override onShow() {
-        this.setHash((this.parent as TorrentPanel).getHash());
-        super.onShow();
-    }
-}
-
-class AddTorrentForm {
-
-    private opened: boolean = false;
-
-    private disabled: boolean;
-
-    private form: HTMLFormElement;
-
-    private submitEl: HTMLSpanElement;
-
-    private mode: AddTorrentMode;
-
-    private modes: AddTorrentMode[];
-
-    constructor(
-        selector: string,
-        submitSelector: string,
-        private router: Router,
-        private ui: UiManager,
-        private translator: Translator,
-        private afterSubmit: () => void
-    ) {
-        this.form = document.querySelector(selector);
-        this.submitEl = document.querySelector(submitSelector);
-        this.modes = [];
-
-        this.submitEl.addEventListener('click', this.onSubmitClick.bind(this));
-        this.disabled = this.form.classList.contains('disabled');
-    }
-
-    onSubmitClick(event: MouseEvent) {
-        const target = event.target as HTMLElement;
-
-        if (!target.classList.contains('disabled')) {
-            this.submit();
-        }
-    }
-
-    isOpened() {
-        return !this.opened;
-    }
-
-    open() {
-        if (this.opened) {
-            return;
-        }
-
-        this.opened = true;
-        this.form.classList.add('opened');
-    }
-
-    close() {
-        if (!this.opened) {
-            return;
-        }
-
-        this.opened = false;
-        this.form.classList.remove('opened');
-    }
-
-    enable() {
-        if (!this.disabled) {
-            return;
-        }
-
-        this.disabled = false;
-        this.form.classList.remove('disabled');
-    }
-
-    disable() {
-        if (this.disabled) {
-            return;
-        }
-
-        this.disabled = true;
-        this.form.classList.add('disabled');
-    }
-
-    setMode(mode: AddTorrentMode) {
-        this.mode = mode;
-    }
-
-    getMode() {
-        return this.mode;
-    }
-
-    registerMode(mode: AddTorrentMode) {
-        this.modes.push(mode);
-    }
-
-    updateFileCounter() {
-        let count = 0;
-
-        for (let i = 0, { length } = this.modes; i < length; ++i) {
-            count += this.modes[i].getCounter();
-        }
-
-        if (count > 0) {
-            this.submitEl.classList.remove('disabled');
-        } else {
-            this.submitEl.classList.add('disabled');
-        }
-    }
-
-    submit() {
-        const params: Params = {};
-
-        for (let i = 0, { length } = this.modes; i < length; ++i) {
-            params[this.modes[i].getInputName()] = this.modes[i].getItems();
-        }
-
-        this.router.sendRequest('addTorrents', params).then(this.afterSubmit, (error: Response<{ status: string; error: string; }>) => {
-
-            if (error.body instanceof Object) {
-                this.ui.showModal('error.title', error.body.error);
-            }else {
-                this.ui.showModal('error.title', this.translator.translate('error.unknownError'))
-            }
-        });
-
-        for (let i = 0, { length } = this.modes; i < length; ++i) {
-            this.modes[i].clearItems();
-        }
-
-        this.mode.disable();
-        this.mode = null;
-    }
-}
-
-abstract class AddTorrentMode {
-
-    private enabled: boolean = false;
-
-    protected element: HTMLElement;
-
-    private btn: HTMLElement;
-
-    private counter: number = 0;
-
-    private counterEL: HTMLElement;
-
-    private form: AddTorrentForm;
-
-    abstract onEnabled(): void;
-
-    protected constructor(private inputName: string, elementSelector: string, btnSelector: string, counterSelector: string, form: AddTorrentForm) {
-
-        this.element = document.querySelector(elementSelector);
-        this.btn = document.querySelector(btnSelector);
-        this.counterEL = document.querySelector(counterSelector);
-
-        if (form) {
-            this.form = form;
-            form.registerMode(this);
-        }
-
-        this.btn.addEventListener('click', this.toggle.bind(this));
-        $(this).on('enabled', this.onEnabled.bind(this));
-    }
-
-    enable() {
-        this.enabled = true;
-        this.element.style.display = 'block';
-        this.btn.classList.add('active');
-
-        if (this.form.isOpened()) {
-            this.form.open();
-        } else {
-            this.form.getMode().disable(true);
-        }
-
-        this.form.setMode(this);
-
-        $(this).trigger('enabled');
-    }
-
-    disable(recursive = false) {
-        this.enabled = false;
-        this.element.style.display = 'none';
-        this.btn.classList.remove('active');
-
-        if (!recursive) {
-            this.form.close();
-            this.form.setMode(null);
-        }
-    }
-
-    toggle() {
-        if (this.enabled) {
-            this.disable();
-        } else {
-            this.enable();
-        }
-    }
-
-    setCounter(number: number) {
-        this.counter = number;
-        this.counterEL.textContent = `(${number})`;
-        this.form.updateFileCounter();
-    }
-
-    getCounter() {
-        return this.counter;
-    }
-
-    getInputName(): string {
-        return this.inputName;
-    }
-
-    abstract getItems(): string[];
-    abstract clearItems(): void;
-}
-
-class AddTorrentFileMode extends AddTorrentMode {
-
-    private dropzone;
-
-    constructor(
-        router: Router,
-        translator: Translator,
-        ui: UiManager,
-        private securityManager: SecurityManager,
-        inputName: string,
-        elementSelector: string,
-        btnSelector: string,
-        counterSelector: string,
-        form: AddTorrentForm
-    ) {
-        super(inputName, elementSelector, btnSelector, counterSelector, form);
-
-
-        this.dropzone = new Dropzone(elementSelector, {
-            url: router.generateUrl('uploadTorrent'),
-            paramName: 'upload-torrent-file',
-            dictDefaultMessage: translator.translate('torrents.dropzone'),
-            dictInvalidFileType: translator.translate('error.notATorrent'),
-            dictFileTooBig: translator.translate('error.fileTooBig'),
-            dictResponseError: translator.translate('error.serverError'),
-            previewTemplate: document.querySelector('#template-dropzone-preview').innerHTML,
-            acceptedFiles: '.torrent',
-            parallelUploads: 1,
-            maxFilesize: 1
-        });
-
-        this.dropzone.on('removedfile', this.onRemovedFile.bind(this));
-        this.dropzone.on('success', this.onSuccess.bind(this));
-        this.dropzone.on('error', this.onError.bind(this));
-
-        this.dropzone.on('sending', this.onSending.bind(this));
-    }
-
-    onEnabled() {
-        this.element.dispatchEvent(new MouseEvent('click'));
-    }
-
-    onRemovedFile() {
-        this.setCounter(this.dropzone.getAcceptedFiles().length);
-    }
-
-    onSuccess() {
-        this.securityManager.removeCsrfCookie();
-        this.setCounter(this.dropzone.getAcceptedFiles().length);
-    }
-
-    onError() {
-        this.securityManager.removeCsrfCookie();
-    }
-
-    onSending(file: DropzoneFile[], xhr: XMLHttpRequest, formData: FormData) {
-        formData.append('_token', this.securityManager.initializeCsrfToken());
-    }
-
-    getItems() {
-        const items = [],
-            files = this.dropzone.getAcceptedFiles();
-
-        for (let i = 0, { length } = files; i < length; ++i) {
-            items.push(files[i].name);
-        }
-
-        return items;
-    }
-
-    clearItems() {
-        this.dropzone.removeAllFiles(true);
-        this.setCounter(0);
-    }
-}
-
-class AddTorrentMagnetMode extends AddTorrentMode {
-
-    private textarea: HTMLTextAreaElement;
-
-    constructor(inputName: string, elementSelector: string, btnSelector: string, counterSelector: string, form: AddTorrentForm) {
-        super(inputName, elementSelector, btnSelector, counterSelector, form);
-
-        this.textarea = document.querySelector('#add-torrent-magnet-input');
-        this.textarea.addEventListener('input', this.onInput.bind(this));
-    }
-
-    onEnabled() {
-        this.element.querySelector('textarea').focus();
-    }
-
-    onInput() {
-        this.setCounter(this.getItems().length);
-    }
-
-    getItems() {
-        const magnets = [],
-            rmagnet = /^magnet:\?[\x20-\x7E]*/,
-            lines = this.textarea.value.split(/\r\n|\r|\n/);
-
-        for (let i = 0, { length } = lines; i < length; ++i) {
-            if (rmagnet.test(lines[i])) {
-                magnets.push(lines[i]);
-            }
-        }
-
-        return magnets;
-    }
-
-    clearItems() {
-        this.textarea.value = '';
-        this.setCounter(0);
-    }
-}
-
 class TorrentsPage extends AbstractPage {
 
     private torrentsUpdater: Updater;
 
-    private torrentPanel: TorrentPanel;
-
-    private trackersTab: TorrentPanelTab;
-
-    private addTorrentFileMode: AddTorrentFileMode;
-
-    private addTorrentMagnetMode: AddTorrentMagnetMode;
-
-    private addTorrentForm: AddTorrentForm;
+    private uploadManager: UploadManager;
 
     init() {
+        this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
 
         this.initializeTorrentsList();
-        this.initializeTorrentPanel();
-        this.initializeAddTorrentForm();
 
         if (navigator.registerProtocolHandler) {
             navigator.registerProtocolHandler('magnet', `${ location.origin }/user/torrents/magnet?magnet=%s`, 'Athorrent');
+        }
+
+        this.handleMagnetParam();
+    }
+
+    protected handleMagnetParam() {
+        const magnet = Router.parseQueryParameters()['magnet'] as string | undefined;
+
+        if (magnet) {
+            this.showMagnetModal(magnet);
+
+            const url = new URL(location.href);
+            url.searchParams.delete('magnet');
+            history.replaceState(null, '', url.toString());
         }
     }
 
@@ -599,10 +120,10 @@ class TorrentsPage extends AbstractPage {
         document.querySelector('.torrent-list').innerHTML = data;
 
         if (document.querySelector('.backend-alert')) {
-            this.addTorrentForm.disable();
+            document.querySelector('.add-button').setAttribute('disabled', 'disabled');
         }
         else {
-            this.addTorrentForm.enable();
+            document.querySelector('.add-button').removeAttribute('disabled');
         }
     }
 
@@ -633,34 +154,70 @@ class TorrentsPage extends AbstractPage {
         on(document, 'click', new Map([
             ['.torrent-pause', this.onTorrentPause],
             ['.torrent-resume', this.onTorrentResume],
-            ['.torrent-remove', this.onTorrentRemove]
+            ['.torrent-remove', this.onTorrentRemove],
+            ['.add-torrent', this.onTorrentAdd],
+            ['.add-magnet', this.onMagnetAdd],
         ]));
     }
 
-    onShowDetails = (event: MouseEvent) => {
-        this.torrentPanel.toggleHash(this.getTorrentHash(event.target as HTMLElement));
-    }
+    protected onTorrentAdd = (_: MouseEvent) => {
+        this.uploadManager.trigger({
+            title: 'files.upload',
+            route: 'uploadTorrent',
 
-    initializeTorrentPanel() {
-        this.torrentPanel = new TorrentPanel();
-        this.trackersTab = new TorrentPanelTab(this.router, this.torrentPanel, 'torrent-trackers', 'listTrackers', {}, trackerListTimeout);
+            dropzone: {
+                paramName: 'upload-torrent-file',
+                acceptedFiles: '.torrent',
+                maxFilesize: 1,
 
-        on(document, 'click', '.torrent-detail', this.onShowDetails);
-    }
+                dictInvalidFileType: this.translator.translate('error.notATorrent'),
+            },
 
-    initializeAddTorrentForm() {
-        this.addTorrentForm = new AddTorrentForm('#add-torrent-form',
-            '#add-torrent-submit',
-            this.router,
-            this.ui,
-            this.translator,
-            () => {
-                this.torrentsUpdater.update();
+            complete: async (filesUploaded) => {
+                if (filesUploaded > 0) {
+                    await this.torrentsUpdater.update();
+                }
             }
-        );
+        });
+    }
 
-        this.addTorrentFileMode = new AddTorrentFileMode(this.router, this.translator, this.ui, this.securityManager, 'add-torrent-files', '#add-torrent-file-drop', '#add-torrent-file', '#add-torrent-file-counter', this.addTorrentForm);
-        this.addTorrentMagnetMode = new AddTorrentMagnetMode('add-torrent-magnets', '#add-torrent-magnet-wrapper', '#add-torrent-magnet', '#add-torrent-magnet-counter', this.addTorrentForm);
+    protected showMagnetModal(prefill = '') {
+        const modal = this.ui.showModal({
+            title: 'torrents.magnetModal.title',
+            subtitle: 'torrents.magnetModal.subtitle',
+            content: '<textarea placeholder="magnet:?xt=urn:btih:...\nmagnet:?xt=urn:btih:..." class="add-magnet-textarea"></textarea>',
+            removeWhenClose: true,
+            controls: [{
+                label: 'common.cancel',
+            }, {
+                label: 'torrents.add',
+                primary: true,
+                callback: async () => {
+                    const textarea = modal.querySelector('textarea');
+                    const magnets = textarea.value.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+                    try {
+                        await this.sendRequest('addMagnets', { magnets });
+                    }
+                    catch (response) {
+                        const message = (response as Response<ApiErrorResponse>).body.error;
+
+                        this.ui.showModal({
+                            title: 'torrents.magnetModal.title',
+                            content: message ?? this.translate('error.unknownError'),
+                        });
+                    }
+                }
+            }]
+        });
+
+        if (prefill) {
+            modal.querySelector('textarea').value = prefill;
+        }
+    }
+
+    protected onMagnetAdd = (_: MouseEvent) => {
+        this.showMagnetModal();
     }
 }
 

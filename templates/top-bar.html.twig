@@ -1,0 +1,14 @@
+<div class="top-bar {% if navbar_visible %}navbar-mode{% endif %}">
+    {% if navbar_visible %}
+        <button class="icon-only menu-burger-button" aria-expanded="false" aria-controls="sidebar-nav" aria-label="{{ 'nav.menu'|trans }}">{{ ux_icon('burger') }}</button>
+    {% endif %}
+
+    <a class="brand" href="{{ path('home') }}">
+        <img src="{{ asset('build/logo-small.png') }}" />
+        {{ 'app.name'|trans }}
+    </a>
+
+    {% if not navbar_visible and app.request.attributes.get('_route') != 'login' %}
+        <a class="button primary" href="{{ path('files_listFiles') }}">{{ 'nav.mySpace'|trans }}</a>
+    {% endif %}
+</div>

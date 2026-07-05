@@ -1,4 +1,3 @@
-
+@use "vars" as *;
 @use "listTorrents";
-@use "listTrackers";
-@use "addTorrents";
+@use "addMagnetModal";

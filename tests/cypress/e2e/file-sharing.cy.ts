@@ -6,10 +6,10 @@ function uploadAndShare(path) {
 
     cy.dropdownItem('.add-sharing', selector).click();
 
-    cy.get('.modal-header').should('contain', 'Lien de partage');
+    cy.get('dialog > header').should('contain', 'Lien de partage');
 
     return cy.get('.modal-body a').invoke('attr', 'href').then(async (url) => {
-        await cy.get('.modal-dialog .close').click();
+        await cy.get('dialog .close').click();
         return {basename, selector, url};
     });
 }
@@ -31,8 +31,8 @@ describe('file-sharing', () => {
     it('shared files should be listed in sharing list', () => {
         uploadAndShare('cypress/fixtures/files/test.txt').then(({basename, url}) => {
 
-            const relativeUrl = url.replace(/^.+(\/sharings\/.+\/files\/)$/, '$1');
-            const sharingId = relativeUrl.replace(/^\/sharings\/(.+)\/files\/$/, '$1');
+            const relativeUrl = url.replace(/^.+(\/shared\/.+\/files\/)$/, '$1');
+            const sharingId = relativeUrl.replace(/^\/shared\/(.+)\/files\/$/, '$1');
 
             cy.visit('/user/sharings/');
 
@@ -45,7 +45,7 @@ describe('file-sharing', () => {
     it('sharing list should allow to remove sharing', () => {
         uploadAndShare('cypress/fixtures/files/test.txt').then(({basename, url}) => {
 
-            const sharingId = url.replace(/^.+\/sharings\/(.+)\/files\/$/, '$1');
+            const sharingId = url.replace(/^.+\/shared\/(.+)\/files\/$/, '$1');
 
             cy.visit('/user/sharings/');
 

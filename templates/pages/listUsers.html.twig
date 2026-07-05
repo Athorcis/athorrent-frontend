@@ -2,11 +2,6 @@
 
 {% block title %}{{ 'users.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('users') }}
-{% endblock %}
-
 {% block main_script %}
     {{ encore_entry_script_tags('users') }}
 {% endblock %}
@@ -14,20 +9,21 @@
 {% set userId = app.user.id %}
 
 {% block content %}
-    <div class="page-header">
+    <header class="main-header">
         <h1>
             {{ 'users.title'|trans }}
-            <a class="btn btn-default pull-right" href="{{ path('addUser') }}">{{ 'users.add.title'|trans }}</a>
         </h1>
-    </div>
 
-    <table class="table table-striped">
+        <a class="button primary" href="{{ path('addUser') }}">{{ ux_icon('plus') }}{{ 'users.add.title'|trans }}</a>
+    </header>
+
+    <table>
         <thead>
             <tr>
                 <th>#</th>
-                <th>{{ 'users.username'|trans }}</th>
-                <th>{{ 'users.role'|trans }}</th>
-                <th>{{ 'users.lastConnection'|trans }}</th>
+                <th class="text-left">{{ 'users.username'|trans }}</th>
+                <th class="text-left">{{ 'users.role'|trans }}</th>
+                <th class="text-left">{{ 'users.lastConnection'|trans }}</th>
                 <th></th>
             </tr>
         </thead>
@@ -36,9 +32,9 @@
                 {% cache cache_key('user', user) %}
                 <tr class="user" id="user-{{ user.id }}">
                     <td>{{ user.id }}</td>
-                    <td class="user-name">{{ user.username }}</td>
-                    <td>{{ user.roles[0]|trans }}</td>
-                    <td>
+                    <td class="user-name text-left">{{ user.username }}</td>
+                    <td class="text-left">{{ user.roles[0]|trans }}</td>
+                    <td class="text-left">
                         {% if user.connectionTimestamp %}
                             {{ user.connectionTimestamp|format_datetime }}
                         {% else %}
@@ -46,20 +42,19 @@
                         {% endif %}
                     </td>
                     <td class="text-right user-buttons">
-                        <button class="btn btn-xs btn-default user-reset-password">
-                            <span class="fa fa-undo"></span>
+                        {% if user.id != userId %}
+                            <a class="button icon-only user-switch" href="{{ path('files_listFiles', { _switch_user: user.username }) }}">
+                                {{ ux_icon('eye') }}
+                            </a>
+                        {% endif %}
+
+                        <button class="icon-only user-reset-password">
+                            {{ ux_icon('reload') }}
                         </button>
 
-                        {% if user.id != userId %}
-                        <a class="btn btn-xs btn-default user-switch" href="{{ path('listFiles', { _switch_user: user.username, _prefixId: 'files' }) }}">
-                            <span class="fa fa-exchange-alt"></span>
-                        </a>
-                            {% if user.id != 1 %}
-                        <button class="btn btn-xs btn-danger user-remove">
-                            <span class="fa fa-times"></span>
+                        <button class="icon-only danger user-remove" {% if user.id == 1 or user.id == userId %}disabled{% endif %}>
+                            {{ ux_icon('close') }}
                         </button>
-                            {% endif %}
-                        {% endif %}
                     </td>
                 </tr>
                 {% endcache %}

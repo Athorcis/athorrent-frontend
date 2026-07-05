@@ -6,20 +6,26 @@ namespace Athorrent\View;
 
 use Athorrent\Cache\KeyGenerator\LocalizedKeyGenerator;
 use Athorrent\Filesystem\UserFilesystemEntry;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
-    public function __construct(private readonly TranslatorInterface $translator, private readonly LocalizedKeyGenerator $keyGenerator)
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly LocalizedKeyGenerator $keyGenerator,
+        private readonly AccessMapInterface $accessMap,
+        private readonly RequestStack $requestStack,
+    )
     {
     }
 
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('torrentStateToClass', $this->torrentStateToClass(...)),
             new TwigFunction('format_age', $this->formatAge(...)),
             new TwigFunction('date_to_age', $this->dateToAge(...)),
             new TwigFunction('icon', $this->getIcon(...)),
@@ -27,6 +33,7 @@ class TwigHelperExtension extends AbstractExtension
             new TwigFunction('format_bytes', $this->formatBytes(...)),
             new TwigFunction('cache_key', $this->getCacheKey(...)),
             new TwigFunction('sha256', $this->hashWithSha256(...)),
+            new TwigFunction('is_auth_required', $this->isAuthRequired(...)),
         ];
     }
 
@@ -34,44 +41,19 @@ class TwigHelperExtension extends AbstractExtension
     {
         if ($value instanceof UserFilesystemEntry) {
             if ($value->isDirectory()) {
-                return 'fa-folder-open';
+                return 'directory';
             } elseif ($value->isText()) {
-                return 'fa-file-alt';
+                return 'text-file';
             } elseif ($value->isImage()) {
-                return 'fa-file-image';
-            } elseif ($value->isAudio()) {
-                return 'fa-file-audio';
-            } elseif ($value->isVideo()) {
-                return 'fa-file-video';
-            } elseif ($value->isPdf()) {
-                return 'fa-file-pdf';
-            } elseif ($value->isArchive()) {
-                return 'fa-file-archive';
+                return 'image-file';
+            } elseif ($value->isPlayable()) {
+                return 'playable-file';
             }
 
-            return 'fa-file';
+            return 'file';
         }
 
         return '';
-    }
-
-    public function torrentStateToClass(array $torrent): string
-    {
-        $state = $torrent['state'];
-
-        if ($state === 'paused') {
-            $class = 'warning';
-        } elseif ($state === 'seeding' || $state === 'downloading') {
-            $class = 'success';
-        } elseif ($state === 'disabled') {
-            $class = 'disabled';
-        } elseif ($state === 'missing_files' || $state === 'error') {
-            $class = 'danger';
-        } else {
-            $class = 'info';
-        }
-
-        return $class;
     }
 
     public function formatAge(int $age): ?string
@@ -133,5 +115,13 @@ class TwigHelperExtension extends AbstractExtension
     public function hashWithSha256(string $value): string
     {
         return hash('sha256', $value);
+    }
+
+    public function isAuthRequired(): bool
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        [$roles] = $this->accessMap->getPatterns($request);
+
+        return is_array($roles) && !in_array('PUBLIC_ACCESS', $roles, true);
     }
 }

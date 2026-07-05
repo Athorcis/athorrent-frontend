@@ -1,0 +1,30 @@
+@use "../vars" as *;
+
+table {
+    min-width: 100%;
+    border-spacing: 0;
+    line-height: 20px;
+    border: $border;
+    border-radius: $radius-xl;
+    background: $color-bg;
+    overflow: hidden;
+    text-align: right;
+}
+
+th {
+    font-weight: 600;
+    border-bottom: $border;
+    background: $color-surface-6;
+    padding: 8px 12px;
+}
+
+tbody > tr:nth-child(even) {
+    background: $color-surface-6;
+}
+
+td {
+    padding: 8px 12px;
+    width: 0;
+    white-space: nowrap;
+    height: 50px;
+}
