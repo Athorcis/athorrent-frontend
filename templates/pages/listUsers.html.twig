@@ -2,6 +2,11 @@
 
 {% block title %}{{ 'users.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('users') }}
+{% endblock %}
+
 {% block main_script %}
     {{ encore_entry_script_tags('users') }}
 {% endblock %}
@@ -17,7 +22,7 @@
         <a class="button primary" href="{{ path('addUser') }}">{{ ux_icon('plus') }}{{ 'users.add.title'|trans }}</a>
     </header>
 
-    <table>
+    <table class="user-list">
         <thead>
             <tr>
                 <th>#</th>
@@ -46,12 +51,13 @@
                             <a class="button icon-only user-switch" href="{{ path('files_listFiles', { _switch_user: user.username }) }}">
                                 {{ ux_icon('eye') }}
                             </a>
-                        {% endif %}
+                        {%- endif -%}
 
                         <button class="icon-only user-reset-password">
                             {{ ux_icon('reload') }}
                         </button>
 
+                        {#- -#}
                         <button class="icon-only danger user-remove" {% if user.id == 1 or user.id == userId %}disabled{% endif %}>
                             {{ ux_icon('close') }}
                         </button>

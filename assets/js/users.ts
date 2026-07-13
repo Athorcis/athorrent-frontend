@@ -1,3 +1,4 @@
+import '../css/users.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';

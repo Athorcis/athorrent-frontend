@@ -27,7 +27,7 @@
                 {% for sharing in sharings %}
                     {% cache cache_key('sharing', sharing) %}
                     <tr class="sharing" id="sharing-{{ sharing.id }}">
-                        <td class="text-left">
+                        <td class="text-col text-left">
                             <a href="{{ path('sharedFiles_listFiles', { id: sharing.id }) }}">{{ sharing.path }}</a>
                         </td>
                         <td>
