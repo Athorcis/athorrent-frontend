@@ -6,6 +6,8 @@ namespace Athorrent\View;
 
 use Athorrent\Cache\KeyGenerator\LocalizedKeyGenerator;
 use Athorrent\Filesystem\UserFilesystemEntry;
+use NumberFormatter;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\AccessMapInterface;
 use Twig\Extension\AbstractExtension;
@@ -17,6 +19,8 @@ class TwigHelperExtension extends AbstractExtension
         private readonly LocalizedKeyGenerator $keyGenerator,
         private readonly AccessMapInterface $accessMap,
         private readonly RequestStack $requestStack,
+        #[Autowire('%kernel.default_locale%')]
+        private readonly string $defaultLocale,
     )
     {
     }
@@ -73,10 +77,16 @@ class TwigHelperExtension extends AbstractExtension
             $exponent = floor(log($bytes) / log($base));
             $exponent = min($exponent, $maxExponent);
 
-            $value = round($bytes / pow($base, $exponent), $precision);
+            $value = $bytes / ($base ** $exponent);
         }
 
-        return $value . ' ' . $units[$exponent];
+        $locale = $this->requestStack->getCurrentRequest()?->getLocale() ?? $this->defaultLocale;
+
+        $formatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+        $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 0);
+        $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $precision);
+
+        return $formatter->format($value) . ' ' . $units[$exponent];
     }
 
     public function getCacheKey(string $annotation, mixed $value = null): string
