@@ -243,6 +243,13 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         return 'ok';
     }
 
+    public function setDownloadLimit(int $limit): void
+    {
+        $this->request('POST', '/api/v2/transfer/setDownloadLimit', [
+            'body' => ['limit' => $limit],
+        ], json: false);
+    }
+
     protected function ensureTorrentsDirExists(): string
     {
         $torrentsDir = $this->getTorrentsDirectory();

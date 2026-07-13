@@ -95,8 +95,11 @@ class TorrentController extends AbstractController
         Request $request,
         TorrentManagerInterface $torrentManager,
         ValidatorInterface $validator,
+        #[MapQueryParameter] ?int $downloadLimit = null,
     ): array
     {
+        $this->applyTestDownloadLimit($downloadLimit, $torrentManager);
+
         /** @var UploadedFile $file */
         $file = $request->files->get('file');
 
@@ -152,8 +155,14 @@ class TorrentController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/magnets', methods: 'POST', options: ['expose' => true])]
-    public function addMagnets(Request $request, TorrentManagerInterface $torrentManager): array
+    public function addMagnets(
+        Request $request,
+        TorrentManagerInterface $torrentManager,
+        #[MapQueryParameter] ?int $downloadLimit = null,
+    ): array
     {
+        $this->applyTestDownloadLimit($downloadLimit, $torrentManager);
+
         $magnets = $request->request->all('magnets');
 
         $torrentIds = [];
@@ -211,5 +220,16 @@ class TorrentController extends AbstractController
     {
         $torrentManager->removeTorrent($hash);
         return [];
+    }
+
+    private function applyTestDownloadLimit(?int $downloadLimit, TorrentManagerInterface $torrentManager): void
+    {
+        if ($downloadLimit === null) {
+            return;
+        }
+
+        if (($_ENV['APP_ENV'] ?? '') === 'test') {
+            $torrentManager->setDownloadLimit($downloadLimit);
+        }
     }
 }

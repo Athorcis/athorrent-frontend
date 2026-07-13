@@ -2,18 +2,36 @@
 
 import Chainable = Cypress.Chainable;
 
+export const TEST_DOWNLOAD_LIMIT = 51_200;
+
+export interface TorrentAddOptions {
+    downloadLimit?: number;
+}
+
 declare namespace Cypress {
     interface Chainable {
-        torrentFile(filename: string, shouldExist?: boolean): Chainable<number|undefined>;
-        torrentMagnet(uri: string, shouldExist?: boolean): Chainable<number|undefined>;
+        torrentFile(filename: string, shouldExist?: boolean, options?: TorrentAddOptions): Chainable<string|undefined>;
+        torrentMagnet(uri: string, shouldExist?: boolean, options?: TorrentAddOptions): Chainable<string|undefined>;
 
-        torrentStatus(status: string): Chainable<number>;
+        torrentStatus(status: string): Chainable<string>;
 
-        torrentClick(selector: string): Chainable<number>;
+        torrentClick(selector: string): Chainable<string>;
     }
 }
 
-function addTorrent(callback: () => void, shouldExist: boolean): Chainable<number|undefined> {
+function interceptAddTorrent(path: string, downloadLimit?: number) {
+    if (downloadLimit === undefined) {
+        cy.intercept('POST', path).as('addTorrents');
+        return;
+    }
+
+    cy.intercept('POST', path, (req) => {
+        const separator = req.url.includes('?') ? '&' : '?';
+        req.url = `${req.url}${separator}downloadLimit=${downloadLimit}`;
+    }).as('addTorrents');
+}
+
+function addTorrent(callback: () => void, shouldExist: boolean): Chainable<string|undefined> {
     cy.url().should('contain', '/user/torrents');
 
     callback();
@@ -37,38 +55,38 @@ function addTorrent(callback: () => void, shouldExist: boolean): Chainable<numbe
     return cy.get('@addTorrent_torrentId');
 }
 
-function submitTorrentFile(filename: string) {
-    cy.intercept('POST', '/user/torrents/files').as('addTorrents');
+function submitTorrentFile(filename: string, options?: TorrentAddOptions) {
+    interceptAddTorrent('/user/torrents/files*', options?.downloadLimit);
     cy.dropdownItem('.add-torrent', '.main-header').click();
     cy.get('input[type="file"]').selectFile(`cypress/fixtures/torrents/${filename}`, { force: true });
 }
 
-function submitMagnetUri(uri: string) {
-    cy.intercept('POST', '/user/torrents/magnets').as('addTorrents');
+function submitMagnetUri(uri: string, options?: TorrentAddOptions) {
+    interceptAddTorrent('/user/torrents/magnets*', options?.downloadLimit);
     cy.dropdownItem('.add-magnet', '.main-header').click();
     cy.get('dialog textarea').type(uri, { delay: 0 });
     cy.get('dialog button.primary').click();
 }
 
-function getTorrentElement(id: number) {
+function getTorrentElement(id: string) {
     return cy.get('#torrent-' + id);
 }
 
-Cypress.Commands.add('torrentFile', function (filename: string, shouldExist = true): Chainable<number|undefined> {
+Cypress.Commands.add('torrentFile', function (filename: string, shouldExist = true, options?: TorrentAddOptions): Chainable<string|undefined> {
     return addTorrent(() => {
-        submitTorrentFile(filename);
+        submitTorrentFile(filename, options);
     }, shouldExist);
 });
 
-Cypress.Commands.add('torrentMagnet', function (uri: string, shouldExist = true): Chainable<number|undefined> {
+Cypress.Commands.add('torrentMagnet', function (uri: string, shouldExist = true, options?: TorrentAddOptions): Chainable<string|undefined> {
     return addTorrent(() => {
-        submitMagnetUri(uri)
+        submitMagnetUri(uri, options)
     }, shouldExist);
 });
 
 Cypress.Commands.add('torrentStatus', {
     prevSubject: true,
-}, (torrentId: number, status: string) => {
+}, (torrentId: string, status: string) => {
 
     getTorrentElement(torrentId)
         .find('.torrent-state')
@@ -79,7 +97,7 @@ Cypress.Commands.add('torrentStatus', {
 
 Cypress.Commands.add('torrentClick', {
     prevSubject: true,
-}, (torrentId: number, selector: string) => {
+}, (torrentId: string, selector: string) => {
 
     getTorrentElement(torrentId)
         .find(selector)
