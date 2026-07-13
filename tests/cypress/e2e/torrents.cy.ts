@@ -1,5 +1,6 @@
 import {getFileSelector} from "../support/commands";
 import {resetTestData} from "../support/utils";
+import {TEST_DOWNLOAD_LIMIT} from "../support/torrent.commands";
 
 describe('torrents', () => {
     beforeEach(() => {
@@ -9,13 +10,13 @@ describe('torrents', () => {
     });
 
     it('should add torrent file', function() {
-        cy.torrentFile('sintel.torrent')
+        cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
 
             .torrentStatus('En téléchargement');
     });
 
     it('should pause and resume torrents', function () {
-        cy.torrentFile('sintel.torrent')
+        cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
 
             .torrentClick('.torrent-pause')
             .torrentStatus('En pause')
@@ -31,7 +32,7 @@ describe('torrents', () => {
     });
 
     it('should not allow to remove file bound to torrents', function () {
-        cy.torrentFile('sintel.torrent')
+        cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
             .torrentStatus('En téléchargement');
 
         cy.visit('/user/files');

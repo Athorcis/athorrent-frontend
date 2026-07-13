@@ -31,4 +31,6 @@ interface TorrentManagerInterface
     public function resumeTorrent(string $hash): string;
 
     public function removeTorrent(string $hash): string;
+
+    public function setDownloadLimit(int $limit): void;
 }
