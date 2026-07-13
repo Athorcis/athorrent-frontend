@@ -28,3 +28,17 @@ td {
     white-space: nowrap;
     height: 50px;
 }
+
+.text-col {
+    max-width: 0;
+    white-space: normal;
+    overflow-wrap: break-word;
+    width: max-content;
+}
+
+@media (width < $breakpoint-mobile) {
+    th,
+    td {
+        padding: 6px 8px;
+    }
+}

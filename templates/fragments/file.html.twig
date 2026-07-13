@@ -12,7 +12,7 @@
     <td class="file-icon">
         {{ ux_icon(icon) }}
     </td>
-    <td class="file-name text-left">
+    <td class="file-name text-col text-left">
         <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.path }) }}" title="{{ name }}">{{ name }}</a>
     </td>
     <td class="file-size">

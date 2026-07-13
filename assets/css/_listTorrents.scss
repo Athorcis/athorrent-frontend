@@ -42,6 +42,7 @@
     overflow: hidden;
     font-weight: normal;
     font-size: inherit;
+    overflow-wrap: break-word;
 }
 
 .torrent-state {
@@ -75,6 +76,7 @@ progress {
 .torrent-info {
     display: flex;
     gap: 16px;
+    white-space: nowrap;
 }
 
 .torrent-info-value {
@@ -98,6 +100,7 @@ progress {
 
 .torrent-controls {
     margin-left: auto;
+    white-space: nowrap;
 }
 
 @media (width < $breakpoint-mobile) {
@@ -107,10 +110,5 @@ progress {
 
     .torrent-info {
         gap: 10px;
-    }
-
-    .torrent-controls {
-        margin-left: 0;
-        flex: 1 1 100%;
     }
 }

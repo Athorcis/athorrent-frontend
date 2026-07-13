@@ -1,8 +1,7 @@
-
-<table>
+<table class="search-results">
     <thead>
         <tr>
-            <th class="text-left">{{ 'search.torrents.name'|trans }}</th>
+            <th class="col-title text-left">{{ 'search.torrents.name'|trans }}</th>
             <th class="col-tracker">{{ 'search.torrents.tracker'|trans }}</th>
             <th class="col-size">{{ 'search.torrents.size'|trans }}</th>
             <th class="col-age">{{ 'search.torrents.age'|trans }}</th>
@@ -18,7 +17,7 @@
     <tbody>
     {% for result in results %}
         <tr>
-            <td class="col-title text-left">
+            <td class="col-title text-col text-left">
                 <a href="{{ result.Details }}" target="_blank">{{ result.Title }}</a>
             </td>
             <td class="col-tracker">{{ result.Tracker }}</td>

@@ -6,19 +6,12 @@
 
 .file-name {
     width: auto;
-    max-width: 0;
     padding-left: 0;
 }
 
 td.file-name,
 td.file-size {
     padding-top: 7px;
-}
-
-.file-link {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .file-buttons {
