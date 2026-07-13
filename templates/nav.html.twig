@@ -9,7 +9,7 @@
     {% set roles = [] %}
 {% endif %}
 
-{% cache cache_key('nav', roles) %}
+{% cache cache_key('nav', [roles, route]) %}
 
     <nav class="sidebar" id="sidebar-nav">
         <header>
