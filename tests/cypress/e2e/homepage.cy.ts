@@ -10,7 +10,7 @@ describe('homepage', () => {
 
     it('should allow login', () => {
         cy.login();
-        cy.visit('/user/files');
+        cy.visit('/user/files/');
         getLogoutButton().should('exist');
     });
 
