@@ -22,7 +22,7 @@
             </td>
             <td class="col-tracker">{{ result.Tracker }}</td>
             <td class="col-size">{{ format_bytes(result.Size) }}</td>
-            <td class="col-age">{{ format_age(date_to_age(result.PublishDate)) }}</td>
+            <td class="col-age">{{ date_to_age(result.PublishDate)|duration }}</td>
             <td class="col-seeders">{{ result.Seeders }}</td>
             <td class="col-leechers">{{ result.Peers }}</td>
             <td class="col-add-magnet">

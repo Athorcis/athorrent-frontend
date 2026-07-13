@@ -8,14 +8,12 @@ use Athorrent\Cache\KeyGenerator\LocalizedKeyGenerator;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\AccessMapInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
     public function __construct(
-        private readonly TranslatorInterface $translator,
         private readonly LocalizedKeyGenerator $keyGenerator,
         private readonly AccessMapInterface $accessMap,
         private readonly RequestStack $requestStack,
@@ -26,7 +24,6 @@ class TwigHelperExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('format_age', $this->formatAge(...)),
             new TwigFunction('date_to_age', $this->dateToAge(...)),
             new TwigFunction('icon', $this->getIcon(...)),
             new TwigFunction('base64_encode', 'base64_encode'),
@@ -54,31 +51,6 @@ class TwigHelperExtension extends AbstractExtension
         }
 
         return '';
-    }
-
-    public function formatAge(int $age): ?string
-    {
-        $steps = [
-            'seconds' => 60,
-            'minutes' => 3600,
-            'hours' => 86400,
-            'days' => 2_592_000,
-            'months' => 31_557_600,
-            'years' => INF
-        ];
-
-        $previousLimit = 1;
-
-        foreach ($steps as $magnitude => $limit) {
-            if ($age < $limit) {
-                $n = floor($age / $previousLimit);
-                return $n . ' ' . $this->translator->trans('search.age.' . $magnitude, ['count' => $n]);
-            }
-
-            $previousLimit = $limit;
-        }
-
-        return null;
     }
 
     public function dateToAge(string $date): int
