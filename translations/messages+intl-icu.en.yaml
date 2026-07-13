@@ -115,6 +115,8 @@ torrents:
     ratio: Ratio
     seeders: Seeders
     leechers: Leechers
+    eta:
+        unknown: Unknown
     none: no torrents to display
     unavailable:
         starting: The torrent manager is starting

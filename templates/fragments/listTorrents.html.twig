@@ -18,7 +18,12 @@
 
                     <span class="torrent-info-value">
                         {{ ux_icon('hourglass') }}
-                        {{ torrent.eta }}
+
+                        {% if torrent.eta >= 8640000 %}
+                            {{ 'torrents.eta.unknown'|trans }}
+                        {% else %}
+                            {{ torrent.eta|duration }}
+                        {% endif %}
                     </span>
                 {% elseif torrent.state == 'seeding' %}
                     <span class="torrent-info-value">

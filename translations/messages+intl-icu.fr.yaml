@@ -113,6 +113,8 @@ torrents:
     ratio: Ratio
     seeders: Seeders
     leechers: Leechers
+    eta:
+        unknown: Inconnu
     none: Aucun torrent à afficher
     unavailable:
         starting: Le gestionnaire de torrents est en cours de démarrage.
