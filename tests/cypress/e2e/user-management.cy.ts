@@ -25,7 +25,7 @@ describe('user-management', () => {
         cy.visit('/administration/users/');
 
         cy.get('.user-switch').click();
-        cy.url().should('contain', '/user/files');
+        cy.url().should('contain', '/user/files/');
         getLogoutButton().click();
     });
     */

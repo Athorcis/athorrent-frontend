@@ -35,7 +35,7 @@ describe('torrents', () => {
         cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
             .torrentStatus('En téléchargement');
 
-        cy.visit('/user/files');
+        cy.visit('/user/files/');
 
         const selector = getFileSelector('Sintel');
 

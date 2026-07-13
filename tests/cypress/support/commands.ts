@@ -34,7 +34,7 @@ Cypress.Commands.add('login', function (username: string = DEFAULT_USERNAME, pas
         cy.get('form input[name=_password]').clear().type(password);
         cy.get('form button').click();
 
-        cy.url().should('contain', '/user/files');
+        cy.url().should('contain', '/user/files/');
     }, {
         validate: () => {
             cy.elementExists(LOGOUT_BUTTON_SELECTOR).then(exists => {
@@ -52,7 +52,7 @@ export function getLogoutButton() {
     return cy.get(LOGOUT_BUTTON_SELECTOR);
 }
 Cypress.Commands.add('logout', function () {
-    cy.visit('/user/files');
+    cy.visit('/user/files/');
     getLogoutButton().click();
     Cypress.session.clearAllSavedSessions();
 });
@@ -77,7 +77,7 @@ function getBasename(path: string): string {
 }
 
 export function uploadFiles(paths: string[], relativePaths: string[] = [], asDirectory = false) {
-    cy.visit('/user/files');
+    cy.visit('/user/files/');
     cy.get('.add-button').click();
 
     if (asDirectory) {

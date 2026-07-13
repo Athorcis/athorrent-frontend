@@ -20,7 +20,7 @@ describe('user-files', () => {
     beforeEach(() => {
         resetTestData();
         cy.login();
-        cy.visit('/user/files');
+        cy.visit('/user/files/');
     });
 
     it('should be accessible', () => {
