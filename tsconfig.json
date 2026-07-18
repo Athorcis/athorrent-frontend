@@ -16,7 +16,7 @@
         "strictBuiltinIteratorReturn": true,
         "strictFunctionTypes": true,
         "strictNullChecks": true,
-        "strictPropertyInitialization": false,
+        "strictPropertyInitialization": true,
         "useUnknownInCatchVariables": true,
     }
 }
