@@ -38,10 +38,6 @@ class FileController extends AbstractFileController
             throw new AccessDeniedHttpException();
         }
 
-        if (file_exists($path) &&  $request->request->get('overwrite') !== 'true') {
-            throw new UserVisibleException('error.fileExists');
-        }
-
         $dirPath = dirname($path);
 
         $dirEntry = $rootEntry->getFilesystem()->getEntry($dirPath);
@@ -49,6 +45,22 @@ class FileController extends AbstractFileController
         if ($dirEntry->isWritable()) {
             $fs = new Filesystem();
             $fs->mkdir($dirPath);
+        }
+
+        $overwrite = $request->request->get('overwrite') === 'true';
+
+        if (!$overwrite) {
+            $handle = @fopen($path, 'x');
+
+            if ($handle === false) {
+                if (file_exists($path)) {
+                    throw new UserVisibleException('error.fileExists');
+                }
+
+                throw new \RuntimeException(sprintf('Failed to create file "%s"', $path));
+            }
+
+            fclose($handle);
         }
 
         $file->move($dirPath, basename($relativePath));
