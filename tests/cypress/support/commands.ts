@@ -76,8 +76,24 @@ function getBasename(path: string): string {
     return path.replace(/^(?:.*\/)?([^/]+)$/, '$1');
 }
 
+function getParentDir(path: string): string {
+    const normalized = path.replace(/\\/g, '/');
+    const index = normalized.lastIndexOf('/');
+
+    return index === -1 ? '' : normalized.slice(0, index);
+}
+
+function visitUserFiles(path = '') {
+    if (path === '') {
+        cy.visit('/user/files/');
+        return;
+    }
+
+    cy.visit({ url: '/user/files/', qs: { path } });
+}
+
 export function uploadFiles(paths: string[], relativePaths: string[] = [], asDirectory = false) {
-    cy.visit('/user/files/');
+    visitUserFiles();
     cy.get('.add-button').click();
 
     if (asDirectory) {
@@ -87,6 +103,8 @@ export function uploadFiles(paths: string[], relativePaths: string[] = [], asDir
         cy.get('.add-file').click();
     }
 
+    cy.intercept('POST', '/user/files*').as('uploadFile');
+
     cy.get('.dz-hidden-input').selectFile(paths.map((path, index) => {
 
         return {
@@ -95,15 +113,41 @@ export function uploadFiles(paths: string[], relativePaths: string[] = [], asDir
         };
     }), { force: true });
 
+    for (let i = 0; i < paths.length; i++) {
+        cy.wait('@uploadFile');
+    }
+
     const result = paths.map((path, index) => {
-        const basename = getBasename(relativePaths[index] ?? path);
+        const relativePath = (relativePaths[index] ?? getBasename(path)).replace(/\\/g, '/');
+        const basename = getBasename(relativePath);
         const selector = getFileSelector(basename);
 
-        return { basename, selector };
+        return { basename, selector, relativePath, parentDir: getParentDir(relativePath) };
     });
 
-    for (const { selector } of result) {
-        cy.get(`${selector}`).should('exist');
+    const filesByDir = new Map<string, typeof result>();
+
+    for (const file of result) {
+        const files = filesByDir.get(file.parentDir) ?? [];
+        files.push(file);
+        filesByDir.set(file.parentDir, files);
+    }
+
+    let currentDir = '';
+
+    for (const [parentDir, files] of filesByDir) {
+        if (parentDir !== currentDir) {
+            visitUserFiles(parentDir);
+            currentDir = parentDir;
+        }
+
+        for (const { selector } of files) {
+            cy.get(selector).should('exist');
+        }
+    }
+
+    if (currentDir !== '') {
+        visitUserFiles();
     }
 
     return result;
