@@ -1,3 +1,5 @@
+import { readdirSync } from 'node:fs';
+import { basename, extname } from 'node:path';
 import Encore from '@symfony/webpack-encore';
 import StyleLintPlugin from 'stylelint-webpack-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
@@ -22,20 +24,8 @@ Encore
      *
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
+     * JS and standalone SCSS entries are registered dynamically below.
      */
-    .addEntry('athorrent', './assets/js/athorrent.ts')
-    .addEntry('audio', './assets/js/audio.ts')
-    .addEntry('files', './assets/js/files.ts')
-    .addEntry('search', './assets/js/search.ts')
-    .addEntry('sharings', './assets/js/sharings.ts')
-    .addEntry('torrents', './assets/js/torrents.ts')
-    .addEntry('users', './assets/js/users.ts')
-    .addEntry('video', './assets/js/video.ts')
-
-    .addStyleEntry('home', './assets/css/home.scss')
-    .addStyleEntry('main', './assets/css/main.scss')
-    .addStyleEntry('media', './assets/css/media.scss')
-
     .copyFiles({
         from: './assets/images',
         pattern: /\.(ico|png)$/
@@ -96,5 +86,24 @@ Encore
     // requires WebpackEncoreBundle 1.4 or higher
     .enableIntegrityHashes(Encore.isProduction())
 ;
+
+const jsEntries = new Set();
+
+for (const file of readdirSync('./assets/js')) {
+    if (extname(file) === '.ts') {
+        const name = basename(file, '.ts');
+        jsEntries.add(name);
+        Encore.addEntry(name, `./assets/js/${file}`);
+    }
+}
+
+for (const file of readdirSync('./assets/css')) {
+    if (extname(file) === '.scss' && !file.startsWith('_')) {
+        const name = basename(file, '.scss');
+        if (!jsEntries.has(name)) {
+            Encore.addStyleEntry(name, `./assets/css/${file}`);
+        }
+    }
+}
 
 export default await Encore.getWebpackConfig();
