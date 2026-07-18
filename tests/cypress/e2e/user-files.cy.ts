@@ -1,4 +1,4 @@
-import {uploadFile, uploadFiles} from "../support/commands";
+import {getFileSelector, uploadFile, uploadFiles} from "../support/commands";
 import {resetTestData} from "../support/utils";
 
 
@@ -124,6 +124,25 @@ describe('user-files', () => {
         cy.get('h1').should('have.text', basename);
 
         pausePlayerAndAssertElapsed('video');
+    });
+
+    it('should allow directory download as tar.gz', () => {
+        uploadFiles(
+            ['cypress/fixtures/files/test.txt', 'cypress/fixtures/files/test.txt'],
+            ['folder/a.txt', 'folder/b.txt'],
+        );
+
+        const dirSelector = getFileSelector('folder');
+
+        cy.dropdownItem('.download-file', dirSelector).click();
+
+        cy.readFile('cypress/downloads/folder.tar.gz', null).should('not.be.null');
+
+        cy.exec('tar -tzf cypress/downloads/folder.tar.gz').then(({stdout}) => {
+            const members = stdout.trim().split(/\r?\n/).filter(Boolean);
+
+            expect(members).to.deep.equals(['a.txt', 'b.txt']);
+        });
     });
 
     // @TODO check directory upload
