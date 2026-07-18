@@ -28,17 +28,6 @@ trait MimeTypeCheckerTrait
         return str_starts_with($this->getMimeType(), 'video/');
     }
 
-    public function isPdf(): bool
-    {
-        return str_starts_with($this->getMimeType(), 'application/pdf');
-    }
-
-    public function isArchive(): bool
-    {
-        $mimeType = $this->getMimeType();
-        return str_starts_with($mimeType, 'application/zip') || str_starts_with($mimeType, 'application/x-gzip');
-    }
-
     public function isPlayable(): bool
     {
         $mimeType = $this->getMimeType();
