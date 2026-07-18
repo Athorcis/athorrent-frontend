@@ -24,15 +24,17 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('athorrent', './assets/js/athorrent.ts')
+    .addEntry('audio', './assets/js/audio.ts')
     .addEntry('files', './assets/js/files.ts')
-    .addEntry('media', './assets/js/media.ts')
     .addEntry('search', './assets/js/search.ts')
     .addEntry('sharings', './assets/js/sharings.ts')
     .addEntry('torrents', './assets/js/torrents.ts')
     .addEntry('users', './assets/js/users.ts')
+    .addEntry('video', './assets/js/video.ts')
 
     .addStyleEntry('home', './assets/css/home.scss')
     .addStyleEntry('main', './assets/css/main.scss')
+    .addStyleEntry('media', './assets/css/media.scss')
 
     .copyFiles({
         from: './assets/images',
@@ -93,19 +95,6 @@ Encore
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
     .enableIntegrityHashes(Encore.isProduction())
-
-    .addRule({
-        test: /mediaelement[\\\/]build[\\\/]mediaelement-and-player\.js$/,
-        loader: "exports-loader",
-        options: {
-            type: 'commonjs',
-            exports: "MediaElementPlayer",
-        },
-    })
-
-    .addAliases({
-        'mediaelement/full': 'mediaelement/build/mediaelement-and-player.js'
-    })
 ;
 
 export default await Encore.getWebpackConfig();

@@ -6,13 +6,13 @@ import {SecurityManager} from "./security-manager";
 
 export abstract class AbstractPage extends DataManager {
 
-    protected router: Router;
+    protected router!: Router;
 
-    protected ui: UiManager;
+    protected ui!: UiManager;
 
-    protected translator: Translator;
+    protected translator!: Translator;
 
-    protected securityManager: SecurityManager;
+    protected securityManager!: SecurityManager;
 
     injectServices(router: Router, translator: Translator, ui: UiManager, securityManager: SecurityManager) {
         this.router = router;

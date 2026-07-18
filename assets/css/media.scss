@@ -1,16 +1,6 @@
 
-img {
-    max-width: 100%;
-}
-
-.media-container {
-    text-align: center;
-
-    > img {
-        display: inline-block;
-    }
-}
-
-.mejs__container {
-    max-height: 85vh;
+img.content {
+    object-fit: contain;
+    min-height: 0;
+    margin: auto;
 }

@@ -153,30 +153,28 @@ abstract class AbstractFileController extends AbstractController
     }
 
     #[Route(path: '/play', methods: 'GET')]
-    public function playFile(#[Requirements(path: true, file: true)] UserFilesystemEntry $entry): View
+    public function playFile(#[Requirements(path: true, file: true)] UserFilesystemEntry $entry, Request $request): View
     {
-        if ($entry->isPlayable()) {
-            if ($entry->isAudio()) {
-                $mediaTag = 'audio';
-            } elseif ($entry->isVideo()) {
-                $mediaTag = 'video';
-            }
+        if ($entry->isAudio()) {
+            $template = 'playAudio';
+        } elseif ($entry->isVideo()) {
+            $template = 'playVideo';
         }
-
-        if (!isset($mediaTag)) {
+        else {
             throw new UnsupportedMediaTypeHttpException('error.notPlayable');
         }
 
         $path = $entry->getPath();
         $breadcrumb = $this->getBreadcrumb($path);
 
+        $request->attributes->set('_subroute', $template);
+
         return new View(ViewType::Page, [
             'name' => $entry->getName(),
             'breadcrumb' => $breadcrumb,
-            'mediaTag' => $mediaTag,
             'type' => $entry->getMimeType(),
             'src' => $path
-        ]);
+        ], $template);
     }
 
     #[Route(path: '/display', methods: 'GET')]

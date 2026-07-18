@@ -84,9 +84,9 @@ class Updater {
 
 class TorrentsPage extends AbstractPage {
 
-    private torrentsUpdater: Updater;
+    private torrentsUpdater!: Updater;
 
-    private uploadManager: UploadManager;
+    private uploadManager!: UploadManager;
 
     init() {
         this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
