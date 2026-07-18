@@ -12,7 +12,7 @@ class Updater {
 
     private timeoutId = -1;
 
-    private data$: AbortablePromise<string>;
+    private data$: AbortablePromise<string>|null = null;
 
     constructor(
         private router: Router,
@@ -117,13 +117,13 @@ class TorrentsPage extends AbstractPage {
     }
 
     onUpdateTorrents = (data: string) => {
-        document.querySelector('.torrent-list').innerHTML = data;
+        document.querySelector('.torrent-list')!.innerHTML = data;
 
         if (document.querySelector('.backend-alert')) {
-            document.querySelector('.add-button').setAttribute('disabled', 'disabled');
+            document.querySelector('.add-button')!.setAttribute('disabled', 'disabled');
         }
         else {
-            document.querySelector('.add-button').removeAttribute('disabled');
+            document.querySelector('.add-button')!.removeAttribute('disabled');
         }
     }
 
@@ -193,14 +193,14 @@ class TorrentsPage extends AbstractPage {
                 label: 'torrents.add',
                 primary: true,
                 callback: async () => {
-                    const textarea = modal.querySelector('textarea');
+                    const textarea = modal.querySelector('textarea')!;
                     const magnets = textarea.value.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
                     try {
                         await this.sendRequest('addMagnets', { magnets });
                     }
                     catch (response) {
-                        const message = (response as Response<ApiErrorResponse>).body.error;
+                        const message = (response as Response<ApiErrorResponse>).body?.error;
 
                         this.ui.showModal({
                             title: 'torrents.magnetModal.title',
@@ -212,7 +212,7 @@ class TorrentsPage extends AbstractPage {
         });
 
         if (prefill) {
-            modal.querySelector('textarea').value = prefill;
+            modal.querySelector('textarea')!.value = prefill;
         }
     }
 

@@ -16,7 +16,7 @@ class SearchPage extends AbstractPage {
         const link = (event.target as HTMLElement).closest('a');
 
         try {
-            await this.sendRequest('addMagnets', { magnets: [link.href] });
+            await this.sendRequest('addMagnets', { magnets: [link!.href] });
             location.assign(this.router.generateUrl('listTorrents'));
         }
         catch (response) {

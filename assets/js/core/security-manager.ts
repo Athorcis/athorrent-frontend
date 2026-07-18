@@ -4,9 +4,9 @@ const CSRF_TOKEN_LENGTH = 18;
 
 export class SecurityManager {
 
-    private csrfCookie: string|undefined;
+    private csrfCookie: string|null = null;
 
-    private csrfToken: string|undefined;
+    private csrfToken: string|null = null;
 
     constructor(private http: HttpClient) {}
 
@@ -39,9 +39,11 @@ export class SecurityManager {
     private nameCheck = /^[-_a-zA-Z0-9]{4,22}$/;
     private tokenCheck = /^[-_/+a-zA-Z0-9]{24,}$/;
 
-    initializeCsrfToken(form?: HTMLFormElement): string {
+    initializeCsrfToken(): string;
+    initializeCsrfToken(form: HTMLFormElement): string|null;
+    initializeCsrfToken(form?: HTMLFormElement): string|null {
         if (form) {
-            const csrfField = form.querySelector('input[data-controller="csrf-protection"], input[name="_csrf_token"]') as HTMLInputElement;
+            const csrfField = this.getCsrfField(form);
 
             if (csrfField) {
                 this.csrfCookie = csrfField.getAttribute('data-csrf-protection-cookie-value');
@@ -52,17 +54,21 @@ export class SecurityManager {
             this.csrfToken = 'csrf-token';
         }
 
-        if (!this.csrfCookie && this.nameCheck.test(this.csrfToken)) {
+        if (!this.csrfCookie && this.csrfToken && this.nameCheck.test(this.csrfToken)) {
             this.csrfCookie = this.csrfToken;
             this.csrfToken = btoa(String.fromCharCode.apply(null, Array.from(crypto.getRandomValues(new Uint8Array(CSRF_TOKEN_LENGTH)))));
         }
 
-        if (this.csrfCookie && this.tokenCheck.test(this.csrfToken)) {
+        if (this.csrfCookie && this.csrfToken && this.tokenCheck.test(this.csrfToken)) {
             const cookie = this.csrfCookie + '_' + this.csrfToken + '=' + this.csrfCookie + '; path=/; samesite=strict';
             document.cookie = window.location.protocol === 'https:' ? '__Host-' + cookie + '; secure' : cookie;
         }
 
         return this.csrfToken;
+    }
+
+    protected getCsrfField(form: HTMLFormElement): HTMLInputElement|null {
+        return form.querySelector('input[data-controller="csrf-protection"], input[name="_csrf_token"]');
     }
 
     addCsrfTokenToForm(form: HTMLFormElement) {
@@ -71,20 +77,25 @@ export class SecurityManager {
             return;
         }
 
-        const csrfToken = this.initializeCsrfToken(form);
-        const csrfField = form.querySelector('input[data-controller="csrf-protection"], input[name="_csrf_token"]') as HTMLInputElement;
+        const csrfField = this.getCsrfField(form);
 
-        csrfField.value = csrfToken;
+        if (csrfField) {
+            const csrfToken = this.initializeCsrfToken(form);
+
+            if (csrfToken) {
+                csrfField.value = csrfToken;
+            }
+        }
     }
 
     removeCsrfCookie () {
-        if (this.tokenCheck.test(this.csrfToken) && this.nameCheck.test(this.csrfCookie)) {
+        if (this.csrfToken && this.tokenCheck.test(this.csrfToken) && this.csrfCookie && this.nameCheck.test(this.csrfCookie)) {
             const cookie = this.csrfCookie + '_' + this.csrfToken + '=0; path=/; samesite=strict; max-age=0';
 
             document.cookie = window.location.protocol === 'https:' ? '__Host-' + cookie + '; secure' : cookie;
 
-            this.csrfCookie = undefined;
-            this.csrfToken = undefined;
+            this.csrfCookie = null;
+            this.csrfToken = null;
         }
     }
 }

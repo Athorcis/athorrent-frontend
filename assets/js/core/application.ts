@@ -15,9 +15,9 @@ export class Application {
     private translator: Translator;
 
     constructor(config: Partial<AppConfig>) {
-        this.router = new Router(config.routes, config.routeParameters, config.action);
+        this.router = new Router(config.routes!, config.routeParameters!, config.action!);
         this.securityManager = new SecurityManager(this.router.getHttpClient());
-        this.translator = new Translator(config.strings);
+        this.translator = new Translator(config.strings!);
         this.ui = new UiManager(this.translator);
     }
 
@@ -25,7 +25,7 @@ export class Application {
         this.securityManager.init();
     }
 
-    run(pageType: { new(): AbstractPage } = null) {
+    run(pageType: { new(): AbstractPage }|null = null) {
 
         this.initialize();
 
@@ -37,7 +37,7 @@ export class Application {
     }
 
     static create() {
-        let data: AppConfig;
+        let data: AppConfig|undefined;
         const json = document.body.dataset['athorrent'];
 
         if (json !== undefined) {

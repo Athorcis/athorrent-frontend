@@ -20,7 +20,14 @@ export class UiManager {
     private modalTemplate: HTMLTemplateElement;
 
     constructor(private translator: Translator) {
-        this.modalTemplate = document.querySelector('#template-modal');
+        const modalTemplate = document.querySelector<HTMLTemplateElement>('#template-modal');
+
+        if (modalTemplate) {
+            this.modalTemplate = modalTemplate;
+        }
+        else {
+            throw new Error('failed to find #template-modal');
+        }
 
         this.initMobileNav();
 
@@ -31,13 +38,13 @@ export class UiManager {
                 return;
             }
 
-            const menu = target.closest<HTMLUListElement>('.dropdown-menu');
+            const menu = target.closest<HTMLUListElement>('.dropdown-menu')!;
             menu.hidePopover();
         });
 
         on(document, 'click', '.alert-dismissible > .close', function (event) {
             const target = event.target as HTMLElement;
-            target.closest('.alert').remove();
+            target.closest('.alert')!.remove();
         });
     }
 
@@ -103,15 +110,15 @@ export class UiManager {
 
         const fragment: DocumentFragment = this.modalTemplate.content.cloneNode(true) as DocumentFragment;
 
-        fragment.querySelector('.modal-title').textContent = this.translator.translate(title);
-        fragment.querySelector('.modal-body').innerHTML = content;
+        fragment.querySelector('.modal-title')!.textContent = this.translator.translate(title);
+        fragment.querySelector('.modal-body')!.innerHTML = content;
 
         if (subtitle) {
             const subtitleEL = document.createElement('p');
             subtitleEL.classList.add('modal-subtitle');
             subtitleEL.textContent = this.translator.translate(subtitle);
 
-            fragment.querySelector('header').append(subtitleEL);
+            fragment.querySelector('header')!.append(subtitleEL);
         }
 
         if (controls) {
@@ -137,7 +144,7 @@ export class UiManager {
                 controlsEL.appendChild(controlEl);
             }
 
-            fragment.firstElementChild.appendChild(controlsEL);
+            fragment.firstElementChild!.appendChild(controlsEL);
         }
 
         const modal = fragment.firstElementChild as HTMLDialogElement;

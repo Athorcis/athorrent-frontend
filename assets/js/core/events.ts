@@ -28,6 +28,9 @@ export function on<E extends Event>(
             if (typeof listeners === 'function') {
                 listeners = [listeners];
             }
+            else if (!listeners) {
+                listeners = [];
+            }
 
             if (target.closest(selector)) {
                 for (const listener of listeners) {
