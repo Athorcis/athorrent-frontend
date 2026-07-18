@@ -1,36 +1,41 @@
 
 export class DataManager {
-    getItem(type: string, element: HTMLElement, selector: string = null): HTMLElement {
-        return element.closest(selector || `.${type}`);
-    }
+    getItem(type: string, element: HTMLElement, selector: string|null = null): HTMLElement {
+        selector = selector || `.${type}`;
 
-    getItemId(type: string, element: HTMLElement, selector: string = null) {
-        const item = this.getItem(type, element, selector);
+        const item = element.closest<HTMLElement>(selector);
 
         if (item) {
-            return item.getAttribute('id').replace(`${type}-`, '');
+            return item;
         }
 
-        return null;
+        throw new Error(`failed to get item : root not found ${selector}`);
     }
 
-    getItemAttr(type: string, element: HTMLElement, name: string, selector: string = null) {
+    getItemId(type: string, element: HTMLElement, selector: string|null = null): string {
         const item = this.getItem(type, element, selector);
+        const elementId = item.getAttribute('id');
 
-        if (item) {
-            return item.querySelector(`.${type}-${name}`).textContent;
+        if (elementId) {
+            return elementId.replace(`${type}-`, '');
         }
 
-        return null;
+        throw new Error('failed to get item id : missing attribute id');
     }
 
-    getItemData(type: string, element: HTMLElement, name: string, selector: string = null) {
+    getItemAttr(type: string, element: HTMLElement, name: string, selector: string|null = null): string {
         const item = this.getItem(type, element, selector);
+        const attr = item.querySelector(`.${type}-${name}`);
 
-        if (item) {
-            return item.dataset[name];
+        if (attr) {
+            return attr.textContent;
         }
 
-        return null;
+        throw new Error(`failed to get item attribute : missing attribute ${name}`);
+    }
+
+    getItemData(type: string, element: HTMLElement, name: string, selector: string|null = null): string|null {
+        const item = this.getItem(type, element, selector);
+        return item.dataset[name] ?? null;
     }
 }

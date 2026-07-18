@@ -36,21 +36,21 @@ export class UploadManager {
         const modal = this.ui.prepareModal({ title, content: `<div class="file-upload-list"></div>`, removeWhenClose: true });
         modal.classList.add('hide-close');
 
-        const dropzone = new Dropzone(modal.querySelector<HTMLDivElement>('.file-upload-list'), {
+        const dropzone = new Dropzone(modal.querySelector<HTMLDivElement>('.file-upload-list')!, {
             ...options.dropzone,
             url: this.router.generateUrl(route),
             paramName: 'file',
             dictFileTooBig: this.translator.translate('error.fileTooBig'),
             dictResponseError: this.translator.translate('error.serverError'),
-            previewTemplate: document.querySelector('#template-dropzone-preview').innerHTML,
+            previewTemplate: document.querySelector('#template-dropzone-preview')!.innerHTML,
             parallelUploads: 1,
             init: function() {
                 if (type === 'directory') {
                     // This allows the file picker to select folders instead of files
-                    this.hiddenFileInput.setAttribute("webkitdirectory", 'true');
+                    this.hiddenFileInput!.setAttribute("webkitdirectory", 'true');
                 }
 
-                this.hiddenFileInput.addEventListener("cancel", () => {
+                this.hiddenFileInput!.addEventListener("cancel", () => {
                     this.destroy();
                     modal.remove();
                 });
@@ -77,16 +77,16 @@ export class UploadManager {
         dropzone.on('uploadprogress', (file: DropzoneFile, progress: number) => {
 
             if (file.status === 'uploading') {
-                file.previewElement.querySelector('.file-upload__status__progress').textContent = percentFormat.format(progress / PROGRESS_COMPLETED);
+                file.previewElement!.querySelector('.file-upload__status__progress')!.textContent = percentFormat.format(progress / PROGRESS_COMPLETED);
 
                 if (progress === PROGRESS_COMPLETED) {
-                    file.previewElement.querySelector('progress').removeAttribute('value');
+                    file.previewElement!.querySelector('progress')!.removeAttribute('value');
                 }
             }
         });
 
         dropzone.on('success', (file: DropzoneFile) => {
-            file.previewElement.querySelector('progress').value = 100;
+            file.previewElement!.querySelector('progress')!.value = 100;
             this.securityManager.removeCsrfCookie();
             ++filesUploaded;
         });
@@ -123,6 +123,6 @@ export class UploadManager {
 
     trigger(options: UploadOptions): void {
         const [, modal] = this.initialize(options);
-        modal.querySelector('.file-upload-list').dispatchEvent(new MouseEvent('click'));
+        modal.querySelector('.file-upload-list')!.dispatchEvent(new MouseEvent('click'));
     }
 }

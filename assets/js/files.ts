@@ -66,9 +66,9 @@ class FilesPage extends AbstractPage {
     }
 
     async updateFileList() {
-        const data = await this.sendRequest<string>('listFiles', { path: Router.parseQueryParameters()['path'] });
+        const data = await this.sendRequest<string>('listFiles', { path: Router.parseQueryParameters()['path']! });
 
-        const content = document.querySelector('.main-header').nextElementSibling;
+        const content = document.querySelector('.main-header')!.nextElementSibling!;
         const newContent = document.createRange().createContextualFragment(data);
 
         content.replaceWith(newContent);
@@ -98,8 +98,8 @@ class FilesPage extends AbstractPage {
     }
 
     onSharingLink = (event: MouseEvent) => {
-        const target = event.target as HTMLElement;
-        this.modalSharingLink(target.getAttribute('href'));
+        const target = event.target as HTMLAnchorElement;
+        this.modalSharingLink(target.getAttribute('href')!);
         event.preventDefault();
     }
 

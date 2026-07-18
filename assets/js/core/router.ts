@@ -24,17 +24,21 @@ export class Router {
 
         const body$ = this.http.executeForResponse<ApiResponse<R>>(request).then(response => {
 
-            const {body} = response;
+            const {body}: {body: ApiResponse<R>|null} = response;
 
-            if (body.status === 'success') {
-                return body.data;
+            if (body) {
+                if (body.status === 'success') {
+                    return body.data;
+                }
+
+                if (body.code === 'LOGIN_REQUIRED') {
+                    location.reload();
+                }
+
+                throw new Error(body.error ?? body.code ?? '');
             }
 
-            if (body.code === 'LOGIN_REQUIRED') {
-                location.reload();
-            }
-
-            throw new Error(body.error ?? body.code);
+            throw new Error('response without a body')
         }) as AbortablePromise<R>;
 
         body$.abort = function () {
@@ -60,7 +64,7 @@ export class Router {
     protected prepareUrl(route: Route, params: Params): string {
 
         params = {
-            _locale: this.routeParameters['_locale'],
+            _locale: this.routeParameters['_locale'] as string,
             ...params
         };
 
@@ -117,13 +121,13 @@ export class Router {
             throw new Error(`cannot find route with name: ${name}`);
         }
 
-        const routeGroup = this.routes[name];
+        const routeGroup = this.routes[name]!;
 
         if (!routeGroup.hasOwnProperty(prefixId)) {
-            prefixId = Object.keys(routeGroup)[0];
+            prefixId = Object.keys(routeGroup)[0]!;
         }
 
-        return routeGroup[prefixId];
+        return routeGroup[prefixId]!;
     }
 
     static parseQueryParameters(): Params {
