@@ -4,6 +4,9 @@ module.exports = {
 
       modifyObstructiveCode: false,
 
+      // Video.js HTML skins render controls inside open shadow roots.
+      includeShadowDom: true,
+
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },

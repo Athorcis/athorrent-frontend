@@ -1,4 +1,4 @@
-    import {uploadFile, uploadFiles} from "../support/commands";
+import {uploadFile, uploadFiles} from "../support/commands";
 import {resetTestData} from "../support/utils";
 
 
@@ -13,6 +13,29 @@ function waitForPlayerStart(selector: string) {
         return new Promise<void>((resolve) => {
             media.addEventListener('playing', () => resolve(), {once: true});
         });
+    });
+}
+
+function playPlayer(mediaSelector: string) {
+    cy.get('media-play-button').click();
+
+    waitForPlayerStart(mediaSelector);
+}
+
+function pausePlayerAndAssertElapsed(mediaSelector: string) {
+    playPlayer(mediaSelector);
+    cy.wait(1500);
+
+    cy.get('.media-controls').trigger('mouseover');
+    cy.get('media-play-button')
+        .click();
+
+    cy.get(mediaSelector).should(($el) => {
+        const media = $el[0] as HTMLMediaElement;
+
+        expect(media.paused).to.eq(true);
+        expect(media.currentTime).to.be.at.least(1);
+        expect(media.currentTime).to.be.lessThan(2);
     });
 }
 
@@ -91,10 +114,7 @@ describe('user-files', () => {
         cy.dropdownItem('.play-file', selector).click();
         cy.get('h1').should('have.text', basename);
 
-        waitForPlayerStart('audio');
-        cy.wait(1500);
-        cy.get('.mejs__pause > button').click();
-        cy.get('.mejs__currenttime').should('have.text', '00:01');
+        pausePlayerAndAssertElapsed('audio');
     });
 
     it('should handle video', () => {
@@ -103,10 +123,7 @@ describe('user-files', () => {
         cy.dropdownItem('.play-file', selector).click();
         cy.get('h1').should('have.text', basename);
 
-        waitForPlayerStart('video');
-        cy.wait(1500);
-        cy.get('.mejs__pause > button').click();
-        cy.get('.mejs__currenttime').should('have.text', '00:01');
+        pausePlayerAndAssertElapsed('video');
     });
 
     // @TODO check directory upload
