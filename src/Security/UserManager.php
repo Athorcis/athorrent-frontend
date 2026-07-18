@@ -61,7 +61,6 @@ readonly class UserManager
 
         $fs->mkdirAs([
             $user->getFilesPath(),
-            $user->getNewTorrentsPath(),
             $user->getQBittorrentConfigPath(),
         ], 'www-data');
     }

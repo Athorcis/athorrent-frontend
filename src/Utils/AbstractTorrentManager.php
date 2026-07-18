@@ -17,21 +17,4 @@ readonly abstract class AbstractTorrentManager implements TorrentManagerInterfac
     {
         return $this->user;
     }
-
-    public function getTorrentsDirectory(): string
-    {
-        return $this->user->getNewTorrentsPath();
-    }
-
-    protected function makePathRelative(string $path): string
-    {
-        $backendDir = $this->user->getBackendPath();
-        return str_replace($backendDir, '<workdir>', $path);
-    }
-
-    protected function makePathAbsolute(string $path): string
-    {
-        $backendDir = $this->user->getBackendPath();
-        return str_replace('<workdir>', $backendDir, $path);
-    }
 }

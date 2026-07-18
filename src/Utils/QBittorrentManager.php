@@ -85,12 +85,6 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         return [];
     }
 
-    public function storeUploadedTorrentFile(UploadedFile $file): void
-    {
-        $torrentsDir = $this->ensureTorrentsDirExists();
-        $file->move($torrentsDir, $file->getClientOriginalName());
-    }
-
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromFile(string $path): array
     {
@@ -248,14 +242,6 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         $this->request('POST', '/api/v2/transfer/setDownloadLimit', [
             'body' => ['limit' => $limit],
         ], json: false);
-    }
-
-    protected function ensureTorrentsDirExists(): string
-    {
-        $torrentsDir = $this->getTorrentsDirectory();
-        $this->fs->mkdir($torrentsDir);
-
-        return $torrentsDir;
     }
 
     private function normalizeState(string $qbitState): string

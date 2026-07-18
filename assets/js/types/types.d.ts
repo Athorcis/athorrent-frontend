@@ -1,11 +1,5 @@
 
-declare module '*.css';
 declare module '*.scss';
-
-declare module '*.svg' {
-    const content: string;
-    export default content;
-}
 
 interface Navigator {
     registerProtocolHandler(scheme: string, url: string, title?: string): void;

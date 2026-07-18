@@ -53,10 +53,4 @@ class FileUtils extends \Symfony\Component\Filesystem\Filesystem
     {
         return is_iterable($files) ? $files : [$files];
     }
-
-    public static function encodeFilename(string $path): string
-    {
-        $parts = pathinfo($path);
-        return $parts['dirname'] . '/'. base64_encode($parts['filename']) . '.' . $parts['extension'];
-    }
 }

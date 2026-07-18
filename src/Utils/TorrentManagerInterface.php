@@ -11,12 +11,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 interface TorrentManagerInterface
 {
     public function getUser(): User;
-    public function getTorrentsDirectory(): string;
 
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromUrl(string $url): array;
 
-    public function storeUploadedTorrentFile(UploadedFile $file): void;
     #[ArrayShape(['hash' => 'string'])]
     public function addTorrentFromFile(string $path): array;
 
