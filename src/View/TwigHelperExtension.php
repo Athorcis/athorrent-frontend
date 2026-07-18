@@ -8,6 +8,7 @@ use Athorrent\Cache\KeyGenerator\LocalizedKeyGenerator;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use NumberFormatter;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\AccessMapInterface;
 use Twig\Extension\AbstractExtension;
@@ -35,6 +36,7 @@ class TwigHelperExtension extends AbstractExtension
             new TwigFunction('cache_key', $this->getCacheKey(...)),
             new TwigFunction('sha256', $this->hashWithSha256(...)),
             new TwigFunction('is_auth_required', $this->isAuthRequired(...)),
+            new TwigFunction('get_route_cache_key', $this->getRouteCacheKey(...)),
         ];
     }
 
@@ -105,5 +107,25 @@ class TwigHelperExtension extends AbstractExtension
         [$roles] = $this->accessMap->getPatterns($request);
 
         return is_array($roles) && !in_array('PUBLIC_ACCESS', $roles, true);
+    }
+
+    public function getRouteCacheKey(Request $request, ?string $error = null): string
+    {
+        $attributes = $request->attributes;
+
+        if ($error) {
+            return 'error';
+        }
+
+        $route = $attributes->get('_route');
+        $subroute = $attributes->get('_subroute');
+
+        $cacheKey = $route;
+
+        if ($subroute) {
+            $cacheKey .= '_' . $subroute;
+        }
+
+        return $cacheKey;
     }
 }

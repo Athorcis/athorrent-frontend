@@ -1,0 +1,10 @@
+{% extends 'skeleton.html.twig' %}
+
+{% block title %}{{ name }} - {{ 'app.name'|trans }}{% endblock %}
+
+{% block content %}
+    <header class="main-header">
+        <h1 title="{{ name }}">{{ name }}</h1>
+        {% include 'fragments/breadcrumb.html.twig' %}
+    </header>
+{% endblock %}

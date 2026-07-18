@@ -9,7 +9,7 @@ import {DropzoneType, UploadManager} from './core/upload-manager';
 
 class FilesPage extends AbstractPage {
 
-    private uploadManager: UploadManager;
+    private uploadManager!: UploadManager;
 
     init() {
         this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);

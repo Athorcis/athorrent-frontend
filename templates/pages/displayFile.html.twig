@@ -1,6 +1,4 @@
-{% extends 'skeleton.html.twig' %}
-
-{% block title %}{{ name }} - {{ 'app.name'|trans }}{% endblock %}
+{% extends 'pages/fileDetails.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -8,16 +6,11 @@
 {% endblock %}
 
 {% block content %}
-    <header class="main-header">
-        <h1 title="{{ name }}">{{ name }}</h1>
-        {% include 'fragments/breadcrumb.html.twig' %}
-    </header>
+    {{ parent() }}
 
     {% if text is defined %}
         <pre>{{ text }}</pre>
     {% elseif src is defined %}
-        <div class="media-container">
-            <img src="{{ path('openFile', { path: src }) }}" />
-        </div>
+        <img class="content" src="{{ path('openFile', { path: src }) }}" />
     {% endif %}
 {% endblock %}

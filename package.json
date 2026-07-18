@@ -5,8 +5,8 @@
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
+    "@videojs/html": "^10.0.0-beta.25",
     "dropzone": "~6.0.0-beta.2",
-    "mediaelement": "~7.1.0",
     "query-string": "~9.4.1",
     "typescript-http-client": "~0.10.5"
   },
@@ -28,7 +28,6 @@
     "core-js": "^3.49.0",
     "eslint": "^10.6.0",
     "eslint-webpack-plugin": "^6.0.0",
-    "exports-loader": "^5.0.0",
     "jiti": "^2.7.0",
     "postcss": "^8.5.16",
     "postcss-loader": "^8.2.1",

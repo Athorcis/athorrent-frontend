@@ -1,0 +1,22 @@
+{% extends 'pages/fileDetails.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('video') }}
+{% endblock %}
+
+{% block main_script %}
+    {{ encore_entry_script_tags('video') }}
+{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+
+    <video-player>
+        <video-minimal-skin>
+            <video playsinline>
+                <source type="{{ type }}" src="{{ path('openFile', { path: src }) }}" />
+            </video>
+        </video-minimal-skin>
+    </video-player>
+{% endblock %}

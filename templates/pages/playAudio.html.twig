@@ -1,0 +1,22 @@
+{% extends 'pages/fileDetails.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('audio') }}
+{% endblock %}
+
+{% block main_script %}
+    {{ encore_entry_script_tags('audio') }}
+{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+
+    <audio-player>
+        <audio-minimal-skin>
+            <audio>
+                <source type="{{ type }}" src="{{ path('openFile', { path: src }) }}" />
+            </audio>
+        </audio-minimal-skin>
+    </audio-player>
+{% endblock %}
