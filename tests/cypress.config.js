@@ -1,14 +1,16 @@
 module.exports = {
-  e2e: {
-      baseUrl: 'https://athorrent.local',
+    allowCypressEnv: false,
 
-      modifyObstructiveCode: false,
+    e2e: {
+        baseUrl: 'https://athorrent.local',
 
-      // Video.js HTML skins render controls inside open shadow roots.
-      includeShadowDom: true,
+        modifyObstructiveCode: false,
 
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
+        // Video.js HTML skins render controls inside open shadow roots.
+        includeShadowDom: true,
+
+        setupNodeEvents(on, config) {
+            // implement node event listeners here
+        },
     },
-  },
 };
