@@ -101,8 +101,6 @@ files:
 torrents:
     title: Torrents
     advanced: Advanced interface
-    panelClose: Close
-    dropzone: Drop files here or click to select them
     add: Add
     addTorrent: Add a torrent
     addMagnet: Add a magnet

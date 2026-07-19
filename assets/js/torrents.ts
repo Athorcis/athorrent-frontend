@@ -157,7 +157,7 @@ class TorrentsPage extends AbstractPage {
 
     protected onTorrentAdd = (_: MouseEvent) => {
         this.uploadManager.trigger({
-            title: 'files.upload',
+            title: 'torrents.addTorrent',
             route: 'uploadTorrent',
 
             dropzone: {
