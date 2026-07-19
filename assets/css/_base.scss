@@ -1,0 +1,92 @@
+@use "vars" as *;
+
+@use "components/alert";
+@use "components/button";
+@use "components/title";
+@use "components/top-bar";
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: $color-bg;
+    color: $color-text;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    height: 100%;
+}
+
+.main-layout {
+    flex: 1;
+    display: flex;
+    max-height: 100vh;
+}
+
+.container {
+    container-type: inline-size;
+    container-name: page;
+    padding: $spacing-page-y $spacing-gutter;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow-y: auto;
+
+    @media (width < $breakpoint-mobile) {
+        padding: $spacing-page-y-mobile $spacing-gutter-mobile;
+        gap: 16px;
+    }
+}
+
+.brand {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-text;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.main-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    h1 {
+        flex: 1 1 0;
+
+        + button,
+        + .button {
+            margin-left: auto;
+        }
+    }
+
+    @media (width < $breakpoint-mobile) {
+        h1 {
+            flex-basis: max-content;
+        }
+    }
+}
+
+a {
+    text-decoration: none;
+    color: $color-primary;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

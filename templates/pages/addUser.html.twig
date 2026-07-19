@@ -2,6 +2,10 @@
 
 {% block title %}{{ 'users.add.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app-form') }}
+{% endblock %}
+
 {% block content %}
     <header class="main-header">
         <h1>{{ 'users.add.title'|trans }}</h1>

@@ -1,35 +1,7 @@
 @use "vars" as *;
 
-.jumbotron {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 64px $spacing-gutter-wide 52px;
-    background: $color-surface-14;
-    border-bottom: $border;
-    text-align: center;
-
-    @media (width < $breakpoint-mobile) {
-        padding: 40px $spacing-gutter-mobile 32px;
-    }
-
-    p {
-        max-width: 560px;
-        color: $color-text-muted;
-        line-height: 1.7;
-    }
-}
-
-h1 {
-    margin-bottom: 12px;
-    font-size: $font-size-3xl;
-    font-weight: 700;
-    line-height: 1.2;
-
-    @media (width < $breakpoint-mobile) {
-        font-size: $font-size-2xl;
-    }
-}
+@use "base";
+@use "components/jumbotron";
 
 .container {
     padding: 0;

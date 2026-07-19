@@ -1,5 +1,7 @@
 @use "../vars" as *;
 
+@use "./form";
+
 .form-box {
     h1 {
         margin-bottom: 20px;
