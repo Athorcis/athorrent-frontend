@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 use Twig\Environment;
+use function Symfony\Component\String\u;
 
 readonly class ExceptionListener implements EventSubscriberInterface
 {
@@ -43,40 +44,52 @@ readonly class ExceptionListener implements EventSubscriberInterface
     }
 
     /**
-     * @return array{string, int}
+     * @return array{string, ?string, int}
      */
-    protected function getMessageAndStatusCode(Throwable $throwable): array
+    protected function getMessageKeyAndStatusCode(Throwable $throwable): array
     {
         if ($throwable instanceof HttpException) {
             $statusCode = $throwable->getStatusCode();
 
             if ($throwable instanceof NotFoundHttpException && !str_starts_with($throwable->getMessage(), 'error.')) {
-                $message = 'error.pageNotFound';
+                $messageKey = 'error.pageNotFound';
             }
         } else {
             $statusCode = 500;
         }
 
         if ($throwable instanceof UserVisibleException) {
-            $message = $throwable->getMessage();
+            $messageKey = $throwable->getMessage();
         }
         elseif ($statusCode === 500) {
-            $message = 'error.unknownError';
+            $messageKey = 'error.unknownError';
         }
 
-        if (!isset($message)) {
-            $message = $throwable->getMessage();
+        if (!isset($messageKey)) {
+            $messageKey = $throwable->getMessage();
         }
 
-        return [$this->translator->trans($message), $statusCode];
+        $message = $this->translator->trans($messageKey);
+
+        if ($message !== $messageKey) {
+            $errorCode = u(
+                preg_replace('/^error\./', '', $messageKey)
+            )->snake()->upper()->toString();
+        }
+        else {
+            $errorCode = null;
+        }
+
+        return [$message, $errorCode, $statusCode];
     }
 
-    protected function renderError(Request $request, string $message, int $statusCode): Response
+    protected function renderError(Request $request, string $message, ?string $errorCode, int $statusCode): Response
     {
         if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse([
                 'status' => 'error',
-                'error' => $message
+                'code' => $errorCode,
+                'error' => $message,
             ], $statusCode);
         } else {
             try {
@@ -113,8 +126,8 @@ readonly class ExceptionListener implements EventSubscriberInterface
         }
 
         $throwable = $event->getThrowable();
-        [$message, $statusCode] = $this->getMessageAndStatusCode($throwable);
-        $response = $this->renderError($event->getRequest(), $message, $statusCode);
+        [$message, $errorCode, $statusCode] = $this->getMessageKeyAndStatusCode($throwable);
+        $response = $this->renderError($event->getRequest(), $message, $errorCode, $statusCode);
 
         $response->setStatusCode($statusCode);
         $event->setResponse($response);

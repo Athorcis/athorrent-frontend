@@ -200,6 +200,7 @@ class TorrentsPage extends AbstractPage {
                         this.ui.showModal({
                             title: 'torrents.magnetModal.title',
                             content: message ?? this.translate('error.unknownError'),
+                            id: 'dialog-error'
                         });
                     }
                 }

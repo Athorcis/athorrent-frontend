@@ -1,15 +1,16 @@
 import {uploadFile} from "../support/commands";
 import {resetTestData} from "../support/utils";
 
-function uploadAndShare(path) {
+function uploadAndShare(path: string) {
     const { basename, selector } = uploadFile(path);
 
     cy.dropdownItem('.add-sharing', selector).click();
 
-    cy.get('dialog > header').should('contain', 'Lien de partage');
+    cy.get('#dialog-sharing-link').as('dialog');
+    cy.get('@dialog').should('be.visible');
 
-    return cy.get('.modal-body a').invoke('attr', 'href').then(async (url) => {
-        await cy.get('dialog .close').click();
+    return cy.get('@dialog').find('.modal-body a').invoke('attr', 'href').then(async (url) => {
+        await cy.get('@dialog').find('.close').click();
         return {basename, selector, url};
     });
 }

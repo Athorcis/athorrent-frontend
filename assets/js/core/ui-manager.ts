@@ -13,6 +13,7 @@ interface ModalOptions {
     content: string;
     removeWhenClose?: boolean;
     controls?: ModalControl[];
+    id?: string;
 }
 
 export class UiManager {
@@ -148,6 +149,10 @@ export class UiManager {
         }
 
         const modal = fragment.firstElementChild as HTMLDialogElement;
+
+        if (options.id) {
+            modal.id = options.id;
+        }
 
         modal.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;

@@ -9,7 +9,6 @@ declare namespace Cypress {
         logout(): Chainable<null>;
         dropdownItem(selector: string, parentSelector: string): Chainable<null>;
         dropdownItem(selector: string, parentSelector: string, skipOpen: boolean): Chainable<null>;
-        expectModal(text: string, selector?: string): Chainable<null>;
     }
 }
 
@@ -64,11 +63,6 @@ Cypress.Commands.add('dropdownItem', function (selector: string, parentSelector:
     }
 
     cy.get(`${parentSelector} .dropdown-menu ${selector}`);
-});
-
-Cypress.Commands.add('expectModal', function (text: string, selector?: string) {
-    cy.get('dialog:open .modal-body' + (selector ? ' ' + selector : '')).should('have.text', text);
-    cy.get('dialog:open button.close').click();
 });
 
 
