@@ -61,6 +61,7 @@ class FilesPage extends AbstractPage {
         this.ui.showModal({
             title: 'files.sharingLink',
             content: `<a href="${link}">${link}</a>`,
+            id: 'dialog-sharing-link',
         });
     }
 

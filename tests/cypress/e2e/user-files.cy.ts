@@ -47,12 +47,13 @@ describe('user-files', () => {
     });
 
     it('should be accessible', () => {
-        cy.get('h1').should('contain', 'Fichiers');
+        cy.location('pathname').should('eq', '/user/files/');
+        cy.get('.main-header h1').should('be.visible');
+        cy.get('.add-button').should('exist');
     });
 
-
     it('should be empty by default', () => {
-        cy.get('.alert-info').should('contain', 'Aucun fichier à afficher');
+        cy.get('#alert-empty-dir').should('be.visible');
     });
 
     it('should allow file upload', () => {

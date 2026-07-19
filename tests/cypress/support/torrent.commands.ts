@@ -92,8 +92,7 @@ Cypress.Commands.add('torrentStatus', {
 }, (torrentId: string, status: string) => {
 
     getTorrentElement(torrentId)
-        .find('.torrent-state')
-        .should('have.text', status);
+        .should('have.class', 'torrent--' + status);
 
     return cy.wrap(torrentId);
 });

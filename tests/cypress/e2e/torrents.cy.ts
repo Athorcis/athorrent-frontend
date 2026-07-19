@@ -12,17 +12,17 @@ describe('torrents', () => {
     it('should add torrent file', function() {
         cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
 
-            .torrentStatus('En téléchargement');
+            .torrentStatus('downloading');
     });
 
     it('should pause and resume torrents', function () {
         cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
 
             .torrentClick('.torrent-pause')
-            .torrentStatus('En pause')
+            .torrentStatus('paused')
 
             .torrentClick('.torrent-resume')
-            .torrentStatus('En téléchargement')
+            .torrentStatus('downloading')
     });
 
     it('should allow to remove torrents', function () {
@@ -33,7 +33,7 @@ describe('torrents', () => {
 
     it('should not allow to remove file bound to torrents', function () {
         cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
-            .torrentStatus('En téléchargement')
+            .torrentStatus('downloading')
             .torrentProgress();
 
         cy.visit('/user/files/');
@@ -46,7 +46,8 @@ describe('torrents', () => {
 
     it('should fail for invalid torrent file', function() {
         cy.torrentFile('invalid.torrent', false);
-        cy.expectModal('Fichier torrent invalide', '.file-upload__error');
+        cy.get('@addTorrents').its('response.body.code').should('eq', 'INVALID_TORRENT_FILE');
+        cy.get('dialog:open .file-upload__error').should('be.visible');
     });
 
 
@@ -59,7 +60,8 @@ describe('torrents', () => {
 
     it ('should fail for invalid magnet uri', function() {
         cy.torrentMagnet('magnet:?', false);
-        cy.expectModal('Lien magnet invalide');
+        cy.get('@addTorrents').its('response.body.code').should('eq', 'INVALID_MAGNET_URI');
+        cy.get('#dialog-error').should('be.visible');
     });
 
     it('should allow access to qbittorrent web version', function () {
