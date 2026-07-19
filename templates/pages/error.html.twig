@@ -2,6 +2,10 @@
 
 {% block title %}{{ 'error.title'|trans }} {{ code }} - {{ 'app.name'|trans }}{% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+
 {% block content %}
     <div class="jumbotron">
         <h1>{{ 'error.title'|trans }} {{ code }}</h1>

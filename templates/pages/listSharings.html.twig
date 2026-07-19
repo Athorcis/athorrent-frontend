@@ -2,6 +2,10 @@
 
 {% block title %}{{ 'sharings.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('sharings') }}
+{% endblock %}
+
 {% block main_script %}
     {{ encore_entry_script_tags('sharings') }}
 {% endblock %}
