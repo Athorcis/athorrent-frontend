@@ -15,6 +15,9 @@ declare namespace Cypress {
 
         torrentStatus(status: string): Chainable<string>;
 
+        /** Wait until download progress exceeds min (default 0), i.e. content has started writing. */
+        torrentProgress(min?: number): Chainable<string>;
+
         torrentClick(selector: string): Chainable<string>;
     }
 }
@@ -91,6 +94,17 @@ Cypress.Commands.add('torrentStatus', {
     getTorrentElement(torrentId)
         .find('.torrent-state')
         .should('have.text', status);
+
+    return cy.wrap(torrentId);
+});
+
+Cypress.Commands.add('torrentProgress', {
+    prevSubject: true,
+}, (torrentId: string, min = 0) => {
+    cy.get(`#torrent-${torrentId} progress`, { timeout: 30_000 })
+        .should($el => {
+            expect(Number($el.attr('value') ?? 0)).to.be.greaterThan(min);
+        });
 
     return cy.wrap(torrentId);
 });

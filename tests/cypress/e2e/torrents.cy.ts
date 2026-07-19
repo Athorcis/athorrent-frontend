@@ -33,7 +33,8 @@ describe('torrents', () => {
 
     it('should not allow to remove file bound to torrents', function () {
         cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
-            .torrentStatus('En téléchargement');
+            .torrentStatus('En téléchargement')
+            .torrentProgress();
 
         cy.visit('/user/files/');
 
