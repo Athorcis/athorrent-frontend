@@ -3,7 +3,7 @@
 
     {% set route = get_route_cache_key(app.request, error|default(null)) %}
 
-    {% cache cache_key('head', route ~ locale ~ sha256(app.request.query.all|json_encode)) %}
+    {% cache cache_key('head', route ~ app.locale ~ sha256(app.request.query.all|json_encode)) %}
         <head>
             <meta charset="utf-8">
             <title>{% block title %}{% endblock %}</title>
