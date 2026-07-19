@@ -15,7 +15,7 @@ export class Application {
     private translator: Translator;
 
     constructor(config: Partial<AppConfig>) {
-        this.router = new Router(config.routes!, config.routeParameters!, config.action!);
+        this.router = new Router(config.routes!, config.routeParameters!);
         this.securityManager = new SecurityManager(this.router.getHttpClient());
         this.translator = new Translator(config.strings!);
         this.ui = new UiManager(this.translator);

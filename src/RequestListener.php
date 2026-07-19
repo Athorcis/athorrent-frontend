@@ -4,49 +4,22 @@ declare(strict_types=1);
 
 namespace Athorrent;
 
-use Athorrent\View\View;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class RequestListener implements EventSubscriberInterface
 {
-    public function __construct(
-        #[Autowire(env: 'APP_DEBUG')]
-        private bool $debug,
-    ) {
-    }
-
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::VIEW => 'onKernelView',
             KernelEvents::RESPONSE => [
                 ['saveSession', -512],
                 ['addVaryHeader'],
                 ['disableOutputBuffering'],
             ]
         ];
-    }
-
-    public function onKernelView(ViewEvent $event): void
-    {
-        $result = $event->getControllerResult();
-
-        if ($result instanceof View) {
-            $request = $event->getRequest();
-
-            if ($result->isPageView($request)) {
-                $vars = [
-                    'debug' => $this->debug,
-                ];
-
-                $result->setJsVars($vars);
-            }
-        }
     }
 
     public function saveSession(ResponseEvent $event): void

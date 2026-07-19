@@ -2,7 +2,6 @@ import '../css/files.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
-import {Router} from './core/router';
 import {decodeBase64} from "./core/utils";
 import {DropzoneFile} from 'dropzone';
 import {DropzoneType, UploadManager} from './core/upload-manager';
@@ -66,7 +65,7 @@ class FilesPage extends AbstractPage {
     }
 
     async updateFileList() {
-        const data = await this.sendRequest<string>('listFiles', { path: Router.parseQueryParameters()['path']! });
+        const data = await this.sendRequest<string>('listFiles', { path: this.router.getQueryParam('path')! });
 
         const content = document.querySelector('.main-header')!.nextElementSibling!;
         const newContent = document.createRange().createContextualFragment(data);
@@ -152,7 +151,7 @@ class FilesPage extends AbstractPage {
     }
 
     protected triggerFileUpload(type: DropzoneType) {
-        const path = Router.parseQueryParameters()['path'] as string ?? '';
+        const path = this.router.getQueryParam('path') as string | undefined ?? '';
 
         this.uploadManager.trigger({
             title: 'files.upload',
