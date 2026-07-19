@@ -75,11 +75,6 @@ class Updater {
         this.data$ = null;
         this.success(data);
     }
-
-    setParameters(parameters: {[key: string]: string}) {
-        this.parameters = parameters;
-        this.update();
-    }
 }
 
 class TorrentsPage extends AbstractPage {
@@ -101,7 +96,7 @@ class TorrentsPage extends AbstractPage {
     }
 
     protected handleMagnetParam() {
-        const magnet = Router.parseQueryParameters()['magnet'] as string | undefined;
+        const magnet = this.router.getQueryParam('magnet') as string | undefined;
 
         if (magnet) {
             this.showMagnetModal(magnet);

@@ -9,9 +9,13 @@ export class Router {
 
     private http: HttpClient;
 
-    constructor(private routes: Routes, private routeParameters: Params, private action: string) {
+    constructor(private routes: Routes, private routeParameters: Params) {
         this.queryParams = Router.parseQueryParameters();
         this.http = newHttpClient();
+    }
+
+    getQueryParam(key: string) {
+        return this.queryParams[key];
     }
 
     getHttpClient(): HttpClient {

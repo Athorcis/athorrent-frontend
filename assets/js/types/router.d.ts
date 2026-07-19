@@ -25,7 +25,6 @@ type AbortablePromise<T> = Promise<T> & Abortable;
 interface ApiSuccessResponse<T> {
     status: 'success';
     data: T;
-    csrfToken?: string;
 }
 
 interface ApiErrorResponse {
