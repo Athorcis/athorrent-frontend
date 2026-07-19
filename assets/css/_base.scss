@@ -58,6 +58,7 @@ main {
     display: flex;
     align-items: center;
     gap: 8px;
+    text-decoration: none;
 }
 
 .main-header {
@@ -83,10 +84,5 @@ main {
 }
 
 a {
-    text-decoration: none;
     color: $color-primary;
-
-    &:hover {
-        text-decoration: underline;
-    }
 }
