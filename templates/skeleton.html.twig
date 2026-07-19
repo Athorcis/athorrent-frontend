@@ -41,7 +41,7 @@
                 <div class="sidebar-backdrop"></div>
             {% endif %}
 
-            <div class="container">
+            <main>
                 {% if notifications is defined %}
                     <div class="alert-stack">
                         {% include 'notifications.html.twig' %}
@@ -49,7 +49,7 @@
                 {% endif %}
 
                 {% block content %}{% endblock %}
-            </div>
+            </main>
         </div>
 
 
