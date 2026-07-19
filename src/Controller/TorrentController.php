@@ -73,7 +73,7 @@ class TorrentController extends AbstractController
             'backend_stopped' => $backendStopped,
             'alert_level' => $alertLevel,
             '_strings' => [
-                'torrents.dropzone',
+                'torrents.addTorrent',
                 'torrents.magnetModal.title',
                 'torrents.magnetModal.subtitle',
                 'torrents.add',
