@@ -1,3 +1,5 @@
+const AdmZip = require('adm-zip');
+
 module.exports = {
     allowCypressEnv: false,
 
@@ -10,7 +12,16 @@ module.exports = {
         includeShadowDom: true,
 
         setupNodeEvents(on, config) {
-            // implement node event listeners here
+            on('task', {
+                listZipEntries(filePath) {
+                    const zip = new AdmZip(filePath);
+
+                    return zip.getEntries()
+                        .filter((entry) => !entry.isDirectory)
+                        .map((entry) => entry.entryName)
+                        .sort();
+                },
+            });
         },
     },
 };

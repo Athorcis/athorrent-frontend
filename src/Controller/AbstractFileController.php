@@ -107,14 +107,16 @@ abstract class AbstractFileController extends AbstractController
     protected function sendDirectory(UserFilesystemEntry $entry, $contentDisposition): StreamedResponse
     {
         $headers = [
-            'Content-Type' => 'application/x-gzip',
-            'Content-Disposition' => $this->getContentDisposition($contentDisposition, $entry->getName() . '.tar.gz'),
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => $this->getContentDisposition($contentDisposition, $entry->getName() . '.zip'),
             'X-Accel-Buffering' => 'no',
         ];
 
+        set_time_limit(0);
+
         return new StreamedResponse(function () use ($entry) {
 
-            $process = Process::fromShellCommandline('tar --create --use-compress-program="gzip -1" --file - -- *', $entry->getRealPath());
+            $process = Process::fromShellCommandline('zip -r -0 -q - -- *', $entry->getRealPath());
             $process->setTimeout(null);
 
             $process->start(function ($type, $buffer) {

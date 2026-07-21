@@ -127,7 +127,7 @@ describe('user-files', () => {
         pausePlayerAndAssertElapsed('video');
     });
 
-    it('should allow directory download as tar.gz', () => {
+    it('should allow directory download as zip', () => {
         uploadFiles(
             ['cypress/fixtures/files/test.txt', 'cypress/fixtures/files/test.txt'],
             ['folder/a.txt', 'folder/b.txt'],
@@ -137,13 +137,9 @@ describe('user-files', () => {
 
         cy.dropdownItem('.download-file', dirSelector).click();
 
-        cy.readFile('cypress/downloads/folder.tar.gz', null).should('not.be.null');
+        cy.readFile('cypress/downloads/folder.zip', null).should('not.be.null');
 
-        cy.exec('tar -tzf cypress/downloads/folder.tar.gz').then(({stdout}) => {
-            const members = stdout.trim().split(/\r?\n/).filter(Boolean);
-
-            expect(members).to.deep.equals(['a.txt', 'b.txt']);
-        });
+        cy.task('listZipEntries', 'cypress/downloads/folder.zip').should('deep.equal', ['a.txt', 'b.txt']);
     });
 
     // @TODO check directory upload
