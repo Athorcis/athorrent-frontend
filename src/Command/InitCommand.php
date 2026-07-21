@@ -10,6 +10,7 @@ use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Security\UserManager;
 use Athorrent\Utils\TorrentManagerFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -84,7 +85,10 @@ class InitCommand
         return $rootUser;
     }
 
-    protected function getSchemaToolAndMetadata()
+    /**
+     * @return array{SchemaTool, list<ClassMetadata<object>>}
+     */
+    protected function getSchemaToolAndMetadata(): array
     {
         static $cache;
 
@@ -98,13 +102,13 @@ class InitCommand
         return $cache;
     }
 
-    protected function createSchema()
+    protected function createSchema(): void
     {
         [$schemaTool, $metadata] = $this->getSchemaToolAndMetadata();
         $schemaTool->createSchema($metadata);
     }
 
-    protected function dropSchema()
+    protected function dropSchema(): void
     {
         [$schemaTool, $metadata] = $this->getSchemaToolAndMetadata();
         $schemaTool->dropSchema($metadata);
@@ -117,15 +121,17 @@ class InitCommand
         return $schemaManager->tableExists('user');
     }
 
-    protected function detachAndCleanRootUser()
+    protected function detachAndCleanRootUser(): ?User
     {
         try {
             $rootUser = $this->userRepository->find(1);
 
-            if ($rootUser instanceof User) {
-                $this->entityManager->detach($rootUser);
-                $this->backendManager->detachUser($rootUser);
+            if ($rootUser === null) {
+                return null;
             }
+
+            $this->entityManager->detach($rootUser);
+            $this->backendManager->detachUser($rootUser);
 
             $torrentManager = $this->torrentManagerFactory->create($rootUser);
 
@@ -156,6 +162,7 @@ class InitCommand
     protected function removeUserDirectoryContent(bool $excludeRootUser): void
     {
         $finder = new Finder();
+        // @phpstan-ignore constant.notFound
         $finder->depth(0)->in(USER_ROOT_DIR);
 
         if ($excludeRootUser) {

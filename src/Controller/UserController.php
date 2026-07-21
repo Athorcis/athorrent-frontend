@@ -65,6 +65,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @return array{password: string}
      * @throws Exception
      */
     #[Route(path: '/{userId}', methods: 'POST', options: ['expose' => true])]
@@ -78,6 +79,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @return array{}
      * @throws Exception
      */
     #[Route(path: '/{userId}', methods: 'DELETE', options: ['expose' => true])]

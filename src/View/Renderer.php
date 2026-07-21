@@ -18,12 +18,13 @@ readonly class Renderer
     {
     }
 
-    public function getDefaultTemplateName()
+    public function getDefaultTemplateName(): ?string
     {
-        return $this->requestStack->getCurrentRequest()->attributes->get('_action');
+        return $this->requestStack->getCurrentRequest()?->attributes->get('_action');
     }
 
     /**
+     * @param array<string, mixed> $parameters
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
@@ -40,6 +41,7 @@ readonly class Renderer
     }
 
     /**
+     * @param array<string, mixed> $parameters
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError

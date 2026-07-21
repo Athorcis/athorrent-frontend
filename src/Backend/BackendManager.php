@@ -37,15 +37,16 @@ class BackendManager
 {
     private BackendProcessManagerInterface $backendProcessManager;
 
+    /** @var PromiseInterface<array<void>> */
     private PromiseInterface $runPromise;
 
-    /** @var SplObjectStorage<PromiseInterface> */
+    /** @var SplObjectStorage<PromiseInterface<void>, void> */
     private SplObjectStorage $sleepPromises;
 
     /** @var array<int, BackendInterface>  */
     private array $backends;
 
-    /** @var SplObjectStorage<BackendInterface> */
+    /** @var SplObjectStorage<BackendInterface, void> */
     private SplObjectStorage $failedBackends;
 
     /** @var SplQueue<BackendInterface>  */
@@ -57,9 +58,13 @@ class BackendManager
     /** @var SplQueue<BackendInterface>  */
     private SplQueue $nextHeartbeatQueue;
 
+    /** @var array<int, true> */
     private array $addingUser = [];
+
+    /** @var array<int, true> */
     private array $removingUser = [];
 
+    /** @var array<int, true> */
     private array $stopRequested = [];
 
     private bool $stopping = false;
@@ -154,6 +159,9 @@ class BackendManager
         $this->stopping = false;
     }
 
+    /**
+     * @return PromiseInterface<null>
+     */
     public function stopAsync(bool $keepBackends = true): PromiseInterface
     {
         if ($this->stopping) {
@@ -210,6 +218,7 @@ class BackendManager
             $this->sleepPromises->offsetUnset($promise);
         }
 
+        // @phpstan-ignore booleanNot.alwaysTrue
         return !$this->stopping;
     }
 
@@ -290,14 +299,21 @@ class BackendManager
             $backend->setState(BackendState::Starting);
             $this->startQueue->enqueue($backend);
         }
-        elseif ($backend->getProcess()->shouldRestartToUpdate()) {
-            $this->logger->info(sprintf('Restarting %s to update...', $backend));
-
-            $backend->setState(BackendState::Updating);
-            $this->startQueue->enqueue($backend);
-        }
         else {
-            $this->nextHeartbeatQueue->enqueue($backend);
+            $backendProcess = $backend->getProcess();
+
+            if ($backendProcess === null) {
+                $this->logger->error(sprintf('Found a backend without process %s (not supposed to happen)', $backend));
+            }
+            elseif ($backendProcess->shouldRestartToUpdate()) {
+                $this->logger->info(sprintf('Restarting %s to update...', $backend));
+
+                $backend->setState(BackendState::Updating);
+                $this->startQueue->enqueue($backend);
+            }
+            else {
+                $this->nextHeartbeatQueue->enqueue($backend);
+            }
         }
     }
 
@@ -343,7 +359,7 @@ class BackendManager
      * @param User[] $users
      * @return BackendInterface[]
      */
-    protected function initializeBackendsForUsers(array $users, $keepAll = false): array
+    protected function initializeBackendsForUsers(array $users, bool $keepAll = false): array
     {
         $backends = [];
 
@@ -383,6 +399,9 @@ class BackendManager
         return $backends;
     }
 
+    /**
+     * @param array<int, BackendInterface> $backends
+     */
     protected function enqueueCreatedBackends(array $backends): void
     {
         foreach ($backends as $backend) {
@@ -395,7 +414,7 @@ class BackendManager
         }
     }
 
-    public function addUser(int $id)
+    public function addUser(int $id): void
     {
         if (isset($this->backends[$id])) {
             throw new BadRequestHttpException(sprintf('A backend is already managed for user %d', $id));
@@ -444,7 +463,7 @@ class BackendManager
         }
     }
 
-    public function removeUser(int $id)
+    public function removeUser(int $id): void
     {
         if (!isset($this->backends[$id])) {
             throw new NotFoundHttpException(sprintf('No backend found for user %d', $id));
@@ -492,7 +511,7 @@ class BackendManager
         $this->resetRestartLimiter($id);
     }
 
-    public function detachUser(int $id)
+    public function detachUser(int $id): void
     {
         if (!isset($this->backends[$id])) {
             throw new NotFoundHttpException(sprintf('No backend found for user %d', $id));
@@ -520,7 +539,7 @@ class BackendManager
         $this->backendRestartLimiter->create((string)$id)->reset();
     }
 
-    public function clear()
+    public function clear(): void
     {
         $this->logger->info('Clearing backends...');
         $promises = [];

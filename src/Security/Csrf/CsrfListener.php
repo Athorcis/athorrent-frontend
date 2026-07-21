@@ -19,6 +19,9 @@ readonly class CsrfListener implements EventSubscriberInterface
     {
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getRouteOptions(ControllerArgumentsEvent $event): array
     {
         $routeOptions = [];
@@ -43,10 +46,10 @@ readonly class CsrfListener implements EventSubscriberInterface
             $csrfEnabled = $csrfOption === true;
 
             if ($csrfEnabled) {
-                $tokenValue = $request->headers->get('X-Csrf-Token', $request->request->get('_token'));
+                $tokenValue = $request->headers->get('X-Csrf-Token', $request->request->getString('_token'));
                 $token = new CsrfToken('xhr', $tokenValue);
 
-                if ($tokenValue === null || !$this->tokenManager->isTokenValid($token)) {
+                if ($tokenValue === '' || !$this->tokenManager->isTokenValid($token)) {
                     throw new AccessDeniedHttpException('error.invalidCsrfToken');
                 }
             }

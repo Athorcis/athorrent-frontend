@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -28,7 +29,7 @@ abstract class AbstractFileController extends AbstractController
     }
 
     /**
-     * @return string[]
+     * @return array<string, string>
      */
     protected function getBreadcrumb(string $path): array
     {
@@ -80,7 +81,7 @@ abstract class AbstractFileController extends AbstractController
         ], 'listFiles');
     }
 
-    protected function sendFile(Request $request, UserFilesystemEntry $entry, $contentDisposition): BinaryFileResponse
+    protected function sendFile(Request $request, UserFilesystemEntry $entry, string $contentDisposition): BinaryFileResponse
     {
         BinaryFileResponse::trustXSendfileTypeHeader();
         $response = $entry->toBinaryFileResponse();
@@ -95,19 +96,11 @@ abstract class AbstractFileController extends AbstractController
         return $response;
     }
 
-    protected function getContentDisposition($disposition, $filename): string
-    {
-        $response = new BinaryFileResponse(__FILE__);
-        $response->setContentDisposition($disposition, $filename);
-
-        return $response->headers->get('Content-Disposition');
-    }
-
-    protected function sendDirectory(UserFilesystemEntry $entry, $contentDisposition): StreamedResponse
+    protected function sendDirectory(UserFilesystemEntry $entry, string $contentDisposition): StreamedResponse
     {
         $headers = [
             'Content-Type' => 'application/zip',
-            'Content-Disposition' => $this->getContentDisposition($contentDisposition, $entry->getName() . '.zip'),
+            'Content-Disposition' => HeaderUtils::makeDisposition($contentDisposition, $entry->getName() . '.zip'),
             'X-Accel-Buffering' => 'no',
         ];
 
@@ -192,6 +185,7 @@ abstract class AbstractFileController extends AbstractController
         return new View(ViewType::Page, $data);
     }
 
+    /** @return array{exists: list<string>} */
     #[Route(path: '/exists', methods: 'POST', options: ['expose' => true])]
     public function doesFilesExist(Request $request, #[Requirements(dir: true)] UserFilesystemEntry $entry): array
     {

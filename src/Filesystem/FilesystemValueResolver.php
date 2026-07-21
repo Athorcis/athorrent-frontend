@@ -45,9 +45,12 @@ readonly class FilesystemValueResolver implements ValueResolverInterface
         return $entry;
     }
 
-    public function resolve(Request $request, ArgumentMetadata $argument): iterable
+    /** @return list<UserFilesystemEntry> */
+    public function resolve(Request $request, ArgumentMetadata $argument): array
     {
-        if (!is_a($argument->getType(), UserFilesystemEntry::class, true)) {
+        $type = $argument->getType();
+
+        if ($type === null || !is_a($type, UserFilesystemEntry::class, true)) {
             return [];
         }
 
@@ -57,8 +60,9 @@ readonly class FilesystemValueResolver implements ValueResolverInterface
             $filesystem = $this->filesystemFactory->createTorrentFilesystem();
         }
 
+        /** @var list<Requirements> $attributes */
         $attributes = $argument->getAttributes(Requirements::class);
-        $path = $request->query->get('path') ?? $request->request->get('path');
+        $path = $request->query->getString('path', $request->request->getString('path'));
 
         return [$this->getEntry($filesystem, $path, $attributes[0] ?? new Requirements())];
     }

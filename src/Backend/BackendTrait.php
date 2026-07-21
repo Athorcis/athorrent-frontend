@@ -10,9 +10,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 trait BackendTrait
 {
-    private readonly User $user;
+    private User $user;
 
-    private readonly string $statePath;
+    private string $statePath;
 
     private BackendState $state;
 

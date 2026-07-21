@@ -6,7 +6,10 @@ namespace Athorrent\Filesystem;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-/** @property SubFilesystem $filesystem */
+/**
+ * @template TFilesystem of SubFilesystem = SubFilesystem
+ * @extends AbstractFilesystemEntry<TFilesystem>
+ */
 class SubFilesystemEntry extends AbstractFilesystemEntry
 {
     use MimeTypeCheckerTrait;
@@ -76,6 +79,7 @@ class SubFilesystemEntry extends AbstractFilesystemEntry
         $internalEntries = $this->internalEntry->readDirectory($includeParentDirectory);
 
         foreach ($internalEntries as $internalEntry) {
+            // @phpstan-ignore new.static
             $entries[] = new static($this->filesystem, '', $internalEntry);
         }
 

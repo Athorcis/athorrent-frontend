@@ -13,7 +13,7 @@ class LocalizedKeyGenerator extends KeyGenerator
     {
     }
 
-    public function generateKey($value): string
+    public function generateKey(CacheKeyGetterInterface|array|string|null $value): string
     {
         if ($value === null) {
             $keySuffix = '';

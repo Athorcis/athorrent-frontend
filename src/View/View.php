@@ -9,6 +9,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class View
 {
+    /**
+     * @param array<string, mixed> $data
+     */
     public function __construct(
         private readonly ViewType $type,
         private array $data = [],
@@ -46,6 +49,9 @@ class View
         $this->data['js_vars'][$key] = $value;
     }
 
+    /**
+     * @param array<string, mixed> $vars
+     */
     public function setJsVars(array $vars): void
     {
         foreach ($vars as $key => $value) {
@@ -53,6 +59,9 @@ class View
         }
     }
 
+    /**
+     * @param list<string> $ids
+     */
     public function addStrings(array $ids): void
     {
         foreach ($ids as $id) {
@@ -63,6 +72,10 @@ class View
     public function render(Request $request, TranslatorInterface $translator, Renderer $renderer): string
     {
         $name = $this->name ?? $renderer->getDefaultTemplateName();
+
+        if ($name === null) {
+            throw new \RuntimeException('failed to render view without template name');
+        }
 
         $data = $this->data;
 

@@ -11,5 +11,5 @@ interface DeletableRepositoryInterface
     /**
      * @throws ORMException
      */
-    public function delete(mixed $id);
+    public function delete(mixed $id): void;
 }

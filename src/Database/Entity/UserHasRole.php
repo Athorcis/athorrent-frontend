@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping\Cache;
 class UserHasRole
 {
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'hasRoles')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'hasRoles')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[Cache(usage: 'NONSTRICT_READ_WRITE')]
     private User $user;

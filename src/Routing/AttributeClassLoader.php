@@ -20,6 +20,10 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
         parent::__construct($_ENV['APP_ENV']);
     }
 
+    /**
+     * @param array<string, mixed> $globals
+     * @param ReflectionClass<object> $class
+     */
     protected function addRouteWithoutLocale(RouteCollection $collection, Route $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $attr->defaults = array_replace($attr->defaults, [
@@ -29,6 +33,10 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
         parent::addRoute($collection, $attr, $globals, $class, $method);
     }
 
+    /**
+     * @param array<string, mixed> $globals
+     * @param ReflectionClass<object> $class
+     */
     protected function addRouteWithLocale(RouteCollection $collection, Route $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $attr->name .= '|i18n';
@@ -41,6 +49,8 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
 
     /**
      * @param Route $attr
+     * @param array<string, mixed> $globals
+     * @param ReflectionClass<object> $class
      */
     protected function addRoute(RouteCollection $collection, object $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
@@ -57,6 +67,7 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
         $this->addRouteWithoutLocale($collection, $attr, $globals, $class, $method);
     }
 
+    /** @param ReflectionClass<object> $class */
     protected function getDefaultRouteName(ReflectionClass $class, ReflectionMethod $method): string
     {
         return $method->getName();

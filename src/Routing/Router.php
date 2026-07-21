@@ -22,13 +22,18 @@ use function ini_get;
 use const FILTER_VALIDATE_BOOL;
 use const PHP_SAPI;
 
+/**
+ * @phpstan-import-type ActionMap from ActionMapDumper
+ */
 #[AsDecorator('router')]
 class Router implements RouterInterface, RequestMatcherInterface, WarmableInterface
 {
+    /** @var ActionMap|null */
     protected ?array $actionMap = null;
 
     private ?ConfigCacheFactoryInterface $configCacheFactory = null;
 
+    /** @var ActionMap|null */
     private static ?array $cache = [];
 
     public function __construct(
@@ -42,6 +47,9 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
         return new ActionMapDumper($this->inner->getRouteCollection());
     }
 
+    /**
+     * @return ActionMap
+     */
     public function getActionMap(): array
     {
         if (null !== $this->actionMap) {
@@ -108,6 +116,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
         return $this->configCacheFactory ??= new ConfigCacheFactory($this->inner->getOption('debug'));
     }
 
+    /** @return ActionMap */
     private static function readCache(string $path): array
     {
         if ([] === self::$cache && function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOL) && (!in_array(PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOL))) {
@@ -136,21 +145,29 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
         return $this->inner->getRouteCollection();
     }
 
+    /**
+     * @param array<string, string|list<string>> $parameters
+     */
     public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         return $this->getGenerator()->generate($name, $parameters, $referenceType);
     }
 
+    /** @return array<string, mixed> */
     public function match(string $pathinfo): array
     {
         return $this->inner->match($pathinfo);
     }
 
+    /** @return array<string, mixed> */
     public function matchRequest(Request $request): array
     {
         return $this->inner->matchRequest($request);
     }
 
+    /**
+     * @return array<string>
+     */
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $warmed = $this->inner->warmUp($cacheDir, $buildDir);

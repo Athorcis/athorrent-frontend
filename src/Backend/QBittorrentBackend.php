@@ -24,6 +24,10 @@ class QBittorrentBackend implements BackendInterface
         $this->initBackend($user);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     * @throws BackendUnavailableException
+     */
     public function request(string $method, string $path, array $options = []): ResponseInterface
     {
         $state = $this->ensureRunningState();

@@ -7,14 +7,21 @@ namespace Athorrent\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+/**
+ * @template TFilesystem of AbstractFilesystem
+ * @property TFilesystem $filesystem
+ */
 abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
 {
+    /**
+     * @param TFilesystem $filesystem
+     */
     public function __construct(protected AbstractFilesystem $filesystem, protected string $path)
     {
     }
 
     /**
-     * @return AbstractFilesystem
+     * @return TFilesystem
      */
     public function getFilesystem(): AbstractFilesystem
     {
@@ -54,10 +61,12 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
         $entries = [];
 
         if ($includeParentDirectory) {
+            // @phpstan-ignore new.static
             $entries[] = new static($this->filesystem, Path::canonicalize($this->path . '/..'));
         }
 
         foreach ($this->filesystem->readDirectory($this->path) as $path) {
+            // @phpstan-ignore new.static
             $entries[] = new static($this->filesystem, $path);
         }
 

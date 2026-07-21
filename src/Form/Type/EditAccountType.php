@@ -16,6 +16,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @extends AbstractType<User>
+ */
 class EditAccountType extends AbstractType
 {
     public function __construct(private readonly TranslatorInterface $translator)

@@ -10,6 +10,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class BackendFactory
 {
+    /** @var array<int, BackendInterface> */
     private array $instances = [];
 
     public function __construct(
