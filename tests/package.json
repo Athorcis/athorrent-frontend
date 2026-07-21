@@ -2,6 +2,7 @@
   "name": "tests",
   "packageManager": "yarn@4.17.1",
   "devDependencies": {
+    "adm-zip": "^0.6.0",
     "cypress": "^15.18.0",
     "cypress-map": "^1.56.0",
     "typescript": "^6.0.3"
