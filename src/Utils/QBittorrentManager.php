@@ -9,13 +9,16 @@ use Athorrent\Database\Entity\User;
 use Athorrent\UserVisibleException;
 use Exception;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+
+/**
+ * @phpstan-import-type TorrentState from TorrentManagerInterface
+ * @phpstan-import-type TorrentInfo from TorrentManagerInterface
+ */
 
 readonly class QBittorrentManager extends AbstractTorrentManager
 {
@@ -32,9 +35,10 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     }
 
     /**
+     * @param array<string, mixed> $options
      * @throws ExceptionInterface
      */
-    protected function request(string $method, string $path, array $options = [], $json = true)
+    protected function request(string $method, string $path, array $options = [], bool $json = true): mixed
     {
         $response = $this->backend->request($method, $path, $options);
 
@@ -52,6 +56,7 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     }
 
     /**
+     * @param array<string, mixed> $body
      * @return string[]
      * @throws ExceptionInterface
      * @throws TorrentAlreadyAdded
@@ -73,7 +78,7 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         }
     }
 
-    #[ArrayShape(['hash' => 'string'])]
+    /** @return array{hash: string|null} */
     public function addTorrentFromUrl(string $url): array
     {
         $ids = $this->addTorrents(['urls' => $url], $url);
@@ -82,10 +87,10 @@ readonly class QBittorrentManager extends AbstractTorrentManager
             return ['hash' => $ids[0]];
         }
 
-        return [];
+        return ['hash' => null];
     }
 
-    #[ArrayShape(['hash' => 'string'])]
+    /** @return array{hash: string|null} */
     public function addTorrentFromFile(string $path): array
     {
         $absolutePath = Path::canonicalize($path);
@@ -102,7 +107,7 @@ readonly class QBittorrentManager extends AbstractTorrentManager
                 return ['hash' => $ids[0]];
             }
 
-            return [];
+            return ['hash' => null];
         }
         finally {
             if (is_resource($torrentFile)) {
@@ -112,24 +117,27 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         }
     }
 
+    /**
+     * @return array{xt: string, ...}|null
+     */
     protected function parseMagnet(string $uri): ?array
     {
         $uriParts = parse_url($uri);
 
-        if (!(count($uriParts) === 2  && isset($uriParts['scheme']) && $uriParts['scheme'] === 'magnet' && isset($uriParts['query']))) {
+        if (!(is_array($uriParts) && count($uriParts) === 2  && isset($uriParts['scheme']) && $uriParts['scheme'] === 'magnet' && isset($uriParts['query']))) {
             return null;
         }
 
         parse_str($uriParts['query'], $params);
 
-        if (!(isset($params['xt']) && preg_match('/urn:btih:([0-9a-fA-F]{32}|[0-9a-fA-F]{40})/', $params['xt']))) {
+        if (!(isset($params['xt']) && is_string($params['xt']) && preg_match('/urn:btih:([0-9a-fA-F]{32}|[0-9a-fA-F]{40})/', $params['xt']))) {
             return null;
         }
 
         return $params;
     }
 
-    #[ArrayShape(['hash' => 'string'])]
+    /** @return array{hash: string|null} */
     public function addTorrentFromMagnet(string $magnet): array
     {
         if ($this->parseMagnet($magnet) === null) {
@@ -139,17 +147,28 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         return $this->addTorrentFromUrl($magnet);
     }
 
+    /**
+     * @return list<TorrentInfo>
+     */
     public function getTorrents(): array
     {
-        $torrents = $this->request('GET', '/api/v2/torrents/info');
+        /** @var list<array<string, mixed>> $torrents */
+        $torrents = $this->request('GET', '/api/v2/torrents/info') ?? [];
         $normalizedTorrents = [];
 
         foreach ($torrents as $torrent) {
             $qbitState = (string) ($torrent['state'] ?? '');
 
             $normalizedTorrents[] = [
-                ...$torrent,
+                'hash' => (string) $torrent['hash'],
+                'name' => (string) $torrent['name'],
                 'state' => $this->normalizeState($qbitState),
+                'progress' => (float) $torrent['progress'],
+                'size' => (int) $torrent['size'],
+                'dlspeed' => (float) $torrent['dlspeed'],
+                'eta' => (int) $torrent['eta'],
+                'upspeed' => (float) $torrent['upspeed'],
+                'ratio' => (float) $torrent['ratio'],
                 'paused' => $this->isPausedState($qbitState),
             ];
         }
@@ -157,6 +176,9 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         return $normalizedTorrents;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getPaths(): array
     {
         $torrents = $this->request('GET', '/api/v2/torrents/info');
@@ -244,6 +266,9 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         ], json: false);
     }
 
+    /**
+     * @return TorrentState
+     */
     private function normalizeState(string $qbitState): string
     {
         $pausedStates = ['stoppedDL', 'stoppedUP'];

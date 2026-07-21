@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Athorrent\View;
 
+use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Cache\KeyGenerator\LocalizedKeyGenerator;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use NumberFormatter;
@@ -40,23 +41,19 @@ class TwigHelperExtension extends AbstractExtension
         ];
     }
 
-    public function getIcon($value): string
+    public function getIcon(UserFilesystemEntry $value): string
     {
-        if ($value instanceof UserFilesystemEntry) {
-            if ($value->isDirectory()) {
-                return 'directory';
-            } elseif ($value->isText()) {
-                return 'text-file';
-            } elseif ($value->isImage()) {
-                return 'image-file';
-            } elseif ($value->isPlayable()) {
-                return 'playable-file';
-            }
-
-            return 'file';
+        if ($value->isDirectory()) {
+            return 'directory';
+        } elseif ($value->isText()) {
+            return 'text-file';
+        } elseif ($value->isImage()) {
+            return 'image-file';
+        } elseif ($value->isPlayable()) {
+            return 'playable-file';
         }
 
-        return '';
+        return 'file';
     }
 
     public function dateToAge(string $date): int
@@ -91,7 +88,10 @@ class TwigHelperExtension extends AbstractExtension
         return $formatter->format($value) . ' ' . $units[$exponent];
     }
 
-    public function getCacheKey(string $annotation, mixed $value = null): string
+    /**
+     * @param CacheKeyGetterInterface|list<string>|string|null $value
+     */
+    public function getCacheKey(string $annotation, CacheKeyGetterInterface|array|string|null $value = null): string
     {
         return $annotation . '.' . $this->keyGenerator->generateKey($value);
     }
@@ -104,6 +104,11 @@ class TwigHelperExtension extends AbstractExtension
     public function isAuthRequired(): bool
     {
         $request = $this->requestStack->getCurrentRequest();
+
+        if ($request === null) {
+            return false;
+        }
+
         [$roles] = $this->accessMap->getPatterns($request);
 
         return is_array($roles) && !in_array('PUBLIC_ACCESS', $roles, true);

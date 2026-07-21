@@ -6,7 +6,7 @@ namespace Athorrent\Notification;
 
 class ErrorNotification extends Notification
 {
-    public function __construct($message, $action = null)
+    public function __construct(string $message, ?string $action = null)
     {
         parent::__construct(NotificationType::ERROR, $message, $action);
     }

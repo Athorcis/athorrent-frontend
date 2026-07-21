@@ -8,7 +8,10 @@ use Athorrent\Cache\KeyGenerator\CacheKeyGetterInterface;
 use Athorrent\Database\Entity\Sharing;
 use Athorrent\Database\Entity\User;
 
-/** @property UserFilesystem $filesystem */
+/**
+ * @template TFilesystem of UserFilesystem = UserFilesystem
+ * @extends SubFilesystemEntry<TFilesystem>
+ */
 class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterInterface
 {
     private ?Sharing $sharing = null;

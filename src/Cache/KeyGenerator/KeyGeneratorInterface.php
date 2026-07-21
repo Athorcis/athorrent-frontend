@@ -6,5 +6,8 @@ namespace Athorrent\Cache\KeyGenerator;
 
 interface KeyGeneratorInterface
 {
-    public function generateKey($value): string;
+    /**
+     * @param CacheKeyGetterInterface|list<string>|string $value
+     */
+    public function generateKey(CacheKeyGetterInterface|array|string $value): string;
 }

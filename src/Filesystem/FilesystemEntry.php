@@ -7,6 +7,10 @@ namespace Athorrent\Filesystem;
 use Symfony\Component\Mime\FileBinaryMimeTypeGuesser;
 use Symfony\Component\Mime\MimeTypes;
 
+/**
+ * @template TFilesystem of Filesystem = Filesystem
+ * @extends AbstractFilesystemEntry<TFilesystem>
+ */
 class FilesystemEntry extends AbstractFilesystemEntry
 {
     protected ?bool $isDir = null;
@@ -37,7 +41,13 @@ class FilesystemEntry extends AbstractFilesystemEntry
 
     public function getModificationTimestamp(): int
     {
-        return filemtime($this->path);
+        $timestamp = filemtime($this->path);
+
+        if ($timestamp === false) {
+            throw new \RuntimeException('Unable to get file modification timestamp for ' . $this->path);
+        }
+
+        return $timestamp;
     }
 
     public function getSize(): int
@@ -56,6 +66,10 @@ class FilesystemEntry extends AbstractFilesystemEntry
             }
 
             $this->mimeType = $mimeUtils->guessMimeType($this->path);
+
+            if ($this->mimeType === null) {
+                throw new \RuntimeException('Unable to guess mime type for ' . $this->path);
+            }
         }
 
         return $this->mimeType;
@@ -63,6 +77,12 @@ class FilesystemEntry extends AbstractFilesystemEntry
 
     public function readFile(): string
     {
-        return file_get_contents($this->path);
+        $content = file_get_contents($this->path);
+
+        if ($content === false) {
+            throw new \RuntimeException('Unable to read file ' . $this->path);
+        }
+
+        return $content;
     }
 }

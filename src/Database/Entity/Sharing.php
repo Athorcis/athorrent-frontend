@@ -22,7 +22,7 @@ class Sharing implements CacheKeyGetterInterface
     #[ORM\Column(type: 'uuid')]
     private Uuid $id;
 
-    #[ORM\ManyToOne(targetEntity: 'User', inversedBy: 'sharings')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'sharings')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private User $user;
 

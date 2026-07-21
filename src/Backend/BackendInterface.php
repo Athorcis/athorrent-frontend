@@ -22,4 +22,6 @@ interface BackendInterface
 
     public function clean(): void;
 
+    public function __toString(): string;
+
 }

@@ -66,7 +66,7 @@ class BackendManagerCommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function handleRequest(ServerRequestInterface $request)
+    protected function handleRequest(ServerRequestInterface $request): Response
     {
         $path = $request->getUri()->getPath();
 

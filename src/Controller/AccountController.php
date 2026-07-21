@@ -28,7 +28,7 @@ class AccountController extends AbstractController
     /**
      * Remove the logged-in user from Doctrine then reload the user from the database
      */
-    protected function reloadUser(): UserInterface
+    protected function reloadUser(): ?UserInterface
     {
         $sessionUser = $this->getUser();
 
@@ -49,6 +49,10 @@ class AccountController extends AbstractController
         // also because the UserPassword uses the session user to check the password
         // and the session user also have to be removed from doctrine or else UniqueEntity constraint fail
         $user = $this->reloadUser();
+
+        if ($user === null) {
+            throw new RuntimeException('Failed to reload user');
+        }
 
         $form = $this->createForm(EditAccountType::class, $user);
 

@@ -34,6 +34,7 @@ class SharingController extends AbstractController
         return new PaginatedView($request, $this->sharingRepository, 10, ['user', $this->getUser()], ['path' => 'ASC']);
     }
 
+    /** @return array{string} */
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
     public function addSharing(#[Requirements(path: true)] UserFilesystemEntry $entry): array
     {
@@ -51,6 +52,7 @@ class SharingController extends AbstractController
     }
 
     /**
+     * @return array{}
      * @throws ORMException
      */
     #[Route(

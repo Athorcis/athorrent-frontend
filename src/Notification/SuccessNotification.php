@@ -6,7 +6,7 @@ namespace Athorrent\Notification;
 
 class SuccessNotification extends Notification
 {
-    public function __construct($message, $action = null)
+    public function __construct(string $message, ?string $action = null)
     {
         parent::__construct(NotificationType::SUCCESS, $message, $action);
     }

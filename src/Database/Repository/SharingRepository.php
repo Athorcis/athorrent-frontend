@@ -9,9 +9,14 @@ use Athorrent\Database\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * @extends EntityRepository<Sharing>
+ * @implements PaginableRepositoryInterface<Sharing>
+ */
 class SharingRepository extends EntityRepository implements DeletableRepositoryInterface, PaginableRepositoryInterface
 {
     use DeletableRepositoryTrait;
+    /** @use PaginableRepositoryTrait<Sharing> */
     use PaginableRepositoryTrait;
 
     protected function getEntityAlias(): string
@@ -19,7 +24,7 @@ class SharingRepository extends EntityRepository implements DeletableRepositoryI
         return 's';
     }
 
-    protected function createQueryBuilderByUserAndRoot(User $user, $root): QueryBuilder
+    protected function createQueryBuilderByUserAndRoot(User $user, string $root): QueryBuilder
     {
         $qb = $this->createQueryBuilder($this->getEntityAlias());
 
@@ -40,7 +45,10 @@ class SharingRepository extends EntityRepository implements DeletableRepositoryI
         return $qb;
     }
 
-    public function findByUserAndRoot(User $user, $root)
+    /**
+     * @return list<Sharing>
+     */
+    public function findByUserAndRoot(User $user, string $root): array
     {
         return $this->createQueryBuilderByUserAndRoot($user, $root)
 
@@ -50,7 +58,7 @@ class SharingRepository extends EntityRepository implements DeletableRepositoryI
         ->getQuery()->execute();
     }
 
-    public function deleteByUserAndRoot(User $user, $root)
+    public function deleteByUserAndRoot(User $user, string $root): int
     {
         return $this->createQueryBuilderByUserAndRoot($user, $root)
 

@@ -10,22 +10,35 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
 use function in_array;
 
+/**
+ * @phpstan-import-type ActionMap from ActionMapDumper
+ */
 class CompiledUrlGenerator extends UrlGenerator
 {
+    /** @var ActionMap */
     private array $actionMap;
 
+    /**
+     * @param array<string, list<array<string, mixed>>> $compiledRoutes
+     */
     public function __construct(private readonly array $compiledRoutes, RequestContext $context, LoggerInterface|null $logger = null, private readonly ?string $defaultLocale = null)
     {
         $this->context = $context;
         $this->logger = $logger;
     }
 
+    /**
+     * @param ActionMap $actionMap
+     */
     public function setActionMap(array $actionMap): void
     {
         $this->actionMap = $actionMap;
     }
 
-    protected function getPrefixId(string $name, array $parameters)
+    /**
+     * @param array<string, string> $parameters
+     */
+    protected function getPrefixId(string $name, array $parameters): ?string
     {
         $prefixId = null;
 
@@ -44,6 +57,9 @@ class CompiledUrlGenerator extends UrlGenerator
         return $prefixId;
     }
 
+    /**
+     * @param array<string, string> $parameters
+     */
     public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         $locale = $parameters['_locale']

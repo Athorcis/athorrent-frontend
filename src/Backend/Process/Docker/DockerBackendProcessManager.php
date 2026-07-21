@@ -144,6 +144,9 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         }
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     protected function createContainer(User $user, array $config): DockerBackendProcess
     {
         $this->pullImageIfNotExists($config['Image']);
@@ -158,7 +161,10 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         return new DockerBackendProcess($this->docker, $container['Id']);
     }
 
-    protected function getMountConfig($source, $target, $readOnly = true): array
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getMountConfig(string $source, string $target, bool $readOnly = true): array
     {
         if ($this->mountType === 'bind') {
             $mountSource = $this->mountSrc . '/' . $source;

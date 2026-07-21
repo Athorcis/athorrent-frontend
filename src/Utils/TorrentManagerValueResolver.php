@@ -17,9 +17,12 @@ class TorrentManagerValueResolver implements ValueResolverInterface
     {
     }
 
+    /** @return list<TorrentManagerInterface> */
     public function resolve(Request $request, ArgumentMetadata $argument): array
     {
-        if (!is_a($argument->getType(), TorrentManagerInterface::class, true)) {
+        $type = $argument->getType();
+
+        if ($type === null || !is_a($type, TorrentManagerInterface::class, true)) {
             return [];
         }
 

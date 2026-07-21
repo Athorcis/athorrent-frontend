@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Athorrent\Utils;
 
 use Athorrent\Backend\BackendFactory;
+use Athorrent\Backend\QBittorrentBackend;
 use Athorrent\Database\Entity\User;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -23,6 +24,7 @@ class TorrentManagerFactory
 
     protected function doCreate(User $user): TorrentManagerInterface
     {
+        /** @var QBittorrentBackend $backend */
         $backend = $this->backendFactory->create($user);
         return new QBittorrentManager($this->cache, $this->fs, $user, $backend);
     }

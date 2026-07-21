@@ -88,6 +88,7 @@ class TorrentController extends AbstractController
     }
 
     /**
+     * @return array{hash: string|null}
      * @throws Exception
      */
     #[Route(path: '/files', methods: 'POST', options: ['expose' => true])]
@@ -116,7 +117,7 @@ class TorrentController extends AbstractController
         ]);
 
         if (count($violations) > 0) {
-            throw new BadRequestException($violations[0]->getMessage());
+            throw new BadRequestException((string) $violations->get(0)->getMessage());
         }
 
         $path = $file->getRealPath();
@@ -152,6 +153,7 @@ class TorrentController extends AbstractController
     }
 
     /**
+     * @return array{torrentIds: list<string>}
      * @throws Exception
      */
     #[Route(path: '/magnets', methods: 'POST', options: ['expose' => true])]
@@ -193,6 +195,7 @@ class TorrentController extends AbstractController
     }
 
     /**
+     * @return array{}
      * @throws Exception
      */
     #[Route(path: '/{hash}/pause', methods: 'PUT', options: ['expose' => true])]
@@ -203,6 +206,7 @@ class TorrentController extends AbstractController
     }
 
     /**
+     * @return array{}
      * @throws Exception
      */
     #[Route(path: '/{hash}/resume', methods: 'PUT', options: ['expose' => true])]
@@ -213,6 +217,7 @@ class TorrentController extends AbstractController
     }
 
     /**
+     * @return array{}
      * @throws Exception
      */
     #[Route(path: '/{hash}', methods: 'DELETE', options: ['expose' => true])]

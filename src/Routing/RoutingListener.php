@@ -16,6 +16,9 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class RoutingListener implements EventSubscriberInterface
 {
+    /**
+     * @var array<string, array<string, array{method: string, pattern: string}>>
+     */
     private array $routeDescriptors;
 
     public function __construct(private readonly CacheInterface $cache, private readonly RequestContext $requestContext, private readonly RouterInterface $router)

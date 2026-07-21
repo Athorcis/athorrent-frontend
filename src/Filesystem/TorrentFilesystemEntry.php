@@ -6,7 +6,10 @@ namespace Athorrent\Filesystem;
 
 use Exception;
 
-/** @property TorrentFilesystem $filesystem */
+/**
+ * @template TFilesystem of TorrentFilesystem = TorrentFilesystem
+ * @extends UserFilesystemEntry<TFilesystem>
+ */
 class TorrentFilesystemEntry extends UserFilesystemEntry
 {
     private ?bool $torrent = null;

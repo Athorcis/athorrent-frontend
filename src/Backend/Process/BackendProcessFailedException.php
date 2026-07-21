@@ -7,8 +7,14 @@ namespace Athorrent\Backend\Process;
 use Athorrent\Backend\BackendInterface;
 use Exception;
 
+/**
+ * @phpstan-import-type BackendProcessErrorInfo from BackendProcessInterface
+ */
 class BackendProcessFailedException extends Exception
 {
+    /**
+     * @param BackendProcessErrorInfo $errorInfo
+     */
     public function __construct(string $message, private readonly BackendInterface $backend, private readonly array $errorInfo)
     {
         parent::__construct($message);
@@ -19,6 +25,9 @@ class BackendProcessFailedException extends Exception
         return $this->backend;
     }
 
+    /**
+     * @return BackendProcessErrorInfo
+     */
     public function getErrorInfo(): array
     {
         return $this->errorInfo;

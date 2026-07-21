@@ -19,10 +19,11 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(path: '/user/files', name: 'files_')]
 class FileController extends AbstractFileController
 {
+    /** @return array{} */
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
-    public function addFile(Request $request, #[Requirements(dir: true)] UserFilesystemEntry $rootEntry)
+    public function addFile(Request $request, #[Requirements(dir: true)] UserFilesystemEntry $rootEntry): array
     {
-        /** @var UploadedFile $file */
+        /** @var ?UploadedFile $file */
         $file = $request->files->get('file');
 
         if ($file === null) {
@@ -30,7 +31,7 @@ class FileController extends AbstractFileController
         }
 
         $rootPath = $rootEntry->getRealPath();
-        $relativePath = $request->request->get('relativePath');
+        $relativePath = $request->request->getString('relativePath');
 
         $path = Path::makeAbsolute($relativePath, $rootPath);
 
@@ -47,7 +48,7 @@ class FileController extends AbstractFileController
             $fs->mkdir($dirPath);
         }
 
-        $overwrite = $request->request->get('overwrite') === 'true';
+        $overwrite = $request->request->getBoolean('overwrite');
 
         if (!$overwrite) {
             $handle = @fopen($path, 'x');
@@ -68,6 +69,7 @@ class FileController extends AbstractFileController
         return [];
     }
 
+    /** @return array{} */
     #[Route(path: '/', methods: 'DELETE', options: ['expose' => true])]
     public function removeFile(#[Requirements(path: true)] UserFilesystemEntry $entry, SharingRepository $sharingRepository): array
     {

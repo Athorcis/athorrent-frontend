@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Athorrent\Controller;
 
 use Athorrent\Backend\BackendFactory;
+use Athorrent\Backend\QBittorrentBackend;
+use Athorrent\Database\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +23,11 @@ class QBittorrentProxyController extends AbstractController
     #[Route('/user/qb/{path}', requirements: ['path' => '.*'], methods: ['GET','POST','PUT','PATCH','DELETE'], options: ['csrf' => false])]
     public function proxyToQBittorrent(Request $request, string $path, UrlGeneratorInterface $urlGenerator): Response
     {
-        $backend = $this->backendFactory->create($this->getUser());
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var QBittorrentBackend $backend */
+        $backend = $this->backendFactory->create($user);
         $blocked = ['api/v2/auth/login'];
 
         if (in_array($path, $blocked, true)) {
@@ -142,8 +148,8 @@ class QBittorrentProxyController extends AbstractController
     /**
      * Ouvre un fichier uploadé (ou une liste) pour l'envoi multipart.
      *
-     * @param UploadedFile|array<UploadedFile|array> $file - Fichier(s) Symfony
-     * @return resource|array<int|string, mixed>
+     * @param UploadedFile|array<mixed> $file - Fichier(s) Symfony
+     * @return resource|false|array<mixed>
      */
     private function mapUploadedFiles(UploadedFile|array $file): mixed
     {

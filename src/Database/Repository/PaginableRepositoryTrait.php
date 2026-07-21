@@ -7,6 +7,9 @@ namespace Athorrent\Database\Repository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
+/**
+ * @template T
+ */
 trait PaginableRepositoryTrait
 {
     abstract public function createQueryBuilder(string $alias, ?string $indexBy = null): QueryBuilder;
@@ -16,7 +19,10 @@ trait PaginableRepositoryTrait
         return $this->createQueryBuilder($this->getEntityAlias());
     }
 
-    protected function paginateQueryBuilder(QueryBuilder $qb, $limit, $offset): Paginator
+    /**
+     * @return Paginator<T>
+     */
+    protected function paginateQueryBuilder(QueryBuilder $qb, int $limit, int $offset): Paginator
     {
         $qb->setMaxResults($limit);
         $qb->setFirstResult($offset);
@@ -24,6 +30,9 @@ trait PaginableRepositoryTrait
         return new Paginator($qb->getQuery());
     }
 
+    /**
+     * @return Paginator<T>
+     */
     public function paginate(int $limit, int $offset, array $criteria = [], array $sort = []): Paginator
     {
         $qb = $this->getQueryBuilderForPagination();

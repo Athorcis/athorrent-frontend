@@ -11,11 +11,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PaginatedView extends View
 {
-    public function __construct(Request $request, PaginableRepositoryInterface $entityRepository, $countPerPage, array $criteria = [], array $sort = [])
+    /**
+     * @param PaginableRepositoryInterface<mixed> $entityRepository
+     * @param array{}|array{string, mixed} $criteria
+     * @param array<string, 'ASC'|'DESC'> $sort
+     */
+    public function __construct(Request $request, PaginableRepositoryInterface $entityRepository, int $countPerPage, array $criteria = [], array $sort = [])
     {
-        $page = $request->query->get('page', 1);
+        $page = $request->query->getInt('page', 1);
 
-        if (!is_numeric($page) || $page < 1) {
+        if ($page < 1) {
             throw new BadRequestHttpException();
         }
 

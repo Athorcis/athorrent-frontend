@@ -7,14 +7,19 @@ namespace Athorrent\Routing;
 use Symfony\Component\Routing\RouteCollection;
 use function var_export;
 
+/**
+ * @phpstan-type ActionMap array<string, list<string>>
+ */
 class ActionMapDumper
 {
+    /** @var ActionMap|null */
     private ?array $actionMap = null;
 
     public function __construct(private readonly RouteCollection $routes)
     {
     }
 
+    /** @return ActionMap */
     public function generateActionMap(): array
     {
         if ($this->actionMap === null) {

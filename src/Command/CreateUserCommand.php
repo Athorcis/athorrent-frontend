@@ -18,6 +18,9 @@ class CreateUserCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * @param list<string> $roles
+     */
     public function __invoke(
         #[Argument] string $username,
         #[Argument] string $password,

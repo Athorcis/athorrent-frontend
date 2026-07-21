@@ -26,7 +26,10 @@ class BackendManagerProxy
         $this->allowTransportExceptions = $allowTransportExceptions;
     }
 
-    protected function request(string $method, string $path, array $options = [])
+    /**
+     * @param array<string, mixed> $options
+     */
+    protected function request(string $method, string $path, array $options = []): void
     {
         try {
             $this->http->request($method, sprintf('http://%s:8080', $_ENV['BACKEND_MANAGER_HOST']) . $path, $options);
@@ -41,22 +44,22 @@ class BackendManagerProxy
         }
     }
 
-    public function addUser(User $user)
+    public function addUser(User $user): void
     {
         $this->request('POST', '/user/add', ['query' => ['id' => $user->getId()]]);
     }
 
-    public function removeUser(User $user)
+    public function removeUser(User $user): void
     {
         $this->request('DELETE', '/user/remove', ['query' => ['id' => $user->getId()]]);
     }
 
-    public function detachUser(User $user)
+    public function detachUser(User $user): void
     {
         $this->request('DELETE', '/user/detach', ['query' => ['id' => $user->getId()]]);
     }
 
-    public function clear()
+    public function clear(): void
     {
         $this->request('DELETE', '/clear');
     }

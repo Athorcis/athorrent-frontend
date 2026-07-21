@@ -13,9 +13,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * @extends EntityRepository<User>
+ * @implements PaginableRepositoryInterface<User>
+ */
 class UserRepository extends EntityRepository implements DeletableRepositoryInterface, PaginableRepositoryInterface, UserLoaderInterface, PasswordUpgraderInterface
 {
     use DeletableRepositoryTrait;
+    /** @use PaginableRepositoryTrait<User> */
     use PaginableRepositoryTrait {
         paginateQueryBuilder as paginateQueryBuilderOriginal;
     }
@@ -25,7 +30,10 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
         return 'u';
     }
 
-    protected function paginateQueryBuilder(QueryBuilder $qb, $limit, $offset): Paginator
+    /**
+     * @return Paginator<User>
+     */
+    protected function paginateQueryBuilder(QueryBuilder $qb, int $limit, int $offset): Paginator
     {
         $qb->addSelect('uhr');
         $qb->join('u.hasRoles', 'uhr');
@@ -48,6 +56,7 @@ class UserRepository extends EntityRepository implements DeletableRepositoryInte
 
     public function getNextAvailablePort(): int
     {
+        /** @var int|null $nextAvailablePort */
         $nextAvailablePort = $this->createQueryBuilder('u')
             ->select('MAX(u.port) + 1')
             ->getQuery()

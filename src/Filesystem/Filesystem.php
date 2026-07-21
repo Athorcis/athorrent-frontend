@@ -28,6 +28,7 @@ class Filesystem extends AbstractFilesystem
 
     public function readDirectory(string $path): array
     {
+        /** @var iterable<string> $iterator */
         $iterator = new FilesystemIterator($path, FilesystemIterator::CURRENT_AS_PATHNAME | FilesystemIterator::SKIP_DOTS);
         return iterator_to_array($iterator);
     }

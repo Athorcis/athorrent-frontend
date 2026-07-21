@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -56,9 +57,11 @@ class NotificationListener implements EventSubscriberInterface
         }
     }
 
-    protected function getFlashBag(Request $request): ?FlashBagInterface
+    protected function getFlashBag(Request $request): FlashBagInterface
     {
-        return $request->getSession()->getFlashBag();
+        /** @var FlashBagAwareSessionInterface $session */
+        $session = $request->getSession();
+        return $session->getFlashBag();
     }
 
     public function handleView(View $view, Request $request): void
@@ -66,7 +69,7 @@ class NotificationListener implements EventSubscriberInterface
         if ($request->cookies->has('notification')) {
             $flashBag = $this->getFlashBag($request);
 
-            if ($flashBag && $flashBag->has('notifications')) {
+            if ($flashBag->has('notifications')) {
                 $view->set('notifications', $flashBag->get('notifications'));
             }
         }
@@ -76,7 +79,7 @@ class NotificationListener implements EventSubscriberInterface
     {
         $flashBag = $this->getFlashBag($request);
 
-        $flashBag?->add('notifications', $notification);
+        $flashBag->add('notifications', $notification);
         $this->keepCookie = true;
 
         $action = $notification->getAction();
@@ -85,6 +88,10 @@ class NotificationListener implements EventSubscriberInterface
             $url = $this->urlGenerator->generate($action);
         } else {
             $url = $request->headers->get('Referer');
+        }
+
+        if ($url === null) {
+            throw new \RuntimeException('fail to detect redirect url');
         }
 
         return new RedirectResponse($url, 302, [

@@ -9,6 +9,7 @@ use Athorrent\Database\Repository\UserRepository;
 use Athorrent\Database\Type\UserRole;
 use DateTimeImmutable;
 use Deprecated;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Cache;
@@ -53,18 +54,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     private ?DateTimeImmutable $connectionDateTime = null;
 
     /**
-     * @var UserHasRole[]|Collection
+     * @var Collection<int, UserHasRole>
      */
-    #[ORM\OneToMany(targetEntity: 'UserHasRole', mappedBy: 'user', cascade: ['persist', 'detach'], fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: UserHasRole::class, mappedBy: 'user', cascade: ['persist', 'detach'], fetch: 'EAGER')]
     #[Cache(usage: 'READ_ONLY')]
-    private array|Collection $hasRoles;
+    private Collection $hasRoles;
 
     /**
-     * @var Sharing[]|Collection
+     * @var Collection<string, Sharing>
      */
-    #[ORM\OneToMany(targetEntity: 'Sharing', mappedBy: 'user', indexBy: 'path', cascade: ['detach'], fetch: 'LAZY')]
+    #[ORM\OneToMany(targetEntity: Sharing::class, mappedBy: 'user', indexBy: 'path', cascade: ['detach'], fetch: 'LAZY')]
     #[Cache(usage: 'NONSTRICT_READ_WRITE')]
-    private array|Collection $sharings;
+    // @phpstan-ignore property.onlyRead
+    private Collection $sharings;
 
     #[ORM\Column]
     private int $port;
@@ -87,6 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getUserIdentifier(): string
     {
+        // @phpstan-ignore return.type
         return $this->username;
     }
 
@@ -140,7 +143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     }
 
     /**
-     * @return UserHasRole[]|Collection
+     * @return UserHasRole[]|Collection<int, UserHasRole>
      */
     public function getHasRoles(): array|Collection
     {
@@ -166,13 +169,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
      */
     public function setRoles(array $roles): void
     {
-        $this->hasRoles = array_map(fn($role) => new UserHasRole($this, UserRole::fromOrSelf($role)), $roles);
+        $this->hasRoles = new ArrayCollection(array_map(fn($role) => new UserHasRole($this, UserRole::fromOrSelf($role)), $roles));
     }
 
     /**
-     * @return Sharing[]|Collection
+     * @return Collection<string, Sharing>
      */
-    public function getSharings(): array|Collection
+    public function getSharings(): Collection
     {
         return $this->sharings;
     }
@@ -227,6 +230,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getPath(string $path): string
     {
+        // @phpstan-ignore constant.notFound
         return Path::join(USER_ROOT_DIR, (string)$this->id, $path);
     }
 
