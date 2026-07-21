@@ -1,8 +1,6 @@
 import { readdirSync } from 'node:fs';
 import { basename, extname } from 'node:path';
 import Encore from '@symfony/webpack-encore';
-import StyleLintPlugin from 'stylelint-webpack-plugin';
-import ESLintPlugin from 'eslint-webpack-plugin';
 import CompressionPlugin from "compression-webpack-plugin";
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -66,14 +64,8 @@ Encore
 
     .enablePostCssLoader()
 
-    .addPlugin(new StyleLintPlugin({ context: './assets/css' }))
-
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
-
-    .addPlugin(new ESLintPlugin({
-        extensions: ['ts']
-    }))
 
     .addPlugin(new CompressionPlugin({
         test: /\.(css|eot|ico|js|svg|ttf)(\?.*)?$/i,
