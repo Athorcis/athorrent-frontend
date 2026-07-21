@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -115,24 +114,14 @@ abstract class AbstractFileController extends AbstractController
         set_time_limit(0);
 
         return new StreamedResponse(function () use ($entry) {
+            passthru(
+                sprintf('cd %s && exec zip -r -0 -q - .', escapeshellarg($entry->getRealPath())),
+                $status,
+            );
 
-            $process = Process::fromShellCommandline('zip -r -0 -q - -- *', $entry->getRealPath());
-            $process->setTimeout(null);
-
-            $process->start(function ($type, $buffer) {
-                if (Process::OUT === $type) {
-                    echo $buffer;
-                    flush();
-                }
-            });
-
-            $process->wait();
-
-            if (!$process->isSuccessful()) {
-                $this->logger->error("directory download failed", [
-                    'status' => $process->getExitCode(),
-                    'stderr' => $process->getErrorOutput(),
-                    'signal' => $process->getStopSignal(),
+            if ($status !== 0) {
+                $this->logger->error('directory download failed', [
+                    'status' => $status,
                 ]);
             }
         }, 200, $headers);
