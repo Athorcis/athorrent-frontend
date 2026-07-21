@@ -114,7 +114,7 @@ abstract class AbstractFileController extends AbstractController
 
         return new StreamedResponse(function () use ($entry) {
 
-            $process = Process::fromShellCommandline('tar --create --gzip --file - -- *', $entry->getRealPath());
+            $process = Process::fromShellCommandline('tar --create --use-compress-program="gzip -1" --file - -- *', $entry->getRealPath());
             $process->setTimeout(null);
 
             $process->start(function ($type, $buffer) {
