@@ -96,6 +96,24 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.cache \
     --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.yarn \
     yarn build
 
+FROM builder AS lint
+
+ARG RUN_USER
+ARG BUILD_DIR
+COPY --chown=$RUN_USER composer.json composer.lock $BUILD_DIR/
+
+ARG UID
+ARG GID
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.composer/ \
+    composer install --no-scripts
+
+COPY --chown=$RUN_USER --parents assets/icons bin config public src templates translations .env phpstan.dist.neon phpstan-baseline.neon $BUILD_DIR/
+
+RUN set -ex ;\
+    APP_ENV=dev php bin/console cache:warmup -v ;\
+    APP_ENV=dev composer lint ;\
+    touch $BUILD_DIR/.lint-ok
+
 FROM builder AS full-build
 
 ARG RUN_USER
@@ -104,15 +122,17 @@ USER $RUN_USER
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
-COPY --chown=$RUN_USER --parents assets/icons bin config migrations public src templates translations .env $RUN_DIR
+COPY --chown=$RUN_USER --parents assets/icons bin config public src templates translations .env $RUN_DIR
 
 ARG BUILD_DIR
 COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
 COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
+COPY --from=lint $BUILD_DIR/.lint-ok $RUN_DIR/.lint-ok
 
 ARG RUN_USER
 ARG SYMFONY_APP_ENV
 RUN set -ex ;\
+    rm -f .lint-ok ;\
     # If we don't create the database first warmup doesn't create all metadata cache \
     APP_SECRET=dummy php bin/console doctrine:schema:create --env=$SYMFONY_APP_ENV -v ;\
     php bin/console cache:warmup --env=$SYMFONY_APP_ENV -v;\

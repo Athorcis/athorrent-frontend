@@ -50,6 +50,9 @@
         "twig/twig": "^3.28.0"
     },
     "require-dev": {
+        "phpstan/phpstan": "^2.2.5",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0.20",
         "roave/security-advisories": "dev-latest",
         "symfony/debug-bundle": "8.1.*",
         "symfony/stopwatch": "8.1.*",
@@ -91,6 +94,18 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "lint:phpstan": "phpstan analyse --memory-limit 1G",
+        "lint:container": "php bin/console lint:container",
+        "lint:twig": "php bin/console lint:twig templates",
+        "lint:yaml": "php bin/console lint:yaml config translations --parse-tags",
+        "lint:translations": "php bin/console lint:translations",
+        "lint": [
+            "@lint:phpstan",
+            "@lint:container",
+            "@lint:twig",
+            "@lint:yaml",
+            "@lint:translations"
         ]
     },
     "conflict": {

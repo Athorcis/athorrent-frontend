@@ -25,7 +25,6 @@
     "autoprefixer": "^10.5.3",
     "compression-webpack-plugin": "^12.0.0",
     "eslint": "^10.7.0",
-    "eslint-webpack-plugin": "^6.0.0",
     "jiti": "^2.7.0",
     "postcss": "^8.5.19",
     "postcss-loader": "^8.2.1",
@@ -35,7 +34,6 @@
     "stylelint": "~17.14.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-scss": "^7.2.0",
-    "stylelint-webpack-plugin": "^5.1.0",
     "ts-loader": "^9.6.2",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.64.0",
@@ -47,6 +45,9 @@
     "dev-server": "encore dev-server",
     "dev": "encore dev",
     "watch": "encore dev --watch",
-    "build": "encore production --progress"
+    "lint:js": "eslint ./assets",
+    "lint:css": "stylelint \"assets/css/**/*.scss\"",
+    "lint": "yarn lint:js && yarn lint:css",
+    "build": "yarn lint && encore production --progress"
   }
 }
