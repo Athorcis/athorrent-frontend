@@ -2,7 +2,7 @@
 
 ARG PHP_VERSION=8.5.8
 ARG COMPOSER_VERSION=2.10.2
-ARG NODEJS_VERSION=24.18.0
+ARG NODEJS_VERSION=26.5.0
 ARG NGINX_VERSION=1.31.3
 
 ARG UID=33
@@ -53,6 +53,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     apt-get install -y --no-install-recommends \
         nodejs=$(apt-cache policy nodejs | grep $NODEJS_VERSION | grep -v Candidate | awk '{ print $1 }') \
     ;\
+    npm install -g corepack \
     corepack enable
 
 ARG RUN_USER
