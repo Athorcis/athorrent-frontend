@@ -64,7 +64,7 @@ class FilesPage extends AbstractPage {
     }
 
     async updateFileList() {
-        const data = await this.sendRequest<string>('listFiles', { path: this.router.getQueryParam('path')! });
+        const data = await this.sendRequest<string>('listFiles', { path: (await this.router.getQueryParam('path'))! });
 
         const content = document.querySelector('.main-header')!.nextElementSibling!;
         const newContent = document.createRange().createContextualFragment(data);
@@ -150,14 +150,14 @@ class FilesPage extends AbstractPage {
     }
 
     protected async triggerFileUpload(type: DropzoneType) {
-        const path = this.router.getQueryParam('path') as string | undefined ?? '';
+        const path = await this.router.getQueryParam('path') as string | undefined ?? '';
 
         if (this.uploadManager === null) {
             const {UploadManager} = await import("./core/upload-manager");
             this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
         }
 
-        this.uploadManager.trigger({
+        await this.uploadManager.trigger({
             title: 'files.upload',
             route: 'addFile',
             type,
