@@ -9,7 +9,7 @@
     {% set roles = [] %}
 {% endif %}
 
-{% cache cache_key('nav', [roles|join(','), route]) %}
+{% cache cache_key('nav', [roles|join(','), route, app.locale]) %}
 
     <nav class="sidebar" id="sidebar-nav">
         <header>
@@ -52,7 +52,7 @@
                     {{ ux_icon('sign-out') }}
                 </a>
             {% else %}
-                <a href="{{ path('_logout_main') }}" class="button icon-only logout-button" title="{{ 'nav.logout'|trans }}">
+                <a href="{{ path('_logout_main', { _locale: app.locale }) }}" class="button icon-only logout-button" title="{{ 'nav.logout'|trans }}">
                     {{ ux_icon('sign-out') }}
                 </a>
             {% endif %}
