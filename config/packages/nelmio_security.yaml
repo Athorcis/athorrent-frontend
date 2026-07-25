@@ -10,3 +10,49 @@ nelmio_security:
             default-src: ['self', '%env(string:default::ADDITIONAL_CSP_ORIGIN)%']
             style-src: ['self', 'unsafe-inline']
             frame-ancestors: ['none']
+
+    content_type:
+        nosniff: true
+
+    referrer_policy:
+        enabled: true
+        policies:
+            - 'no-referrer'
+            - 'strict-origin-when-cross-origin'
+
+    permissions_policy:
+        enabled: true
+        policies:
+            # Media permissions
+            camera: []
+            microphone: []
+
+            # Location and sensors
+            geolocation: []
+            accelerometer: []
+            gyroscope: []
+            magnetometer: []
+
+            bluetooth: []
+            serial: []
+            usb: []
+
+            # Privacy features
+            interest_cohort: []           # Disable FLoC tracking
+
+            # Payment and authentication
+            payment: []
+            publickey_credentials_get: []
+
+            # Display and interaction
+            fullscreen: ['self']
+            picture_in_picture: ['self']
+            autoplay: []
+
+    cross_origin_isolation:
+        enabled: true
+        paths:
+            '^/.*':
+                coep: require-corp
+                coop: same-origin
+                corp: same-origin
