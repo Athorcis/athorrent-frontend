@@ -17,7 +17,11 @@ export interface UploadOptions {
     dropzone?: DropzoneOptions;
 }
 
-export class UploadManager {
+export interface UploadManagerInterface {
+    trigger(options: UploadOptions): void;
+}
+
+export class UploadManager implements UploadManagerInterface{
 
     constructor(
         private router: Router,
@@ -26,7 +30,7 @@ export class UploadManager {
         private translator: Translator,
     ) {}
 
-    initialize(options: UploadOptions): [Dropzone, HTMLDialogElement] {
+    protected initialize(options: UploadOptions): [Dropzone, HTMLDialogElement] {
         const {
             title,
             route,
