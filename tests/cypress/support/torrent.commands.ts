@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import {pathWithLocale} from "./utils";
 import Chainable = Cypress.Chainable;
 
 export const TEST_DOWNLOAD_LIMIT = 51_200;
@@ -35,7 +36,7 @@ function interceptAddTorrent(path: string, downloadLimit?: number) {
 }
 
 function addTorrent(callback: () => void, shouldExist: boolean): Chainable<string|undefined> {
-    cy.url().should('contain', '/user/torrents');
+    cy.url().should('contain', pathWithLocale('/user/torrents'));
 
     callback();
 
@@ -59,13 +60,13 @@ function addTorrent(callback: () => void, shouldExist: boolean): Chainable<strin
 }
 
 function submitTorrentFile(filename: string, options?: TorrentAddOptions) {
-    interceptAddTorrent('/user/torrents/files*', options?.downloadLimit);
+    interceptAddTorrent(pathWithLocale('/user/torrents/files*'), options?.downloadLimit);
     cy.dropdownItem('.add-torrent', '.main-header').click();
     cy.get('input[type="file"]').selectFile(`cypress/fixtures/torrents/${filename}`, { force: true });
 }
 
 function submitMagnetUri(uri: string, options?: TorrentAddOptions) {
-    interceptAddTorrent('/user/torrents/magnets*', options?.downloadLimit);
+    interceptAddTorrent(pathWithLocale('/user/torrents/magnets*'), options?.downloadLimit);
     cy.dropdownItem('.add-magnet', '.main-header').click();
     cy.get('dialog textarea').type(uri, { delay: 0 });
     cy.get('dialog button.primary').click();

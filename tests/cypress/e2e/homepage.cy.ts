@@ -1,16 +1,17 @@
 import {getLogoutButton} from "../support/commands";
+import {pathWithLocale} from "../support/utils";
 
 describe('homepage', () => {
 
     it('should be accessible', () => {
-        cy.visit('/');
+        cy.visit(pathWithLocale('/'));
 
         cy.get('h1').should('contain', 'Athorrent');
     });
 
     it('should allow login', () => {
         cy.login();
-        cy.visit('/user/files/');
+        cy.visit(pathWithLocale('/user/files/'));
         getLogoutButton().should('exist');
     });
 
@@ -19,13 +20,5 @@ describe('homepage', () => {
 
         cy.logout();
         getLogoutButton().should('not.exist');
-    });
-
-    it('localized pages should be accessible', () => {
-        cy.visit('/en/');
-
-        cy.login();
-
-        cy.visit('/en/');
     });
 });

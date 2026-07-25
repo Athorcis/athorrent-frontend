@@ -202,6 +202,13 @@ yarn install --immutable
 yarn cypress run
 ```
 
+To run against a non-default locale (default is `fr`):
+
+```sh
+yarn cypress run --expose locale=en
+# or: CYPRESS_locale=en yarn cypress run
+```
+
 Interactive mode:
 
 ```sh

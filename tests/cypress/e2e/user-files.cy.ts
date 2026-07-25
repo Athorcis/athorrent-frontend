@@ -1,5 +1,5 @@
 import {getFileSelector, uploadFile, uploadFiles} from "../support/commands";
-import {resetTestData} from "../support/utils";
+import {pathWithLocale, resetTestData} from "../support/utils";
 
 
 function waitForPlayerStart(selector: string) {
@@ -43,11 +43,11 @@ describe('user-files', () => {
     beforeEach(() => {
         resetTestData();
         cy.login();
-        cy.visit('/user/files/');
+        cy.visit(pathWithLocale('/user/files/'));
     });
 
     it('should be accessible', () => {
-        cy.location('pathname').should('eq', '/user/files/');
+        cy.location('pathname').should('eq', pathWithLocale('/user/files/'));
         cy.get('.main-header h1').should('be.visible');
         cy.get('.add-button').should('exist');
     });
@@ -71,7 +71,7 @@ describe('user-files', () => {
     it('should allow to remove file', () => {
         const { selector } = uploadFile('cypress/fixtures/files/test.txt');
 
-        cy.intercept('DELETE', '/user/files').as('deleteFiles');
+        cy.intercept('DELETE', pathWithLocale('/user/files')).as('deleteFiles');
 
         cy.get(`${selector} .file-remove`).click();
 
