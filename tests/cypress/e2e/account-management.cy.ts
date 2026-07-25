@@ -1,5 +1,5 @@
 import {ALT_PASSWORD, ALT_USERNAME, DEFAULT_PASSWORD, DEFAULT_USERNAME} from "../support/commands";
-import {checkIfFieldHasError, createUser, resetTestData} from "../support/utils";
+import {checkIfFieldHasError, createUser, pathWithLocale, resetTestData} from "../support/utils";
 
 describe('account-management', () => {
     beforeEach(() => {
@@ -8,7 +8,7 @@ describe('account-management', () => {
     });
 
     it('should display form', () => {
-        cy.visit('/user/account/');
+        cy.visit(pathWithLocale('/user/account/'));
 
         cy.get('#edit_account_username').should('have.value', DEFAULT_USERNAME);
     });
@@ -18,7 +18,7 @@ describe('account-management', () => {
 
         assert.notEqual(DEFAULT_USERNAME, NEW_USERNAME);
 
-        cy.visit('/user/account/');
+        cy.visit(pathWithLocale('/user/account/'));
         cy.get('#edit_account_username').clear().type(NEW_USERNAME);
         cy.get('#edit_account_current_password').type(DEFAULT_PASSWORD);
         cy.get('#edit_account_update').click();
@@ -31,7 +31,7 @@ describe('account-management', () => {
 
         assert.notEqual(DEFAULT_PASSWORD, NEW_PASSWORD);
 
-        cy.visit('/user/account/');
+        cy.visit(pathWithLocale('/user/account/'));
         cy.get('#edit_account_current_password').type(DEFAULT_PASSWORD);
         cy.get('#edit_account_plainPassword_first').type(NEW_PASSWORD);
         cy.get('#edit_account_plainPassword_second').type(NEW_PASSWORD);
@@ -43,7 +43,7 @@ describe('account-management', () => {
     it('should validate username', () => {
         createUser(ALT_USERNAME, ALT_PASSWORD);
 
-        cy.visit('/user/account/');
+        cy.visit(pathWithLocale('/user/account/'));
 
         cy.get('#edit_account_username').clear().type(ALT_USERNAME);
         cy.get('#edit_account_current_password').type(DEFAULT_PASSWORD);
@@ -57,7 +57,7 @@ describe('account-management', () => {
 
         assert.notEqual(DEFAULT_PASSWORD, INVALID_PASSWORD);
 
-        cy.visit('/user/account/');
+        cy.visit(pathWithLocale('/user/account/'));
         cy.get('#edit_account_current_password').type(INVALID_PASSWORD);
         cy.get('#edit_account_update').click();
 
@@ -65,7 +65,7 @@ describe('account-management', () => {
     });
 
     it('should validate password confirmation', () => {
-        cy.visit('/user/account/');
+        cy.visit(pathWithLocale('/user/account/'));
         cy.get('#edit_account_current_password').type(DEFAULT_PASSWORD);
         cy.get('#edit_account_plainPassword_first').type('x');
         cy.get('#edit_account_plainPassword_second').type('y');

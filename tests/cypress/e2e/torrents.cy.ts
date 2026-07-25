@@ -1,12 +1,12 @@
 import {getFileSelector} from "../support/commands";
-import {resetTestData} from "../support/utils";
+import {pathWithLocale, resetTestData} from "../support/utils";
 import {TEST_DOWNLOAD_LIMIT} from "../support/torrent.commands";
 
 describe('torrents', () => {
     beforeEach(() => {
         resetTestData();
         cy.login();
-        cy.visit('/user/torrents/');
+        cy.visit(pathWithLocale('/user/torrents/'));
     });
 
     it('should add torrent file', function() {
@@ -36,7 +36,7 @@ describe('torrents', () => {
             .torrentStatus('downloading')
             .torrentProgress();
 
-        cy.visit('/user/files/');
+        cy.visit(pathWithLocale('/user/files/'));
 
         const selector = getFileSelector('Sintel');
 

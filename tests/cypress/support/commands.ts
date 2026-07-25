@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import {getLocale, pathWithLocale} from "./utils";
 import Chainable = Cypress.Chainable;
 
 declare namespace Cypress {
@@ -15,8 +16,7 @@ declare namespace Cypress {
 export const DEFAULT_USERNAME = 'admin';
 export const DEFAULT_PASSWORD = 'test';
 
-export const ALT_USERNAME = 'test';
-export const ALT_PASSWORD = 'password';
+export {ALT_USERNAME, ALT_PASSWORD} from "./utils";
 
 Cypress.Commands.add('elementExists', function (selector: string) {
     cy.get('body').then(($body) => {
@@ -26,14 +26,14 @@ Cypress.Commands.add('elementExists', function (selector: string) {
 
 Cypress.Commands.add('login', function (username: string = DEFAULT_USERNAME, password: string = DEFAULT_PASSWORD) {
 
-    cy.session([username, password], () => {
-        cy.visit('/login');
+    cy.session([username, password, getLocale()], () => {
+        cy.visit(pathWithLocale('/login'));
 
         cy.get('form input[name=_username]').clear().type(username);
         cy.get('form input[name=_password]').clear().type(password);
         cy.get('form button').click();
 
-        cy.url().should('contain', '/user/files/');
+        cy.url().should('contain', pathWithLocale('/user/files/'));
     }, {
         validate: () => {
             cy.elementExists(LOGOUT_BUTTON_SELECTOR).then(exists => {
@@ -51,7 +51,7 @@ export function getLogoutButton() {
     return cy.get(LOGOUT_BUTTON_SELECTOR);
 }
 Cypress.Commands.add('logout', function () {
-    cy.visit('/user/files/');
+    cy.visit(pathWithLocale('/user/files/'));
     getLogoutButton().click();
     Cypress.session.clearAllSavedSessions();
 });
@@ -79,11 +79,11 @@ function getParentDir(path: string): string {
 
 function visitUserFiles(path = '') {
     if (path === '') {
-        cy.visit('/user/files/');
+        cy.visit(pathWithLocale('/user/files/'));
         return;
     }
 
-    cy.visit({ url: '/user/files/', qs: { path } });
+    cy.visit({ url: pathWithLocale('/user/files/'), qs: { path } });
 }
 
 export function uploadFiles(paths: string[], relativePaths: string[] = [], asDirectory = false) {
@@ -97,7 +97,7 @@ export function uploadFiles(paths: string[], relativePaths: string[] = [], asDir
         cy.get('.add-file').click();
     }
 
-    cy.intercept('POST', '/user/files*').as('uploadFile');
+    cy.intercept('POST', pathWithLocale('/user/files*')).as('uploadFile');
 
     cy.get('.dz-hidden-input').selectFile(paths.map((path, index) => {
 

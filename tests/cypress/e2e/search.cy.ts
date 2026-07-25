@@ -1,7 +1,7 @@
-import {resetTestData} from "../support/utils";
+import {resetTestData, pathWithLocale} from "../support/utils";
 
-function searchTorrents(query: string, source: string) {
-    cy.visit('/search/');
+function searchTorrents(query: string, source?: string) {
+    cy.visit(pathWithLocale('/search/'));
 
     if (source) {
         cy.get('[name=source]').select(source);
@@ -33,7 +33,7 @@ describe('search', () => {
         searchTorrents('debian');
 
         cy.get('tbody > tr:first-child td:first-child a').invoke('text').then(function (name) {
-            cy.intercept('POST', '/user/torrents/magnets').as('addTorrents');
+            cy.intercept('POST', pathWithLocale('/user/torrents/magnets')).as('addTorrents');
             cy.get('tbody > tr:first-child .col-add-magnet > a').click();
             cy.wait('@addTorrents');
             cy.get('.torrent-name').should('have.text', name);

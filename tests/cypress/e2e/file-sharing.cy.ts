@@ -1,5 +1,5 @@
 import {uploadFile} from "../support/commands";
-import {resetTestData} from "../support/utils";
+import {pathWithLocale, pathWithoutLocale, resetTestData} from "../support/utils";
 
 function uploadAndShare(path: string) {
     const { basename, selector } = uploadFile(path);
@@ -13,6 +13,15 @@ function uploadAndShare(path: string) {
         await cy.get('@dialog').find('.close').click();
         return {basename, selector, url};
     });
+}
+
+function getPathFromLocalizedUrl(url: string): string {
+    const localizedPath = new URL(url).pathname;
+    return pathWithoutLocale(localizedPath);
+}
+
+function getSharingId(path: string): string {
+    return path.replace(/^\/shared\/(.+)\/files\/$/, '$1');
 }
 
 describe('file-sharing', () => {
@@ -32,23 +41,23 @@ describe('file-sharing', () => {
     it('shared files should be listed in sharing list', () => {
         uploadAndShare('cypress/fixtures/files/test.txt').then(({basename, url}) => {
 
-            const relativeUrl = url.replace(/^.+(\/shared\/.+\/files\/)$/, '$1');
-            const sharingId = relativeUrl.replace(/^\/shared\/(.+)\/files\/$/, '$1');
+            const sharingPath = getPathFromLocalizedUrl(url);
+            const sharingId = getSharingId(sharingPath);
 
-            cy.visit('/user/sharings/');
+            cy.visit(pathWithLocale('/user/sharings/'));
 
             cy.get(`#sharing-${sharingId} a`)
                 .should('have.text', basename)
-                .invoke('attr', 'href').should('deep.equal', relativeUrl);
+                .invoke('attr', 'href').should('deep.equal', pathWithLocale(sharingPath));
         });
     });
 
     it('sharing list should allow to remove sharing', () => {
-        uploadAndShare('cypress/fixtures/files/test.txt').then(({basename, url}) => {
+        uploadAndShare('cypress/fixtures/files/test.txt').then(({url}) => {
 
-            const sharingId = url.replace(/^.+\/shared\/(.+)\/files\/$/, '$1');
+            const sharingId = getSharingId(getPathFromLocalizedUrl(url));
 
-            cy.visit('/user/sharings/');
+            cy.visit(pathWithLocale('/user/sharings/'));
 
             cy.get(`#sharing-${sharingId} .sharing-remove`).click();
             cy.get(`#sharing-${sharingId}`).should('not.exist');

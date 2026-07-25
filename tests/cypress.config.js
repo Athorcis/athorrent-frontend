@@ -3,6 +3,10 @@ const AdmZip = require('adm-zip');
 module.exports = {
     allowCypressEnv: false,
 
+    expose: {
+        locale: 'fr',
+    },
+
     e2e: {
         baseUrl: 'https://athorrent.local',
 
