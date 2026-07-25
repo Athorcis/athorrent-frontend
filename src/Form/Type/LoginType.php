@@ -6,10 +6,12 @@ namespace Athorrent\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -18,8 +20,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class LoginType extends AbstractType
 {
-    public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -57,10 +61,30 @@ class LoginType extends AbstractType
                 SubmitType::class,
                 ['label' => 'login.submit'],
             );
+
+        // Preserve locale: login_check is not localized, so default redirect would use "fr".
+        if (!$this->hasStoredTargetPath()) {
+            $builder->add('_target_path', HiddenType::class, [
+                'data' => $this->urlGenerator->generate('files_listFiles'),
+            ]);
+        }
     }
 
     public function getBlockPrefix(): string
     {
         return '';
+    }
+
+    private function hasStoredTargetPath(): bool
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($request === null || !$request->hasSession()) {
+            return false;
+        }
+
+        $targetPath = $request->getSession()->get('_security.main.target_path');
+
+        return \is_string($targetPath) && $targetPath !== '';
     }
 }
