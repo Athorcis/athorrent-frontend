@@ -3,16 +3,14 @@ import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
 import {decodeBase64} from "./core/utils";
-import {DropzoneFile} from 'dropzone';
-import {DropzoneType, UploadManager} from './core/upload-manager';
+import type {DropzoneFile} from 'dropzone';
+import type {DropzoneType, UploadManagerInterface} from './core/upload-manager';
 
 class FilesPage extends AbstractPage {
 
-    private uploadManager!: UploadManager;
+    private uploadManager: UploadManagerInterface|null = null;
 
     init() {
-        this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
-
         on(document, 'click', new Map([
             ['.add-sharing', this.onSharingAdd],
             ['.sharing-remove', this.onSharingRemove],
@@ -151,8 +149,13 @@ class FilesPage extends AbstractPage {
         return "";
     }
 
-    protected triggerFileUpload(type: DropzoneType) {
+    protected async triggerFileUpload(type: DropzoneType) {
         const path = this.router.getQueryParam('path') as string | undefined ?? '';
+
+        if (this.uploadManager === null) {
+            const {UploadManager} = await import("./core/upload-manager");
+            this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
+        }
 
         this.uploadManager.trigger({
             title: 'files.upload',

@@ -3,8 +3,8 @@ import {Router} from './core/router';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
-import {UploadManager} from "./core/upload-manager";
-import { Response } from 'typescript-http-client';
+import type { Response } from 'typescript-http-client';
+import type {UploadManagerInterface} from "./core/upload-manager";
 
 const torrentListTimeout = 2000;
 
@@ -81,11 +81,9 @@ class TorrentsPage extends AbstractPage {
 
     private torrentsUpdater!: Updater;
 
-    private uploadManager!: UploadManager;
+    private uploadManager: UploadManagerInterface|null = null;
 
     init() {
-        this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
-
         this.initializeTorrentsList();
 
         if (navigator.registerProtocolHandler) {
@@ -155,7 +153,13 @@ class TorrentsPage extends AbstractPage {
         ]));
     }
 
-    protected onTorrentAdd = (_: MouseEvent) => {
+    protected onTorrentAdd = async (_: MouseEvent) => {
+
+        if (this.uploadManager === null) {
+            const {UploadManager} = await import("./core/upload-manager");
+            this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
+        }
+
         this.uploadManager.trigger({
             title: 'torrents.addTorrent',
             route: 'uploadTorrent',
