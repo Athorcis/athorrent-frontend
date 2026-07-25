@@ -41,6 +41,9 @@
     "webpack-cli": "^7.2.1",
     "webpack-notifier": "^1.15.0"
   },
+  "resolutions": {
+    "@parcel/watcher": "npm:empty-npm-package@1.0.0"
+  },
   "scripts": {
     "dev-server": "encore dev-server",
     "dev": "encore dev",
