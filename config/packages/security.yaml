@@ -30,9 +30,7 @@ security:
             form_login:
                 login_path: login
                 check_path: login_check
-                default_target_path: files_listFiles
                 failure_handler: Athorrent\Security\AuthenticationFailureHandler
-                always_use_default_target_path: false
                 enable_csrf: true
 
             logout:
