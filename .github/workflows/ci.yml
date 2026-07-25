@@ -125,7 +125,7 @@ jobs:
               with:
                   working-directory: tests
                   install-command: yarn install --immutable
-                  command: yarn run --binaries-only cypress run
+                  command: yarn test:e2e
               env:
                   YARN_ENABLE_SCRIPTS: "true"
 

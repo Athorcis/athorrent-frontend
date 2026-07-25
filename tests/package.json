@@ -6,5 +6,8 @@
     "cypress": "^15.18.1",
     "cypress-map": "^1.56.0",
     "typescript": "^6.0.3"
+  },
+  "scripts": {
+    "test:e2e": "cypress run && cypress run --expose locale=en"
   }
 }
