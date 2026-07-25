@@ -17,7 +17,6 @@ nelmio_security:
     referrer_policy:
         enabled: true
         policies:
-            - 'no-referrer'
             - 'strict-origin-when-cross-origin'
 
     permissions_policy:
