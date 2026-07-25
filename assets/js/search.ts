@@ -2,7 +2,7 @@ import '../css/search.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
-import { Response } from 'typescript-http-client';
+import type { Response } from 'typescript-http-client';
 
 class SearchPage extends AbstractPage {
 
@@ -17,7 +17,7 @@ class SearchPage extends AbstractPage {
 
         try {
             await this.sendRequest('addMagnets', { magnets: [link!.href] });
-            location.assign(this.router.generateUrl('listTorrents'));
+            location.assign(await this.router.generateUrl('listTorrents'));
         }
         catch (response) {
             const message = (response as Response<ApiErrorResponse>).body?.error;

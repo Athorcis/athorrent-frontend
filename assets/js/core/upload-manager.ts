@@ -1,5 +1,5 @@
 import Dropzone, {DropzoneFile, DropzoneOptions} from 'dropzone';
-import {Router} from "./router";
+import {LazyRouter} from "./lazy-router";
 import {SecurityManager} from "./security-manager";
 import {UiManager} from "./ui-manager";
 import {Translator} from "./translator";
@@ -18,19 +18,19 @@ export interface UploadOptions {
 }
 
 export interface UploadManagerInterface {
-    trigger(options: UploadOptions): void;
+    trigger(options: UploadOptions): void|Promise<void>;
 }
 
 export class UploadManager implements UploadManagerInterface{
 
     constructor(
-        private router: Router,
+        private router: LazyRouter,
         private securityManager: SecurityManager,
         private ui: UiManager,
         private translator: Translator,
     ) {}
 
-    protected initialize(options: UploadOptions): [Dropzone, HTMLDialogElement] {
+    protected async initialize(options: UploadOptions): Promise<[Dropzone, HTMLDialogElement]> {
         const {
             title,
             route,
@@ -42,7 +42,7 @@ export class UploadManager implements UploadManagerInterface{
 
         const dropzone = new Dropzone(modal.querySelector<HTMLDivElement>('.file-upload-list')!, {
             ...options.dropzone,
-            url: this.router.generateUrl(route),
+            url: await this.router.generateUrl(route),
             paramName: 'file',
             dictFileTooBig: this.translator.translate('error.fileTooBig'),
             dictResponseError: this.translator.translate('error.serverError'),
@@ -125,8 +125,8 @@ export class UploadManager implements UploadManagerInterface{
         return [dropzone, modal];
     }
 
-    trigger(options: UploadOptions): void {
-        const [, modal] = this.initialize(options);
+    async trigger(options: UploadOptions): Promise<void> {
+        const [, modal] = await this.initialize(options);
         modal.querySelector('.file-upload-list')!.dispatchEvent(new MouseEvent('click'));
     }
 }

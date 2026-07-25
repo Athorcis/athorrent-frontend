@@ -1,5 +1,13 @@
 import queryString from 'query-string';
-import { HttpClient, Request, newHttpClient } from 'typescript-http-client';
+import {
+    Filter,
+    FilterConfig,
+    FilterRegistration,
+    HttpClient,
+    Request,
+    newHttpClient
+} from 'typescript-http-client';
+import { createAbortablePromise } from './utils';
 
 type RequestOptions = ConstructorParameters<typeof Request>[1];
 
@@ -18,38 +26,35 @@ export class Router {
         return this.queryParams[key];
     }
 
-    getHttpClient(): HttpClient {
-        return this.http;
+    addHttpFilter(filter: Filter<unknown, unknown>, name: string, config?: FilterConfig): FilterRegistration {
+        return this.http.addFilter(filter, name, config);
     }
 
     sendRequest<R>(name: string , parameters: Params = {}): AbortablePromise<R> {
         const route = this.getRoute(name);
         const request = this.createRequestFromRoute(route, { ...parameters });
 
-        const body$ = this.http.executeForResponse<ApiResponse<R>>(request).then(response => {
+        return createAbortablePromise(
+            this.http.executeForResponse<ApiResponse<R>>(request).then(response => {
 
-            const {body}: {body: ApiResponse<R>|null} = response;
+                const {body}: {body: ApiResponse<R>|null} = response;
 
-            if (body) {
-                if (body.status === 'success') {
-                    return body.data;
+                if (body) {
+                    if (body.status === 'success') {
+                        return body.data;
+                    }
+
+                    if (body.code === 'LOGIN_REQUIRED') {
+                        location.reload();
+                    }
+
+                    throw new Error(body.error ?? body.code ?? '');
                 }
 
-                if (body.code === 'LOGIN_REQUIRED') {
-                    location.reload();
-                }
-
-                throw new Error(body.error ?? body.code ?? '');
-            }
-
-            throw new Error('response without a body')
-        }) as AbortablePromise<R>;
-
-        body$.abort = function () {
-            request.abort();
-        }
-
-        return body$;
+                throw new Error('response without a body')
+            }),
+            () => request.abort(),
+        );
     }
 
     protected getQueryString(params: Params): string {

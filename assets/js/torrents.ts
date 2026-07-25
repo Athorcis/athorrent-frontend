@@ -1,10 +1,10 @@
 import '../css/torrents.scss';
-import {Router} from './core/router';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
 import type { Response } from 'typescript-http-client';
 import type {UploadManagerInterface} from "./core/upload-manager";
+import type {LazyRouter} from './core/lazy-router';
 
 const torrentListTimeout = 2000;
 
@@ -15,7 +15,7 @@ class Updater {
     private data$: AbortablePromise<string>|null = null;
 
     constructor(
-        private router: Router,
+        private router: LazyRouter,
         private action: string,
         private parameters: Params,
         private success: (data: string) => void,
@@ -90,11 +90,11 @@ class TorrentsPage extends AbstractPage {
             navigator.registerProtocolHandler('magnet', `${ location.origin }/user/torrents/magnet?magnet=%s`, 'Athorrent');
         }
 
-        this.handleMagnetParam();
+        void this.handleMagnetParam();
     }
 
-    protected handleMagnetParam() {
-        const magnet = this.router.getQueryParam('magnet') as string | undefined;
+    protected async handleMagnetParam() {
+        const magnet = await this.router.getQueryParam('magnet') as string | undefined;
 
         if (magnet) {
             this.showMagnetModal(magnet);
@@ -160,7 +160,7 @@ class TorrentsPage extends AbstractPage {
             this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
         }
 
-        this.uploadManager.trigger({
+        await this.uploadManager.trigger({
             title: 'torrents.addTorrent',
             route: 'uploadTorrent',
 

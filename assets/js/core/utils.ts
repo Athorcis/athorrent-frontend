@@ -14,3 +14,9 @@ export function decodeBase64(base64: string, charset: string = 'utf-8'): string 
     const decoder = new TextDecoder(charset);
     return decoder.decode(bytes);
 }
+
+export function createAbortablePromise<T>(promise: Promise<T>, abort: () => void): AbortablePromise<T> {
+    const abortable = promise as AbortablePromise<T>;
+    abortable.abort = abort;
+    return abortable;
+}

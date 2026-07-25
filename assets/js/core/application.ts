@@ -1,12 +1,12 @@
 import {Translator} from './translator';
-import {Router} from './router';
+import {LazyRouter} from './lazy-router';
 import {SecurityManager} from './security-manager';
 import {AbstractPage} from './abstract-page';
 import {UiManager} from './ui-manager';
 
 export class Application {
 
-    private router: Router;
+    private router: LazyRouter;
 
     private ui: UiManager;
 
@@ -15,8 +15,8 @@ export class Application {
     private translator: Translator;
 
     constructor(config: Partial<AppConfig>) {
-        this.router = new Router(config.routes!, config.routeParameters!);
-        this.securityManager = new SecurityManager(this.router.getHttpClient());
+        this.router = new LazyRouter(config.routes!, config.routeParameters!);
+        this.securityManager = new SecurityManager(this.router);
         this.translator = new Translator(config.strings!);
         this.ui = new UiManager(this.translator);
     }
