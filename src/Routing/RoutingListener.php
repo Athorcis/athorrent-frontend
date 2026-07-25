@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Athorrent\Routing;
 
 use Athorrent\View\View;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -21,8 +22,13 @@ class RoutingListener implements EventSubscriberInterface
      */
     private array $routeDescriptors;
 
-    public function __construct(private readonly CacheInterface $cache, private readonly RequestContext $requestContext, private readonly RouterInterface $router)
-    {
+    public function __construct(
+        private readonly CacheInterface $cache,
+        private readonly RequestContext $requestContext,
+        private readonly RouterInterface $router,
+        #[Autowire('%kernel.default_locale%')]
+        private readonly string $defaultLocale,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -63,16 +69,16 @@ class RoutingListener implements EventSubscriberInterface
                     $prefixId = $route->getDefault('_prefixId');
 
                     if ($route->getOption('expose')) {
-                        $defaultLocale = $route->getDefault('_locale');
+                        $routeLocale = $route->getDefault('_locale');
 
-                        if ($locale === 'fr') {
-                            if ($defaultLocale) {
+                        if ($locale === $this->defaultLocale) {
+                            if ($routeLocale) {
                                 $ajaxRouteDescriptors[$action][$prefixId] = [
                                     'method' => $route->getMethods()[0],
                                     'pattern' => $route->getPath()
                                 ];
                             }
-                        } elseif (!$defaultLocale) {
+                        } elseif (!$routeLocale) {
                             $ajaxRouteDescriptors[$action][$prefixId] = [
                                 'method' => $route->getMethods()[0],
                                 'pattern' => $route->getPath()
