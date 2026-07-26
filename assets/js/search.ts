@@ -2,7 +2,6 @@ import '../css/search.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
-import type { Response } from 'typescript-http-client';
 
 class SearchPage extends AbstractPage {
 
@@ -19,12 +18,10 @@ class SearchPage extends AbstractPage {
             await this.sendRequest('addMagnets', { magnets: [link!.href] });
             location.assign((await this.getRouter()).generateUrl('listTorrents'));
         }
-        catch (response) {
-            const message = (response as Response<ApiErrorResponse>).body?.error;
-
+        catch (error) {
             this.ui.showModal({
                 title: 'torrents.magnetModal.title',
-                content: message ?? this.translate('error.unknownError'),
+                content: (error as Error).message || this.translate('error.unknownError'),
             });
         }
     }

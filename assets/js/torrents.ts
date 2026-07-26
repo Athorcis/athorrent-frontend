@@ -2,7 +2,6 @@ import '../css/torrents.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
-import type { Response } from 'typescript-http-client';
 import type {UploadManagerInterface} from "./core/upload-manager";
 import type {Router} from './core/router';
 import {getQueryParam} from "./core/utils";
@@ -199,12 +198,10 @@ class TorrentsPage extends AbstractPage {
                     try {
                         await this.sendRequest('addMagnets', { magnets });
                     }
-                    catch (response) {
-                        const message = (response as Response<ApiErrorResponse>).body?.error;
-
+                    catch (error) {
                         this.ui.showModal({
                             title: 'torrents.magnetModal.title',
-                            content: message ?? this.translate('error.unknownError'),
+                            content: (error as Error).message || this.translate('error.unknownError'),
                             id: 'dialog-error'
                         });
                     }
