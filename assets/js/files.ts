@@ -2,7 +2,7 @@ import '../css/files.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
-import {decodeBase64} from "./core/utils";
+import {decodeBase64, getQueryParam} from "./core/utils";
 import type {DropzoneFile} from 'dropzone';
 import type {DropzoneType, UploadManagerInterface} from './core/upload-manager';
 
@@ -64,7 +64,7 @@ class FilesPage extends AbstractPage {
     }
 
     async updateFileList() {
-        const data = await this.sendRequest<string>('listFiles', { path: (await this.router.getQueryParam('path'))! });
+        const data = await this.sendRequest<string>('listFiles', { path: getQueryParam('path')! });
 
         const content = document.querySelector('.main-header')!.nextElementSibling!;
         const newContent = document.createRange().createContextualFragment(data);
@@ -150,14 +150,14 @@ class FilesPage extends AbstractPage {
     }
 
     protected async triggerFileUpload(type: DropzoneType) {
-        const path = await this.router.getQueryParam('path') as string | undefined ?? '';
+        const path = getQueryParam('path') as string | undefined ?? '';
 
         if (this.uploadManager === null) {
             const {UploadManager} = await import("./core/upload-manager");
-            this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
+            this.uploadManager = new UploadManager(await this.getRouter(), this.securityManager, this.ui, this.translator);
         }
 
-        await this.uploadManager.trigger({
+        this.uploadManager.trigger({
             title: 'files.upload',
             route: 'addFile',
             type,

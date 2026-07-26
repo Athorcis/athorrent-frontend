@@ -15,6 +15,40 @@ export function decodeBase64(base64: string, charset: string = 'utf-8'): string 
     return decoder.decode(bytes);
 }
 
+export function stringifyParams(params: Params): string {
+    const builder = new URLSearchParams();
+
+    for (const [key, value] of Object.entries(params)) {
+        if (value == null) {
+            continue;
+        }
+
+        if (Array.isArray(value)) {
+            for (const v of value) {
+                builder.append(key + '[]', v);
+            }
+        }
+        else {
+            builder.append(key, value);
+        }
+    }
+
+    return builder.toString();
+}
+
+export function toQueryString(params: Params): string {
+    if (Object.keys(params).length > 0) {
+        return '?' + stringifyParams(params);
+    }
+
+    return '';
+}
+
+export function getQueryParam(key: string) {
+    const params = new URLSearchParams(location.search);
+    return params.get(key);
+}
+
 export function createAbortablePromise<T>(promise: Promise<T>, abort: () => void): AbortablePromise<T> {
     const abortable = promise as AbortablePromise<T>;
     abortable.abort = abort;

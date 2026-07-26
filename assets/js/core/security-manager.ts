@@ -1,5 +1,5 @@
 import type {Request, Response, FilterChain} from "typescript-http-client";
-import type {LazyRouter} from "./lazy-router";
+import type {Router} from "./router";
 
 const CSRF_TOKEN_LENGTH = 18;
 
@@ -9,15 +9,15 @@ export class SecurityManager {
 
     private csrfToken: string|null = null;
 
-    constructor(private router?: LazyRouter) {}
-
     init() {
         document.addEventListener('submit', event => {
             const form = event.target as HTMLFormElement;
             this.addCsrfTokenToForm(form);
         });
+    }
 
-        this.router?.addFilter({
+    setRouter(router: Router) {
+        router.getHttpClient().addFilter({
             doFilter: <T>(request: Request, filterChain: FilterChain<ApiResponse<T>>): Promise<Response<ApiResponse<T>>> => {
                 request.addHeader('X-Csrf-Token', this.initializeCsrfToken());
 

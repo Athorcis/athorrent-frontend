@@ -1,36 +1,25 @@
-import queryString from 'query-string';
 import {
-    Filter,
-    FilterConfig,
-    FilterRegistration,
     HttpClient,
     Request,
     newHttpClient
 } from 'typescript-http-client';
-import { createAbortablePromise } from './utils';
+import {createAbortablePromise, stringifyParams, toQueryString} from './utils';
 
 type RequestOptions = ConstructorParameters<typeof Request>[1];
 
 export class Router {
 
-    private queryParams;
-
     private http: HttpClient;
 
     constructor(private routes: Routes, private routeParameters: Params) {
-        this.queryParams = Router.parseQueryParameters();
         this.http = newHttpClient();
     }
 
-    getQueryParam(key: string) {
-        return this.queryParams[key];
+    getHttpClient(): HttpClient {
+        return this.http;
     }
 
-    addHttpFilter(filter: Filter<unknown, unknown>, name: string, config?: FilterConfig): FilterRegistration {
-        return this.http.addFilter(filter, name, config);
-    }
-
-    sendRequest<R>(name: string , parameters: Params = {}): AbortablePromise<R> {
+    sendRequest<R>(name: string, parameters: Params = {}): AbortablePromise<R> {
         const route = this.getRoute(name);
         const request = this.createRequestFromRoute(route, { ...parameters });
 
@@ -57,17 +46,9 @@ export class Router {
         );
     }
 
-    protected getQueryString(params: Params): string {
-        if (Object.keys(params).length > 0) {
-            return '?' + queryString.stringify(params, { arrayFormat: 'bracket' });
-        }
-
-        return '';
-    }
-
     generateUrl(name: string, params: Params = {}): string {
         const route = this.getRoute(name);
-        return this.prepareUrl(route, params) + this.getQueryString(params);
+        return this.prepareUrl(route, params) + toQueryString(params);
     }
 
     protected prepareUrl(route: Route, params: Params): string {
@@ -100,10 +81,10 @@ export class Router {
         };
 
         if (method === 'GET') {
-            url += this.getQueryString(params);
+            url += toQueryString(params);
         }
         else {
-            options.body = queryString.stringify(params, { arrayFormat: 'bracket' });
+            options.body = stringifyParams(params);
             options.contentType = 'application/x-www-form-urlencoded';
         }
 
@@ -137,9 +118,5 @@ export class Router {
         }
 
         return routeGroup[prefixId]!;
-    }
-
-    static parseQueryParameters(): Params {
-        return queryString.parse(location.search) as Params;
     }
 }
