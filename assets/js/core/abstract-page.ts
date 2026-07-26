@@ -1,12 +1,10 @@
 import {Translator} from './translator';
-import {LazyRouter} from './lazy-router';
 import {DataManager} from './data-manager';
 import {UiManager} from './ui-manager';
 import {SecurityManager} from "./security-manager";
+import {RouterProvider} from "./application";
 
 export abstract class AbstractPage extends DataManager {
-
-    protected router!: LazyRouter;
 
     protected ui!: UiManager;
 
@@ -14,15 +12,18 @@ export abstract class AbstractPage extends DataManager {
 
     protected securityManager!: SecurityManager;
 
-    injectServices(router: LazyRouter, translator: Translator, ui: UiManager, securityManager: SecurityManager) {
-        this.router = router;
+    injectServices(routerProvider: RouterProvider, translator: Translator, ui: UiManager, securityManager: SecurityManager) {
+        this.getRouter = routerProvider;
         this.securityManager = securityManager;
         this.translator = translator;
         this.ui = ui;
     }
 
-    sendRequest<R>(action: string, parameters: Params = {}) {
-        return this.router.sendRequest<R>(action, parameters);
+    protected getRouter!: RouterProvider;
+
+    async sendRequest<R>(action: string, parameters: Params = {}): Promise<R> {
+        const router = await this.getRouter();
+        return router.sendRequest<R>(action, parameters);
     }
 
     translate(key: string, parameters: Record<string, string> = {}): string {

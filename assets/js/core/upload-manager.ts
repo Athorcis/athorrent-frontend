@@ -1,8 +1,8 @@
 import Dropzone, {DropzoneFile, DropzoneOptions} from 'dropzone';
-import {LazyRouter} from "./lazy-router";
-import {SecurityManager} from "./security-manager";
-import {UiManager} from "./ui-manager";
-import {Translator} from "./translator";
+import type {Router} from "./router";
+import type {SecurityManager} from "./security-manager";
+import type {UiManager} from "./ui-manager";
+import type {Translator} from "./translator";
 
 export type DropzoneType = 'file'|'directory';
 
@@ -18,19 +18,19 @@ export interface UploadOptions {
 }
 
 export interface UploadManagerInterface {
-    trigger(options: UploadOptions): void|Promise<void>;
+    trigger(options: UploadOptions): void;
 }
 
 export class UploadManager implements UploadManagerInterface{
 
     constructor(
-        private router: LazyRouter,
+        private router: Router,
         private securityManager: SecurityManager,
         private ui: UiManager,
         private translator: Translator,
     ) {}
 
-    protected async initialize(options: UploadOptions): Promise<[Dropzone, HTMLDialogElement]> {
+    protected initialize(options: UploadOptions): [Dropzone, HTMLDialogElement] {
         const {
             title,
             route,
@@ -42,7 +42,7 @@ export class UploadManager implements UploadManagerInterface{
 
         const dropzone = new Dropzone(modal.querySelector<HTMLDivElement>('.file-upload-list')!, {
             ...options.dropzone,
-            url: await this.router.generateUrl(route),
+            url: this.router.generateUrl(route),
             paramName: 'file',
             dictFileTooBig: this.translator.translate('error.fileTooBig'),
             dictResponseError: this.translator.translate('error.serverError'),
@@ -125,8 +125,8 @@ export class UploadManager implements UploadManagerInterface{
         return [dropzone, modal];
     }
 
-    async trigger(options: UploadOptions): Promise<void> {
-        const [, modal] = await this.initialize(options);
+    trigger(options: UploadOptions): void {
+        const [, modal] = this.initialize(options);
         modal.querySelector('.file-upload-list')!.dispatchEvent(new MouseEvent('click'));
     }
 }

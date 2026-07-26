@@ -1,7 +1,5 @@
 
-interface Params {
-    [name: string]: string|string[];
-}
+type Params = Record<string, string|string[]>;
 
 interface Route {
     name: string;

@@ -4,7 +4,8 @@ import {Application} from './core/application';
 import {on} from './core/events';
 import type { Response } from 'typescript-http-client';
 import type {UploadManagerInterface} from "./core/upload-manager";
-import type {LazyRouter} from './core/lazy-router';
+import type {Router} from './core/router';
+import {getQueryParam} from "./core/utils";
 
 const torrentListTimeout = 2000;
 
@@ -15,7 +16,7 @@ class Updater {
     private data$: AbortablePromise<string>|null = null;
 
     constructor(
-        private router: LazyRouter,
+        private router: Router,
         private action: string,
         private parameters: Params,
         private success: (data: string) => void,
@@ -84,17 +85,17 @@ class TorrentsPage extends AbstractPage {
     private uploadManager: UploadManagerInterface|null = null;
 
     init() {
-        this.initializeTorrentsList();
-
         if (navigator.registerProtocolHandler) {
             navigator.registerProtocolHandler('magnet', `${ location.origin }/user/torrents/magnet?magnet=%s`, 'Athorrent');
         }
 
-        void this.handleMagnetParam();
+        this.handleMagnetParam();
+
+        void this.initializeTorrentsList();
     }
 
-    protected async handleMagnetParam() {
-        const magnet = await this.router.getQueryParam('magnet') as string | undefined;
+    protected handleMagnetParam() {
+        const magnet = getQueryParam('magnet') as string | undefined;
 
         if (magnet) {
             this.showMagnetModal(magnet);
@@ -140,8 +141,8 @@ class TorrentsPage extends AbstractPage {
         return this.applyActionToTorrent('removeTorrent', event.target as HTMLElement);
     }
 
-    initializeTorrentsList() {
-        this.torrentsUpdater = new Updater(this.router,'listTorrents', {}, this.onUpdateTorrents, torrentListTimeout);
+    async initializeTorrentsList() {
+        this.torrentsUpdater = new Updater(await this.getRouter(),'listTorrents', {}, this.onUpdateTorrents, torrentListTimeout);
         this.torrentsUpdater.start();
 
         on(document, 'click', new Map([
@@ -157,10 +158,10 @@ class TorrentsPage extends AbstractPage {
 
         if (this.uploadManager === null) {
             const {UploadManager} = await import("./core/upload-manager");
-            this.uploadManager = new UploadManager(this.router, this.securityManager, this.ui, this.translator);
+            this.uploadManager = new UploadManager(await this.getRouter(), this.securityManager, this.ui, this.translator);
         }
 
-        await this.uploadManager.trigger({
+        this.uploadManager.trigger({
             title: 'torrents.addTorrent',
             route: 'uploadTorrent',
 

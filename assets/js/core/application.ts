@@ -1,12 +1,14 @@
 import {Translator} from './translator';
-import {LazyRouter} from './lazy-router';
+import type {Router} from './router';
 import {SecurityManager} from './security-manager';
 import {AbstractPage} from './abstract-page';
 import {UiManager} from './ui-manager';
 
+export type RouterProvider = () => Promise<Router>;
+
 export class Application {
 
-    private router: LazyRouter;
+    private router: Router|undefined;
 
     private ui: UiManager;
 
@@ -14,11 +16,30 @@ export class Application {
 
     private translator: Translator;
 
+    readonly routerProvider: RouterProvider;
+
     constructor(config: Partial<AppConfig>) {
-        this.router = new LazyRouter(config.routes!, config.routeParameters!);
-        this.securityManager = new SecurityManager(this.router);
+
+        this.routerProvider = async () => {
+            if (this.router == null) {
+                this.router = await this.initRouter(config.routes!, config.routeParameters!);
+            }
+
+            return this.router;
+        };
+
+        this.securityManager = new SecurityManager();
         this.translator = new Translator(config.strings!);
         this.ui = new UiManager(this.translator);
+    }
+
+    protected async initRouter(routes: Routes, routeParams: Params): Promise<Router> {
+        const {Router} = await import('./router');
+
+        const router = new Router(routes, routeParams);
+        this.securityManager.setRouter(router);
+
+        return router;
     }
 
     initialize() {
@@ -31,7 +52,7 @@ export class Application {
 
         if (pageType) {
             const page = new pageType();
-            page.injectServices(this.router, this.translator, this.ui, this.securityManager);
+            page.injectServices(this.routerProvider, this.translator, this.ui, this.securityManager);
             page.init();
         }
     }
