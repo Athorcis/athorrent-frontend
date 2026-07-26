@@ -96,7 +96,7 @@ class FilesPage extends AbstractPage {
     })
 
     onSharingLink = (event: MouseEvent) => {
-        const target = event.target as HTMLAnchorElement;
+        const target = (event.target as HTMLElement).closest<HTMLAnchorElement>('.sharing-link')!;
         this.modalSharingLink(target.getAttribute('href')!);
         event.preventDefault();
     }
