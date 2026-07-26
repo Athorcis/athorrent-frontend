@@ -89,10 +89,6 @@ describe('user-files', () => {
         const { basename, selector } = uploadFile('cypress/fixtures/files/test.txt')
         const CONTENT = 'Hello world!\n';
 
-        cy.dropdownItem('.open-file', selector).click();
-        cy.get('body').should('have.text', CONTENT);
-        cy.go('back');
-
         cy.dropdownItem('.display-file', selector).click();
         cy.get('h1').should('have.text', basename);
         cy.get('pre').should('have.text', CONTENT);
@@ -101,7 +97,7 @@ describe('user-files', () => {
     it('should handle image', () => {
         const { basename, selector } = uploadFile('cypress/fixtures/files/test.png')
 
-        cy.dropdownItem('.open-file', selector).invoke('attr', 'href').then(href => {
+        cy.dropdownItem('.download-file', selector).invoke('attr', 'href').then(href => {
             cy.dropdownItem('.display-file', selector, true).click();
 
             cy.get('h1').should('have.text', basename);
