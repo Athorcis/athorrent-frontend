@@ -7,6 +7,7 @@ error:
     sharingNotFound: Partage introuvable
     fileRequired: La requête doit contenir un fichier
     fileExists: Le fichier existe déjà
+    dirNotWritable: Ce dossier n'est pas accessible en écriture
     notATorrent: Ce fichier n'est pas un torrent
     fileTooBig: Ce fichier est trop grand
     notPlayable: Le fichier n'est ni un fichier audio, ni un fichier vidéo

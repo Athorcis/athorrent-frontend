@@ -43,10 +43,12 @@ class FileController extends AbstractFileController
 
         $dirEntry = $rootEntry->getFilesystem()->getEntry($dirPath);
 
-        if ($dirEntry->isWritable()) {
-            $fs = new Filesystem();
-            $fs->mkdir($dirPath);
+        if (!$dirEntry->isWritable()) {
+            throw new UserVisibleException('error.dirNotWritable');
         }
+
+        $fs = new Filesystem();
+        $fs->mkdir($dirPath);
 
         $overwrite = $request->request->getBoolean('overwrite');
 
