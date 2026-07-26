@@ -11,6 +11,7 @@ use Athorrent\Database\Type\UserRole;
 use Athorrent\Filesystem\FileUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class UserManager
@@ -45,7 +46,11 @@ readonly class UserManager
             $user->setClientIp($clientIp);
         }
 
-        $this->validator->validate($user);
+        $violations = $this->validator->validate($user);
+
+        if (count($violations) > 0) {
+            throw new ValidationFailedException($user, $violations);
+        }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
