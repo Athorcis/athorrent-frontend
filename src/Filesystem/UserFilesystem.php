@@ -41,6 +41,6 @@ class UserFilesystem extends SubFilesystem
 
     public function isWritable(): bool
     {
-        return $this->owner === $this->accessor;
+        return $this->owner->is($this->accessor);
     }
 }

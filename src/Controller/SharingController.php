@@ -59,7 +59,7 @@ class SharingController extends AbstractController
     )]
     public function removeSharing(#[MapEntity] Sharing $sharing): array
     {
-        if ($sharing->getUser() !== $this->getUser()) {
+        if (!$sharing->getUser()->is(User::as($this->getUser()))) {
             throw new AccessDeniedHttpException();
         }
 
