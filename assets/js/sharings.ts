@@ -2,6 +2,7 @@ import '../css/sharings.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
+import {noParallelRun} from './core/utils';
 
 class SharingsPage extends AbstractPage {
 
@@ -13,7 +14,7 @@ class SharingsPage extends AbstractPage {
         return this.getItemId('sharing', element, selector);
     }
 
-    onSharingRemove = async (event: MouseEvent) => {
+    onSharingRemove = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         await this.sendRequest('removeSharing', {
@@ -21,7 +22,7 @@ class SharingsPage extends AbstractPage {
         });
 
         this.getItem('sharing', target).remove();
-    }
+    })
 }
 
 Application.create().run(SharingsPage);

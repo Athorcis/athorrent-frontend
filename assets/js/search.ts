@@ -2,6 +2,7 @@ import '../css/search.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
+import {noParallelRun} from './core/utils';
 
 class SearchPage extends AbstractPage {
 
@@ -9,7 +10,7 @@ class SearchPage extends AbstractPage {
         on(document, 'click', '.col-add-magnet > a', this.onMagnetAdd);
     }
 
-    protected onMagnetAdd = async (event: MouseEvent) => {
+    protected onMagnetAdd = noParallelRun(async (event: MouseEvent) => {
         event.preventDefault();
 
         const link = (event.target as HTMLElement).closest('a');
@@ -24,7 +25,7 @@ class SearchPage extends AbstractPage {
                 content: (error as Error).message || this.translate('error.unknownError'),
             });
         }
-    }
+    })
 }
 
 Application.create().run(SearchPage);

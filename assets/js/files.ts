@@ -2,7 +2,7 @@ import '../css/files.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
-import {decodeBase64, getQueryParam} from "./core/utils";
+import {decodeBase64, getQueryParam, noParallelRun} from "./core/utils";
 import type {DropzoneFile} from 'dropzone';
 import type {DropzoneType, UploadManagerInterface} from './core/upload-manager';
 
@@ -74,7 +74,7 @@ class FilesPage extends AbstractPage {
         this.initFileDropdowns();
     }
 
-    onSharingAdd = async (event: MouseEvent) => {
+    onSharingAdd = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         const data = await this.sendRequest<string>('addSharing',{
@@ -83,9 +83,9 @@ class FilesPage extends AbstractPage {
 
         this.modalSharingLink(data);
         this.updateFileList();
-    }
+    })
 
-    onSharingRemove = async (event: MouseEvent) => {
+    onSharingRemove = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         await this.sendRequest('removeSharing', {
@@ -93,7 +93,7 @@ class FilesPage extends AbstractPage {
         });
 
         this.updateFileList();
-    }
+    })
 
     onSharingLink = (event: MouseEvent) => {
         const target = event.target as HTMLAnchorElement;
@@ -101,7 +101,7 @@ class FilesPage extends AbstractPage {
         event.preventDefault();
     }
 
-    onFileRemove = async (event: MouseEvent) => {
+    onFileRemove = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         if (this.confirm('files.removalConfirmation', { entry: this.getFileName(target) })) {
@@ -117,7 +117,7 @@ class FilesPage extends AbstractPage {
                 await this.updateFileList();
             }
         }
-    }
+    })
 
     onBeforeFileDropdownToggle = (event: ToggleEvent) => {
 

@@ -4,7 +4,7 @@ import {Application} from './core/application';
 import {on} from './core/events';
 import type {UploadManagerInterface} from "./core/upload-manager";
 import type {Router} from './core/router';
-import {getQueryParam} from "./core/utils";
+import {getQueryParam, noParallelRun} from "./core/utils";
 
 const torrentListTimeout = 2000;
 
@@ -128,17 +128,17 @@ class TorrentsPage extends AbstractPage {
         this.torrentsUpdater.update();
     }
 
-    onTorrentPause = async (event: MouseEvent) => {
+    onTorrentPause = noParallelRun(async (event: MouseEvent) => {
         return this.applyActionToTorrent('pauseTorrent', event.target as HTMLElement);
-    }
+    })
 
-    onTorrentResume = async (event: MouseEvent) =>  {
+    onTorrentResume = noParallelRun(async (event: MouseEvent) =>  {
         return this.applyActionToTorrent('resumeTorrent', event.target as HTMLElement);
-    }
+    })
 
-    onTorrentRemove = async (event: MouseEvent) => {
+    onTorrentRemove = noParallelRun(async (event: MouseEvent) => {
         return this.applyActionToTorrent('removeTorrent', event.target as HTMLElement);
-    }
+    })
 
     async initializeTorrentsList() {
         this.torrentsUpdater = new Updater(await this.getRouter(),'listTorrents', {}, this.onUpdateTorrents, torrentListTimeout);
@@ -191,7 +191,7 @@ class TorrentsPage extends AbstractPage {
             }, {
                 label: 'torrents.add',
                 primary: true,
-                callback: async () => {
+                callback: noParallelRun(async () => {
                     const textarea = modal.querySelector('textarea')!;
                     const magnets = textarea.value.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
@@ -205,7 +205,7 @@ class TorrentsPage extends AbstractPage {
                             id: 'dialog-error'
                         });
                     }
-                }
+                })
             }]
         });
 
