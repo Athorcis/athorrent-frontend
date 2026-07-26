@@ -93,6 +93,12 @@ abstract class AbstractFileController extends AbstractController
             set_time_limit(0);
         }
 
+        $mimeType = $response->getFile()->getMimeType();
+
+        if ($mimeType === null || !preg_match('#^(audio|image|video)/#', $mimeType)) {
+            $response->headers->set('Content-Type', 'application/octet-stream');
+        }
+
         return $response;
     }
 
