@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Athorrent\Utils;
 
 use Athorrent\Database\Entity\User;
-use JetBrains\PhpStorm\ArrayShape;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @phpstan-type TorrentState 'paused'|'downloading'|'seeding'|'disabled'|'checking_files'|'checking_resume_data'|'downloading_metadata'|'moving'|'missing_files'|'error'|'unknown'

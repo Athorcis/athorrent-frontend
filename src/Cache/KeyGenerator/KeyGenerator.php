@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Athorrent\Cache\KeyGenerator;
 
-use InvalidArgumentException;
-
 class KeyGenerator implements KeyGeneratorInterface
 {
     /**
@@ -16,7 +14,7 @@ class KeyGenerator implements KeyGeneratorInterface
         if ($value instanceof CacheKeyGetterInterface) {
            return $value->getCacheKey();
         }
-        
+
         if (is_array($value)) {
             return implode(',', $value);
         }

@@ -52,7 +52,7 @@ abstract class AbstractFileController extends AbstractController
     }
 
     #[Route(path: '/', methods: 'GET', options: ['expose' => true])]
-    public function listFiles(UserFilesystemEntry $dirEntry, Request $request): View
+    public function listFiles(UserFilesystemEntry $dirEntry): View
     {
         if ($this instanceof FileController && $dirEntry->isRoot()) {
             $title = $this->translator->trans('files.title');
