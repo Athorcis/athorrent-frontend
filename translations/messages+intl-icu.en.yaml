@@ -7,6 +7,7 @@ error:
     sharingNotFound: Sharing not found
     fileRequired: The request must contain a file
     fileExists: File already exists
+    dirNotWritable: This directory is not writable
     notATorrent: This file is not a torrent
     fileTooBig: This file is too big
     notPlayable: This file is neither an audio file nor a video file
