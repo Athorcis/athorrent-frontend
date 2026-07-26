@@ -17,9 +17,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @extends EntityRepository<User>
  * @implements PaginableRepositoryInterface<User>
  */
-class UserRepository extends EntityRepository implements DeletableRepositoryInterface, PaginableRepositoryInterface, UserLoaderInterface, PasswordUpgraderInterface
+class UserRepository extends EntityRepository implements PaginableRepositoryInterface, UserLoaderInterface, PasswordUpgraderInterface
 {
-    use DeletableRepositoryTrait;
     /** @use PaginableRepositoryTrait<User> */
     use PaginableRepositoryTrait {
         paginateQueryBuilder as paginateQueryBuilderOriginal;

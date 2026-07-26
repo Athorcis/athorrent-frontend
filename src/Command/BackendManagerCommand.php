@@ -9,7 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use React\EventLoop\Loop;
 use React\Http\HttpServer;
 use React\Http\Message\Response;
-use React\Promise\PromiseInterface;
 use React\Socket\SocketServer;
 use Seld\Signal\SignalHandler;
 use Symfony\Component\Console\Command\Command;

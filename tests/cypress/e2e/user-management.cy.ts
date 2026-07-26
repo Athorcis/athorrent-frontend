@@ -1,4 +1,4 @@
-import {DEFAULT_PASSWORD, DEFAULT_USERNAME, getLogoutButton} from "../support/commands";
+import {DEFAULT_PASSWORD, DEFAULT_USERNAME} from "../support/commands";
 import {createAltUser, pathWithLocale, resetTestData} from "../support/utils";
 
 describe('user-management', () => {
