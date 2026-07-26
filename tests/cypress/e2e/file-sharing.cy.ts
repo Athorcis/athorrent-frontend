@@ -1,4 +1,4 @@
-import {uploadFile} from "../support/commands";
+import {getLogoutButton, uploadFile} from "../support/commands";
 import {pathWithLocale, pathWithoutLocale, resetTestData} from "../support/utils";
 
 function uploadAndShare(path: string) {
@@ -36,6 +36,15 @@ describe('file-sharing', () => {
             cy.get('h1').should('contain', basename);
         });
 
+    });
+
+    it('shared files should be accessible without login', () => {
+        uploadAndShare('cypress/fixtures/files/test.txt').then(({basename, url}) => {
+            cy.logout();
+
+            cy.visit(url);
+            cy.get('h1').should('contain', basename);
+        });
     });
 
     it('shared files should be listed in sharing list', () => {
