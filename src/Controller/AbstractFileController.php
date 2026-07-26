@@ -120,12 +120,6 @@ abstract class AbstractFileController extends AbstractController
         }, 200, $headers);
     }
 
-    #[Route(path: '/open', methods: 'GET')]
-    public function openFile(Request $request, #[Requirements(path: true, file: true)] UserFilesystemEntry $entry): BinaryFileResponse
-    {
-        return $this->sendFile($request, $entry, 'inline');
-    }
-
     #[Route(path: '/download', methods: 'GET')]
     public function downloadFile(Request $request, #[Requirements(path: true)] UserFilesystemEntry $entry): BinaryFileResponse|StreamedResponse
     {

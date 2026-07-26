@@ -27,11 +27,14 @@
             </button>
             {#- -#}
             <ul id="file-dropdown-{{ base64_encode(file.path) }}" class="dropdown-menu file-dropdown" popover>
-                <li>
-                    <a class="button open-file" href="{{ path(file.isFile ? 'openFile' : 'listFiles', { path: file.path }) }}">
-                        {{ ux_icon('open') }}{{ 'files.open'|trans }}
-                    </a>
-                </li>
+                {% if file.isDirectory %}
+                    <li>
+                        <a class="button open-file" href="{{ path('listFiles', { path: file.path }) }}">
+                            {{ ux_icon('open') }}{{ 'files.open'|trans }}
+                        </a>
+                    </li>
+                {% endif %}
+
                 <li>
                     <a class="button download-file" href="{{ path('downloadFile', { path: file.path }) }}">
                         {{ ux_icon('download') }}{{ 'files.download'|trans }}

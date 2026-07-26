@@ -38,10 +38,6 @@ class SharingController extends AbstractController
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
     public function addSharing(#[Requirements(path: true)] UserFilesystemEntry $entry): array
     {
-        if (!$entry->exists()) {
-            throw new FileNotFoundException();
-        }
-
         $sharing = new Sharing(User::as($this->getUser()), $entry->getPath());
         $this->entityManager->persist($sharing);
         $this->entityManager->flush();

@@ -29,6 +29,10 @@ readonly class FilesystemValueResolver implements ValueResolverInterface
 
         try {
             $entry = $filesystem->getEntry($path);
+
+            if (!$entry->exists()) {
+                throw new FileNotFoundException();
+            }
         }
         catch (FileNotFoundException $exception) {
             throw new NotFoundHttpException($exception->getMessage(), $exception);

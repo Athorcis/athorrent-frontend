@@ -12,6 +12,6 @@
     {% if text is defined %}
         <pre>{{ text }}</pre>
     {% elseif src is defined %}
-        <img class="content" src="{{ path('openFile', { path: src }) }}" />
+        <img class="content" src="{{ path('downloadFile', { path: src }) }}" />
     {% endif %}
 {% endblock %}
