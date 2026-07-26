@@ -54,3 +54,26 @@ export function createAbortablePromise<T>(promise: Promise<T>, abort: () => void
     abortable.abort = abort;
     return abortable;
 }
+
+/**
+ * Wraps an async callback so a second call is ignored while the first is still running.
+ */
+export function noParallelRun<A extends unknown[]>(
+    fn: (...args: A) => void | PromiseLike<void>,
+): (...args: A) => Promise<void> {
+    let running = false;
+
+    return async (...args: A) => {
+        if (running) {
+            return;
+        }
+
+        running = true;
+
+        try {
+            await fn(...args);
+        } finally {
+            running = false;
+        }
+    };
+}

@@ -2,6 +2,7 @@ import '../css/users.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
+import {noParallelRun} from './core/utils';
 
 class UsersPage extends AbstractPage {
 
@@ -20,7 +21,7 @@ class UsersPage extends AbstractPage {
         return this.getItemAttr('user', element, 'name');
     }
 
-    onRemoveUser = async (event: MouseEvent) =>  {
+    onRemoveUser = noParallelRun(async (event: MouseEvent) =>  {
         const target = event.target as HTMLElement;
 
         if (this.confirm('users.deletionConfirmation', { user: this.getUserName(target) })) {
@@ -30,9 +31,9 @@ class UsersPage extends AbstractPage {
 
             this.getItem('user', target).remove();
         }
-    }
+    })
 
-    onResetUserPassword = async (event: MouseEvent) => {
+    onResetUserPassword = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
         if (this.confirm('users.passwordResetConfirmation', { user: this.getUserName(target) })) {
@@ -42,7 +43,7 @@ class UsersPage extends AbstractPage {
 
             this.ui.showModal({ title: 'users.newPasswordModalTitle', content: data.password });
         }
-    }
+    })
 }
 
 Application.create().run(UsersPage);
