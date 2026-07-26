@@ -9,6 +9,7 @@ use Athorrent\View\View;
 use Athorrent\View\ViewType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -24,6 +25,11 @@ class SearchController extends AbstractController
     ): View
     {
         $sources = $cache->get('search.trackers', fn () => $jackett->getConfiguredIndexers());
+        $sourceIds = array_column($sources, 'id');
+
+        if ($source !== 'all' && !in_array($source, $sourceIds, true)) {
+            throw new BadRequestHttpException('invalid source');
+        }
 
         if ($query === '') {
             $results = [];
