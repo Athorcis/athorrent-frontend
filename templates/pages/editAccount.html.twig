@@ -6,6 +6,10 @@
     {{ encore_entry_link_tags('app-form') }}
 {% endblock %}
 
+{% block main_script %}
+    {{ encore_entry_script_tags('form') }}
+{% endblock %}
+
 {% block content %}
     <header class="main-header">
         <h1>{{ 'account.edit.title'|trans }}</h1>

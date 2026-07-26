@@ -9,7 +9,7 @@ export class SecurityManager {
 
     private csrfToken: string|null = null;
 
-    constructor(private router: LazyRouter) {}
+    constructor(private router?: LazyRouter) {}
 
     init() {
         document.addEventListener('submit', event => {
@@ -17,7 +17,7 @@ export class SecurityManager {
             this.addCsrfTokenToForm(form);
         });
 
-        this.router.addFilter({
+        this.router?.addFilter({
             doFilter: <T>(request: Request, filterChain: FilterChain<ApiResponse<T>>): Promise<Response<ApiResponse<T>>> => {
                 request.addHeader('X-Csrf-Token', this.initializeCsrfToken());
 
