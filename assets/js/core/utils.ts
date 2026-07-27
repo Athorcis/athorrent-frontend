@@ -15,6 +15,50 @@ export function decodeBase64(base64: string, charset: string = 'utf-8'): string 
     return decoder.decode(bytes);
 }
 
+/**
+ * `setInterval`-like helper that awaits the callback and never overlaps executions.
+ * Returns a cancel function that stops further scheduling immediately.
+ */
+export function setAsyncInterval(
+    callback: () => Promise<void>,
+    intervalMs: number,
+    fireNow = false,
+): () => void {
+    let cancelled = false;
+    let timeoutId: number | undefined;
+
+    const tick = async () => {
+        if (cancelled) {
+            return;
+        }
+
+        await callback();
+
+        if (cancelled) {
+            return;
+        }
+
+        timeoutId = window.setTimeout(() => {
+            void tick();
+        }, intervalMs);
+    };
+
+    if (fireNow) {
+        void tick();
+    } else {
+        timeoutId = window.setTimeout(() => {
+            void tick();
+        }, intervalMs);
+    }
+
+    return () => {
+        cancelled = true;
+        if (timeoutId !== undefined) {
+            clearTimeout(timeoutId);
+        }
+    };
+}
+
 export function stringifyParams(params: Params): string {
     const builder = new URLSearchParams();
 

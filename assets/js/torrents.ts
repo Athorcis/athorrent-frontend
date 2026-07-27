@@ -4,15 +4,15 @@ import {Application} from './core/application';
 import {on} from './core/events';
 import type {UploadManagerInterface} from "./core/upload-manager";
 import type {Router} from './core/router';
-import {getQueryParam, noParallelRun} from "./core/utils";
+import {getQueryParam, noParallelRun, setAsyncInterval} from "./core/utils";
 
 const torrentListTimeout = 2000;
 
 class Updater {
 
-    private timeoutId = -1;
-
     private data$: AbortablePromise<string>|null = null;
+
+    private intervalStop: (() => void)|null = null;
 
     constructor(
         private router: Router,
@@ -24,23 +24,21 @@ class Updater {
     }
 
     start(fireNow = false) {
-        if (this.timeoutId === -1) {
-            const run = async (fire = true) => {
-                if (fire) {
-                    await this.intervalCallback();
-                }
-
-                this.timeoutId = window.setTimeout(run, this.interval);
-            };
-
-            void run(fireNow);
+        if (this.intervalStop) {
+            return;
         }
+
+        this.intervalStop = setAsyncInterval(
+            () => this.intervalCallback(),
+            this.interval,
+            fireNow,
+        );
     }
 
     stop() {
-        if (this.timeoutId > -1) {
-            clearTimeout(this.timeoutId);
-            this.timeoutId = -1;
+        if (this.intervalStop) {
+            this.intervalStop();
+            this.intervalStop = null;
 
             if (this.data$) {
                 this.data$.abort();
@@ -50,10 +48,8 @@ class Updater {
     }
 
     update() {
-        if (this.timeoutId > -1) {
-            this.stop();
-            this.start(true);
-        }
+        this.stop();
+        this.start(true);
     }
 
     async intervalCallback() {
