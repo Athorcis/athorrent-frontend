@@ -55,9 +55,13 @@ readonly class UserManager
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $this->initUserDirs($user);
-
-        $this->backendManager->addUser($user);
+        try {
+            $this->initUserDirs($user);
+            $this->backendManager->addUser($user);
+        } catch (\Throwable $e) {
+            $this->removeUser($user, true);
+            throw $e;
+        }
     }
 
     public function initUserDirs(User $user): void
@@ -75,15 +79,49 @@ readonly class UserManager
         $user->setPassword($this->hasher->hashPassword($user, $password));
     }
 
-    public function removeUser(User $user): void
+    protected function removeUserDirs(User $user)
     {
-        $this->backendManager->removeUser($user);
-
         $fs = new FileUtils();
         $fs->remove($user->getPath(''));
+    }
+
+    public function removeUser(User $user, $creationCleanup = false): void
+    {
+        try {
+            $this->backendManager->removeUser($user);
+        } catch (\Throwable $t) {
+            if (!$creationCleanup) {
+                throw $t;
+            }
+
+            // Backend may never have been registered.
+        }
+
+        try {
+            $this->removeUserDirs($user);
+        } catch (\Throwable $t) {
+            if (!$creationCleanup) {
+                throw $t;
+            }
+
+            // Directory may never have been created.
+        }
 
         // we delete the entity last because we need the entity to contain the id
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
+        try {
+            if ($creationCleanup && !$this->entityManager->contains($user)) {
+                return;
+            }
+
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+        }
+        catch (\Throwable $t) {
+            if (!$creationCleanup) {
+                throw $t;
+            }
+
+            // Prefer surfacing the original create failure.
+        }
     }
 }
