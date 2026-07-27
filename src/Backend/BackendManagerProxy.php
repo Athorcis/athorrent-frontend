@@ -32,7 +32,8 @@ class BackendManagerProxy
     protected function request(string $method, string $path, array $options = []): void
     {
         try {
-            $this->http->request($method, sprintf('http://%s:8080', $_ENV['BACKEND_MANAGER_HOST']) . $path, $options);
+            $response = $this->http->request($method, sprintf('http://%s:8080', $_ENV['BACKEND_MANAGER_HOST']) . $path, $options);
+            $response->getHeaders(); // response is lazy so to get errors we need to access it
         }
         catch (TransportExceptionInterface $e) {
             if ($this->allowTransportExceptions) {
