@@ -147,7 +147,7 @@ final readonly class ContentSecurityPolicy
             'script-src-elem', 'script-src-attr' => ['script-src', 'default-src'],
             'style-src-elem', 'style-src-attr' => ['style-src', 'default-src'],
             'frame-src', 'worker-src' => ['child-src', 'default-src'],
-            'fenced-frame-src' => ['frame-src', 'child-src', 'defaulf-src'],
+            'fenced-frame-src' => ['frame-src', 'child-src', 'default-src'],
             default => \in_array($directive, self::DEFAULT_SRC_FALLBACKS, true)
                 ? ['default-src']
                 : [],
