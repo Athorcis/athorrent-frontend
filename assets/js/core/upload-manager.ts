@@ -68,8 +68,12 @@ export class UploadManager implements UploadManagerInterface{
             modal.showModal();
         });
 
-        dropzone.on('sending', (file: DropzoneFile, xhr: XMLHttpRequest, formData: FormData) => {
-            formData.append('_token', this.securityManager.initializeCsrfToken());
+        const csrfCleanups = new WeakMap<DropzoneFile, () => void>();
+
+        dropzone.on('sending', (file: DropzoneFile, _xhr: XMLHttpRequest, formData: FormData) => {
+            const { token, cleanup } = this.securityManager.createCsrfToken();
+            csrfCleanups.set(file, cleanup);
+            formData.append('_token', token);
             formData.append('relativePath', file.webkitRelativePath || file.name);
         });
 
@@ -91,12 +95,14 @@ export class UploadManager implements UploadManagerInterface{
 
         dropzone.on('success', (file: DropzoneFile) => {
             file.previewElement!.querySelector('progress')!.value = 100;
-            this.securityManager.removeCsrfCookie();
+            csrfCleanups.get(file)?.();
+            csrfCleanups.delete(file);
             ++filesUploaded;
         });
 
-        dropzone.on('error', () => {
-            this.securityManager.removeCsrfCookie();
+        dropzone.on('error', (file: DropzoneFile) => {
+            csrfCleanups.get(file)?.();
+            csrfCleanups.delete(file);
             ++filesErrored;
         });
 

@@ -2,12 +2,14 @@ import type {Request, Response, FilterChain} from "typescript-http-client";
 import type {Router} from "./router";
 
 const CSRF_TOKEN_LENGTH = 18;
+const CSRF_COOKIE_NAME = 'csrf-token';
+
+export interface CsrfProtection {
+    token: string;
+    cleanup: () => void;
+}
 
 export class SecurityManager {
-
-    private csrfCookie: string|null = null;
-
-    private csrfToken: string|null = null;
 
     init() {
         document.addEventListener('submit', event => {
@@ -19,13 +21,15 @@ export class SecurityManager {
     setRouter(router: Router) {
         router.getHttpClient().addFilter({
             doFilter: <T>(request: Request, filterChain: FilterChain<ApiResponse<T>>): Promise<Response<ApiResponse<T>>> => {
-                request.addHeader('X-Csrf-Token', this.initializeCsrfToken());
+                const { token, cleanup } = this.createCsrfToken();
+
+                request.addHeader('X-Csrf-Token', token);
 
                 const response$ = filterChain.doFilter(request);
 
                 response$
                     .catch(() => {})
-                    .finally(() => this.removeCsrfCookie());
+                    .finally(cleanup);
 
                 return response$;
             }
@@ -40,32 +44,41 @@ export class SecurityManager {
     private nameCheck = /^[-_a-zA-Z0-9]{4,22}$/;
     private tokenCheck = /^[-_/+a-zA-Z0-9]{24,}$/;
 
-    initializeCsrfToken(): string;
-    initializeCsrfToken(form: HTMLFormElement): string|null;
-    initializeCsrfToken(form?: HTMLFormElement): string|null {
-        if (form) {
-            const csrfField = this.getCsrfField(form);
+    /**
+     * Creates a CSRF cookie/token pair scoped to a single request.
+     * Call `cleanup()` when the request finishes so concurrent requests do not share state.
+     */
+    createCsrfToken(cookieName: string = CSRF_COOKIE_NAME): CsrfProtection {
+        const token = this.generateToken();
 
-            if (csrfField) {
-                this.csrfCookie = csrfField.getAttribute('data-csrf-protection-cookie-value');
-                this.csrfToken = csrfField.value;
-            }
-        }
-        else {
-            this.csrfToken = 'csrf-token';
-        }
+        this.writeCsrfCookie(cookieName, token);
 
-        if (!this.csrfCookie && this.csrfToken && this.nameCheck.test(this.csrfToken)) {
-            this.csrfCookie = this.csrfToken;
-            this.csrfToken = btoa(String.fromCharCode.apply(null, Array.from(crypto.getRandomValues(new Uint8Array(CSRF_TOKEN_LENGTH)))));
-        }
+        return {
+            token,
+            cleanup: () => this.clearCsrfCookie(cookieName, token),
+        };
+    }
 
-        if (this.csrfCookie && this.csrfToken && this.tokenCheck.test(this.csrfToken)) {
-            const cookie = this.csrfCookie + '_' + this.csrfToken + '=' + this.csrfCookie + '; path=/; samesite=strict';
-            document.cookie = window.location.protocol === 'https:' ? '__Host-' + cookie + '; secure' : cookie;
+    initializeCsrfToken(form: HTMLFormElement): string|null {
+        const csrfField = this.getCsrfField(form);
+
+        if (!csrfField) {
+            return null;
         }
 
-        return this.csrfToken;
+        let csrfCookie = csrfField.getAttribute('data-csrf-protection-cookie-value');
+        let csrfToken = csrfField.value;
+
+        if (!csrfCookie && csrfToken && this.nameCheck.test(csrfToken)) {
+            csrfCookie = csrfToken;
+            csrfToken = this.generateToken();
+        }
+
+        if (csrfCookie && csrfToken && this.tokenCheck.test(csrfToken)) {
+            this.writeCsrfCookie(csrfCookie, csrfToken);
+        }
+
+        return csrfToken;
     }
 
     protected getCsrfField(form: HTMLFormElement): HTMLInputElement|null {
@@ -89,14 +102,25 @@ export class SecurityManager {
         }
     }
 
-    removeCsrfCookie () {
-        if (this.csrfToken && this.tokenCheck.test(this.csrfToken) && this.csrfCookie && this.nameCheck.test(this.csrfCookie)) {
-            const cookie = this.csrfCookie + '_' + this.csrfToken + '=0; path=/; samesite=strict; max-age=0';
+    private generateToken(): string {
+        return btoa(String.fromCharCode.apply(null, Array.from(crypto.getRandomValues(new Uint8Array(CSRF_TOKEN_LENGTH)))));
+    }
 
-            document.cookie = window.location.protocol === 'https:' ? '__Host-' + cookie + '; secure' : cookie;
-
-            this.csrfCookie = null;
-            this.csrfToken = null;
+    private writeCsrfCookie(cookieName: string, token: string): void {
+        if (!this.nameCheck.test(cookieName) || !this.tokenCheck.test(token)) {
+            return;
         }
+
+        const cookie = cookieName + '_' + token + '=' + cookieName + '; path=/; samesite=strict';
+        document.cookie = window.location.protocol === 'https:' ? '__Host-' + cookie + '; secure' : cookie;
+    }
+
+    private clearCsrfCookie(cookieName: string, token: string): void {
+        if (!this.nameCheck.test(cookieName) || !this.tokenCheck.test(token)) {
+            return;
+        }
+
+        const cookie = cookieName + '_' + token + '=0; path=/; samesite=strict; max-age=0';
+        document.cookie = window.location.protocol === 'https:' ? '__Host-' + cookie + '; secure' : cookie;
     }
 }
