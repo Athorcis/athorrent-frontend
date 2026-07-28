@@ -85,6 +85,7 @@ files:
     open: Ouvrir
     download: Télécharger
     display: Afficher
+    truncated: <tronqué>
     play: Lire
     sharingLink: Lien de partage
     removeSharing: Supprimer le partage

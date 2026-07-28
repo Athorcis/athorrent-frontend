@@ -87,6 +87,7 @@ files:
     open: Open
     download: Download
     display: Display
+    truncated: <truncated>
     play: Play
     sharingLink: Sharing link
     removeSharing: Remove sharing
