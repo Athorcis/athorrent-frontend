@@ -24,6 +24,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractFileController extends AbstractController
 {
+    private const int MAX_DISPLAY_TEXT_BYTES = 512 * 1024;
+
     public function __construct(protected TranslatorInterface $translator, protected LoggerInterface $logger)
     {
     }
@@ -177,7 +179,13 @@ abstract class AbstractFileController extends AbstractController
         ];
 
         if ($entry->isText()) {
-            $data['text'] = $entry->readFile();
+            $text = $entry->readFile(self::MAX_DISPLAY_TEXT_BYTES);
+
+            if ($entry->getSize() > self::MAX_DISPLAY_TEXT_BYTES) {
+                $text .= "\n" . $this->translator->trans('files.truncated');
+            }
+
+            $data['text'] = $text;
         } elseif ($entry->isImage()) {
             $data['src'] = $relativePath;
         }

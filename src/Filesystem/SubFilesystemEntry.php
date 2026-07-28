@@ -86,9 +86,9 @@ class SubFilesystemEntry extends AbstractFilesystemEntry
         return $entries;
     }
 
-    public function readFile(): string
+    public function readFile(?int $maxBytes = null): string
     {
-        return $this->internalEntry->readFile();
+        return $this->internalEntry->readFile($maxBytes);
     }
 
     public function remove(): void

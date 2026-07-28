@@ -35,7 +35,7 @@ interface FilesystemEntryInterface
      */
     public function readDirectory(bool $includeParentDirectory = false): array;
 
-    public function readFile(): string;
+    public function readFile(?int $maxBytes = null): string;
 
     public function remove(): void;
 

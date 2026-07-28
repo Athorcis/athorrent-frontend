@@ -75,12 +75,19 @@ class FilesystemEntry extends AbstractFilesystemEntry
         return $this->mimeType;
     }
 
-    public function readFile(): string
+    public function readFile(?int $maxBytes = null): string
     {
-        $content = file_get_contents($this->path);
+        $content = $maxBytes === null
+            ? file_get_contents($this->path)
+            : file_get_contents($this->path, false, null, 0, $maxBytes);
 
         if ($content === false) {
             throw new \RuntimeException('Unable to read file ' . $this->path);
+        }
+
+        if ($maxBytes !== null) {
+            // Avoid splitting a multibyte character at the byte limit.
+            $content = mb_strcut($content, 0, $maxBytes, 'UTF-8');
         }
 
         return $content;
