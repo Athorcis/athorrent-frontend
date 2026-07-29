@@ -59,7 +59,9 @@ class QBittorrentProxyController extends AbstractController
         $status = $qbResponse->getStatusCode();
         $respHeaders = $qbResponse->getHeaders(false);
 
-        if ($respHeaders['content-type'][0] === 'text/html' && str_contains($content, '<!DOCTYPE html>')) {
+        $contentType = $respHeaders['content-type'][0] ?? '';
+
+        if (str_starts_with($contentType, 'text/html') && str_contains($content, '<!DOCTYPE html>')) {
             $newLine = "\n    ";
             $content = str_replace(
                 '<head>',
