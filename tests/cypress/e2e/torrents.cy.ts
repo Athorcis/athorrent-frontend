@@ -65,7 +65,22 @@ describe('torrents', () => {
     });
 
     it('should allow access to qbittorrent web version', function () {
-        cy.get('.open-qbittorrent-ui').should('exist');
-        // qbittorrent web won't work since it's the tested pages are opened in an iframe
+        cy.get('.open-qbittorrent-ui')
+            .should('have.attr', 'href')
+            // we can't test qbittorrent web directly because it won't work
+            // since pages are opened in an iframe (which is what cypress does)
+            .then((href) => {
+                const webUiPath = String(href).replace(/\/?$/, '/');
+
+                cy.request(webUiPath).then((response) => {
+                    expect(response.status).to.eq(200);
+                    expect(response.body).to.include('<title>qBittorrent WebUI</title>');
+                });
+
+                cy.request(`${webUiPath}api/v2/app/version`).then((response) => {
+                    expect(response.status).to.eq(200);
+                    expect(String(response.body)).to.match(/^v?\d/);
+                });
+            });
     });
 });
