@@ -334,8 +334,17 @@ class BackendManager
         while (true) {
             $this->rotateHeartbeatQueues();
 
+            $backends = [];
+
             foreach ($this->heartbeatQueue as $backend) {
-                $this->processHeartbeat($backend);
+                $backends[] = $backend;
+            }
+
+            foreach (array_chunk($backends, 3) as $chunk) {
+                await(parallel(array_map(
+                    fn (BackendInterface $backend) => async(fn () => $this->processHeartbeat($backend)),
+                    $chunk,
+                )));
 
                 if ($this->stopping) {
                     return;
