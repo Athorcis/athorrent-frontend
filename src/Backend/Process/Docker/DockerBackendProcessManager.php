@@ -91,14 +91,15 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     }
 
     /**
-     * @param int[] $userIds
-     * @return DockerBackendProcess[]
+     * @param list<int> $userIds
+     * @return array<int, DockerBackendProcess>
      * @throws Throwable
      */
     protected function listProcesses(bool $all, array $userIds = []): array
     {
         $processes = [];
 
+        /** @var list<string> $labelFilters */
         $labelFilters = $userIds === []
             ? ['com.athorrent.user']
             : array_map(static fn (int $userId): string => "com.athorrent.user=$userId", $userIds);

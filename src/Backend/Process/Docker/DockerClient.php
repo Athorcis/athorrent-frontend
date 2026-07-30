@@ -17,7 +17,7 @@ class DockerClient extends Client
 {
     /**
      * @param array<string, list<string>> $filters
-     * @return PromiseInterface<list<array<string, mixed>>>
+     * @return PromiseInterface<array<mixed>>
      */
     public function containerList($all = false, $size = false, array $filters = []): PromiseInterface
     {
