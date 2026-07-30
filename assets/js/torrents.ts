@@ -201,7 +201,7 @@ class TorrentsPage extends AbstractPage {
         textareaEl.classList.add('add-magnet-textarea');
         textareaEl.setAttribute('placeholder', 'magnet:?xt=urn:btih:...\nmagnet:?xt=urn:btih:...');
 
-        const modal = this.ui.showModal({
+        this.ui.showModal({
             title: 'torrents.magnetModal.title',
             subtitle: 'torrents.magnetModal.subtitle',
             content: textareaEl,
