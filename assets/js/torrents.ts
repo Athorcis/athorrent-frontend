@@ -53,6 +53,10 @@ class Updater {
     }
 
     async intervalCallback() {
+        if (document.hidden) {
+            return;
+        }
+
         if (this.data$) {
             this.data$.abort();
         }
