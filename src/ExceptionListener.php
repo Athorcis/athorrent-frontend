@@ -50,23 +50,19 @@ readonly class ExceptionListener implements EventSubscriberInterface
     {
         if ($throwable instanceof HttpException) {
             $statusCode = $throwable->getStatusCode();
-
-            if ($throwable instanceof NotFoundHttpException && !str_starts_with($throwable->getMessage(), 'error.')) {
-                $messageKey = 'error.pageNotFound';
-            }
         } else {
             $statusCode = 500;
         }
 
-        if ($throwable instanceof UserVisibleException) {
-            $messageKey = $throwable->getMessage();
-        }
-        elseif ($statusCode === 500) {
-            $messageKey = 'error.unknownError';
-        }
+        $rawMessage = $throwable->getMessage();
 
-        if (!isset($messageKey)) {
-            $messageKey = $throwable->getMessage();
+        if (str_starts_with($rawMessage, 'error.')) {
+            $messageKey = $rawMessage;
+        }
+        elseif ($throwable instanceof NotFoundHttpException) {
+            $messageKey = 'error.pageNotFound';
+        } else {
+            $messageKey = 'error.unknownError';
         }
 
         $message = $this->translator->trans($messageKey);
