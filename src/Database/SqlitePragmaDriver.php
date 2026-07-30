@@ -20,7 +20,7 @@ class SqlitePragmaDriver extends AbstractDriverMiddleware
 
             $connection->exec('PRAGMA journal_mode=WAL;');
             $connection->exec('PRAGMA synchronous=NORMAL;');
-            //$connection->exec('PRAGMA busy_timeout=5000;');
+            $connection->exec('PRAGMA busy_timeout=5000;');
         }
 
         return $connection;
