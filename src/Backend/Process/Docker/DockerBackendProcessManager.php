@@ -7,7 +7,6 @@ namespace Athorrent\Backend\Process\Docker;
 use Athorrent\Backend\Process\BackendProcessManagerInterface;
 use Athorrent\Database\Entity\User;
 use Athorrent\Security\UserManager;
-use Clue\React\Docker\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use React\Http\Message\ResponseException;
@@ -25,7 +24,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     private array $processes = [];
 
     public function __construct(
-        private readonly Client $docker,
+        private readonly DockerClient $docker,
         private readonly LoggerInterface $logger,
         #[Autowire('%env(BACKEND_DOCKER_QBITTORRENT_IMAGE)%')]
         private readonly string $qbittorrentImageTag,
@@ -100,22 +99,18 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     {
         $processes = [];
 
-        $containers = await($this->docker->containerList($all));
+        $labelFilters = $userIds === []
+            ? ['com.athorrent.user']
+            : array_map(static fn (int $userId): string => "com.athorrent.user=$userId", $userIds);
+
+        $containers = await($this->docker->containerList($all, false, [
+            'label' => $labelFilters,
+        ]));
 
         foreach ($containers as $container) {
-            $userId = null;
-
-            if (isset($container['Labels']['com.athorrent.user'])) {
-                $userId = (int)$container['Labels']['com.athorrent.user'];
-            }
-            else {
-                foreach ($container['Names'] as $name) {
-                    if (str_starts_with($name, '/athorrentd_')) {
-                        $userId = (int)str_replace('/athorrentd_', '', $name);
-                        break;
-                    }
-                }
-            }
+            $userId = isset($container['Labels']['com.athorrent.user'])
+                ? (int) $container['Labels']['com.athorrent.user']
+                : null;
 
             if ($userId && (count($userIds) === 0 || in_array($userId, $userIds, true))) {
                 $processes[$userId] = new DockerBackendProcess($this->docker, $container['Id']);

@@ -55,7 +55,9 @@ services:
         tags:
             - { name: controller.argument_value_resolver }
 
-    Clue\React\Docker\Client:
+    Athorrent\Backend\Process\Docker\DockerClient:
         arguments:
             $loop: null
             $url: '%env(DOCKER_API_ENDPOINT)%'
+
+    Clue\React\Docker\Client: '@Athorrent\Backend\Process\Docker\DockerClient'
