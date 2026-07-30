@@ -216,6 +216,7 @@ class TorrentsPage extends AbstractPage {
 
                     try {
                         await this.sendRequest('addMagnets', { magnets });
+                        this.torrentsUpdater.update();
                     }
                     catch (error) {
                         this.ui.showModal({
