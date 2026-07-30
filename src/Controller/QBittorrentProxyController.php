@@ -32,16 +32,24 @@ class QBittorrentProxyController extends AbstractController
             throw new AccessDeniedHttpException();
         }
 
-        /** @var User $user */
-        $user = $this->getUser();
-
-        /** @var QBittorrentBackend $backend */
-        $backend = $this->backendFactory->create($user);
         $blocked = ['api/v2/auth/login'];
 
         if (in_array($path, $blocked, true)) {
             return new Response('Forbidden', Response::HTTP_FORBIDDEN);
         }
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Release session lock so parallel /user/qb/* requests are not serialized.
+        // Session may not be started yet (lazy session / remember-me).
+        $session = $request->getSession();
+        if ($session->isStarted()) {
+            $session->save();
+        }
+
+        /** @var QBittorrentBackend $backend */
+        $backend = $this->backendFactory->create($user);
 
         $body = $this->resolveProxyBody($request);
         $headers = $this->extractForwardedHeaders($request);
