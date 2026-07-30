@@ -6,6 +6,7 @@ namespace Athorrent;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -22,8 +23,23 @@ class RequestListener implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Release the session lock before long-running file responses.
+     *
+     * Do not save on every response: closing the session before Symfony's
+     * SessionListener (-1000) means the session cookie is never added to the
+     * Response. With mock_file storage (test env) there is no native setcookie(),
+     * so the cookie is lost and values like _security.*.target_path disappear
+     * on the next request (e.g. after redirect to login).
+     */
     public function saveSession(ResponseEvent $event): void
     {
+        $response = $event->getResponse();
+
+        if (!$response instanceof BinaryFileResponse && !$response instanceof StreamedResponse) {
+            return;
+        }
+
         $session = $event->getRequest()->getSession();
 
         if ($session->isStarted()) {
