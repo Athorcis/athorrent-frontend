@@ -29,7 +29,6 @@ use function React\Async\await;
 use function React\Async\delay;
 use function React\Async\parallel;
 use function React\Promise\all;
-use function React\Promise\resolve;
 use function React\Promise\Timer\sleep;
 use function React\Promise\Timer\timeout;
 
@@ -68,6 +67,9 @@ class BackendManager
     private array $stopRequested = [];
 
     private bool $stopping = false;
+
+    /** @var PromiseInterface<null>|null */
+    private ?PromiseInterface $stopPromise = null;
 
     public function __construct(
         private readonly BackendProcessManagerFactory $factory,
@@ -114,14 +116,36 @@ class BackendManager
         $this->backendProcessManager->requestUpdate();
     }
 
-    public function stop(bool $keepBackends = true): void
+    /**
+     * @return PromiseInterface<null>
+     */
+    public function stop(bool $keepBackends = true): PromiseInterface
     {
-        if ($this->stopping) {
-            return;
+        if ($this->stopPromise !== null) {
+            return $this->stopPromise;
         }
 
         $this->stopping = true;
 
+        $this->stopPromise = new Promise(function ($resolve, $reject) use ($keepBackends) {
+            Loop::futureTick(async(function () use ($keepBackends, $resolve, $reject) {
+                try {
+                    $this->doStop($keepBackends);
+                    $resolve(null);
+                } catch (Throwable $e) {
+                    $reject($e);
+                } finally {
+                    $this->stopping = false;
+                    $this->stopPromise = null;
+                }
+            }));
+        });
+
+        return $this->stopPromise;
+    }
+
+    private function doStop(bool $keepBackends): void
+    {
         foreach ($this->sleepPromises as $promise) {
             $promise->cancel();
         }
@@ -144,8 +168,7 @@ class BackendManager
 
                     $this->cleanProcess($backend);
                     $backend->setState(BackendState::Stopped);
-                }
-                elseif ($state !== BackendState::Failed) {
+                } elseif ($state !== BackendState::Failed) {
                     $this->logger->info(sprintf('Cleaning up %s...', $backend));
                     $this->cleanProcess($backend);
                 }
@@ -155,33 +178,6 @@ class BackendManager
         $this->backends = [];
         $this->startQueue = new SplQueue();
         $this->heartbeatQueue = new SplQueue();
-
-        $this->stopping = false;
-    }
-
-    /**
-     * @return PromiseInterface<null>
-     */
-    public function stopAsync(bool $keepBackends = true): PromiseInterface
-    {
-        if ($this->stopping) {
-            return resolve(null);
-        }
-
-        $this->stopping = true;
-
-        return new Promise(function ($resolve, $reject) use ($keepBackends) {
-            Loop::futureTick(async(function () use ($keepBackends, $resolve, $reject) {
-                try {
-                    $this->stopping = false;
-                    $this->stop($keepBackends);
-                    $resolve(null);
-                }
-                catch (Throwable $e) {
-                    $reject($e);
-                }
-            }));
-        });
     }
 
     protected function dottedSleep(float $time): bool

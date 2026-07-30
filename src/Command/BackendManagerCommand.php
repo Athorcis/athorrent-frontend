@@ -17,7 +17,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 use function React\Async\async;
-use function React\Promise\resolve;
 
 class BackendManagerCommand extends Command
 {
@@ -33,19 +32,12 @@ class BackendManagerCommand extends Command
         $interruptionHandler = SignalHandler::create(null, function (string $signalName, SignalHandler $self) use ($output, $destroyServer) {
             $output->writeln(sprintf("Received signal %s", $signalName));
 
-            $promise = null;
-
-            // We have to execute this asynchronously or it crashes: https://github.com/php/php-src/pull/9028
-            if (function_exists('pcntl_signal')) {
-                $promise = $this->backendManager->stopAsync();
-            }
-            else {
-                $this->backendManager->stop();
-            }
+            // Defer stop off the signal handler or it can crash: https://github.com/php/php-src/pull/9028
+            $promise = $this->backendManager->stop();
 
             $destroyServer();
 
-            resolve($promise)->then(function () use ($self) {
+            $promise->then(function () use ($self) {
                 $self->reset();
             });
         });
