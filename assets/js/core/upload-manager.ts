@@ -135,7 +135,7 @@ export class UploadManager implements UploadManagerInterface{
     }
 
     trigger(options: UploadOptions): void {
-        const [, modal] = this.initialize(options);
-        modal.querySelector('.file-upload-list')!.dispatchEvent(new MouseEvent('click'));
+        const [dropzone] = this.initialize(options);
+        dropzone.hiddenFileInput!.click();
     }
 }
