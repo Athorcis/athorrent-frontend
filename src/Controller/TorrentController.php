@@ -124,7 +124,7 @@ class TorrentController extends AbstractController
             $result = $torrentManager->addTorrentFromFile($path);
         }
         catch (TorrentAlreadyAdded) {
-            // NOOP
+            $result = ['hash' => null];
         }
         catch (ClientException $e) {
             if ($e->getResponse()->getStatusCode() === 415) {
@@ -177,7 +177,7 @@ class TorrentController extends AbstractController
                 $result = $torrentManager->addTorrentFromMagnet($magnet);
             }
             catch (TorrentAlreadyAdded) {
-                // NOOP
+                $result = null;
             }
 
             $usedMagnets[] = $magnet;
