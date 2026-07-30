@@ -14,6 +14,9 @@ class Updater {
 
     private intervalStop: (() => void)|null = null;
 
+    /** Bumped on each new fetch / invalidate so stale responses are ignored. */
+    private requestId = 0;
+
     constructor(
         private router: Router,
         private action: string,
@@ -39,17 +42,22 @@ class Updater {
         if (this.intervalStop) {
             this.intervalStop();
             this.intervalStop = null;
-
-            if (this.data$) {
-                this.data$.abort();
-                this.data$ = null;
-            }
+            this.abortRequest();
         }
     }
 
     update() {
         this.stop();
         this.start(true);
+    }
+
+    private abortRequest() {
+        this.requestId++;
+
+        if (this.data$) {
+            this.data$.abort();
+            this.data$ = null;
+        }
     }
 
     async intervalCallback() {
@@ -61,19 +69,27 @@ class Updater {
             this.data$.abort();
         }
 
-        this.data$ = this.router.sendRequest(this.action, this.parameters)
+        const requestId = ++this.requestId;
+        this.data$ = this.router.sendRequest(this.action, this.parameters);
 
         try {
-            this.internalSuccess(await this.data$);
+            const data = await this.data$;
+
+            if (requestId !== this.requestId) {
+                return;
+            }
+
+            this.data$ = null;
+            this.success(data);
         }
         catch (error) {
+            if (requestId !== this.requestId) {
+                return;
+            }
+
+            this.data$ = null;
             console.error(error);
         }
-    }
-
-    internalSuccess(data: string) {
-        this.data$ = null;
-        this.success(data);
     }
 }
 
