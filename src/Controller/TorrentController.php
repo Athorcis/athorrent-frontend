@@ -175,16 +175,16 @@ class TorrentController extends AbstractController
 
             try {
                 $result = $torrentManager->addTorrentFromMagnet($magnet);
+
+                if (isset($result['hash'])) {
+                    $torrentIds[] = $result['hash'];
+                }
             }
             catch (TorrentAlreadyAdded) {
-                $result = null;
+                // already present
             }
 
             $usedMagnets[] = $magnet;
-
-            if (isset($result['hash'])) {
-                $torrentIds[] = $result['hash'];
-            }
         }
 
         return [
