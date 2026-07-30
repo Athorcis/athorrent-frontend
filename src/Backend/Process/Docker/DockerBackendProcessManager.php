@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Throwable;
 use function React\Async\await;
+use function React\Async\delay;
 
 #[AsTaggedItem('docker')]
 class DockerBackendProcessManager implements BackendProcessManagerInterface
@@ -234,7 +235,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         $clientIp = $process->getClientIp();
 
         if (!empty($clientIp)) {
-            sleep(1);
+            delay(1);
             $user->setClientIp($clientIp);
             $this->entityManager->flush();
         }
