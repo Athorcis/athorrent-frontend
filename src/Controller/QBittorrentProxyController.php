@@ -41,13 +41,6 @@ class QBittorrentProxyController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        // Release session lock so parallel /user/qb/* requests are not serialized.
-        // Session may not be started yet (lazy session / remember-me).
-        $session = $request->getSession();
-        if ($session->isStarted()) {
-            $session->save();
-        }
-
         /** @var QBittorrentBackend $backend */
         $backend = $this->backendFactory->create($user);
 
