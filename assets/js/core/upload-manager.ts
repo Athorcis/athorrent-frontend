@@ -37,10 +37,13 @@ export class UploadManager implements UploadManagerInterface{
             type = 'file'
         } = options;
 
-        const modal = this.ui.prepareModal({ title, content: `<div class="file-upload-list"></div>`, removeWhenClose: true });
+        const uploadListEl = document.createElement('div');
+        uploadListEl.classList.add('file-upload-list');
+
+        const modal = this.ui.prepareModal({ title, content: uploadListEl, removeWhenClose: true });
         modal.classList.add('hide-close');
 
-        const dropzone = new Dropzone(modal.querySelector<HTMLDivElement>('.file-upload-list')!, {
+        const dropzone = new Dropzone(uploadListEl, {
             ...options.dropzone,
             url: this.router.generateUrl(route),
             paramName: 'file',

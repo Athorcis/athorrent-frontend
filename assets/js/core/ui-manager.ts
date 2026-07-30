@@ -10,7 +10,7 @@ interface ModalControl {
 interface ModalOptions {
     title: string;
     subtitle?: string;
-    content: string;
+    content: string|HTMLElement;
     removeWhenClose?: boolean;
     controls?: ModalControl[];
     id?: string;
@@ -112,7 +112,15 @@ export class UiManager {
         const fragment: DocumentFragment = this.modalTemplate.content.cloneNode(true) as DocumentFragment;
 
         fragment.querySelector('.modal-title')!.textContent = this.translator.translate(title);
-        fragment.querySelector('.modal-body')!.innerHTML = content;
+
+        const modalBodyEl = fragment.querySelector('.modal-body')!;
+
+        if (typeof content === 'string') {
+            modalBodyEl.textContent = content;
+        }
+        else {
+            modalBodyEl.appendChild(content);
+        }
 
         if (subtitle) {
             const subtitleEL = document.createElement('p');

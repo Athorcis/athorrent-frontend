@@ -181,10 +181,14 @@ class TorrentsPage extends AbstractPage {
     }
 
     protected showMagnetModal(prefill = '') {
+        const textareaEl = document.createElement('textarea');
+        textareaEl.classList.add('add-magnet-textarea');
+        textareaEl.setAttribute('placeholder', 'magnet:?xt=urn:btih:...\nmagnet:?xt=urn:btih:...');
+
         const modal = this.ui.showModal({
             title: 'torrents.magnetModal.title',
             subtitle: 'torrents.magnetModal.subtitle',
-            content: '<textarea placeholder="magnet:?xt=urn:btih:...\nmagnet:?xt=urn:btih:..." class="add-magnet-textarea"></textarea>',
+            content: textareaEl,
             removeWhenClose: true,
             controls: [{
                 label: 'common.cancel',
@@ -192,8 +196,7 @@ class TorrentsPage extends AbstractPage {
                 label: 'torrents.add',
                 primary: true,
                 callback: noParallelRun(async () => {
-                    const textarea = modal.querySelector('textarea')!;
-                    const magnets = textarea.value.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+                    const magnets = textareaEl.value.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
                     try {
                         await this.sendRequest('addMagnets', { magnets });
@@ -210,7 +213,7 @@ class TorrentsPage extends AbstractPage {
         });
 
         if (prefill) {
-            modal.querySelector('textarea')!.value = prefill;
+            textareaEl.value = prefill;
         }
     }
 
