@@ -131,9 +131,9 @@ class QBittorrentProxyController extends AbstractController
     /**
      * Copied from Symfony\Component\Security\Csrf\SameOriginCsrfTokenManager::isValidOrigin().
      *
-     * @return bool|null Whether the origin is valid, null if missing
+     * @return bool Whether the origin is valid
      */
-    private function isSameOrigin(Request $request): ?bool
+    private function isSameOrigin(Request $request): bool
     {
         if (null !== $header = $request->headers->get('Sec-Fetch-Site')) {
             return 'same-origin' === $header;

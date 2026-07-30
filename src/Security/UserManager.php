@@ -79,13 +79,13 @@ readonly class UserManager
         $user->setPassword($this->hasher->hashPassword($user, $password));
     }
 
-    protected function removeUserDirs(User $user)
+    protected function removeUserDirs(User $user): void
     {
         $fs = new FileUtils();
         $fs->remove($user->getPath(''));
     }
 
-    public function removeUser(User $user, $creationCleanup = false): void
+    public function removeUser(User $user, bool $creationCleanup = false): void
     {
         try {
             $this->backendManager->removeUser($user);
