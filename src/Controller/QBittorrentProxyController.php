@@ -11,14 +11,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class QBittorrentProxyController extends AbstractController
 {
     public function __construct(
         private readonly BackendFactory $backendFactory,
+        private readonly HttpClientInterface $http,
     ) {}
 
     #[Route('/user/qb/{path}', requirements: ['path' => '.*'], methods: ['GET','POST','PUT','PATCH','DELETE'], options: ['csrf' => false])]
@@ -54,14 +58,37 @@ class QBittorrentProxyController extends AbstractController
             'headers' => $headers,
             'body' => $body,
             'query' => $request->query->all(),
+            // Buffer only HTML (needs <base> rewrite); stream assets/API/downloads.
+            'buffer' => static function (array $headers): bool {
+                $contentType = $headers['content-type'][0] ?? '';
+
+                return str_starts_with($contentType, 'text/html');
+            },
         ]);
-        $content = $qbResponse->getContent();
+
         $status = $qbResponse->getStatusCode();
         $respHeaders = $qbResponse->getHeaders(false);
-
         $contentType = $respHeaders['content-type'][0] ?? '';
 
-        if (str_starts_with($contentType, 'text/html') && str_contains($content, '<!DOCTYPE html>')) {
+        if (str_starts_with($contentType, 'text/html')) {
+            $response = $this->createHtmlProxyResponse($qbResponse, $status, $urlGenerator);
+        } else {
+            $response = $this->createStreamedProxyResponse($qbResponse, $status);
+        }
+
+        $this->copyUpstreamHeaders($respHeaders, $response);
+
+        return $response;
+    }
+
+    private function createHtmlProxyResponse(
+        ResponseInterface $qbResponse,
+        int $status,
+        UrlGeneratorInterface $urlGenerator,
+    ): Response {
+        $content = $qbResponse->getContent();
+
+        if (str_contains($content, '<!DOCTYPE html>')) {
             $newLine = "\n    ";
             $content = str_replace(
                 '<head>',
@@ -72,18 +99,33 @@ class QBittorrentProxyController extends AbstractController
             );
         }
 
+        return new Response($content, $status);
+    }
 
-        $response = new Response($content, $status);
+    private function createStreamedProxyResponse(ResponseInterface $qbResponse, int $status): StreamedResponse
+    {
+        return new StreamedResponse(function () use ($qbResponse): void {
+            foreach ($this->http->stream($qbResponse) as $chunk) {
+                echo $chunk->getContent();
+            }
+        }, $status);
+    }
+
+    /**
+     * @param array<string, string[]> $respHeaders
+     */
+    private function copyUpstreamHeaders(array $respHeaders, Response $response): void
+    {
         foreach ($respHeaders as $name => $values) {
             // Despite not returning gzip content-encoding is still set with gzip value
-            if (in_array(strtolower($name), ['set-cookie', 'content-encoding', 'content-length', 'date'])) {
+            if (in_array(strtolower($name), ['set-cookie', 'content-encoding', 'content-length', 'date'], true)) {
                 continue; // ne pas renvoyer cookie qB au navigateur
             }
+
             foreach ($values as $value) {
                 $response->headers->set($name, $value, false);
             }
         }
-        return $response;
     }
 
     /**
