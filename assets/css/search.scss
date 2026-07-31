@@ -24,6 +24,11 @@ table {
     text-align: center;
 }
 
+table svg {
+    width: 13px;
+    height: 13px;
+}
+
 td.col-seeders {
     color: $color-success;
 }
