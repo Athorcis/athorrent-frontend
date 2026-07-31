@@ -31,8 +31,8 @@
                         <span >{{ format_bytes(torrent.upspeed) }}/s</span>
                     </span>
 
-                    <span class="torrent-info-value">
-                        {{ ux_icon('exchange', { style: "width: 11px; height: 11px;" }) }}
+                    <span class="torrent-info-value torrent-ratio">
+                        {{ ux_icon('exchange') }}
                         {{ torrent.ratio|format_number({ fraction_digit: 2 }) }}
                     </span>
                 {% endif %}
