@@ -8,6 +8,8 @@ export type DropzoneType = 'file'|'directory';
 
 const PROGRESS_COMPLETED = 100;
 
+const CHUNK_SIZE = 8_388_608; // 8 MiB
+
 export interface UploadOptions {
     title: string;
     route: string;
@@ -51,6 +53,11 @@ export class UploadManager implements UploadManagerInterface{
             dictResponseError: this.translator.translate('error.serverError'),
             previewTemplate: document.querySelector('#template-dropzone-preview')!.innerHTML,
             parallelUploads: 1,
+            chunking: true,
+            chunkSize: CHUNK_SIZE,
+            parallelChunkUploads: false,
+            retryChunks: true,
+            retryChunksLimit: 2,
             init: function() {
                 if (type === 'directory') {
                     // This allows the file picker to select folders instead of files
@@ -74,6 +81,8 @@ export class UploadManager implements UploadManagerInterface{
         const csrfCleanups = new WeakMap<DropzoneFile, () => void>();
 
         dropzone.on('sending', (file: DropzoneFile, _xhr: XMLHttpRequest, formData: FormData) => {
+            // Sequential uploads/chunks: clear the previous request cookie before writing a new one.
+            csrfCleanups.get(file)?.();
             const { token, cleanup } = this.securityManager.createCsrfToken();
             csrfCleanups.set(file, cleanup);
             formData.append('_token', token);
