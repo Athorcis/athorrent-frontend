@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Athorrent\Controller;
 
 use Athorrent\Filesystem\AbstractFilesystemEntry;
+use Athorrent\Filesystem\FilesystemEntryInterface;
 use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\View;
@@ -33,9 +34,16 @@ abstract class AbstractFileController extends AbstractController
     /**
      * @return array<string, string>
      */
-    protected function getBreadcrumb(string $path): array
+    protected function getBreadcrumb(string $path, ?FilesystemEntryInterface $entry = null): array
     {
         $breadcrumb = [$this->translator->trans('files.root') => ''];
+
+        // On single file sharing breadcrumb inside
+        // display or play view should contain the file name
+        if ($path === '' && $entry) {
+            $breadcrumb[$entry->getName()] = '';
+            return $breadcrumb;
+        }
 
         $parts = explode('/', $path);
         $currentPath = '';
@@ -151,7 +159,7 @@ abstract class AbstractFileController extends AbstractController
         }
 
         $path = $entry->getPath();
-        $breadcrumb = $this->getBreadcrumb($path);
+        $breadcrumb = $this->getBreadcrumb($path, $entry);
 
         $request->attributes->set('_subroute', $template);
 
@@ -171,7 +179,7 @@ abstract class AbstractFileController extends AbstractController
         }
 
         $relativePath = $entry->getPath();
-        $breadcrumb = $this->getBreadcrumb($relativePath);
+        $breadcrumb = $this->getBreadcrumb($relativePath, $entry);
 
         $data = [
             'name' => $entry->getName(),
