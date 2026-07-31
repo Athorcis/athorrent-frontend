@@ -1,10 +1,18 @@
+{
+    fallback_sni athorrent.local
+}
+
+:443 {
+    reverse_proxy nginx:80
+    tls internal
+}
 
 athorrent.local {
-  reverse_proxy nginx:80
-  tls internal
+	reverse_proxy nginx:80
+	tls internal
 }
 
 jackett.athorrent.local {
-    reverse_proxy jackett:9117
-    tls internal
+	reverse_proxy jackett:9117
+	tls internal
 }
