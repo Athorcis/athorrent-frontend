@@ -52,6 +52,11 @@ main {
         flex-shrink: 0;
         background: $color-surface-14;
         color: $color-primary;
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
     }
 
     h2 {

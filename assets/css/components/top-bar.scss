@@ -20,6 +20,11 @@
         margin-right: auto;
     }
 
+    .menu-burger-button svg {
+        width: 17px;
+        height: 17px;
+    }
+
     &.navbar-mode {
         .menu-burger-button {
             position: absolute;
