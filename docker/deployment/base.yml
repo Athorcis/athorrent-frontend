@@ -6,6 +6,7 @@ configs:
 volumes:
     db_data:
     user_data:
+    caddy_ca_data:
 
 x-php-base: &php-base
     build:
@@ -68,6 +69,8 @@ services:
         configs:
             - source: caddy_config
               target: /etc/caddy/Caddyfile
+        volumes:
+            - caddy_ca_data:/data/caddy/pki/authorities/local/
         ports:
             - "80:80"
             - "443:443"
