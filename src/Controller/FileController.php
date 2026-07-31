@@ -84,7 +84,7 @@ class FileController extends AbstractFileController
         }
 
         if (isset($uploadPath)) {
-            $fs->rename($uploadPath, Path::join($dirPath, $relativePath));
+            $fs->rename($uploadPath, $path, true);
         }
         else {
             $file->move($dirPath, basename($relativePath));
@@ -194,7 +194,7 @@ class FileController extends AbstractFileController
                 'Assembled size mismatch for "%s": expected %d bytes, got %d',
                 $outputPath,
                 $expectedSize,
-                $actualSize,
+                $actualSize === false ? -1 : $actualSize,
             ));
         }
 
