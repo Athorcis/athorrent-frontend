@@ -186,12 +186,15 @@ class FileController extends AbstractFileController
 
         fclose($out);
 
-        if ($expectedSize > 0 && filesize($outputPath) !== $expectedSize) {
+        $actualSize = filesize($outputPath);
+
+        if ($actualSize !== $expectedSize) {
             @unlink($outputPath);
             throw new \RuntimeException(sprintf(
-                'Assembled size mismatch for "%s": expected %d bytes',
+                'Assembled size mismatch for "%s": expected %d bytes, got %d',
                 $outputPath,
                 $expectedSize,
+                $actualSize,
             ));
         }
 
