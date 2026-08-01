@@ -54,7 +54,11 @@ class UsersPage extends AbstractPage {
         );
 
         if (confirmed && password) {
-            this.ui.showModal({ title: 'users.newPasswordModalTitle', content: password });
+            this.ui.showModal({
+                title: 'users.newPasswordModalTitle',
+                content: password,
+                id: 'dialog-new-password',
+            });
         }
     })
 }

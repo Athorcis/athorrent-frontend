@@ -68,7 +68,9 @@ Cypress.Commands.add('dropdownItem', function (selector: string, parentSelector:
 });
 
 Cypress.Commands.add('confirmModal', function () {
-    return cy.get('#dialog-confirm:open button.primary').click();
+    cy.get('#dialog-confirm:open button.primary').click();
+    // Wait until the async confirm action finishes and the dialog is removed
+    cy.get('#dialog-confirm').should('not.exist');
 });
 
 

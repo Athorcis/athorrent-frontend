@@ -36,7 +36,7 @@ describe('user-management', () => {
         cy.get('.user-reset-password').click();
         cy.confirmModal();
 
-        cy.get('dialog:open .modal-body').should('be.visible').then($modal => {
+        cy.get('#dialog-new-password:open .modal-body').should('be.visible').then($modal => {
             const password = $modal.text();
 
             assert.notEqual(password, DEFAULT_PASSWORD);
