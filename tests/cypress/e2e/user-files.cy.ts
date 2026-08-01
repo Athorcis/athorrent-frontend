@@ -68,6 +68,29 @@ describe('user-files', () => {
         });
     });
 
+    it('should allow chunked file upload', () => {
+        // Must exceed UploadManager CHUNK_SIZE (8 MiB). ASCII fill: uploadFile() uses
+        // cy.intercept(), which UTF-8-mangles high bytes on small last chunks.
+        // eslint-disable-next-line no-magic-numbers -- 8 MiB + 1 KiB
+        const fileSize = 8 * 1024 * 1024 + 1024;
+        const filePath = 'cypress/fixtures/files/chunked.bin';
+        const contents = Cypress.Buffer.alloc(fileSize, 0x65);
+
+        cy.writeFile(filePath, contents, null);
+
+        const { basename, selector } = uploadFile(filePath);
+
+        cy.get(`${selector} > .file-name`).should('contain', basename);
+
+        cy.dropdownItem('.download-file', selector).click();
+        cy.readFile(`cypress/downloads/${basename}`, null).should((downloaded) => {
+            const buffer = Cypress.Buffer.from(downloaded as ArrayBuffer);
+
+            expect(buffer.length).to.eq(fileSize);
+            expect(buffer.equals(contents)).to.eq(true);
+        });
+    });
+
     it('should allow to remove file', () => {
         const { selector } = uploadFile('cypress/fixtures/files/test.txt');
 
