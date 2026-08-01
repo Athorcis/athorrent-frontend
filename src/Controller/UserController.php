@@ -40,6 +40,7 @@ class UserController extends AbstractController
             'users.deletionConfirmation',
             'common.cancel',
             'common.confirm',
+            'common.copy',
         ]);
 
         return $view;

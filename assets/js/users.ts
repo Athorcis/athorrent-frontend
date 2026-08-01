@@ -54,9 +54,9 @@ class UsersPage extends AbstractPage {
         );
 
         if (confirmed && password) {
-            this.ui.showModal({
+            this.ui.showCopyableModal({
                 title: 'users.newPasswordModalTitle',
-                content: password,
+                value: password,
                 id: 'dialog-new-password',
             });
         }
