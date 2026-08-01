@@ -97,6 +97,7 @@ describe('user-files', () => {
         cy.intercept('DELETE', pathWithLocale('/user/files')).as('deleteFiles');
 
         cy.get(`${selector} .file-remove`).click();
+        cy.confirmModal();
 
         cy.wait('@deleteFiles');
 

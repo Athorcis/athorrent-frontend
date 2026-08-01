@@ -30,8 +30,12 @@ export abstract class AbstractPage extends DataManager {
         return this.translator.translate(key, parameters);
     }
 
-    confirm(key: string, parameters: Record<string, string> = {}): boolean {
-        return window.confirm(this.translate(key, parameters));
+    confirm(
+        key: string,
+        parameters: Record<string, string> = {},
+        onConfirm?: () => void | PromiseLike<void>,
+    ): Promise<boolean> {
+        return this.ui.confirm(key, parameters, onConfirm);
     }
 
     abstract init(): void;

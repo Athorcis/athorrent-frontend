@@ -34,7 +34,9 @@ describe('user-management', () => {
         cy.visit(pathWithLocale('/administration/users/'));
 
         cy.get('.user-reset-password').click();
-        cy.get('.modal-body').then($modal => {
+        cy.confirmModal();
+
+        cy.get('dialog:open .modal-body').should('be.visible').then($modal => {
             const password = $modal.text();
 
             assert.notEqual(password, DEFAULT_PASSWORD);
@@ -48,6 +50,7 @@ describe('user-management', () => {
 
         cy.visit(pathWithLocale('/administration/users/'));
         cy.get('#user-2 .user-remove').click();
+        cy.confirmModal();
 
         cy.get('#user-2 > .user-name').should('not.exist');
     });

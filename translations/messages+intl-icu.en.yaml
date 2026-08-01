@@ -23,6 +23,7 @@ error:
 common:
     close: Close
     cancel: Cancel
+    confirm: Confirm
 
 app:
     name: Athorrent
