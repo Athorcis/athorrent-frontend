@@ -130,6 +130,12 @@ export class UiManager {
             fragment.querySelector('header')!.append(subtitleEL);
         }
 
+        const modal = fragment.firstElementChild as HTMLDialogElement;
+
+        if (options.id) {
+            modal.id = options.id;
+        }
+
         if (controls) {
             const controlsEL = document.createElement('div');
             controlsEL.className = 'modal-controls';
@@ -144,7 +150,19 @@ export class UiManager {
 
                 controlEl.addEventListener('click', async () => {
                     if (callback) {
-                        await callback();
+                        if (modal.ariaBusy === 'true') {
+                            return;
+                        }
+
+                        this.setModalBusy(modal, true, controlEl);
+
+                        try {
+                            await callback();
+                        }
+                        catch (error) {
+                            this.setModalBusy(modal, false, controlEl);
+                            throw error;
+                        }
                     }
 
                     modal.close();
@@ -153,19 +171,19 @@ export class UiManager {
                 controlsEL.appendChild(controlEl);
             }
 
-            fragment.firstElementChild!.appendChild(controlsEL);
+            modal.appendChild(controlsEL);
         }
 
-        const modal = fragment.firstElementChild as HTMLDialogElement;
-
-        if (options.id) {
-            modal.id = options.id;
-        }
+        modal.addEventListener('cancel', (event) => {
+            if (modal.ariaBusy === 'true') {
+                event.preventDefault();
+            }
+        });
 
         modal.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
 
-            if (target.closest('.close')) {
+            if (target.closest('.close') && modal.ariaBusy !== 'true') {
                 modal.close();
             }
         });
@@ -179,6 +197,20 @@ export class UiManager {
         document.body.append(modal);
 
         return modal;
+    }
+
+    private setModalBusy(modal: HTMLDialogElement, busy: boolean, loadingButton?: HTMLButtonElement) {
+        modal.ariaBusy = busy ? 'true' : 'false';
+
+        for (const button of modal.querySelectorAll('button')) {
+            button.disabled = busy;
+        }
+
+        for (const field of modal.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')) {
+            field.disabled = busy;
+        }
+
+        loadingButton?.classList.toggle('loading', busy);
     }
 
     showModal(options: ModalOptions) {

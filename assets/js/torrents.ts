@@ -99,6 +99,9 @@ class TorrentsPage extends AbstractPage {
 
     private uploadManager: UploadManagerInterface|null = null;
 
+    /** hash → control class currently showing a loading state */
+    private busyTorrents = new Map<string, string>();
+
     init() {
         if (navigator.registerProtocolHandler) {
             navigator.registerProtocolHandler('magnet', `${ location.origin }/user/torrents/magnet?magnet=%s`, 'Athorrent');
@@ -127,6 +130,7 @@ class TorrentsPage extends AbstractPage {
 
     onUpdateTorrents = (data: string) => {
         document.querySelector('.torrent-list')!.innerHTML = data;
+        this.applyTorrentBusyStates();
 
         if (document.querySelector('.backend-alert')) {
             document.querySelector('.add-button')!.setAttribute('disabled', 'disabled');
@@ -136,12 +140,52 @@ class TorrentsPage extends AbstractPage {
         }
     }
 
-    protected async applyActionToTorrent(action: string, element: HTMLElement) {
-        await this.sendRequest(action, {
-            hash: this.getTorrentHash(element)
-        });
+    private applyTorrentBusyStates() {
+        for (const [hash, loadingClass] of this.busyTorrents) {
+            const torrent = document.getElementById(`torrent-${hash}`);
 
-        this.torrentsUpdater.update();
+            if (!torrent) {
+                continue;
+            }
+
+            for (const button of torrent.querySelectorAll<HTMLButtonElement>('.torrent-controls button')) {
+                const loading = button.classList.contains(loadingClass);
+                button.disabled = true;
+                button.classList.toggle('loading', loading);
+                button.ariaBusy = loading ? 'true' : 'false';
+            }
+        }
+    }
+
+    protected async applyActionToTorrent(action: string, element: HTMLElement) {
+        const button = element.closest('button') as HTMLButtonElement;
+        const hash = this.getTorrentHash(element);
+        const loadingClass = ['torrent-pause', 'torrent-resume', 'torrent-remove']
+            .find(className => button.classList.contains(className));
+
+        if (loadingClass) {
+            this.busyTorrents.set(hash, loadingClass);
+            this.applyTorrentBusyStates();
+        }
+
+        try {
+            await this.sendRequest(action, { hash });
+            this.busyTorrents.delete(hash);
+            this.torrentsUpdater.update();
+        }
+        catch (error) {
+            this.busyTorrents.delete(hash);
+
+            const torrent = document.getElementById(`torrent-${hash}`);
+
+            for (const control of torrent?.querySelectorAll<HTMLButtonElement>('.torrent-controls button') ?? []) {
+                control.disabled = false;
+                control.classList.remove('loading');
+                control.ariaBusy = 'false';
+            }
+
+            throw error;
+        }
     }
 
     onTorrentPause = noParallelRun(async (event: MouseEvent) => {
