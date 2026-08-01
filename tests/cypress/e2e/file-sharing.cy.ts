@@ -83,6 +83,20 @@ describe('file-sharing', () => {
         });
     });
 
+    it('displaying a shared single text file should allow going back via root breadcrumb', () => {
+        uploadAndShare('cypress/fixtures/files/test.txt').then(({basename, selector, url}) => {
+            cy.visit(url);
+
+            cy.dropdownItem('.display-file', selector).click();
+            cy.get('h1').should('have.text', basename);
+
+            cy.get('.breadcrumb li').first().find('a').should('exist').click();
+
+            cy.get('.file-list').should('exist');
+            cy.get(selector).should('exist');
+        });
+    });
+
     it('should allow to unshare shared files', () => {
         uploadAndShare('cypress/fixtures/files/test.txt').then(({selector}) => {
             cy.dropdownItem('.sharing-remove', selector).click();
