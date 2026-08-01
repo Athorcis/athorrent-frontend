@@ -24,6 +24,7 @@ common:
     close: Close
     cancel: Cancel
     confirm: Confirm
+    copy: Copy
 
 app:
     name: Athorrent

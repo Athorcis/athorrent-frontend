@@ -225,6 +225,29 @@ export class UiManager {
     }
 
     /**
+     * Shows a modal with the given value and a primary Copy button.
+     * Copy writes to the clipboard then closes the dialog.
+     */
+    showCopyableModal(options: {
+        title: string;
+        value: string;
+        content?: string | HTMLElement;
+        id?: string;
+    }): HTMLDialogElement {
+        return this.showModal({
+            title: options.title,
+            content: options.content ?? options.value,
+            id: options.id,
+            removeWhenClose: true,
+            controls: [{
+                label: 'common.copy',
+                primary: true,
+                callback: () => navigator.clipboard.writeText(options.value),
+            }],
+        });
+    }
+
+    /**
      * Shows a confirm dialog. If `onConfirm` is provided it runs when the user confirms
      * (with a loading state on the confirm button for async work).
      * Resolves `true` when confirmed, `false` when cancelled/dismissed.

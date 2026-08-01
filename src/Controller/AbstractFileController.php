@@ -88,6 +88,7 @@ abstract class AbstractFileController extends AbstractController
                 'sharings.removalConfirmation',
                 'common.cancel',
                 'common.confirm',
+                'common.copy',
                 'error.fileTooBig',
                 'error.serverError',
             ]

@@ -65,8 +65,9 @@ class FilesPage extends AbstractPage {
         anchorEl.setAttribute('href', link);
         anchorEl.textContent = link;
 
-        this.ui.showModal({
+        this.ui.showCopyableModal({
             title: 'files.sharingLink',
+            value: link,
             content: anchorEl,
             id: 'dialog-sharing-link',
         });
