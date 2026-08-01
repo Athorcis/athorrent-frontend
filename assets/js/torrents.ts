@@ -128,6 +128,10 @@ class TorrentsPage extends AbstractPage {
         return this.getItemId('torrent', element);
     }
 
+    getTorrentName(element: HTMLElement) {
+        return this.getItemAttr('torrent', element, 'name');
+    }
+
     onUpdateTorrents = (data: string) => {
         document.querySelector('.torrent-list')!.innerHTML = data;
         this.applyTorrentBusyStates();
@@ -197,7 +201,15 @@ class TorrentsPage extends AbstractPage {
     })
 
     onTorrentRemove = noParallelRun(async (event: MouseEvent) => {
-        return this.applyActionToTorrent('removeTorrent', event.target as HTMLElement);
+        const target = event.target as HTMLElement;
+
+        await this.confirm(
+            'torrents.removalConfirmation',
+            { torrent: this.getTorrentName(target) },
+            async () => {
+                await this.applyActionToTorrent('removeTorrent', target);
+            },
+        );
     })
 
     async initializeTorrentsList() {

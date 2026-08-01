@@ -29,6 +29,8 @@ describe('torrents', () => {
         cy.torrentFile('sintel.torrent')
 
             .torrentClick('.torrent-remove');
+
+        cy.confirmModal();
     });
 
     it('should not allow to remove file bound to torrents', function () {
