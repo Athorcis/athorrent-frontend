@@ -24,24 +24,37 @@ class UsersPage extends AbstractPage {
     onRemoveUser = noParallelRun(async (event: MouseEvent) =>  {
         const target = event.target as HTMLElement;
 
-        if (this.confirm('users.deletionConfirmation', { user: this.getUserName(target) })) {
-            await this.sendRequest('removeUser', {
-                userId: this.getUserId(target)
-            });
+        await this.confirm(
+            'users.deletionConfirmation',
+            { user: this.getUserName(target) },
+            async () => {
+                await this.sendRequest('removeUser', {
+                    userId: this.getUserId(target)
+                });
 
-            this.getItem('user', target).remove();
-        }
+                this.getItem('user', target).remove();
+            },
+        );
     })
 
     onResetUserPassword = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
+        let password: string | undefined;
 
-        if (this.confirm('users.passwordResetConfirmation', { user: this.getUserName(target) })) {
-            const data = await this.sendRequest<{password: string}>('resetUserPassword', {
-                userId: this.getUserId(target)
-            });
+        const confirmed = await this.confirm(
+            'users.passwordResetConfirmation',
+            { user: this.getUserName(target) },
+            async () => {
+                const data = await this.sendRequest<{password: string}>('resetUserPassword', {
+                    userId: this.getUserId(target)
+                });
 
-            this.ui.showModal({ title: 'users.newPasswordModalTitle', content: data.password });
+                password = data.password;
+            },
+        );
+
+        if (confirmed && password) {
+            this.ui.showModal({ title: 'users.newPasswordModalTitle', content: password });
         }
     })
 }

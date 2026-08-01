@@ -154,14 +154,18 @@ export class UiManager {
                             return;
                         }
 
-                        this.setModalBusy(modal, true, controlEl);
+                        const result = callback();
 
-                        try {
-                            await callback();
-                        }
-                        catch (error) {
-                            this.setModalBusy(modal, false, controlEl);
-                            throw error;
+                        if (result != null && typeof (result as PromiseLike<void>).then === 'function') {
+                            this.setModalBusy(modal, true, controlEl);
+
+                            try {
+                                await result;
+                            }
+                            catch {
+                                this.setModalBusy(modal, false, controlEl);
+                                return;
+                            }
                         }
                     }
 
@@ -218,5 +222,66 @@ export class UiManager {
         modal.showModal();
 
         return modal;
+    }
+
+    /**
+     * Shows a confirm dialog. If `onConfirm` is provided it runs when the user confirms
+     * (with a loading state on the confirm button for async work).
+     * Resolves `true` when confirmed, `false` when cancelled/dismissed.
+     * Rejects if `onConfirm` throws.
+     */
+    confirm(
+        key: string,
+        parameters: Record<string, string> = {},
+        onConfirm?: () => void | PromiseLike<void>,
+    ): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            let modal!: HTMLDialogElement;
+            let settled = false;
+
+            const settle = (value: boolean) => {
+                if (!settled) {
+                    settled = true;
+                    resolve(value);
+                }
+            };
+
+            modal = this.prepareModal({
+                title: 'common.confirm',
+                content: this.translator.translate(key, parameters),
+                removeWhenClose: true,
+                id: 'dialog-confirm',
+                controls: [
+                    { label: 'common.cancel' },
+                    {
+                        label: 'common.confirm',
+                        primary: true,
+                        callback: async () => {
+                            try {
+                                if (onConfirm) {
+                                    await onConfirm();
+                                }
+
+                                modal.returnValue = 'confirm';
+                            }
+                            catch (error) {
+                                if (!settled) {
+                                    settled = true;
+                                    reject(error);
+                                }
+
+                                throw error;
+                            }
+                        },
+                    },
+                ],
+            });
+
+            modal.addEventListener('close', () => {
+                settle(modal.returnValue === 'confirm');
+            }, { once: true });
+
+            modal.showModal();
+        });
     }
 }

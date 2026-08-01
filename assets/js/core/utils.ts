@@ -121,3 +121,33 @@ export function noParallelRun<A extends unknown[]>(
         }
     };
 }
+
+/**
+ * Shows a loading spinner on the nearest button while `fn` runs.
+ * On success the caller is expected to remove/replace the button; on error loading is cleared.
+ */
+export async function withButtonLoading(
+    element: HTMLElement,
+    fn: () => void | PromiseLike<void>,
+): Promise<void> {
+    const button = element.closest('button');
+
+    if (!button) {
+        await fn();
+        return;
+    }
+
+    button.classList.add('loading');
+    button.disabled = true;
+    button.ariaBusy = 'true';
+
+    try {
+        await fn();
+    }
+    catch (error) {
+        button.classList.remove('loading');
+        button.disabled = false;
+        button.ariaBusy = 'false';
+        throw error;
+    }
+}

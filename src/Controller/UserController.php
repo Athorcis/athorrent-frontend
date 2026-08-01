@@ -38,6 +38,8 @@ class UserController extends AbstractController
             'users.passwordResetConfirmation',
             'users.newPasswordModalTitle',
             'users.deletionConfirmation',
+            'common.cancel',
+            'common.confirm',
         ]);
 
         return $view;

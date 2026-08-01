@@ -85,6 +85,8 @@ abstract class AbstractFileController extends AbstractController
                 'files.removalConfirmation',
                 'files.upload',
                 'files.overwriteConfirm',
+                'common.cancel',
+                'common.confirm',
                 'error.fileTooBig',
                 'error.serverError',
             ]

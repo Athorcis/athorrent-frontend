@@ -2,7 +2,7 @@ import '../css/files.scss';
 import {AbstractPage} from './core/abstract-page';
 import {Application} from './core/application';
 import {on} from './core/events';
-import {decodeBase64, getQueryParam, noParallelRun} from "./core/utils";
+import {decodeBase64, getQueryParam, noParallelRun, withButtonLoading} from "./core/utils";
 import type {DropzoneFile} from 'dropzone';
 import type {DropzoneType, UploadManagerInterface} from './core/upload-manager';
 
@@ -45,6 +45,11 @@ class FilesPage extends AbstractPage {
         return this.getItemData('file', element, 'mime');
     }
 
+    /** Dropdown actions close the menu; show loading on the visible ellipsis trigger instead. */
+    private getFileMenuTrigger(element: HTMLElement): HTMLElement {
+        return element.closest('.file-buttons')?.querySelector(':scope > button[popovertarget]') ?? element;
+    }
+
     isFilePlayable(element: HTMLElement): CanPlayTypeResult {
         const mimeType = this.getFileMimeType(element);
 
@@ -80,23 +85,31 @@ class FilesPage extends AbstractPage {
 
     onSharingAdd = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
+        let link: string | undefined;
 
-        const data = await this.sendRequest<string>('addSharing',{
-            path: this.getFilePath(target)
-        })
+        await withButtonLoading(this.getFileMenuTrigger(target), async () => {
+            link = await this.sendRequest<string>('addSharing', {
+                path: this.getFilePath(target)
+            });
 
-        this.modalSharingLink(data);
-        this.updateFileList();
+            await this.updateFileList();
+        });
+
+        if (link) {
+            this.modalSharingLink(link);
+        }
     })
 
     onSharingRemove = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
-        await this.sendRequest('removeSharing', {
-            id: this.getSharingId(target, '.sharing-remove')
-        });
+        await withButtonLoading(this.getFileMenuTrigger(target), async () => {
+            await this.sendRequest('removeSharing', {
+                id: this.getSharingId(target, '.sharing-remove')
+            });
 
-        this.updateFileList();
+            await this.updateFileList();
+        });
     })
 
     onSharingLink = (event: MouseEvent) => {
@@ -108,19 +121,22 @@ class FilesPage extends AbstractPage {
     onFileRemove = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
-        if (this.confirm('files.removalConfirmation', { entry: this.getFileName(target) })) {
+        await this.confirm(
+            'files.removalConfirmation',
+            { entry: this.getFileName(target) },
+            async () => {
+                await this.sendRequest('removeFile', {
+                    path: this.getFilePath(target)
+                });
 
-            await this.sendRequest('removeFile',{
-                path: this.getFilePath(target)
-            });
-
-            if (document.querySelectorAll('.file').length > 1) {
-                this.getItem('file', target).remove();
-            }
-            else {
-                await this.updateFileList();
-            }
-        }
+                if (document.querySelectorAll('.file').length > 1) {
+                    this.getItem('file', target).remove();
+                }
+                else {
+                    await this.updateFileList();
+                }
+            },
+        );
     })
 
     onBeforeFileDropdownToggle = (event: ToggleEvent) => {
@@ -183,7 +199,7 @@ class FilesPage extends AbstractPage {
                         filenames,
                     });
 
-                    if (result.exists.length > 0 && !this.confirm('files.overwriteConfirm')) {
+                    if (result.exists.length > 0 && !(await this.confirm('files.overwriteConfirm'))) {
                         modal.close();
                         return;
                     }
