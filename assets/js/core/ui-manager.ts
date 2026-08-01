@@ -236,7 +236,6 @@ export class UiManager {
         onConfirm?: () => void | PromiseLike<void>,
     ): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            let modal!: HTMLDialogElement;
             let settled = false;
 
             const settle = (value: boolean) => {
@@ -246,7 +245,7 @@ export class UiManager {
                 }
             };
 
-            modal = this.prepareModal({
+            const modal = this.prepareModal({
                 title: 'common.confirm',
                 content: this.translator.translate(key, parameters),
                 removeWhenClose: true,
