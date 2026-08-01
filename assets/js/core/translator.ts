@@ -9,9 +9,18 @@ export class Translator {
         });
     }
 
+    protected isTranslationKey(string: string) {
+        return /^[a-zA-Z]+(\.[a-zA-Z]+)*$/.test(string);
+    }
+
     translate(key: string, parameters: Record<string, string> = {}): string {
-        if (this.strings.hasOwnProperty(key)) {
-            return this.replaceParameters(this.strings[key]!, parameters);
+
+        if (this.isTranslationKey(key)) {
+            if (this.strings.hasOwnProperty(key)) {
+                return this.replaceParameters(this.strings[key]!, parameters);
+            }
+
+            console.error(`missing translation for ${key}`);
         }
 
         return key;
