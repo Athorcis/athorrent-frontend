@@ -119,6 +119,7 @@ torrents:
     eta:
         unknown: Unknown
     none: no torrents to display
+    removalConfirmation: Are you sure you want to remove "{torrent}"?
     unavailable:
         starting: The torrent manager is starting
         updating: The torrent manager is being updated
@@ -158,6 +159,7 @@ sharings:
     title: Sharings
     none: no sharings to display
     path: Path
+    removalConfirmation: Are you sure you want to remove the sharing of "{path}"?
 
 users:
     title: User management

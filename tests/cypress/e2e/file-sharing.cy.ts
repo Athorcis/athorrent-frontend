@@ -69,6 +69,7 @@ describe('file-sharing', () => {
             cy.visit(pathWithLocale('/user/sharings/'));
 
             cy.get(`#sharing-${sharingId} .sharing-remove`).click();
+            cy.confirmModal();
             cy.get(`#sharing-${sharingId}`).should('not.exist');
         });
     });
@@ -100,6 +101,7 @@ describe('file-sharing', () => {
     it('should allow to unshare shared files', () => {
         uploadAndShare('cypress/fixtures/files/test.txt').then(({selector}) => {
             cy.dropdownItem('.sharing-remove', selector).click();
+            cy.confirmModal();
 
             cy.dropdownItem('.add-sharing', selector).should('exist');
         });

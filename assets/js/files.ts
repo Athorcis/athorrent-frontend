@@ -103,13 +103,17 @@ class FilesPage extends AbstractPage {
     onSharingRemove = noParallelRun(async (event: MouseEvent) => {
         const target = event.target as HTMLElement;
 
-        await withButtonLoading(this.getFileMenuTrigger(target), async () => {
-            await this.sendRequest('removeSharing', {
-                id: this.getSharingId(target, '.sharing-remove')
-            });
+        await this.confirm(
+            'sharings.removalConfirmation',
+            { path: this.getFileName(target) },
+            async () => {
+                await this.sendRequest('removeSharing', {
+                    id: this.getSharingId(target, '.sharing-remove')
+                });
 
-            await this.updateFileList();
-        });
+                await this.updateFileList();
+            },
+        );
     })
 
     onSharingLink = (event: MouseEvent) => {

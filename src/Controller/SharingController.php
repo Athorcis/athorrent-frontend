@@ -31,7 +31,15 @@ class SharingController extends AbstractController
     #[Route(path: '/', methods: 'GET')]
     public function listSharings(Request $request): PaginatedView
     {
-        return new PaginatedView($request, $this->sharingRepository, 10, ['user', $this->getUser()], ['path' => 'ASC']);
+        $view = new PaginatedView($request, $this->sharingRepository, 10, ['user', $this->getUser()], ['path' => 'ASC']);
+
+        $view->addStrings([
+            'sharings.removalConfirmation',
+            'common.cancel',
+            'common.confirm',
+        ]);
+
+        return $view;
     }
 
     /** @return array{string} */

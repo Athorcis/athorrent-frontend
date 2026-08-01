@@ -32,7 +32,7 @@
                     {% cache cache_key('sharing', sharing) %}
                     <tr class="sharing" id="sharing-{{ sharing.id }}">
                         <td class="text-col text-left">
-                            <a href="{{ path('sharedFiles_listFiles', { id: sharing.id }) }}">{{ sharing.path }}</a>
+                            <a class="sharing-path" href="{{ path('sharedFiles_listFiles', { id: sharing.id }) }}">{{ sharing.path }}</a>
                         </td>
                         <td>
                             <button class="icon-only danger sharing-remove">
