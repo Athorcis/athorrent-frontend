@@ -179,6 +179,7 @@ VOLUME ["$RUN_DIR/var/user"]
 FROM nginx:${NGINX_VERSION}-alpine-slim AS nginx-base
 COPY docker/conf/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 RUN mkdir -p /var/cache/nginx/qb_assets && chown nginx:nginx /var/cache/nginx/qb_assets
+VOLUME ["/var/cache/nginx/qb_assets"]
 
 FROM nginx-base AS nginx
 

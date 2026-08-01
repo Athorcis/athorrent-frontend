@@ -7,6 +7,7 @@ volumes:
     db_data:
     user_data:
     caddy_ca_data:
+    nginx_cache:
 
 x-php-base: &php-base
     build:
@@ -58,6 +59,7 @@ services:
         hostname: athorrent-nginx
         volumes:
             - user_data:/var/www/athorrent/var/user:ro
+            - nginx_cache:/var/cache/nginx/qb_assets
         depends_on:
             - php
 
