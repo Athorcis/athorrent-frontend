@@ -25,6 +25,7 @@ readonly class ExceptionListener implements EventSubscriberInterface
 {
     public function __construct(
         private TranslatorInterface $translator,
+        #[Autowire(lazy: true)]
         private Environment $twig,
         private LoggerInterface $logger,
         private TokenStorageInterface $tokenStorage,
