@@ -38,7 +38,13 @@ class FilesPage extends AbstractPage {
     }
 
     getFileName(element: HTMLElement) {
-        return this.getItemAttr('file', element, 'name');
+        const encodedName = this.getItemData('file', element, 'name');
+
+        if (encodedName === null) {
+            throw new Error('all files are supposed to have a data-name attribute');
+        }
+
+        return decodeBase64(encodedName);
     }
 
     getFileMimeType(element: HTMLElement) {
