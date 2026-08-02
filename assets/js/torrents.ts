@@ -149,6 +149,16 @@ class TorrentsPage extends AbstractPage {
             const torrent = document.getElementById(`torrent-${hash}`);
 
             if (!torrent) {
+                this.busyTorrents.delete(hash);
+                continue;
+            }
+
+            // Pause/resume swaps the control class once qBittorrent reflects the new state.
+            if (
+                (loadingClass === 'torrent-pause' || loadingClass === 'torrent-resume')
+                && !torrent.querySelector(`.${loadingClass}`)
+            ) {
+                this.busyTorrents.delete(hash);
                 continue;
             }
 
@@ -166,6 +176,7 @@ class TorrentsPage extends AbstractPage {
         const hash = this.getTorrentHash(element);
         const loadingClass = ['torrent-pause', 'torrent-resume', 'torrent-remove']
             .find(className => button.classList.contains(className));
+        const waitForStateChange = loadingClass === 'torrent-pause' || loadingClass === 'torrent-resume';
 
         if (loadingClass) {
             this.busyTorrents.set(hash, loadingClass);
@@ -174,8 +185,13 @@ class TorrentsPage extends AbstractPage {
 
         try {
             await this.sendRequest(action, { hash });
-            this.busyTorrents.delete(hash);
-            this.torrentsUpdater.update();
+
+            // Pause/resume can take a moment in qBittorrent; keep the loader and let the
+            // normal list poll clear it once the torrent state actually changes.
+            if (!waitForStateChange) {
+                this.busyTorrents.delete(hash);
+                this.torrentsUpdater.update();
+            }
         }
         catch (error) {
             this.busyTorrents.delete(hash);
