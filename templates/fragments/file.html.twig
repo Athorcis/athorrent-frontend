@@ -4,13 +4,13 @@
     {% set icon = 'parent-directory' %}
     {% set name = 'files.parentDirectory'|trans %}
 {% else %}
-    {% set icon = icon(file) %}
+    {% set icon = file_icon(file) %}
     {% set name = file.name %}
 {% endif %}
 
 <tr class="file" id="file-{{ base64_encode(file.path) }}" data-name={{ base64_encode(name) }} {% if file.isFile %}data-mime="{{ file.mimeType }}"{% endif %}>
     <td class="file-icon">
-        {{ ux_icon(icon) }}
+        {{ icon(icon) }}
     </td>
     <td class="file-name text-col text-left">
         <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.path }) }}" title="{{ name }}">{{ name }}</a>
@@ -23,34 +23,34 @@
     <td class="file-buttons">
         {% if not isParentDirectory %}
             <button class="icon-only" popovertarget="file-dropdown-{{ base64_encode(file.path) }}">
-                {{ ux_icon('ellipsis') }}
+                {{ icon('ellipsis') }}
             </button>
             {#- -#}
             <ul id="file-dropdown-{{ base64_encode(file.path) }}" class="dropdown-menu file-dropdown" popover>
                 {% if file.isDirectory %}
                     <li>
                         <a class="button open-file" href="{{ path('listFiles', { path: file.path }) }}">
-                            {{ ux_icon('open') }}{{ 'files.open'|trans }}
+                            {{ icon('open') }}{{ 'files.open'|trans }}
                         </a>
                     </li>
                 {% endif %}
 
                 <li>
                     <a class="button download-file" href="{{ path('downloadFile', { path: file.path }) }}">
-                        {{ ux_icon('download') }}{{ 'files.download'|trans }}
+                        {{ icon('download') }}{{ 'files.download'|trans }}
                     </a>
                 </li>
                 {% if file.isFile %}
                     {% if file.isPlayable %}
                         <li class="play-item">
                             <a class="button play-file" href="{{ path('playFile', { path: file.path }) }}">
-                                {{ ux_icon('play') }}{{ 'files.play'|trans }}
+                                {{ icon('play') }}{{ 'files.play'|trans }}
                             </a>
                         </li>
                     {% elseif file.isDisplayable %}
                         <li>
                             <a class="button display-file" href="{{ path('displayFile', { path: file.path }) }}">
-                                {{ ux_icon('display') }}{{ 'files.display'|trans }}
+                                {{ icon('display') }}{{ 'files.display'|trans }}
                             </a>
                         </li>
                     {% endif %}
@@ -62,18 +62,18 @@
                     {% if file.isShared %}
                         <li>
                             <a href="{{ url('sharedFiles_listFiles', { id: file.sharingId }) }}" class="button sharing-link">
-                                {{ ux_icon('link') }}{{ 'files.sharingLink'|trans }}
+                                {{ icon('link') }}{{ 'files.sharingLink'|trans }}
                             </a>
                         </li>
                         <li>
                             <button class="sharing-remove" id="sharing-{{ file.sharingId }}">
-                                {{ ux_icon('unlink') }}{{ 'files.removeSharing'|trans }}
+                                {{ icon('unlink') }}{{ 'files.removeSharing'|trans }}
                             </button>
                         </li>
                     {% else %}
                         <li>
                             <button class="add-sharing">
-                                {{ ux_icon('link') }}{{ 'files.share'|trans }}
+                                {{ icon('link') }}{{ 'files.share'|trans }}
                             </button>
                         </li>
                     {% endif %}
@@ -82,7 +82,7 @@
 
             {%- if file.isFilesystemWritable -%}
                 <button class="icon-only danger file-remove" {% if not file.isDeletable %}disabled{% endif %}>
-                    {{ ux_icon('close') }}
+                    {{ icon('close') }}
                 </button>
             {% endif %}
         {% endif %}

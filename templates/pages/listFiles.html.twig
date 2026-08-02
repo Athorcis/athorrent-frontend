@@ -16,17 +16,17 @@
 
         {% if dir.writable %}
             <button class="primary add-button" popovertarget="add-button-popover">
-                {{ ux_icon('plus') }}{{ 'files.add'|trans }}
+                {{ icon('plus') }}{{ 'files.add'|trans }}
             </button>
             <ul class="dropdown-menu" id="add-button-popover" popover>
                 <li>
                     <button class="add-file">
-                        {{ ux_icon('file') }}{{ 'files.addFile'|trans }}
+                        {{ icon('file') }}{{ 'files.addFile'|trans }}
                     </button>
                 </li>
                 <li>
                     <button class="add-directory">
-                        {{ ux_icon('directory') }}{{ 'files.addDirectory'|trans }}
+                        {{ icon('directory') }}{{ 'files.addDirectory'|trans }}
                     </button>
                 </li>
             </ul>

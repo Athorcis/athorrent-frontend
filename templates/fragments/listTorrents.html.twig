@@ -12,12 +12,12 @@
 
                 {% if torrent.state == 'downloading' %}
                     <span class="torrent-info-value">
-                        {{ ux_icon('downloading-arrow') }}
+                        {{ icon('downloading-arrow') }}
                         {{ format_bytes(torrent.dlspeed) }}/s
                     </span>
 
                     <span class="torrent-info-value">
-                        {{ ux_icon('hourglass') }}
+                        {{ icon('hourglass') }}
 
                         {% if torrent.eta >= 8640000 %}
                             {{ 'torrents.eta.unknown'|trans }}
@@ -27,12 +27,12 @@
                     </span>
                 {% elseif torrent.state == 'seeding' %}
                     <span class="torrent-info-value">
-                        {{ ux_icon('uploading-arrow') }}
+                        {{ icon('uploading-arrow') }}
                         <span >{{ format_bytes(torrent.upspeed) }}/s</span>
                     </span>
 
                     <span class="torrent-info-value torrent-ratio">
-                        {{ ux_icon('exchange') }}
+                        {{ icon('exchange') }}
                         {{ torrent.ratio|format_number({ fraction_digit: 2 }) }}
                     </span>
                 {% endif %}
@@ -41,12 +41,12 @@
             <div class="torrent-controls">
                 {% if torrent.state != 'disabled' %}
                     <button class="icon-only torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
-                        {{ ux_icon(torrent.paused ? 'play' : 'pause') }}
+                        {{ icon(torrent.paused ? 'play' : 'pause') }}
                     </button>
                 {% endif %}
 
                 <button class="icon-only danger torrent-remove">
-                    {{ ux_icon('close') }}
+                    {{ icon('close') }}
                 </button>
             </div>
         </div>

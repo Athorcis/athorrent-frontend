@@ -12,15 +12,20 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\AccessMapInterface;
+use Symfony\UX\Icons\IconRendererInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class TwigHelperExtension extends AbstractExtension
 {
+    /** @var array<string, string> */
+    private array $iconCache = [];
+
     public function __construct(
         private readonly LocalizedKeyGenerator $keyGenerator,
         private readonly AccessMapInterface $accessMap,
         private readonly RequestStack $requestStack,
+        private readonly IconRendererInterface $iconRenderer,
         #[Autowire('%kernel.default_locale%')]
         private readonly string $defaultLocale,
     )
@@ -31,7 +36,8 @@ class TwigHelperExtension extends AbstractExtension
     {
         return [
             new TwigFunction('date_to_age', $this->dateToAge(...)),
-            new TwigFunction('icon', $this->getIcon(...)),
+            new TwigFunction('file_icon', $this->getFileIcon(...)),
+            new TwigFunction('icon', $this->renderIcon(...), ['is_safe' => ['html']]),
             new TwigFunction('base64_encode', 'base64_encode'),
             new TwigFunction('format_bytes', $this->formatBytes(...)),
             new TwigFunction('cache_key', $this->getCacheKey(...)),
@@ -41,7 +47,17 @@ class TwigHelperExtension extends AbstractExtension
         ];
     }
 
-    public function getIcon(UserFilesystemEntry $value): string
+    /**
+     * @param array<string, bool|string> $attributes
+     */
+    public function renderIcon(string $name, array $attributes = []): string
+    {
+        $cacheKey = $name . "\0" . json_encode($attributes, JSON_THROW_ON_ERROR);
+
+        return $this->iconCache[$cacheKey] ??= $this->iconRenderer->renderIcon($name, $attributes);
+    }
+
+    public function getFileIcon(UserFilesystemEntry $value): string
     {
         if ($value->isDirectory()) {
             return 'directory';
