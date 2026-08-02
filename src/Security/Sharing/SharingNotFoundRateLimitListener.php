@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Athorrent\Security\Sharing;
 
 use Athorrent\SharingNotFoundException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -16,6 +17,7 @@ readonly class SharingNotFoundRateLimitListener implements EventSubscriberInterf
 {
     public function __construct(
         #[Target('sharing_not_found')]
+        #[Autowire(lazy: true)]
         private RateLimiterFactoryInterface $sharingNotFoundLimiter,
     ) {
     }
