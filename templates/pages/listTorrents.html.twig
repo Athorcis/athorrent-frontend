@@ -18,22 +18,22 @@
 
         {% if app.user.clientType === 'qbittorrent' %}
             <a href="{{ path('proxyToQBittorrent', { path: ''}) }}" target="_blank" class="button open-qbittorrent-ui">
-                {{ ux_icon('open') }}{{ 'torrents.advanced'|trans }}
+                {{ icon('open') }}{{ 'torrents.advanced'|trans }}
             </a>
         {% endif %}
 
         <button class="primary add-button" popovertarget="add-button-popover">
-            {{ ux_icon('plus') }}{{ 'files.add'|trans }}
+            {{ icon('plus') }}{{ 'files.add'|trans }}
         </button>
         <ul class="dropdown-menu" id="add-button-popover" popover>
             <li>
                 <button class="add-torrent">
-                    {{ ux_icon('file') }}{{ 'torrents.addTorrent'|trans }}
+                    {{ icon('file') }}{{ 'torrents.addTorrent'|trans }}
                 </button>
             </li>
             <li>
                 <button class="add-magnet">
-                    {{ ux_icon('magnet') }}{{ 'torrents.addMagnet'|trans }}
+                    {{ icon('magnet') }}{{ 'torrents.addMagnet'|trans }}
                 </button>
             </li>
         </ul>

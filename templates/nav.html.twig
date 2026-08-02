@@ -36,24 +36,24 @@
             {% set currentPrefix = app.request.attributes.get('_prefixId') %}
             {% for item in navItems %}
                 <li>
-                    <a class="button {% if currentPrefix === item.activePrefix %}active{% endif %}" href="{{ path(item.route) }}">{{ ux_icon(item.icon) }}{{ item.label|trans }}</a>
+                    <a class="button {% if currentPrefix === item.activePrefix %}active{% endif %}" href="{{ path(item.route) }}">{{ icon(item.icon) }}{{ item.label|trans }}</a>
                 </li>
             {% endfor %}
         </ul>
 
         <footer>
             <a href="{{ path('editAccount') }}" class="button account-button">
-                <span class="user-icon">{{ ux_icon('user') }}</span>
+                <span class="user-icon">{{ icon('user') }}</span>
                 {{ 'nav.account'|trans }}
             </a>
 
             {% if is_granted('IS_IMPERSONATOR') %}
                 <a href="{{ impersonation_exit_path() }}" class="button icon-only exit-impersonation-button" title="{{ 'nav.exit'|trans }}">
-                    {{ ux_icon('sign-out') }}
+                    {{ icon('sign-out') }}
                 </a>
             {% else %}
                 <a href="{{ path('_logout_main', { _locale: app.locale }) }}" class="button icon-only logout-button" title="{{ 'nav.logout'|trans }}">
-                    {{ ux_icon('sign-out') }}
+                    {{ icon('sign-out') }}
                 </a>
             {% endif %}
         </footer>

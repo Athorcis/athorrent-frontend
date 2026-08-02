@@ -18,7 +18,7 @@
             {{ 'users.title'|trans }}
         </h1>
 
-        <a class="button primary" href="{{ path('addUser') }}">{{ ux_icon('plus') }}{{ 'users.add.title'|trans }}</a>
+        <a class="button primary" href="{{ path('addUser') }}">{{ icon('plus') }}{{ 'users.add.title'|trans }}</a>
     </header>
 
     <table class="user-list">
@@ -48,17 +48,17 @@
                     <td class="text-right user-buttons">
                         {% if user.id != userId %}
                             <a class="button icon-only user-switch" href="{{ path('files_listFiles', { _switch_user: user.username }) }}">
-                                {{ ux_icon('eye') }}
+                                {{ icon('eye') }}
                             </a>
                         {%- endif -%}
 
                         <button class="icon-only user-reset-password">
-                            {{ ux_icon('reload') }}
+                            {{ icon('reload') }}
                         </button>
 
                         {#- -#}
                         <button class="icon-only danger user-remove" {% if user.id == 1 or user.id == userId %}disabled{% endif %}>
-                            {{ ux_icon('close') }}
+                            {{ icon('close') }}
                         </button>
                     </td>
                 </tr>
