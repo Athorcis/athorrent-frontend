@@ -1,56 +1,58 @@
 {% for torrent in torrents %}
-    <article class="torrent torrent--{{ torrent.state }}" id="torrent-{{ torrent.hash }}">
-        <header class="torrent-header">
-            <h2 class="torrent-name">{{ torrent.name }}</h2>
-            <div class="torrent-state">{{ ('torrents.state.' ~ torrent.state)|trans }}</div>
-        </header>
-        <div class="torrent-middle-container">
-            <progress value="{{ torrent.progress }}"></progress>
+    {% cache cache_key('torrent', [app.user.id, sha256(torrent|json_encode)]) %}
+        <article class="torrent torrent--{{ torrent.state }}" id="torrent-{{ torrent.hash }}">
+            <header class="torrent-header">
+                <h2 class="torrent-name">{{ torrent.name }}</h2>
+                <div class="torrent-state">{{ ('torrents.state.' ~ torrent.state)|trans }}</div>
+            </header>
+            <div class="torrent-middle-container">
+                <progress value="{{ torrent.progress }}"></progress>
 
-            <div class="torrent-info">
-                <span class="torrent-info-value">{{ format_bytes(torrent.size) }}</span>
+                <div class="torrent-info">
+                    <span class="torrent-info-value">{{ format_bytes(torrent.size) }}</span>
 
-                {% if torrent.state == 'downloading' %}
-                    <span class="torrent-info-value">
-                        {{ icon('downloading-arrow') }}
-                        {{ format_bytes(torrent.dlspeed) }}/s
-                    </span>
+                    {% if torrent.state == 'downloading' %}
+                        <span class="torrent-info-value">
+                            {{ icon('downloading-arrow') }}
+                            {{ format_bytes(torrent.dlspeed) }}/s
+                        </span>
 
-                    <span class="torrent-info-value">
-                        {{ icon('hourglass') }}
+                        <span class="torrent-info-value">
+                            {{ icon('hourglass') }}
 
-                        {% if torrent.eta >= 8640000 %}
-                            {{ 'torrents.eta.unknown'|trans }}
-                        {% else %}
-                            {{ torrent.eta|duration }}
-                        {% endif %}
-                    </span>
-                {% elseif torrent.state == 'seeding' %}
-                    <span class="torrent-info-value">
-                        {{ icon('uploading-arrow') }}
-                        <span >{{ format_bytes(torrent.upspeed) }}/s</span>
-                    </span>
+                            {% if torrent.eta >= 8640000 %}
+                                {{ 'torrents.eta.unknown'|trans }}
+                            {% else %}
+                                {{ torrent.eta|duration }}
+                            {% endif %}
+                        </span>
+                    {% elseif torrent.state == 'seeding' %}
+                        <span class="torrent-info-value">
+                            {{ icon('uploading-arrow') }}
+                            <span >{{ format_bytes(torrent.upspeed) }}/s</span>
+                        </span>
 
-                    <span class="torrent-info-value torrent-ratio">
-                        {{ icon('exchange') }}
-                        {{ torrent.ratio|format_number({ fraction_digit: 2 }) }}
-                    </span>
-                {% endif %}
-            </div>
+                        <span class="torrent-info-value torrent-ratio">
+                            {{ icon('exchange') }}
+                            {{ torrent.ratio|format_number({ fraction_digit: 2 }) }}
+                        </span>
+                    {% endif %}
+                </div>
 
-            <div class="torrent-controls">
-                {% if torrent.state != 'disabled' %}
-                    <button class="icon-only torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
-                        {{ icon(torrent.paused ? 'play' : 'pause') }}
+                <div class="torrent-controls">
+                    {% if torrent.state != 'disabled' %}
+                        <button class="icon-only torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
+                            {{ icon(torrent.paused ? 'play' : 'pause') }}
+                        </button>
+                    {% endif %}
+
+                    <button class="icon-only danger torrent-remove">
+                        {{ icon('close') }}
                     </button>
-                {% endif %}
-
-                <button class="icon-only danger torrent-remove">
-                    {{ icon('close') }}
-                </button>
+                </div>
             </div>
-        </div>
-    </article>
+        </article>
+    {% endcache %}
 {% else %}
     {% if not backend_available %}
         <div class="alert alert-{% if alert_level == 'error' %}danger{% else%}warning{% endif %} backend-alert" role="alert">
