@@ -21,6 +21,9 @@ class TwigHelperExtension extends AbstractExtension
     /** @var array<string, string> */
     private array $iconCache = [];
 
+    /** @var array<string, NumberFormatter> */
+    private array $byteFormatters = [];
+
     public function __construct(
         private readonly LocalizedKeyGenerator $keyGenerator,
         private readonly AccessMapInterface $accessMap,
@@ -96,12 +99,20 @@ class TwigHelperExtension extends AbstractExtension
         }
 
         $locale = $this->requestStack->getCurrentRequest()?->getLocale() ?? $this->defaultLocale;
+        $cacheKey = $locale . "\0" . $precision;
 
+        $formatter = $this->byteFormatters[$cacheKey] ??= $this->createByteFormatter($locale, $precision);
+
+        return $formatter->format($value) . ' ' . $units[$exponent];
+    }
+
+    private function createByteFormatter(string $locale, int $precision): NumberFormatter
+    {
         $formatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
         $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 0);
         $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $precision);
 
-        return $formatter->format($value) . ' ' . $units[$exponent];
+        return $formatter;
     }
 
     /**
