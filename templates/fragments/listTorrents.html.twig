@@ -41,12 +41,12 @@
 
                 <div class="torrent-controls">
                     {% if torrent.state != 'disabled' %}
-                        <button class="icon-only torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}">
+                        <button class="icon-only torrent-{% if torrent.paused %}resume{% else %}pause{% endif %}" aria-label="{{ (torrent.paused ? 'torrents.resume' : 'torrents.pause')|trans }}">
                             {{ icon(torrent.paused ? 'play' : 'pause') }}
                         </button>
                     {% endif %}
 
-                    <button class="icon-only danger torrent-remove">
+                    <button class="icon-only danger torrent-remove" aria-label="{{ 'torrents.remove'|trans }}">
                         {{ icon('close') }}
                     </button>
                 </div>

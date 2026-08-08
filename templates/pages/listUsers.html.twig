@@ -47,17 +47,17 @@
                     </td>
                     <td class="text-right user-buttons">
                         {% if user.id != userId %}
-                            <a class="button icon-only user-switch" href="{{ path('files_listFiles', { _switch_user: user.username }) }}">
+                            <a class="button icon-only user-switch" href="{{ path('files_listFiles', { _switch_user: user.username }) }}" aria-label="{{ 'users.switch'|trans }}">
                                 {{ icon('eye') }}
                             </a>
                         {%- endif -%}
 
-                        <button class="icon-only user-reset-password">
+                        <button class="icon-only user-reset-password" aria-label="{{ 'users.resetPassword'|trans }}">
                             {{ icon('reload') }}
                         </button>
 
                         {#- -#}
-                        <button class="icon-only danger user-remove" {% if user.id == 1 or user.id == userId %}disabled{% endif %}>
+                        <button class="icon-only danger user-remove" aria-label="{{ 'users.remove'|trans }}" {% if user.id == 1 or user.id == userId %}disabled{% endif %}>
                             {{ icon('close') }}
                         </button>
                     </td>

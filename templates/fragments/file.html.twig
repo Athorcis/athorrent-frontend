@@ -10,7 +10,7 @@
 
 <tr class="file" id="file-{{ base64_encode(file.path) }}" data-name={{ base64_encode(name) }} {% if file.isFile %}data-mime="{{ file.mimeType }}"{% endif %}>
     <td class="file-icon">
-        {{ icon(icon) }}
+        {{ icon(icon, {'aria-label': ('files.icon.' ~ icon)|trans}) }}
     </td>
     <td class="file-name text-col text-left">
         <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.path }) }}" title="{{ name }}">{{ name }}</a>
@@ -22,7 +22,7 @@
     </td>
     <td class="file-buttons">
         {% if not isParentDirectory %}
-            <button class="icon-only" popovertarget="file-dropdown-{{ base64_encode(file.path) }}">
+            <button class="icon-only" popovertarget="file-dropdown-{{ base64_encode(file.path) }}" aria-label="{{ 'files.actions'|trans }}">
                 {{ icon('ellipsis') }}
             </button>
             {#- -#}
@@ -81,7 +81,7 @@
             </ul>
 
             {%- if file.isFilesystemWritable -%}
-                <button class="icon-only danger file-remove" {% if not file.isDeletable %}disabled{% endif %}>
+                <button class="icon-only danger file-remove" aria-label="{{ 'files.remove'|trans }}" {% if not file.isDeletable %}disabled{% endif %}>
                     {{ icon('close') }}
                 </button>
             {% endif %}

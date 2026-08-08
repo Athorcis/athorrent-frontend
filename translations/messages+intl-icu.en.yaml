@@ -25,6 +25,8 @@ common:
     cancel: Cancel
     confirm: Confirm
     copy: Copy
+    previous: Previous
+    next: Next
 
 app:
     name: Athorrent
@@ -95,12 +97,21 @@ files:
     removeSharing: Remove sharing
     share: Share
     none: no files to display
+    actions: Actions
+    remove: Delete
     removalConfirmation: Are you sure you want to delete "{entry}"?
     add: Add
     addFile: Add a file
     addDirectory: Add a folder
     upload: Upload files
     overwriteConfirm: One or more files already exist. Do you want to replace them?
+    icon:
+        parent-directory: Parent directory
+        directory: Directory
+        text-file: Text file
+        image-file: Image file
+        playable-file: Media file
+        file: File
 
 torrents:
     title: Torrents
@@ -120,6 +131,9 @@ torrents:
     eta:
         unknown: Unknown
     none: no torrents to display
+    pause: Pause
+    resume: Resume
+    remove: Remove
     removalConfirmation: Are you sure you want to remove "{torrent}"?
     unavailable:
         starting: The torrent manager is starting
@@ -160,6 +174,7 @@ sharings:
     title: Sharings
     none: no sharings to display
     path: Path
+    remove: Remove
     removalConfirmation: Are you sure you want to remove the sharing of "{path}"?
 
 users:
@@ -171,6 +186,9 @@ users:
     lastConnectionNone: None
     passwordResetConfirmation: Are you sure you want to reset the password of the user {user}?
     newPasswordModalTitle: New password
+    switch: Impersonate
+    resetPassword: Reset password
+    remove: Delete
     deletionConfirmation: Are you sure you want to delete user {user}?
 
     add:

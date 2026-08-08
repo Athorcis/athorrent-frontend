@@ -48,11 +48,11 @@
             </a>
 
             {% if is_granted('IS_IMPERSONATOR') %}
-                <a href="{{ impersonation_exit_path() }}" class="button icon-only exit-impersonation-button" title="{{ 'nav.exit'|trans }}">
+                <a href="{{ impersonation_exit_path() }}" class="button icon-only exit-impersonation-button" aria-label="{{ 'nav.exit'|trans }}">
                     {{ icon('sign-out') }}
                 </a>
             {% else %}
-                <a href="{{ path('_logout_main', { _locale: app.locale }) }}" class="button icon-only logout-button" title="{{ 'nav.logout'|trans }}">
+                <a href="{{ path('_logout_main', { _locale: app.locale }) }}" class="button icon-only logout-button" aria-label="{{ 'nav.logout'|trans }}">
                     {{ icon('sign-out') }}
                 </a>
             {% endif %}
