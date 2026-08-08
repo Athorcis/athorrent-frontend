@@ -3,6 +3,8 @@ export const DEFAULT_LOCALE = 'fr';
 export const ALT_USERNAME = 'test';
 export const ALT_PASSWORD = 'password';
 
+export const HTTP_OK = 200;
+
 export function getLocale(): string {
     return Cypress.expose('locale') || DEFAULT_LOCALE;
 }
@@ -50,7 +52,7 @@ export function pathWithoutLocale(urlOrPath: string): string {
 
 export function resetTestData() {
     cy.request('POST', '/tests/reset-data').then((response) => {
-        expect(response.status).to.eq(200);
+        expect(response.status).to.eq(HTTP_OK);
     });
 }
 

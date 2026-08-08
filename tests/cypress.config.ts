@@ -1,0 +1,32 @@
+import {defineConfig} from 'cypress';
+import AdmZip from 'adm-zip';
+
+export default defineConfig({
+    allowCypressEnv: false,
+
+    expose: {
+        locale: 'fr',
+    },
+
+    e2e: {
+        baseUrl: 'https://athorrent.local',
+
+        modifyObstructiveCode: false,
+
+        // Video.js HTML skins render controls inside open shadow roots.
+        includeShadowDom: true,
+
+        setupNodeEvents(on, config) {
+            on('task', {
+                listZipEntries(filePath) {
+                    const zip = new AdmZip(filePath);
+
+                    return zip.getEntries()
+                        .filter((entry) => !entry.isDirectory)
+                        .map((entry) => entry.entryName)
+                        .sort();
+                },
+            });
+        },
+    },
+});

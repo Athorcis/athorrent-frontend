@@ -1,27 +1,7 @@
-/// <reference types="cypress" />
-
-import {pathWithLocale} from "./utils";
+import {HTTP_OK, pathWithLocale} from "./utils";
 import Chainable = Cypress.Chainable;
 
 export const TEST_DOWNLOAD_LIMIT = 51_200;
-
-export interface TorrentAddOptions {
-    downloadLimit?: number;
-}
-
-declare namespace Cypress {
-    interface Chainable {
-        torrentFile(filename: string, shouldExist?: boolean, options?: TorrentAddOptions): Chainable<string|undefined>;
-        torrentMagnet(uri: string, shouldExist?: boolean, options?: TorrentAddOptions): Chainable<string|undefined>;
-
-        torrentStatus(status: string): Chainable<string>;
-
-        /** Wait until download progress exceeds min (default 0), i.e. content has started writing. */
-        torrentProgress(min?: number): Chainable<string>;
-
-        torrentClick(selector: string): Chainable<string>;
-    }
-}
 
 function interceptAddTorrent(path: string, downloadLimit?: number) {
     if (downloadLimit === undefined) {
@@ -42,7 +22,7 @@ function addTorrent(callback: () => void, shouldExist: boolean): Chainable<strin
 
     const res = cy.wait('@addTorrents').then(interception => {
 
-        if (interception.response.statusCode === 200) {
+        if (interception.response?.statusCode === HTTP_OK) {
             const {data} = interception.response.body;
             return data.torrentIds?.[0] ?? data.hash ?? null;
         }
