@@ -1,19 +1,4 @@
-/// <reference types="cypress" />
-
 import {getLocale, pathWithLocale} from "./utils";
-import Chainable = Cypress.Chainable;
-
-declare namespace Cypress {
-    interface Chainable {
-        elementExists(selectior: string): Chainable<null>;
-        login(username: string, password: string): Chainable<null>;
-        logout(): Chainable<null>;
-        dropdownItem(selector: string, parentSelector: string): Chainable<null>;
-        dropdownItem(selector: string, parentSelector: string, skipOpen: boolean): Chainable<null>;
-        /** Confirms the open app confirm modal (`#dialog-confirm`). */
-        confirmModal(): Chainable<JQuery<HTMLElement>>;
-    }
-}
 
 export const DEFAULT_USERNAME = 'admin';
 export const DEFAULT_PASSWORD = 'test';

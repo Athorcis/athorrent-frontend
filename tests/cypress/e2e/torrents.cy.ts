@@ -1,5 +1,5 @@
 import {getFileSelector} from "../support/commands";
-import {pathWithLocale, resetTestData} from "../support/utils";
+import {HTTP_OK, pathWithLocale, resetTestData} from "../support/utils";
 import {TEST_DOWNLOAD_LIMIT} from "../support/torrent.commands";
 
 describe('torrents', () => {
@@ -75,12 +75,12 @@ describe('torrents', () => {
                 const webUiPath = String(href).replace(/\/?$/, '/');
 
                 cy.request(webUiPath).then((response) => {
-                    expect(response.status).to.eq(200);
+                    expect(response.status).to.eq(HTTP_OK);
                     expect(response.body).to.include('<title>qBittorrent WebUI</title>');
                 });
 
                 cy.request(`${webUiPath}api/v2/app/version`).then((response) => {
-                    expect(response.status).to.eq(200);
+                    expect(response.status).to.eq(HTTP_OK);
                     expect(String(response.body)).to.match(/^v?\d/);
                 });
             });
