@@ -11,7 +11,7 @@
         {% set startPage = max(1, endPage - 4) %}
 
         {% if page > 1 %}
-            <li><a href="{{ path(action, { page: page - 1 }) }}">&laquo;</a></li>
+            <li><a href="{{ path(action, { page: page - 1 }) }}" aria-label="{{ 'common.previous'|trans }}">&laquo;</a></li>
         {% endif %}
 
         {% for i in startPage .. endPage %}
@@ -19,7 +19,7 @@
         {% endfor %}
 
         {% if page < lastPage %}
-            <li><a href="{{ path(action, { page: page + 1 }) }}">&raquo;</a></li>
+            <li><a href="{{ path(action, { page: page + 1 }) }}" aria-label="{{ 'common.next'|trans }}">&raquo;</a></li>
         {% endif %}
         </ul>
     </div>

@@ -25,6 +25,8 @@ common:
     cancel: Annuler
     confirm: Confirmer
     copy: Copier
+    previous: Précédent
+    next: Suivant
 
 app:
     name: Athorrent
@@ -93,12 +95,21 @@ files:
     removeSharing: Supprimer le partage
     share: Partager
     none: Aucun fichier à afficher
+    actions: Actions
+    remove: Supprimer
     removalConfirmation: Êtes-vous sur de vouloir supprimer "{entry}" ?
     add: Ajouter
     addFile: Ajouter un fichier
     addDirectory: Ajouter un dossier
     upload: Upload des fichiers
     overwriteConfirm: Un ou plusieurs fichiers existent déjà, voulez-vous les remplacer?
+    icon:
+        parent-directory: Dossier parent
+        directory: Dossier
+        text-file: Fichier texte
+        image-file: Fichier image
+        playable-file: Fichier média
+        file: Fichier
 
 torrents:
     title: Torrents
@@ -118,6 +129,9 @@ torrents:
     eta:
         unknown: Inconnu
     none: Aucun torrent à afficher
+    pause: Pause
+    resume: Reprendre
+    remove: Supprimer
     removalConfirmation: Êtes-vous sûr de vouloir supprimer "{torrent}" ?
     unavailable:
         starting: Le gestionnaire de torrents est en cours de démarrage.
@@ -158,6 +172,7 @@ sharings:
     title: Partages
     none: Aucun partage à afficher
     path: Chemin
+    remove: Supprimer
     removalConfirmation: Êtes-vous sûr de vouloir supprimer le partage de "{path}" ?
 
 users:
@@ -169,6 +184,9 @@ users:
     lastConnectionNone: Aucune
     passwordResetConfirmation: Êtes-vous sur de vouloir réinitialiser le mot de passe de l'utilisateur {user}?
     newPasswordModalTitle: Nouveau mot de passe
+    switch: Usurper l'identité
+    resetPassword: Réinitialiser le mot de passe
+    remove: Supprimer
     deletionConfirmation: Êtes-vous sur de vouloir supprimer l'utilisateur {user}?
 
     add:

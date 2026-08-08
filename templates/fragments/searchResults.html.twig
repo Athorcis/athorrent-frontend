@@ -5,10 +5,10 @@
             <th class="col-tracker">{{ 'search.torrents.tracker'|trans }}</th>
             <th class="col-size">{{ 'search.torrents.size'|trans }}</th>
             <th class="col-age">{{ 'search.torrents.age'|trans }}</th>
-            <th class="col-seeders">
+            <th class="col-seeders" aria-label="{{ 'torrents.seeders'|trans }}">
                  {{ icon('uploading-arrow') }}
             </th>
-            <th class="col-leechers">
+            <th class="col-leechers" aria-label="{{ 'torrents.leechers'|trans }}">
                 {{ icon('downloading-arrow') }}
             </th>
             <th class="col-add-magnet"></th>
@@ -26,7 +26,7 @@
             <td class="col-seeders">{{ result.Seeders }}</td>
             <td class="col-leechers">{{ result.Peers }}</td>
             <td class="col-add-magnet">
-                <a href="{{ result.MagnetUri }}">
+                <a href="{{ result.MagnetUri }}" aria-label="{{ 'torrents.addMagnet'|trans }}">
                     {{ icon('magnet') }}
                 </a>
             </td>
