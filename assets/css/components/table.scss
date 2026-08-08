@@ -3,11 +3,11 @@
 table {
     min-width: 100%;
     border-spacing: 0;
+    border-collapse: separate;
     line-height: 20px;
     border: $border;
     border-radius: $radius-xl;
     background: $color-bg;
-    overflow: hidden;
     text-align: right;
 }
 
@@ -18,8 +18,28 @@ th {
     padding: 8px 12px;
 }
 
+thead tr:first-child {
+    th:first-child {
+        border-top-left-radius: $radius-xl;
+    }
+
+    th:last-child {
+        border-top-right-radius: $radius-xl;
+    }
+}
+
 tbody > tr:nth-child(even) {
     background: $color-surface-6;
+}
+
+tbody tr:last-child {
+    td:first-child {
+        border-bottom-left-radius: $radius-xl;
+    }
+
+    td:last-child {
+        border-bottom-right-radius: $radius-xl;
+    }
 }
 
 td {

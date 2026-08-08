@@ -1,0 +1,39 @@
+@use "../vars" as *;
+
+[aria-label]:not([disabled]) {
+    anchor-name: --tooltip;
+    anchor-scope: --tooltip;
+
+    &::after {
+        content: attr(aria-label);
+        position: absolute;
+        position-anchor: --tooltip;
+        position-area: top;
+        position-try-fallbacks: flip-block, flip-inline;
+        margin: 6px;
+        padding: 4px 8px;
+        border-radius: $radius-md;
+        background: $color-text;
+        color: $color-white;
+        font-size: $font-size-md;
+        font-weight: 500;
+        line-height: 1.3;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px $color-shadow;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 20;
+        transition: opacity 0.12s ease;
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+        opacity: 1;
+    }
+
+    @media (hover: hover) {
+        &:hover::after {
+            transition-delay: 0.35s;
+        }
+    }
+}
