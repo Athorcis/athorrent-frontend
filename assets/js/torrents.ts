@@ -262,7 +262,7 @@ class TorrentsPage extends AbstractPage {
 
             complete: async (filesUploaded) => {
                 if (filesUploaded > 0) {
-                    await this.torrentsUpdater.update();
+                    this.torrentsUpdater.update();
                 }
             }
         });

@@ -9,7 +9,7 @@ type RequestOptions = ConstructorParameters<typeof Request>[1];
 
 export class Router {
 
-    private http: HttpClient;
+    private readonly http: HttpClient;
 
     constructor(private routes: Routes, private routeParameters: Params) {
         this.http = newHttpClient();

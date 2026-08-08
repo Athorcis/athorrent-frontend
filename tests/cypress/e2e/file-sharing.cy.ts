@@ -1,4 +1,4 @@
-import {getLogoutButton, uploadFile} from "../support/commands";
+import {uploadFile} from "../support/commands";
 import {pathWithLocale, pathWithoutLocale, resetTestData} from "../support/utils";
 
 function uploadAndShare(path: string) {
