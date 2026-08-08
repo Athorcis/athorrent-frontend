@@ -9,8 +9,8 @@
 {% endif %}
 
 <tr class="file" id="file-{{ base64_encode(file.path) }}" data-name={{ base64_encode(name) }} {% if file.isFile %}data-mime="{{ file.mimeType }}"{% endif %}>
-    <td class="file-icon">
-        {{ icon(icon, {'aria-label': ('files.icon.' ~ icon)|trans}) }}
+    <td class="file-icon" aria-label="{{ ('files.icon.' ~ icon)|trans }}">
+        {{ icon(icon) }}
     </td>
     <td class="file-name text-col text-left">
         <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.path }) }}" title="{{ name }}">{{ name }}</a>
