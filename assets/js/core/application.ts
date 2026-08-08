@@ -10,11 +10,11 @@ export class Application {
 
     private router: Router|undefined;
 
-    private ui: UiManager;
+    private readonly ui: UiManager;
 
-    private securityManager: SecurityManager;
+    private readonly securityManager: SecurityManager;
 
-    private translator: Translator;
+    private readonly translator: Translator;
 
     readonly routerProvider: RouterProvider;
 
