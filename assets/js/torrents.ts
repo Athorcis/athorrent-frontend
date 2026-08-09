@@ -249,12 +249,6 @@ class TorrentsPage extends AbstractPage {
                 maxFilesize: 1,
 
                 dictInvalidFileType: this.translator.translate('error.notATorrent'),
-            },
-
-            complete: async (filesUploaded) => {
-                if (filesUploaded > 0) {
-                    this.torrentsUpdater.update();
-                }
             }
         });
     }
@@ -279,7 +273,6 @@ class TorrentsPage extends AbstractPage {
 
                     try {
                         await this.sendRequest('addMagnets', { magnets });
-                        this.torrentsUpdater.update();
                     }
                     catch (error) {
                         this.ui.showModal({
