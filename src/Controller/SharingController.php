@@ -70,6 +70,10 @@ class SharingController extends AbstractController
                     'user' => $user,
                     'path' => $path,
                 ]);
+
+                if ($sharing === null) {
+                    throw new \RuntimeException('failed to load sharing');
+                }
             }
         }
 
