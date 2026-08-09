@@ -41,7 +41,7 @@ class SharingController extends AbstractController
         return $view;
     }
 
-    /** @return array{string} */
+    /** @return array{url: string} */
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
     public function addSharing(#[Requirements(path: true)] UserFilesystemEntry $entry): array
     {
