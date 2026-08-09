@@ -10,6 +10,7 @@ use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\View\PaginatedView;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -52,8 +53,19 @@ class SharingController extends AbstractController
 
         if ($sharing === null) {
             $sharing = new Sharing($user, $path);
-            $this->entityManager->persist($sharing);
-            $this->entityManager->flush();
+
+            try {
+                $this->entityManager->persist($sharing);
+                $this->entityManager->flush();
+            }
+            catch (UniqueConstraintViolationException) {
+                $this->entityManager->detach($sharing);
+
+                $sharing = $this->sharingRepository->findOneBy([
+                    'user' => $user,
+                    'path' => $path,
+                ]);
+            }
         }
 
         $url = $this->generateUrl('sharedFiles_listFiles', [
