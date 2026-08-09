@@ -145,11 +145,11 @@ class TorrentsPage extends AbstractPage {
     }
 
     private applyTorrentBusyStates() {
-        for (const [hash, loadingClass] of this.busyTorrents) {
+        for (const [hash, loadingClass] of [...this.busyTorrents]) {
             const torrent = document.getElementById(`torrent-${hash}`);
 
             if (!torrent || !torrent.querySelector(`.${loadingClass}`)) {
-                this.busyTorrents.delete(hash);
+                this.clearTorrentBusy(hash);
                 continue;
             }
 
@@ -159,6 +159,18 @@ class TorrentsPage extends AbstractPage {
                 button.classList.toggle('loading', loading);
                 button.ariaBusy = loading ? 'true' : 'false';
             }
+        }
+    }
+
+    private clearTorrentBusy(hash: string) {
+        this.busyTorrents.delete(hash);
+
+        const torrent = document.getElementById(`torrent-${hash}`);
+
+        for (const control of torrent?.querySelectorAll<HTMLButtonElement>('.torrent-controls button') ?? []) {
+            control.disabled = false;
+            control.classList.remove('loading');
+            control.ariaBusy = 'false';
         }
     }
 
@@ -180,21 +192,12 @@ class TorrentsPage extends AbstractPage {
             // Pause/resume can take a moment in qBittorrent; keep the loader and let the
             // normal list poll clear it once the torrent state actually changes.
             if (!waitForStateChange) {
-                this.busyTorrents.delete(hash);
+                this.clearTorrentBusy(hash);
                 this.torrentsUpdater.update();
             }
         }
         catch (error) {
-            this.busyTorrents.delete(hash);
-
-            const torrent = document.getElementById(`torrent-${hash}`);
-
-            for (const control of torrent?.querySelectorAll<HTMLButtonElement>('.torrent-controls button') ?? []) {
-                control.disabled = false;
-                control.classList.remove('loading');
-                control.ariaBusy = 'false';
-            }
-
+            this.clearTorrentBusy(hash);
             throw error;
         }
     }
