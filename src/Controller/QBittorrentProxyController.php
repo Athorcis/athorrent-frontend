@@ -7,6 +7,7 @@ namespace Athorrent\Controller;
 use Athorrent\Backend\BackendFactory;
 use Athorrent\Backend\QBittorrentBackend;
 use Athorrent\Database\Entity\User;
+use Athorrent\Security\SameOrigin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,7 @@ class QBittorrentProxyController extends AbstractController
     #[Route('/user/qb/{path}', requirements: ['path' => '.*'], methods: ['GET','POST','PUT','PATCH','DELETE'], options: ['csrf' => false])]
     public function proxyToQBittorrent(Request $request, string $path, UrlGeneratorInterface $urlGenerator): Response
     {
-        if (!$request->isMethodSafe() && true !== $this->isSameOrigin($request)) {
+        if (!$request->isMethodSafe() && !SameOrigin::isSameOrigin($request)) {
             throw new AccessDeniedHttpException();
         }
 
@@ -127,33 +128,6 @@ class QBittorrentProxyController extends AbstractController
                 $response->headers->set($name, $value, false);
             }
         }
-    }
-
-    /**
-     * Copied from Symfony\Component\Security\Csrf\SameOriginCsrfTokenManager::isValidOrigin().
-     *
-     * @return bool Whether the origin is valid
-     */
-    private function isSameOrigin(Request $request): bool
-    {
-        if (null !== $header = $request->headers->get('Sec-Fetch-Site')) {
-            return 'same-origin' === $header;
-        }
-
-        $target = $request->getSchemeAndHttpHost().'/';
-
-        foreach (['Origin', 'Referer'] as $header) {
-            if (!$request->headers->has($header)) {
-                continue;
-            }
-            $source = $request->headers->get($header);
-
-            if (str_starts_with($source.'/', $target)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

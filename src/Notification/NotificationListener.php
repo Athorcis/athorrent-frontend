@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Athorrent\Notification;
 
+use Athorrent\Security\SameOrigin;
 use Athorrent\View\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -87,7 +88,7 @@ class NotificationListener implements EventSubscriberInterface
         if ($action) {
             $url = $this->urlGenerator->generate($action);
         } else {
-            $url = $request->headers->get('Referer');
+            $url = SameOrigin::getSameOriginReferer($request);
         }
 
         if ($url === null) {
