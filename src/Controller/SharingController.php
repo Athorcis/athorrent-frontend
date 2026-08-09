@@ -45,9 +45,16 @@ class SharingController extends AbstractController
     #[Route(path: '/', methods: 'POST', options: ['expose' => true])]
     public function addSharing(#[Requirements(path: true)] UserFilesystemEntry $entry): array
     {
-        $sharing = new Sharing(User::as($this->getUser()), $entry->getPath());
-        $this->entityManager->persist($sharing);
-        $this->entityManager->flush();
+        $user = User::as($this->getUser());
+        $path = $entry->getPath();
+
+        $sharing = $user->getSharings()[$path] ?? null;
+
+        if ($sharing === null) {
+            $sharing = new Sharing($user, $path);
+            $this->entityManager->persist($sharing);
+            $this->entityManager->flush();
+        }
 
         $url = $this->generateUrl('sharedFiles_listFiles', [
             'id' => $sharing->getId()->toRfc4122(),

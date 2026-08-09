@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table]
+#[ORM\UniqueConstraint(columns: ['user_id', 'path'])]
 #[ORM\Index(columns: ['creation_date_time'])]
 #[ORM\Index(columns: ['user_id', 'path_prefix'])]
 #[ORM\Entity(repositoryClass: SharingRepository::class)]
