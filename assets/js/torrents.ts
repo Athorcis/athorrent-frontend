@@ -148,16 +148,7 @@ class TorrentsPage extends AbstractPage {
         for (const [hash, loadingClass] of this.busyTorrents) {
             const torrent = document.getElementById(`torrent-${hash}`);
 
-            if (!torrent) {
-                this.busyTorrents.delete(hash);
-                continue;
-            }
-
-            // Pause/resume swaps the control class once qBittorrent reflects the new state.
-            if (
-                (loadingClass === 'torrent-pause' || loadingClass === 'torrent-resume')
-                && !torrent.querySelector(`.${loadingClass}`)
-            ) {
+            if (!torrent || !torrent.querySelector(`.${loadingClass}`)) {
                 this.busyTorrents.delete(hash);
                 continue;
             }
