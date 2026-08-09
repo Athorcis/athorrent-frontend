@@ -97,7 +97,7 @@ files:
     none: Aucun fichier à afficher
     actions: Actions
     remove: Supprimer
-    removalConfirmation: Êtes-vous sur de vouloir supprimer "{entry}" ?
+    removalConfirmation: Êtes-vous sûr de vouloir supprimer "{entry}" ?
     add: Ajouter
     addFile: Ajouter un fichier
     addDirectory: Ajouter un dossier
@@ -182,12 +182,12 @@ users:
     role: Rôle
     lastConnection: Dernière connexion
     lastConnectionNone: Aucune
-    passwordResetConfirmation: Êtes-vous sur de vouloir réinitialiser le mot de passe de l'utilisateur {user}?
+    passwordResetConfirmation: Êtes-vous sûr de vouloir réinitialiser le mot de passe de l'utilisateur {user}?
     newPasswordModalTitle: Nouveau mot de passe
     switch: Se connecter en tant que
     resetPassword: Réinitialiser le mot de passe
     remove: Supprimer
-    deletionConfirmation: Êtes-vous sur de vouloir supprimer l'utilisateur {user}?
+    deletionConfirmation: Êtes-vous sûr de vouloir supprimer l'utilisateur {user}?
 
     add:
         title: Ajouter un utilisateur
