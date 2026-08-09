@@ -18,6 +18,9 @@ class SharingRepository extends EntityRepository implements PaginableRepositoryI
     /** @use PaginableRepositoryTrait<Sharing> */
     use PaginableRepositoryTrait;
 
+    /** Prefer '!' over '\' — DQL ESCAPE must be a 1-char string literal. */
+    private const string LIKE_ESCAPE = '!';
+
     protected function getEntityAlias(): string
     {
         return 's';
@@ -26,20 +29,27 @@ class SharingRepository extends EntityRepository implements PaginableRepositoryI
     protected function createQueryBuilderByUserAndRoot(User $user, string $root): QueryBuilder
     {
         $qb = $this->createQueryBuilder($this->getEntityAlias());
+        $platform = $this->getEntityManager()->getConnection()->getDatabasePlatform();
+
+        $escapedRoot = $platform->escapeStringForLike($root, self::LIKE_ESCAPE);
+        $escapedPrefix = $platform->escapeStringForLike(
+            mb_substr($root, 0, Sharing::PATH_PREFIX_LENGTH),
+            self::LIKE_ESCAPE,
+        );
 
         $qb->where(
             $qb->expr()->eq('s.user', ':user'),
-            $qb->expr()->like('s.pathPrefix', ':pathPrefix'),
+            "s.pathPrefix LIKE :pathPrefix ESCAPE '" . self::LIKE_ESCAPE . "'",
             $qb->expr()->orX(
                 $qb->expr()->eq('s.path', ':path'),
-                $qb->expr()->like('s.path', ':root')
-            )
+                "s.path LIKE :root ESCAPE '" . self::LIKE_ESCAPE . "'",
+            ),
         );
 
         $qb->setParameter('user', $user);
-        $qb->setParameter('pathPrefix', mb_substr($root, 0, Sharing::PATH_PREFIX_LENGTH) . '%');
+        $qb->setParameter('pathPrefix', $escapedPrefix . '%');
         $qb->setParameter('path', $root);
-        $qb->setParameter('root', $root . '/%');
+        $qb->setParameter('root', $escapedRoot . '/%');
 
         return $qb;
     }
