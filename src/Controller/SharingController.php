@@ -17,6 +17,7 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Requirement\Requirement;
@@ -48,6 +49,10 @@ class SharingController extends AbstractController
     {
         $user = User::as($this->getUser());
         $path = $entry->getPath();
+
+        if ($path === '') {
+            throw new BadRequestHttpException('path cannot be empty');
+        }
 
         $sharing = $user->getSharings()[$path] ?? null;
 
