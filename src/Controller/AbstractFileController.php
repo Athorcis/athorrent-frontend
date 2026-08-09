@@ -40,22 +40,19 @@ abstract class AbstractFileController extends AbstractController
 
         // On single file sharing breadcrumb inside
         // display or play view should contain the file name
-        if ($path === '' && $entry) {
-            $breadcrumb[$entry->getName()] = '';
-            return $breadcrumb;
-        }
-
-        $parts = explode('/', $path);
-        $currentPath = '';
-
-        foreach ($parts as $currentName) {
-            if ($path === '') {
-                continue;
+        if ($path === '') {
+            if ($entry) {
+                $breadcrumb[$entry->getName()] = '';
             }
+        }
+        else {
+            $parts = explode('/', $path);
+            $currentPath = '';
 
-            $currentPath .= $currentName;
-            $breadcrumb[$currentName] = $currentPath;
-            $currentPath .= DIRECTORY_SEPARATOR;
+            foreach ($parts as $currentName) {
+                $currentPath = Path::join($currentPath, $currentName);
+                $breadcrumb[$currentName] = $currentPath;
+            }
         }
 
         return $breadcrumb;
