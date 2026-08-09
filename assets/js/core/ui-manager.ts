@@ -11,7 +11,6 @@ interface ModalOptions {
     title: string;
     subtitle?: string;
     content: string|HTMLElement;
-    removeWhenClose?: boolean;
     controls?: ModalControl[];
     id?: string;
 }
@@ -105,7 +104,6 @@ export class UiManager {
             title,
             subtitle,
             content,
-            removeWhenClose = false,
             controls,
         } = options;
 
@@ -192,11 +190,9 @@ export class UiManager {
             }
         });
 
-        if (removeWhenClose) {
-            modal.addEventListener('close', function () {
-                document.body.removeChild(modal);
-            }, { once: true });
-        }
+        modal.addEventListener('close', function () {
+            document.body.removeChild(modal);
+        }, { once: true });
 
         document.body.append(modal);
 
@@ -238,7 +234,6 @@ export class UiManager {
             title: options.title,
             content: options.content ?? options.value,
             id: options.id,
-            removeWhenClose: true,
             controls: [{
                 label: 'common.copy',
                 primary: true,
@@ -271,7 +266,6 @@ export class UiManager {
             const modal = this.prepareModal({
                 title: 'common.confirm',
                 content: this.translator.translate(key, parameters),
-                removeWhenClose: true,
                 id: 'dialog-confirm',
                 controls: [
                     { label: 'common.cancel' },

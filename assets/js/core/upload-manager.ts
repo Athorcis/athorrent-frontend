@@ -42,7 +42,7 @@ export class UploadManager implements UploadManagerInterface{
         const uploadListEl = document.createElement('div');
         uploadListEl.classList.add('file-upload-list');
 
-        const modal = this.ui.prepareModal({ title, content: uploadListEl, removeWhenClose: true });
+        const modal = this.ui.prepareModal({ title, content: uploadListEl });
         modal.classList.add('hide-close');
 
         const dropzone = new Dropzone(uploadListEl, {
