@@ -4,7 +4,7 @@ export class Translator {
     constructor(private strings: Translations) {}
 
     protected replaceParameters(string: string, parameters: Record<string, string>): string {
-        return string.replace(/\{([a-z_]+)}/, function (_, varName: string) {
+        return string.replace(/\{([a-z_]+)}/g, function (_, varName: string) {
             return parameters[varName] ?? '';
         });
     }
