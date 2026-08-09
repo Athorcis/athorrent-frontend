@@ -95,9 +95,9 @@ class FilesPage extends AbstractPage {
         let link: string | undefined;
 
         await withButtonLoading(this.getFileMenuTrigger(target), async () => {
-            link = await this.sendRequest<string>('addSharing', {
+            ({ url: link } = await this.sendRequest<{ url: string }>('addSharing', {
                 path: this.getFilePath(target)
-            });
+            }));
 
             await this.updateFileList();
         });

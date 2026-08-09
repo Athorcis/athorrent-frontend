@@ -49,9 +49,11 @@ class SharingController extends AbstractController
         $this->entityManager->persist($sharing);
         $this->entityManager->flush();
 
-        return [$this->generateUrl('sharedFiles_listFiles', [
+        $url = $this->generateUrl('sharedFiles_listFiles', [
             'id' => $sharing->getId()->toRfc4122(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL)];
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return ['url' => $url];
     }
 
     /**
