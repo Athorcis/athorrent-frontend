@@ -265,7 +265,6 @@ class TorrentsPage extends AbstractPage {
             title: 'torrents.magnetModal.title',
             subtitle: 'torrents.magnetModal.subtitle',
             content: textareaEl,
-            removeWhenClose: true,
             controls: [{
                 label: 'common.cancel',
             }, {
@@ -281,7 +280,7 @@ class TorrentsPage extends AbstractPage {
                         this.ui.showModal({
                             title: 'torrents.magnetModal.title',
                             content: (error as Error).message || this.translate('error.unknownError'),
-                            id: 'dialog-error'
+                            id: 'dialog-error',
                         });
                         throw error;
                     }
