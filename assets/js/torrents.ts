@@ -280,6 +280,7 @@ class TorrentsPage extends AbstractPage {
                             content: (error as Error).message || this.translate('error.unknownError'),
                             id: 'dialog-error'
                         });
+                        throw error;
                     }
                 })
             }]
