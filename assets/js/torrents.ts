@@ -267,6 +267,7 @@ class TorrentsPage extends AbstractPage {
             content: textareaEl,
             controls: [{
                 label: 'common.cancel',
+                autofocus: true,
             }, {
                 label: 'torrents.add',
                 primary: true,

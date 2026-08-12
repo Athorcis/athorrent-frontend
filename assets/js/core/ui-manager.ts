@@ -4,6 +4,7 @@ import {on} from "./events";
 interface ModalControl {
     label: string;
     primary?: boolean;
+    autofocus?: boolean;
     callback?: () => (void|PromiseLike<void>);
 }
 
@@ -138,12 +139,11 @@ export class UiManager {
             const controlsEL = document.createElement('div');
             controlsEL.className = 'modal-controls';
 
-            for (const [i, {label, primary = false, callback}] of controls.entries()) {
+            for (const {label, primary = false, autofocus = false, callback} of controls) {
                 const controlEl = document.createElement('button');
                 controlEl.textContent = this.translator.translate(label);
 
-                // keep initial focus off the close button (its aria-label tooltip)
-                if (i === 0) {
+                if (autofocus) {
                     controlEl.autofocus = true;
                 }
 
@@ -273,7 +273,7 @@ export class UiManager {
                 content: this.translator.translate(key, parameters),
                 id: 'dialog-confirm',
                 controls: [
-                    { label: 'common.cancel' },
+                    { label: 'common.cancel', autofocus: true },
                     {
                         label: 'common.confirm',
                         primary: true,
