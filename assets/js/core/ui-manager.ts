@@ -138,9 +138,14 @@ export class UiManager {
             const controlsEL = document.createElement('div');
             controlsEL.className = 'modal-controls';
 
-            for (const {label, primary = false, callback} of controls) {
+            for (const [i, {label, primary = false, callback}] of controls.entries()) {
                 const controlEl = document.createElement('button');
                 controlEl.textContent = this.translator.translate(label);
+
+                // keep initial focus off the close button (its aria-label tooltip)
+                if (i === 0) {
+                    controlEl.autofocus = true;
+                }
 
                 if (primary) {
                     controlEl.classList.add('primary');
