@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "dependencies": {
-    "@videojs/html": "^10.0.0-beta.25",
+    "@videojs/html": "^10.0.0-beta.26",
     "dropzone": "~6.0.0-beta.2",
     "typescript-http-client": "~0.10.5"
   },
@@ -35,7 +35,7 @@
     "stylelint-scss": "^7.2.0",
     "ts-loader": "^9.6.2",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.65.0",
+    "typescript-eslint": "^8.66.0",
     "webpack": "^5.109.2",
     "webpack-cli": "^7.2.2",
     "webpack-notifier": "^1.15.0"

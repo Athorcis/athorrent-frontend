@@ -3,9 +3,9 @@
   "packageManager": "yarn@4.18.0",
   "devDependencies": {
     "adm-zip": "^0.6.0",
-    "cypress": "^15.19.0",
+    "cypress": "^15.20.0",
     "cypress-map": "^1.56.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "scripts": {
     "test:e2e": "cypress run && cypress run --expose locale=en"
