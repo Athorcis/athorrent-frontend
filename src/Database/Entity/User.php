@@ -11,6 +11,7 @@ use DateTimeImmutable;
 use Deprecated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Cache;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -76,6 +77,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     #[ORM\Column(length: 15, nullable: true)]
     private ?string $clientIp = null;
+
+    /** Disk usage of the user's files directory, in bytes. Null until calculated. */
+    #[ORM\Column(type: Types::BIGINT, nullable: true, options: ['unsigned' => true])]
+    private ?string $size = null;
 
     public function __construct()
     {
@@ -210,6 +215,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
         $this->clientIp = $clientIp;
     }
 
+    public function getSize(): ?int
+    {
+        return $this->size === null ? null : (int) $this->size;
+    }
+
+    public function setSize(int $size): void
+    {
+        $this->size = (string) max(0, $size);
+    }
+
     #[Deprecated]
     public function eraseCredentials(): void
     {
@@ -225,7 +240,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
 
     public function getCacheKey(): string
     {
-        return (string)$this->id;
+        return $this->id . '.' . ($this->size ?? 'n');
     }
 
     public function getPath(string $path): string

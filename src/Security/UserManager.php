@@ -79,6 +79,19 @@ readonly class UserManager
         $user->setPassword($this->hasher->hashPassword($user, $password));
     }
 
+    /**
+     * Recalculate disk usage for the user's files directory and persist it.
+     */
+    public function updateSize(User $user): int
+    {
+        $path = $user->getFilesPath();
+        $size = is_dir($path) ? (new FileUtils())->getSize($path) : 0;
+        $user->setSize($size);
+        $this->entityManager->flush();
+
+        return $size;
+    }
+
     protected function removeUserDirs(User $user): void
     {
         $fs = new FileUtils();

@@ -180,6 +180,9 @@ users:
     username: Nom d'utilisateur
     password: Mot de passe
     role: Rôle
+    size: Taille
+    sizeUnknown: —
+    updateSize: Mettre à jour la taille
     lastConnection: Dernière connexion
     lastConnectionNone: Aucune
     passwordResetConfirmation: Êtes-vous sûr de vouloir réinitialiser le mot de passe de l'utilisateur {user}?

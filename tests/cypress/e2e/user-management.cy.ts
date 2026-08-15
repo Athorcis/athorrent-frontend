@@ -1,4 +1,4 @@
-import {DEFAULT_PASSWORD, DEFAULT_USERNAME} from "../support/commands";
+import {DEFAULT_PASSWORD, DEFAULT_USERNAME, uploadFile} from "../support/commands";
 import {createAltUser, pathWithLocale, resetTestData} from "../support/utils";
 
 describe('user-management', () => {
@@ -11,6 +11,7 @@ describe('user-management', () => {
         cy.visit(pathWithLocale('/administration/users/'));
 
         cy.get('#user-1 > .user-name').should('have.text', DEFAULT_USERNAME);
+        cy.get('#user-1 > .user-size .user-size-value').should('have.text', '—');
     });
 
     it('should create a user', () => {
@@ -29,6 +30,16 @@ describe('user-management', () => {
         getLogoutButton().click();
     });
     */
+
+    it('should compute a user\'s size via admin', () => {
+        uploadFile('cypress/fixtures/files/test.txt');
+
+        cy.visit(pathWithLocale('/administration/users/'));
+        cy.get('#user-1 > .user-size .user-size-value').should('have.text', '—');
+
+        cy.get('#user-1 .user-update-size').click();
+        cy.get('#user-1 > .user-size .user-size-value').should('have.text', '13 B');
+    });
 
     it('should reset a user\'s password', () => {
         cy.visit(pathWithLocale('/administration/users/'));

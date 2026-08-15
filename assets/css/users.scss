@@ -7,4 +7,17 @@
         white-space: normal;
         overflow-wrap: anywhere;
     }
+
+    .user-size {
+        white-space: nowrap;
+
+        .user-size-value {
+            margin-right: 0.25rem;
+        }
+
+        .user-size-value,
+        .user-update-size {
+            vertical-align: middle;
+        }
+    }
 }

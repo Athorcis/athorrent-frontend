@@ -10,6 +10,7 @@ class UsersPage extends AbstractPage {
         on(document, 'click', new Map([
             ['.user-reset-password', this.onResetUserPassword],
             ['.user-remove', this.onRemoveUser],
+            ['.user-update-size', this.onUpdateUserSize],
         ]))
     }
 
@@ -59,6 +60,31 @@ class UsersPage extends AbstractPage {
                 value: password,
                 id: 'dialog-new-password',
             });
+        }
+    })
+
+    onUpdateUserSize = noParallelRun(async (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
+        const button = target.closest('button');
+
+        if (button) {
+            button.disabled = true;
+        }
+
+        try {
+            const data = await this.sendRequest<{size: number, sizeFormatted: string}>('updateUserSize', {
+                userId: this.getUserId(target),
+            });
+
+            const value = this.getItem('user', target).querySelector('.user-size-value');
+
+            if (value) {
+                value.textContent = data.sizeFormatted;
+            }
+        } finally {
+            if (button) {
+                button.disabled = false;
+            }
         }
     })
 }
