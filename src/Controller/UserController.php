@@ -12,6 +12,7 @@ use Athorrent\Notification\SuccessNotification;
 use Athorrent\Security\UserManager;
 use Athorrent\UserVisibleException;
 use Athorrent\View\PaginatedView;
+use Athorrent\View\TwigHelperExtension;
 use Athorrent\View\View;
 use Athorrent\View\ViewType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -78,6 +79,23 @@ class UserController extends AbstractController
         $em->flush();
 
         return ['password' => $password];
+    }
+
+    /**
+     * @return array{size: int, sizeFormatted: string}
+     */
+    #[Route(path: '/{userId}/size', methods: 'POST', options: ['expose' => true])]
+    public function updateUserSize(
+        #[MapEntity(id: 'userId')] User $user,
+        UserManager $userManager,
+        TwigHelperExtension $twigHelper,
+    ): array {
+        $size = $userManager->updateSize($user);
+
+        return [
+            'size' => $size,
+            'sizeFormatted' => $twigHelper->formatBytes($size),
+        ];
     }
 
     /**

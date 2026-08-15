@@ -182,6 +182,9 @@ users:
     username: Username
     password: Password
     role: Role
+    size: Size
+    sizeUnknown: —
+    updateSize: Update size
     lastConnection: Last connection
     lastConnectionNone: None
     passwordResetConfirmation: Are you sure you want to reset the password of the user {user}?

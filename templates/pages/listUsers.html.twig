@@ -27,6 +27,7 @@
                 <th>#</th>
                 <th class="text-left">{{ 'users.username'|trans }}</th>
                 <th class="text-left">{{ 'users.role'|trans }}</th>
+                <th class="text-left">{{ 'users.size'|trans }}</th>
                 <th class="text-left">{{ 'users.lastConnection'|trans }}</th>
                 <th></th>
             </tr>
@@ -38,6 +39,18 @@
                     <td>{{ user.id }}</td>
                     <td class="user-name text-left">{{ user.username }}</td>
                     <td class="text-left">{{ user.roles[0]|trans }}</td>
+                    <td class="user-size text-left">
+                        <span class="user-size-value">
+                            {%- if user.size is not null -%}
+                                {{ format_bytes(user.size) }}
+                            {%- else -%}
+                                {{ 'users.sizeUnknown'|trans }}
+                            {%- endif -%}
+                        </span>
+                        <button class="icon-only user-update-size" aria-label="{{ 'users.updateSize'|trans }}">
+                            {{ icon('reload') }}
+                        </button>
+                    </td>
                     <td class="text-left">
                         {% if user.connectionTimestamp %}
                             {{ user.connectionTimestamp|format_datetime }}
