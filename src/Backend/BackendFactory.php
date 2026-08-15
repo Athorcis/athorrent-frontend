@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Athorrent\Backend;
 
 use Athorrent\Database\Entity\User;
+use Athorrent\Utils\QBittorrentClient;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+#[AutoconfigureTag('container.preload', ['class' => QBittorrentBackend::class])]
+#[AutoconfigureTag('container.preload', ['class' => QBittorrentClient::class])]
 class BackendFactory
 {
     /** @var array<int, BackendInterface> */

@@ -9,6 +9,7 @@ use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -26,6 +27,7 @@ use const PHP_SAPI;
  * @phpstan-import-type ActionMap from ActionMapDumper
  */
 #[AsDecorator('router')]
+#[AutoconfigureTag('container.preload', ['class' => CompiledUrlGenerator::class])]
 class Router implements RouterInterface, RequestMatcherInterface, WarmableInterface
 {
     /** @var ActionMap|null */
