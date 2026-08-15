@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Athorrent\Security;
 
 use Athorrent\Utils\ContentSecurityPolicy;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Merges ADDITIONAL_CSP_HEADER into the response CSP, and allows
  * style-src 'unsafe-inline' on media play pages for @videojs/html.
  */
+#[AutoconfigureTag('container.preload', ['class' => ContentSecurityPolicy::class])]
 readonly class ContentSecurityPolicyListener implements EventSubscriberInterface
 {
     private const array PLAY_SUBROUTES = ['playAudio', 'playVideo'];

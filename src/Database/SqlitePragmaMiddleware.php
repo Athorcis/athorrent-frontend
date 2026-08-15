@@ -7,8 +7,10 @@ namespace Athorrent\Database;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsMiddleware;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\Middleware;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AsMiddleware(connections: ['default'])]
+#[AutoconfigureTag('container.preload', ['class' => SqlitePragmaDriver::class])]
 class SqlitePragmaMiddleware implements Middleware
 {
     public function wrap(Driver $driver): Driver

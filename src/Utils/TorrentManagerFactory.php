@@ -7,9 +7,12 @@ namespace Athorrent\Utils;
 use Athorrent\Backend\BackendFactory;
 use Athorrent\Backend\QBittorrentBackend;
 use Athorrent\Database\Entity\User;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Cache\CacheInterface;
 
+#[AutoconfigureTag('container.preload', ['class' => AbstractTorrentManager::class])]
+#[AutoconfigureTag('container.preload', ['class' => QBittorrentManager::class])]
 class TorrentManagerFactory
 {
     /** @var TorrentManagerInterface[] */

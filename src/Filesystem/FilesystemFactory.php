@@ -6,12 +6,19 @@ namespace Athorrent\Filesystem;
 
 use AssertionError;
 use Athorrent\Database\Entity\User;
+use Athorrent\Database\Entity\UserHasRole;
 use Athorrent\Database\Repository\SharingRepository;
+use Athorrent\Database\Type\UserRole;
 use Athorrent\SharingNotFoundException;
 use Athorrent\Utils\TorrentManagerFactory;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Uid\Uuid;
 
+#[AutoconfigureTag('container.preload', ['class' => UserHasRole::class])]
+#[AutoconfigureTag('container.preload', ['class' => UserRole::class])]
+#[AutoconfigureTag('container.preload', ['class' => FileUtils::class])]
+#[AutoconfigureTag('container.preload', ['class' => Requirements::class])]
 readonly class FilesystemFactory
 {
     public function __construct(private TokenStorageInterface $tokenStorage, private TorrentManagerFactory $torrentManagerFactory, private SharingRepository $sharingRepository)
