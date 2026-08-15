@@ -17,6 +17,8 @@ class Updater {
     /** Bumped on each new fetch / invalidate so stale responses are ignored. */
     private requestId = 0;
 
+    private lastRequestedAt = -1;
+
     constructor(
         private router: Router,
         private action: string,
@@ -26,7 +28,7 @@ class Updater {
 
     }
 
-    start(fireNow = false) {
+    start(delayMs = this.interval) {
         if (this.intervalStop) {
             return;
         }
@@ -34,8 +36,9 @@ class Updater {
         this.intervalStop = setAsyncInterval(
             () => this.intervalCallback(),
             this.interval,
-            fireNow,
+            delayMs,
         );
+        document.addEventListener('visibilitychange', this.onVisibilityChange);
     }
 
     stop() {
@@ -43,12 +46,20 @@ class Updater {
             this.intervalStop();
             this.intervalStop = null;
             this.abortRequest();
+            document.removeEventListener('visibilitychange', this.onVisibilityChange);
         }
     }
 
-    update() {
+    update(delayMs = 0) {
         this.stop();
-        this.start(true);
+        this.start(delayMs);
+    }
+
+    private onVisibilityChange = () => {
+        if (!document.hidden) {
+            const delayMs = Math.max(0, this.interval - (Date.now() - this.lastRequestedAt))
+            this.update(delayMs);
+        }
     }
 
     private abortRequest() {
@@ -71,6 +82,7 @@ class Updater {
 
         const requestId = ++this.requestId;
         this.data$ = this.router.sendRequest(this.action, this.parameters);
+        this.lastRequestedAt = Date.now();
 
         try {
             const data = await this.data$;
