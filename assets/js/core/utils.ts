@@ -22,7 +22,7 @@ export function decodeBase64(base64: string, charset: string = 'utf-8'): string 
 export function setAsyncInterval(
     callback: () => Promise<void>,
     intervalMs: number,
-    fireNow = false,
+    delayMs = intervalMs,
 ): () => void {
     let cancelled = false;
     let timeoutId: number | undefined;
@@ -43,12 +43,12 @@ export function setAsyncInterval(
         }, intervalMs);
     };
 
-    if (fireNow) {
+    if (delayMs === 0) {
         void tick();
     } else {
         timeoutId = window.setTimeout(() => {
             void tick();
-        }, intervalMs);
+        }, delayMs);
     }
 
     return () => {
