@@ -35,8 +35,9 @@
         <ul>
             {% set currentPrefix = app.request.attributes.get('_prefixId') %}
             {% for item in navItems %}
+                {% set isCurrentItem = currentPrefix === item.activePrefix %}
                 <li>
-                    <a class="button {% if currentPrefix === item.activePrefix %}active{% endif %}" href="{{ path(item.route) }}">{{ icon(item.icon) }}{{ item.label|trans }}</a>
+                    <a class="button {% if isCurrentItem %}active{% endif %}" {% if isCurrentItem %}aria-current="true"{% endif %} href="{{ path(item.route) }}">{{ icon(item.icon) }}{{ item.label|trans }}</a>
                 </li>
             {% endfor %}
         </ul>
