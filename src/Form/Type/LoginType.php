@@ -43,8 +43,7 @@ class LoginType extends AbstractType
                 TextType::class,
                 [
                     'label' => 'login.username',
-                    'attr' => ['autofocus' => true],
-                    'autocomplete' => 'username',
+                    'attr' => ['autofocus' => true, 'autocomplete' => 'username'],
                 ],
             )
             ->add(
@@ -52,7 +51,7 @@ class LoginType extends AbstractType
                 PasswordType::class,
                 [
                     'label' => 'login.password',
-                    'autocomplete' => 'current-password',
+                    'attr' => ['autocomplete' => 'current-password'],
                 ],
             )
             ->add('_remember_me', CheckboxType::class, [
