@@ -41,7 +41,7 @@ class EditAccountType extends AbstractType
                 [
                     'label' => 'users.username',
                     'empty_data' => '',
-                    'autocomplete' => 'username',
+                    'attr' => ['autocomplete' => 'username'],
                 ]
             )
             ->add(
@@ -51,7 +51,7 @@ class EditAccountType extends AbstractType
                     'label' => 'account.edit.current_password',
                     'mapped' => false,
                     'constraints' => new UserPassword(),
-                    'autocomplete' => 'current-password',
+                    'attr' => ['autocomplete' => 'current-password'],
                 ]
             )
             ->add(
@@ -65,11 +65,11 @@ class EditAccountType extends AbstractType
                     'first_options'  => [
                         'label' => 'account.edit.new_password',
                         'hash_property_path' => 'password',
-                        'autocomplete' => 'new-password',
+                        'attr' => ['autocomplete' => 'new-password'],
                     ],
                     'second_options' => [
                         'label' => 'account.edit.password_confirm',
-                        'autocomplete' => 'new-password',
+                        'attr' => ['autocomplete' => 'new-password'],
                     ],
                     'mapped' => false,
                 ]
@@ -80,7 +80,7 @@ class EditAccountType extends AbstractType
                 [
                     'label' => 'users.role',
                     'disabled' => true,
-                    'autocomplete' => 'off',
+                    'attr' => ['autocomplete' => 'off'],
                 ]
             )
             ->add(

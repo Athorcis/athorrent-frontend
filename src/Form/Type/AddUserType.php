@@ -24,7 +24,7 @@ class AddUserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'autocomplete' => 'off',
+            'attr' => ['autocomplete' => 'off'],
         ]);
     }
 
@@ -37,7 +37,7 @@ class AddUserType extends AbstractType
                 [
                     'label' => 'users.username',
                     'empty_data' => '',
-                    'autocomplete' => 'off',
+                    'attr' => ['autocomplete' => 'off'],
                 ]
             )
             ->add(
@@ -49,7 +49,7 @@ class AddUserType extends AbstractType
                     'constraints' => [new NotBlank()],
                     'hash_property_path' => 'password',
                     'mapped' => false,
-                    'autocomplete' => 'off',
+                    'attr' => ['autocomplete' => 'off'],
                 ]
             )
             ->add(
@@ -61,7 +61,7 @@ class AddUserType extends AbstractType
                     'label' => 'users.role',
                     'mapped' => false,
                     'constraints' => [new NotBlank()],
-                    'autocomplete' => 'off',
+                    'attr' => ['autocomplete' => 'off'],
                 ]
             )
             ->add(
