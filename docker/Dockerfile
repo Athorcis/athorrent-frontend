@@ -2,8 +2,8 @@
 
 ARG PHP_VERSION=8.5.9
 ARG COMPOSER_VERSION=2.10.2
-ARG NODEJS_VERSION=26.6.0
-ARG NGINX_VERSION=1.31.3
+ARG NODEJS_VERSION=26.7.0
+ARG NGINX_VERSION=1.31.4
 
 ARG UID=33
 ARG GID=33
@@ -53,8 +53,8 @@ RUN --mount=type=cache,target=/var/cache/apt \
     apt-get install -y --no-install-recommends \
         nodejs=$(apt-cache policy nodejs | grep $NODEJS_VERSION | grep -v Candidate | awk '{ print $1 }') \
     ;\
-    npm install -g corepack \
-    corepack enable
+    curl -s https://repo.yarnpkg.com/install | bash ;\
+    mv ~/.yarn/switch/bin/yarn /usr/local/bin/yarn
 
 ARG RUN_USER
 USER $RUN_USER
