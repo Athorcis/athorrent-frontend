@@ -38,7 +38,6 @@ class TwigHelperExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('date_to_age', $this->dateToAge(...)),
             new TwigFunction('file_icon', $this->getFileIcon(...)),
             new TwigFunction('icon', $this->renderIcon(...), ['is_safe' => ['html']]),
             new TwigFunction('base64_encode', 'base64_encode'),
@@ -73,11 +72,6 @@ class TwigHelperExtension extends AbstractExtension
         }
 
         return 'file';
-    }
-
-    public function dateToAge(string $date): int
-    {
-        return time() - strtotime($date);
     }
 
     public function formatBytes(int $bytes, int $precision = 2): string
