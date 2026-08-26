@@ -166,7 +166,7 @@ search:
         name: Nom
         tracker: Tracker
         size: Taille
-        age: Age
+        added: Ajouté
 
 sharings:
     title: Partages

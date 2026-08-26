@@ -4,7 +4,7 @@
             <th class="col-title text-left">{{ 'search.torrents.name'|trans }}</th>
             <th class="col-tracker">{{ 'search.torrents.tracker'|trans }}</th>
             <th class="col-size">{{ 'search.torrents.size'|trans }}</th>
-            <th class="col-age">{{ 'search.torrents.age'|trans }}</th>
+            <th class="col-age">{{ 'search.torrents.added'|trans }}</th>
             <th class="col-seeders" aria-label="{{ 'torrents.seeders'|trans }}">
                  {{ icon('uploading-arrow') }}
             </th>
@@ -22,7 +22,7 @@
             </td>
             <td class="col-tracker">{{ result.Tracker }}</td>
             <td class="col-size">{{ format_bytes(result.Size) }}</td>
-            <td class="col-age">{{ date_to_age(result.PublishDate)|duration }}</td>
+            <td class="col-age">{{ result.PublishDate|ago }}</td>
             <td class="col-seeders">{{ result.Seeders }}</td>
             <td class="col-leechers">{{ result.Peers }}</td>
             <td class="col-add-magnet">
