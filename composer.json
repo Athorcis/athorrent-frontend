@@ -17,8 +17,8 @@
         "ext-posix": "*",
         "ext-sockets": "*",
         "clue/docker-react": "^1.6.0",
-        "doctrine/doctrine-bundle": "^3.3.1",
-        "doctrine/orm": "^3.6.8",
+        "doctrine/doctrine-bundle": "^3.3.2",
+        "doctrine/orm": "^3.7.1",
         "knplabs/knp-time-bundle": "^2.5",
         "nelmio/security-bundle": "^3.9",
         "react/async": "^4.3",
@@ -32,7 +32,7 @@
         "symfony/http-client": "8.1.*",
         "symfony/lock": "8.1.*",
         "symfony/mime": "8.1.*",
-        "symfony/monolog-bundle": "^4.0.2",
+        "symfony/monolog-bundle": "^4.1.0",
         "symfony/process": "8.1.*",
         "symfony/rate-limiter": "8.1.*",
         "symfony/runtime": "8.1.*",
@@ -50,7 +50,7 @@
         "twig/twig": "^3.28.0"
     },
     "require-dev": {
-        "phpstan/phpstan": "^2.2.13",
+        "phpstan/phpstan": "^2.2.14",
         "phpstan/phpstan-doctrine": "^2.0",
         "phpstan/phpstan-symfony": "^2.0.20",
         "roave/security-advisories": "dev-latest",
