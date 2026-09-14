@@ -211,10 +211,12 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "8.1",
-            "ref": "312027aea160796a50bf2d185503afdb5d71f570"
+            "ref": "5295b2b1ef2170b272383b2b0ae0b66702883822"
         },
         "files": [
             ".editorconfig",
+            "AGENTS.md",
+            "CLAUDE.md",
             "config/packages/cache.yaml",
             "config/packages/framework.yaml",
             "config/preload.php",
@@ -256,12 +258,12 @@
         "version": "v5.0.11"
     },
     "symfony/monolog-bundle": {
-        "version": "3.10",
+        "version": "4.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "3.7",
-            "ref": "1b9efb10c54cb51c713a9391c9300ff8bceda459"
+            "ref": "feb8fd9520b5694c7d0d2ba17fd4b4d33f9dd9cf"
         },
         "files": [
             "config/packages/monolog.yaml"
@@ -386,12 +388,12 @@
         }
     },
     "symfony/ux-icons": {
-        "version": "3.2",
+        "version": "3.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "2.19",
-            "ref": "c965ca0bf8a40e03420d57e08cff0bf6045e4ae7"
+            "version": "3.4",
+            "ref": "16a3114526e46593b494471d1654dfa46831beb5"
         },
         "files": [
             "assets/icons/symfony.svg",
