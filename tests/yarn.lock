@@ -522,9 +522,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^15.21.1":
-  version: 15.21.1
-  resolution: "cypress@npm:15.21.1"
+"cypress@npm:^16.0.0":
+  version: 16.0.0
+  resolution: "cypress@npm:16.0.0"
   dependencies:
     "@cypress/request": "npm:^4.0.0"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -542,7 +542,7 @@ __metadata:
     cli-table3: "npm:0.6.1"
     commander: "npm:^6.2.1"
     common-tags: "npm:^1.8.0"
-    dayjs: "npm:^1.10.4"
+    dayjs: "npm:^1.11.23"
     debug: "npm:^4.3.4"
     eventemitter2: "npm:6.4.7"
     execa: "npm:4.1.0"
@@ -567,7 +567,7 @@ __metadata:
     yauzl: "npm:^3.3.1"
   bin:
     cypress: bin/cypress
-  checksum: 10/71b14a52c989484608e2d70bd9c442432f32a811df83ce4193283a506493f547e8340770db79e20cb5889c60c0ec9ef7288a862b290c59219c7d8db27e987661
+  checksum: 10/6d20f74df488647be466d90b21c1d6ed10b91e9ea5a0ab538d9ecd52a6318099720c468234fc4fe48cba1a7807d1d55e108e9f9522886af297ea6671e6b35b52
   languageName: node
   linkType: hard
 
@@ -580,10 +580,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.10.4":
-  version: 1.11.13
-  resolution: "dayjs@npm:1.11.13"
-  checksum: 10/7374d63ab179b8d909a95e74790def25c8986e329ae989840bacb8b1888be116d20e1c4eee75a69ea0dfbae13172efc50ef85619d304ee7ca3c01d5878b704f5
+"dayjs@npm:^1.11.23":
+  version: 1.11.23
+  resolution: "dayjs@npm:1.11.23"
+  checksum: 10/61d29544ca1553369f75541b5abf9c1bb6a978991498923a2d5721c9df3eca513b2c15ff5534de6930dc553de5d6f2b8f8047149f3528df906b21f51df637463
   languageName: node
   linkType: hard
 
@@ -1548,7 +1548,7 @@ __metadata:
   resolution: "tests@workspace:."
   dependencies:
     adm-zip: "npm:^0.6.0"
-    cypress: "npm:^15.21.1"
+    cypress: "npm:^16.0.0"
     cypress-map: "npm:^1.56.0"
     typescript: "npm:^7.0.2"
   languageName: unknown
