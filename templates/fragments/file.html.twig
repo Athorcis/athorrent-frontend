@@ -1,19 +1,23 @@
-{% set isParentDirectory = file.name == '' %}
+{% set isParentDirectory = file.name == '..' %}
 
 {% if isParentDirectory %}
     {% set icon = 'parent-directory' %}
     {% set name = 'files.parentDirectory'|trans %}
+    {% set path = file.canonicalizedPath %}
 {% else %}
     {% set icon = file_icon(file) %}
     {% set name = file.name %}
+    {% set path = file.path %}
 {% endif %}
 
-<tr class="file" id="file-{{ base64_encode(file.path) }}" data-name="{{ base64_encode(name) }}" {% if file.isFile %}data-mime="{{ file.mimeType }}"{% endif %}>
+{% set encodedPath = base64_encode(path) %}
+
+<tr class="file" id="file-{{ encodedPath }}" data-name="{{ base64_encode(name) }}" {% if file.isFile %}data-mime="{{ file.mimeType }}"{% endif %}>
     <td class="file-icon" aria-label="{{ ('files.icon.' ~ icon)|trans }}">
         {{ icon(icon) }}
     </td>
     <td class="file-name text-col text-left">
-        <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: file.path }) }}" title="{{ name }}">{{ name }}</a>
+        <a class="file-link" href="{{ path(file.isFile ? 'downloadFile' : 'listFiles', { path: path }) }}" title="{{ name }}">{{ name }}</a>
     </td>
     <td class="file-size">
         {% if file.isFile %}
@@ -22,34 +26,34 @@
     </td>
     <td class="file-buttons">
         {% if not isParentDirectory %}
-            <button class="icon-only" popovertarget="file-dropdown-{{ base64_encode(file.path) }}" aria-label="{{ 'files.actions'|trans }}">
+            <button class="icon-only" popovertarget="file-dropdown-{{ encodedPath }}" aria-label="{{ 'files.actions'|trans }}">
                 {{ icon('ellipsis') }}
             </button>
             {#- -#}
-            <ul id="file-dropdown-{{ base64_encode(file.path) }}" class="dropdown-menu file-dropdown" popover>
+            <ul id="file-dropdown-{{ encodedPath }}" class="dropdown-menu file-dropdown" popover>
                 {% if file.isDirectory %}
                     <li>
-                        <a class="button open-file" href="{{ path('listFiles', { path: file.path }) }}">
+                        <a class="button open-file" href="{{ path('listFiles', { path: path }) }}">
                             {{ icon('open') }}{{ 'files.open'|trans }}
                         </a>
                     </li>
                 {% endif %}
 
                 <li>
-                    <a class="button download-file" href="{{ path('downloadFile', { path: file.path }) }}">
+                    <a class="button download-file" href="{{ path('downloadFile', { path: path }) }}">
                         {{ icon('download') }}{{ 'files.download'|trans }}
                     </a>
                 </li>
                 {% if file.isFile %}
                     {% if file.isPlayable %}
                         <li class="play-item">
-                            <a class="button play-file" href="{{ path('playFile', { path: file.path }) }}">
+                            <a class="button play-file" href="{{ path('playFile', { path: path }) }}">
                                 {{ icon('play') }}{{ 'files.play'|trans }}
                             </a>
                         </li>
                     {% elseif file.isDisplayable %}
                         <li>
-                            <a class="button display-file" href="{{ path('displayFile', { path: file.path }) }}">
+                            <a class="button display-file" href="{{ path('displayFile', { path: path }) }}">
                                 {{ icon('display') }}{{ 'files.display'|trans }}
                             </a>
                         </li>
