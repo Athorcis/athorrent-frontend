@@ -33,6 +33,11 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
         return $this->path;
     }
 
+    public function getCanonicalizedPath(): string
+    {
+        return Path::canonicalize($this->path);
+    }
+
     public function getRealPath(): string
     {
         return $this->path;
@@ -62,7 +67,7 @@ abstract class AbstractFilesystemEntry implements FilesystemEntryInterface
 
         if ($includeParentDirectory) {
             // @phpstan-ignore new.static
-            $entries[] = new static($this->filesystem, Path::canonicalize($this->path . '/..'));
+            $entries[] = new static($this->filesystem, $this->path . '/..');
         }
 
         foreach ($this->filesystem->readDirectory($this->path) as $path) {
