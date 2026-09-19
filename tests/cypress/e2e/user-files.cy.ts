@@ -26,7 +26,10 @@ function pausePlayerAndAssertElapsed(mediaSelector: string) {
     playPlayer(mediaSelector);
     cy.wait(1500);
 
-    cy.get('.media-controls').trigger('mouseover');
+    if (mediaSelector === 'video') {
+        cy.get(mediaSelector).trigger('mouseover');
+    }
+
     cy.get('media-play-button')
         .click();
 
