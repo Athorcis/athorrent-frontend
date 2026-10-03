@@ -58,7 +58,7 @@ export class UploadManager implements UploadManagerInterface{
             parallelChunkUploads: false,
             retryChunks: true,
             retryChunksLimit: 2,
-            init: function() {
+            init: function(this: Dropzone) {
                 if (type === 'directory') {
                     // This allows the file picker to select folders instead of files
                     this.hiddenFileInput!.setAttribute("webkitdirectory", 'true');
