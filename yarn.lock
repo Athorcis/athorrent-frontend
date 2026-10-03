@@ -1947,15 +1947,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/dropzone@npm:^5.7.9":
-  version: 5.7.9
-  resolution: "@types/dropzone@npm:5.7.9"
-  dependencies:
-    "@types/jquery": "npm:*"
-  checksum: 10/3680fd5e020416e84ca71d0a18089f871c1d938633c5153bdec782d3864ea522b55cd07acb615e4f90c2e8a2aed339021eec01270b2190f9ba27a9cc87a9d402
-  languageName: node
-  linkType: hard
-
 "@types/esrecurse@npm:^4.3.1":
   version: 4.3.1
   resolution: "@types/esrecurse@npm:4.3.1"
@@ -1981,15 +1972,6 @@ __metadata:
   version: 1.0.5
   resolution: "@types/gensync@npm:1.0.5"
   checksum: 10/1b417012a1249c60d2a5d3a646c208710473f31ab91ee702d4a0bf742d4d20a04c4296efcf6f42b7c1b38536ff732c3aa00dd5afc8fa138c70d1905a0521a5c3
-  languageName: node
-  linkType: hard
-
-"@types/jquery@npm:*":
-  version: 3.5.14
-  resolution: "@types/jquery@npm:3.5.14"
-  dependencies:
-    "@types/sizzle": "npm:*"
-  checksum: 10/a0ad2fe4fb3c14dbb02929b995203eb9d02db6dd6054d71058955ab62d659ae48fe3deca63ded0db16a2b99fa1827fffdddb9b4a1977cedfeaf1f8150829a81c
   languageName: node
   linkType: hard
 
@@ -2036,13 +2018,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~8.9.0"
   checksum: 10/278d5241522520fbadd46b41065d7587bbb214adb3c6f8a2a9a28754d374c578d090f7387866d09c79be1e9bbf5adc7eeea453032a52f77e70b06077f85c5c14
-  languageName: node
-  linkType: hard
-
-"@types/sizzle@npm:*":
-  version: 2.3.3
-  resolution: "@types/sizzle@npm:2.3.3"
-  checksum: 10/586a9fb1f6ff3e325e0f2cc1596a460615f0bc8a28f6e276ac9b509401039dd242fa8b34496d3a30c52f5b495873922d09a9e76c50c2ab2bcc70ba3fb9c4e160
   languageName: node
   linkType: hard
 
@@ -2668,7 +2643,6 @@ __metadata:
     "@babel/preset-typescript": "npm:^8.0.1"
     "@eslint/js": "npm:^10.0.1"
     "@symfony/webpack-encore": "npm:^7.2.0"
-    "@types/dropzone": "npm:^5.7.9"
     "@types/node": "npm:^26.6.3"
     "@videojs/html": "npm:^10.0.0-rc.4"
     autoprefixer: "npm:^10.6.1"
