@@ -12,10 +12,10 @@
     {{ parent() }}
 
     <video-player>
-        <video-minimal-skin>
+        <video-neutral-skin>
             <video playsinline>
                 <source type="{{ type }}" src="{{ path('downloadFile', { path: src }) }}" />
             </video>
-        </video-minimal-skin>
+        </video-neutral-skin>
     </video-player>
 {% endblock %}

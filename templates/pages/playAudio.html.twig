@@ -12,10 +12,10 @@
     {{ parent() }}
 
     <audio-player>
-        <audio-minimal-skin>
+        <audio-neutral-skin>
             <audio>
                 <source type="{{ type }}" src="{{ path('downloadFile', { path: src }) }}" />
             </audio>
-        </audio-minimal-skin>
+        </audio-neutral-skin>
     </audio-player>
 {% endblock %}
