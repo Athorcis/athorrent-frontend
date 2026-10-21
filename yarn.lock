@@ -2064,105 +2064,105 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/eslint-plugin@npm:8.71.1"
+"@typescript-eslint/eslint-plugin@npm:8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/eslint-plugin@npm:8.71.2"
   dependencies:
     "@eslint-community/regexpp": "npm:^4.12.2"
-    "@typescript-eslint/scope-manager": "npm:8.71.1"
-    "@typescript-eslint/type-utils": "npm:8.71.1"
-    "@typescript-eslint/utils": "npm:8.71.1"
-    "@typescript-eslint/visitor-keys": "npm:8.71.1"
+    "@typescript-eslint/scope-manager": "npm:8.71.2"
+    "@typescript-eslint/type-utils": "npm:8.71.2"
+    "@typescript-eslint/utils": "npm:8.71.2"
+    "@typescript-eslint/visitor-keys": "npm:8.71.2"
     ignore: "npm:^7.0.5"
     natural-compare: "npm:^1.4.0"
     ts-api-utils: "npm:^2.5.0"
   peerDependencies:
-    "@typescript-eslint/parser": ^8.71.1
+    "@typescript-eslint/parser": ^8.71.2
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
     typescript: ">=4.8.4 <6.1.0"
-  checksum: 10/dc117ca7be83d17b41d3298165b336d46797da247a8388614f3f65afc7875fb4fe23ffe28eb0c37a4e83deacd4ec8e94624a2c8de151ba6b41b58f9207e5c164
+  checksum: 10/9f36c59d9aa90de7e4b0f9cb88a237b0b04c7f9a0c2d77a545af7c3b9fb1961bac7e46974605c5620a3a77004408d4c989b9536116a236e855940d15a9c1636d
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/parser@npm:8.71.1"
+"@typescript-eslint/parser@npm:8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/parser@npm:8.71.2"
   dependencies:
-    "@typescript-eslint/scope-manager": "npm:8.71.1"
-    "@typescript-eslint/types": "npm:8.71.1"
-    "@typescript-eslint/typescript-estree": "npm:8.71.1"
-    "@typescript-eslint/visitor-keys": "npm:8.71.1"
+    "@typescript-eslint/scope-manager": "npm:8.71.2"
+    "@typescript-eslint/types": "npm:8.71.2"
+    "@typescript-eslint/typescript-estree": "npm:8.71.2"
+    "@typescript-eslint/visitor-keys": "npm:8.71.2"
     debug: "npm:^4.4.3"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
     typescript: ">=4.8.4 <6.1.0"
-  checksum: 10/8ce699481f3cec81292889f77f1cffbef68d5f011b0fe1f71150d973794b6d2da89971b80b94824d7fa8bc54ff007a5e632ad6cfb66c595ce8fc1b852cac0c10
+  checksum: 10/4a72edd65f8a924e5c839c0907c5fa376b190eebbd59a99a51130ce15fcd12ba1c9ecc50d12c2e428d657715d20fc9504a2ae66f4515ced3497c072d5fa11e87
   languageName: node
   linkType: hard
 
-"@typescript-eslint/project-service@npm:8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/project-service@npm:8.71.1"
+"@typescript-eslint/project-service@npm:8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/project-service@npm:8.71.2"
   dependencies:
-    "@typescript-eslint/tsconfig-utils": "npm:^8.71.1"
-    "@typescript-eslint/types": "npm:^8.71.1"
+    "@typescript-eslint/tsconfig-utils": "npm:^8.71.2"
+    "@typescript-eslint/types": "npm:^8.71.2"
     debug: "npm:^4.4.3"
   peerDependencies:
     typescript: ">=4.8.4 <6.1.0"
-  checksum: 10/9de11189629df886d456d2e80d1541060e5598f512ba42231953445a94764aa863fbc32b652735ee0694543fd6b0012b0807cda6b92d751a46fcd5fbcb481e3b
+  checksum: 10/763dcd102865a5f591855c3297c0fc5e7a3dfaa177330f68528babcb706097650e9c7b0f69ecbf746627f358bbad2de66e6e260ed37540861ee026423dfb370a
   languageName: node
   linkType: hard
 
-"@typescript-eslint/scope-manager@npm:8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/scope-manager@npm:8.71.1"
+"@typescript-eslint/scope-manager@npm:8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/scope-manager@npm:8.71.2"
   dependencies:
-    "@typescript-eslint/types": "npm:8.71.1"
-    "@typescript-eslint/visitor-keys": "npm:8.71.1"
-  checksum: 10/59b0ee05006c4be44eb939ee8a1c0ed60d79fdabe7211f6adc30989541c306b07934144c51ec454ad8252cbe95ab8b38400ffe123977ae2ce512e76d460e5e98
+    "@typescript-eslint/types": "npm:8.71.2"
+    "@typescript-eslint/visitor-keys": "npm:8.71.2"
+  checksum: 10/a6486b50f3130324b4fbb9f8e56143cc948d704aa2720c0461dee5da67935b8477abd1372d1c7522548eb35937d075350f248fd4792e320dd2d3321968d7625e
   languageName: node
   linkType: hard
 
-"@typescript-eslint/tsconfig-utils@npm:8.71.1, @typescript-eslint/tsconfig-utils@npm:^8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/tsconfig-utils@npm:8.71.1"
+"@typescript-eslint/tsconfig-utils@npm:8.71.2, @typescript-eslint/tsconfig-utils@npm:^8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/tsconfig-utils@npm:8.71.2"
   peerDependencies:
     typescript: ">=4.8.4 <6.1.0"
-  checksum: 10/7a3a71b00f898d8ef53a3aed992597ae6bc56f8b6310cb8180b8f226979877afcb2628fbdc7a4b6f59db8ced5f6779b1fa684c0785e63a99b545f60de31ece51
+  checksum: 10/c6873f2d87565b45069ae383c1031dd62da3b9315e65a4bf8e80ef7309f92933f226efc7e7b05c6a91b1ce470b9e77201f6a6b08d7f423cf4df7dd94afbc79f4
   languageName: node
   linkType: hard
 
-"@typescript-eslint/type-utils@npm:8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/type-utils@npm:8.71.1"
+"@typescript-eslint/type-utils@npm:8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/type-utils@npm:8.71.2"
   dependencies:
-    "@typescript-eslint/types": "npm:8.71.1"
-    "@typescript-eslint/typescript-estree": "npm:8.71.1"
-    "@typescript-eslint/utils": "npm:8.71.1"
+    "@typescript-eslint/types": "npm:8.71.2"
+    "@typescript-eslint/typescript-estree": "npm:8.71.2"
+    "@typescript-eslint/utils": "npm:8.71.2"
     debug: "npm:^4.4.3"
     ts-api-utils: "npm:^2.5.0"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
     typescript: ">=4.8.4 <6.1.0"
-  checksum: 10/56b5b433062b9005c1c627aec3cae4bfe6b3647bb08d826ec82fb4279c5f2c781028ce2e6274d38440eea53d348f393ad6b40a5e82825cf057de32fb813cb2f3
+  checksum: 10/d1a917849e8101ae9e46bedca8ce39d898feea8101308dd1951196364d343577cc213ceae9dc559bfe5d4d769623a55e0601f83423372626ad30e4d8cf28115a
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:8.71.1, @typescript-eslint/types@npm:^8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/types@npm:8.71.1"
-  checksum: 10/e719c89af197092fe69bee725582013e57b661d14f2edbdf0637811216e207139876d57631708d544ede41e52b1a01200e0511c8d9c46742d408cc70f3edc7a1
+"@typescript-eslint/types@npm:8.71.2, @typescript-eslint/types@npm:^8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/types@npm:8.71.2"
+  checksum: 10/23bd123ce82a6e92b53b5a3f04573603b463beaf94c0f24f8943c65dbb27dde22d8c70a00fedb34fb966ee3339fe5b056e4526370219c06919b7e48d1a16ed55
   languageName: node
   linkType: hard
 
-"@typescript-eslint/typescript-estree@npm:8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/typescript-estree@npm:8.71.1"
+"@typescript-eslint/typescript-estree@npm:8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/typescript-estree@npm:8.71.2"
   dependencies:
-    "@typescript-eslint/project-service": "npm:8.71.1"
-    "@typescript-eslint/tsconfig-utils": "npm:8.71.1"
-    "@typescript-eslint/types": "npm:8.71.1"
-    "@typescript-eslint/visitor-keys": "npm:8.71.1"
+    "@typescript-eslint/project-service": "npm:8.71.2"
+    "@typescript-eslint/tsconfig-utils": "npm:8.71.2"
+    "@typescript-eslint/types": "npm:8.71.2"
+    "@typescript-eslint/visitor-keys": "npm:8.71.2"
     debug: "npm:^4.4.3"
     minimatch: "npm:^10.2.2"
     semver: "npm:^7.7.3"
@@ -2170,81 +2170,82 @@ __metadata:
     ts-api-utils: "npm:^2.5.0"
   peerDependencies:
     typescript: ">=4.8.4 <6.1.0"
-  checksum: 10/73cd8debfea2ffe582f689a615cdc875f0e97f0430eef55db7158443b37bedbf1ed76559e7ddfd445ad9b4d5de9cee3afe54dda1512cca0d4e31d1dcc6a12c41
+  checksum: 10/b9193b41273934644f3ae55cde2a19cf17cc77e82834a52f5f708c418630291f68f88b81b6b7c4529b89493b75ac076606a426c979a80a9af5771b28f9e02646
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/utils@npm:8.71.1"
+"@typescript-eslint/utils@npm:8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/utils@npm:8.71.2"
   dependencies:
     "@eslint-community/eslint-utils": "npm:^4.9.1"
-    "@typescript-eslint/scope-manager": "npm:8.71.1"
-    "@typescript-eslint/types": "npm:8.71.1"
-    "@typescript-eslint/typescript-estree": "npm:8.71.1"
+    "@typescript-eslint/scope-manager": "npm:8.71.2"
+    "@typescript-eslint/types": "npm:8.71.2"
+    "@typescript-eslint/typescript-estree": "npm:8.71.2"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
     typescript: ">=4.8.4 <6.1.0"
-  checksum: 10/8427c5634502be65a149cdc1681986fc306332f2309fc6525d85e3b44d5b35fd2d35ee51989a71277d722455a06455154dc267796218723af384776d6b2f289e
+  checksum: 10/1579afd139a4c42e3e500d19601ebd95e9fc6cac62dbed536e98185fe1a2b53daf6ed4bb7353b948bdf5aa9d0bef39722f7c2d88ad6ab63c29ef793631deccd0
   languageName: node
   linkType: hard
 
-"@typescript-eslint/visitor-keys@npm:8.71.1":
-  version: 8.71.1
-  resolution: "@typescript-eslint/visitor-keys@npm:8.71.1"
+"@typescript-eslint/visitor-keys@npm:8.71.2":
+  version: 8.71.2
+  resolution: "@typescript-eslint/visitor-keys@npm:8.71.2"
   dependencies:
-    "@typescript-eslint/types": "npm:8.71.1"
+    "@typescript-eslint/types": "npm:8.71.2"
     eslint-visitor-keys: "npm:^5.0.0"
-  checksum: 10/9abc7b1a266eb65b16ac16d99e334d06e0539241e5ae9b6721a11a6a1d2736a9f564dc5e5dc37e7d0bfce5e260da6495bab9d594a1317d01624d239286bd12c2
+  checksum: 10/2d55399c23afd7f6921cc540ead9171093ccbb06b7fcf25568d78600adf3b836d52f7ac41db9acd044592603e90becb5060894679a1d9065892e80396ae1a0ee
   languageName: node
   linkType: hard
 
-"@videojs/core@npm:10.0.1":
-  version: 10.0.1
-  resolution: "@videojs/core@npm:10.0.1"
+"@videojs/core@npm:10.1.0":
+  version: 10.1.0
+  resolution: "@videojs/core@npm:10.1.0"
   dependencies:
-    "@videojs/media": "npm:10.0.1"
-    "@videojs/store": "npm:10.0.1"
-    "@videojs/utils": "npm:10.0.1"
-  checksum: 10/2eec4eb5279779f19ebb8ff3ba9f2f1d396fed5b0fd3a3c0c1eecb3ab07589702426f40035bec18d1f5bba32305435d4fb9e533b882659cfbd43197d9c748c40
+    "@videojs/media": "npm:10.1.0"
+    "@videojs/store": "npm:10.1.0"
+    "@videojs/utils": "npm:10.1.0"
+  checksum: 10/b1df159c2f54715adc2b223ac972361c68c8e387c35e080f32df50205e68da660c91f5b98cf4f7ae2caf68b3923167f67c73c90079241f45433dd361cb6e4e6f
   languageName: node
   linkType: hard
 
-"@videojs/element@npm:10.0.1":
-  version: 10.0.1
-  resolution: "@videojs/element@npm:10.0.1"
+"@videojs/element@npm:10.1.0":
+  version: 10.1.0
+  resolution: "@videojs/element@npm:10.1.0"
   dependencies:
     "@lit/context": "npm:^1.1.0"
-  checksum: 10/60b84fed37fb0f39c244a0baed79939ecb7074df5e3cfdfa49dca0294a6ee2cbaa058064e4e47e94ed4dea180c9b44b351b906ee80b3d84df82f323b10bc6585
+  checksum: 10/1a67a726cc89f79c5e06ec176db1b19595fac3136bdca1ae47709c1fddb9ae74136c00f8ebdaef5c0be06a54247cffee19cf2ef3fddd41dc633f949ef06cbee0
   languageName: node
   linkType: hard
 
-"@videojs/html@npm:^10.0.1":
-  version: 10.0.1
-  resolution: "@videojs/html@npm:10.0.1"
+"@videojs/html@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "@videojs/html@npm:10.1.0"
   dependencies:
-    "@videojs/core": "npm:10.0.1"
-    "@videojs/element": "npm:10.0.1"
-    "@videojs/media": "npm:10.0.1"
-    "@videojs/native-hls-video": "npm:10.0.1"
-    "@videojs/spf": "npm:10.0.1"
-    "@videojs/store": "npm:10.0.1"
-    "@videojs/utils": "npm:10.0.1"
+    "@videojs/core": "npm:10.1.0"
+    "@videojs/element": "npm:10.1.0"
+    "@videojs/media": "npm:10.1.0"
+    "@videojs/native-hls-video": "npm:10.1.0"
+    "@videojs/spf": "npm:10.1.0"
+    "@videojs/store": "npm:10.1.0"
+    "@videojs/utils": "npm:10.1.0"
   peerDependencies:
-    "@videojs/cloudflare-video": 10.0.1
-    "@videojs/dash-video": 10.0.1
-    "@videojs/google-cast": 10.0.1
-    "@videojs/hlsjs-video": 10.0.1
-    "@videojs/mux-audio": 10.0.1
-    "@videojs/mux-data": 10.0.1
-    "@videojs/mux-video": 10.0.1
-    "@videojs/shaka-video": 10.0.1
-    "@videojs/spotify-audio": 10.0.1
-    "@videojs/tiktok-video": 10.0.1
-    "@videojs/twitch-video": 10.0.1
-    "@videojs/vimeo-video": 10.0.1
-    "@videojs/wistia-video": 10.0.1
-    "@videojs/youtube-video": 10.0.1
+    "@videojs/cloudflare-video": 10.1.0
+    "@videojs/dash-video": 10.1.0
+    "@videojs/google-cast": 10.1.0
+    "@videojs/hlsjs-video": 10.1.0
+    "@videojs/mux-audio": 10.1.0
+    "@videojs/mux-data": 10.1.0
+    "@videojs/mux-video": 10.1.0
+    "@videojs/playerjs-video": 10.1.0
+    "@videojs/shaka-video": 10.1.0
+    "@videojs/spotify-audio": 10.1.0
+    "@videojs/tiktok-video": 10.1.0
+    "@videojs/twitch-video": 10.1.0
+    "@videojs/vimeo-video": 10.1.0
+    "@videojs/wistia-video": 10.1.0
+    "@videojs/youtube-video": 10.1.0
   peerDependenciesMeta:
     "@videojs/cloudflare-video":
       optional: true
@@ -2260,6 +2261,8 @@ __metadata:
       optional: true
     "@videojs/mux-video":
       optional: true
+    "@videojs/playerjs-video":
+      optional: true
     "@videojs/shaka-video":
       optional: true
     "@videojs/spotify-audio":
@@ -2274,62 +2277,63 @@ __metadata:
       optional: true
     "@videojs/youtube-video":
       optional: true
-  checksum: 10/fb23c10d5c3c039bfd7f892324dd996d0aaf05e2b9f2a15630ce2f0b5eae25368a7467036072839ca15e2461c730be0a9109c19f581c3d19b031fe65bb503ff3
+  checksum: 10/2d87ec257304064abae79f7bcfe440e4c826a1612a8e66eb7f1493b40c553670205fd1675e2f942bdce1163ec33efb8bb4e187c2e00bf8fd2b41ed1a7478470d
   languageName: node
   linkType: hard
 
-"@videojs/media@npm:10.0.1":
-  version: 10.0.1
-  resolution: "@videojs/media@npm:10.0.1"
+"@videojs/media@npm:10.1.0":
+  version: 10.1.0
+  resolution: "@videojs/media@npm:10.1.0"
   dependencies:
-    "@videojs/utils": "npm:10.0.1"
-  checksum: 10/5d0e817c2a36208355546649ab6a33d4bd445b05027dc78ecfceb9dad752d4d45b416503b8d5d24baee0a924025bc844ca394eec7f46001c9f379c386c14d806
+    "@videojs/utils": "npm:10.1.0"
+  checksum: 10/20ab018977485baa4fefb650c192000cf2112d0c9712a4341236db492210c9992f4ad4a7774d9d915d3daec466d431d2776e688f3199095a2533e23e0d029a18
   languageName: node
   linkType: hard
 
-"@videojs/native-hls-video@npm:10.0.1":
-  version: 10.0.1
-  resolution: "@videojs/native-hls-video@npm:10.0.1"
+"@videojs/native-hls-video@npm:10.1.0":
+  version: 10.1.0
+  resolution: "@videojs/native-hls-video@npm:10.1.0"
   dependencies:
-    "@videojs/media": "npm:10.0.1"
-    "@videojs/utils": "npm:10.0.1"
-  checksum: 10/d33bb767fadeed52291409d33a163b61c1cd0dd707cc69c86ca6642e47d4e463cd055d54d3acf43e3da9f75bec4c35d19fe861fdaaba30a20697ed883b640542
+    "@videojs/media": "npm:10.1.0"
+    "@videojs/spf": "npm:10.1.0"
+    "@videojs/utils": "npm:10.1.0"
+  checksum: 10/f42d666308696086717f5a1d783dc2d13b0eb06a1edc98e3aa8ddad32c70e1a34dd3f81c0b66880317a3966db3a9e8b7277f79ecf4b5bb563e638f7113555f99
   languageName: node
   linkType: hard
 
-"@videojs/spf@npm:10.0.1":
-  version: 10.0.1
-  resolution: "@videojs/spf@npm:10.0.1"
+"@videojs/spf@npm:10.1.0":
+  version: 10.1.0
+  resolution: "@videojs/spf@npm:10.1.0"
   dependencies:
-    "@videojs/media": "npm:10.0.1"
-    "@videojs/utils": "npm:10.0.1"
+    "@videojs/media": "npm:10.1.0"
+    "@videojs/utils": "npm:10.1.0"
     signal-polyfill: "npm:^0.2.2"
-  checksum: 10/7cdc51bfca6c5bc361f5fe4dad89f6c875470922972d4c4532b8ccfa3672b6e6748ec560313e9d22896b20599a1ba72f98b5ae4c4ec3f284cbc1aaa43d4f006d
+  checksum: 10/71696055461b869a88a77440296faf895336489b7ce72bf5e098ca38cc2f25a8353fccc2838c445e8179eb11717896df79aa20978dd05ed6b4506cfc7c94c63f
   languageName: node
   linkType: hard
 
-"@videojs/store@npm:10.0.1":
-  version: 10.0.1
-  resolution: "@videojs/store@npm:10.0.1"
+"@videojs/store@npm:10.1.0":
+  version: 10.1.0
+  resolution: "@videojs/store@npm:10.1.0"
   dependencies:
-    "@videojs/utils": "npm:10.0.1"
+    "@videojs/utils": "npm:10.1.0"
     react-compiler-runtime: "npm:^1.0.0"
   peerDependencies:
-    "@videojs/element": 10.0.1
+    "@videojs/element": 10.1.0
     react: ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
     "@videojs/element":
       optional: true
     react:
       optional: true
-  checksum: 10/8d73b89facb605ec3e6f516b215082f1587943909bee779b44026db7a2fb4a4e0a08e3fff35ba69eff292c5305183a820a22c4cc4cab545d3d66f37a6a8cb8af
+  checksum: 10/6a4b0346ffc780ceeb51bc9386801903e2d6110f69af922a247b53c38afca70f6da6d2a1d0232bcab8266540b5386068fc1616b170c3f25173bb49169aaa363f
   languageName: node
   linkType: hard
 
-"@videojs/utils@npm:10.0.1":
-  version: 10.0.1
-  resolution: "@videojs/utils@npm:10.0.1"
-  checksum: 10/286c36d65a4d915871198084198816de20f2385032a9f5be4ad685b1f86fae6272c99e90f6d8d73ae0cbd11952ff8c75926a61cffcaf3fcb289d7a8ccdce4d90
+"@videojs/utils@npm:10.1.0":
+  version: 10.1.0
+  resolution: "@videojs/utils@npm:10.1.0"
+  checksum: 10/63bd6cf4f679dec1b335688427575a4e3be4b5c829a3348ff3bc2a7685845530528b01827e9537d031a1123f6fdc6fe945c7cc2d5cb9da7ffa10992f0f90f772
   languageName: node
   linkType: hard
 
@@ -2687,13 +2691,13 @@ __metadata:
     "@eslint/js": "npm:^10.0.1"
     "@symfony/webpack-encore": "npm:^7.2.0"
     "@types/node": "npm:^26.6.5"
-    "@videojs/html": "npm:^10.0.1"
+    "@videojs/html": "npm:^10.1.0"
     autoprefixer: "npm:^10.6.1"
     compression-webpack-plugin: "npm:^12.0.0"
     dropzone: "npm:~6.3.5"
     eslint: "npm:^10.12.0"
     jiti: "npm:^2.7.0"
-    postcss: "npm:^8.5.29"
+    postcss: "npm:^8.5.30"
     postcss-loader: "npm:^8.2.1"
     postcss-media-minmax: "npm:^5.0.0"
     sass-embedded: "npm:^1.105.1"
@@ -2703,7 +2707,7 @@ __metadata:
     stylelint-scss: "npm:^7.3.0"
     ts-loader: "npm:^9.6.2"
     typescript: "npm:~6.0.3"
-    typescript-eslint: "npm:^8.71.1"
+    typescript-eslint: "npm:^8.71.2"
     typescript-http-client: "npm:~0.10.5"
     webpack: "npm:^5.111.1"
     webpack-cli: "npm:^7.2.3"
@@ -4470,7 +4474,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.19":
+"nanoid@npm:^3.3.20":
   version: 3.3.20
   resolution: "nanoid@npm:3.3.20"
   bin:
@@ -4894,14 +4898,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.5.29":
-  version: 8.5.29
-  resolution: "postcss@npm:8.5.29"
+"postcss@npm:^8.5.30":
+  version: 8.5.30
+  resolution: "postcss@npm:8.5.30"
   dependencies:
-    nanoid: "npm:^3.3.19"
+    nanoid: "npm:^3.3.20"
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.2"
-  checksum: 10/801c352ab8aa59aaea145c11e59f1f134db834be0398e15e16969a1ca19dabbd2aa709cdca285d796a8462cee1a1a2626d435b4b63d1a1010100934e9fac3a1b
+  checksum: 10/f7c7fdb1fc69d73d88522da220ecf99ef8de9b2eb7df2d0ceb1e8c42d7a7cc44864c98cb89dc145a79a59187a63f986af466ec6fd642c8365ad276f71c052efe
   languageName: node
   linkType: hard
 
@@ -5992,18 +5996,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-eslint@npm:^8.71.1":
-  version: 8.71.1
-  resolution: "typescript-eslint@npm:8.71.1"
+"typescript-eslint@npm:^8.71.2":
+  version: 8.71.2
+  resolution: "typescript-eslint@npm:8.71.2"
   dependencies:
-    "@typescript-eslint/eslint-plugin": "npm:8.71.1"
-    "@typescript-eslint/parser": "npm:8.71.1"
-    "@typescript-eslint/typescript-estree": "npm:8.71.1"
-    "@typescript-eslint/utils": "npm:8.71.1"
+    "@typescript-eslint/eslint-plugin": "npm:8.71.2"
+    "@typescript-eslint/parser": "npm:8.71.2"
+    "@typescript-eslint/typescript-estree": "npm:8.71.2"
+    "@typescript-eslint/utils": "npm:8.71.2"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
     typescript: ">=4.8.4 <6.1.0"
-  checksum: 10/fd965ad7b08b66f92514bb2173bb82d7388782394f61d4f8442380eb41edcd67cb0468e233335489041bc4d7becb505f06e31e457d3ab1b2f0c3126e34d28d9f
+  checksum: 10/98e52f8f5996ac981a12f5b7b3d750f442f1e93af69300a2ecdc620b572d440e6232b996ee8d1e63d0f0be5842bd95c7dbc02d0b16e142a3292f657c77a4e4f0
   languageName: node
   linkType: hard
 

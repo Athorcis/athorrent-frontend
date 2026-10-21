@@ -522,9 +522,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^16.1.1":
-  version: 16.1.1
-  resolution: "cypress@npm:16.1.1"
+"cypress@npm:^16.2.0":
+  version: 16.2.0
+  resolution: "cypress@npm:16.2.0"
   dependencies:
     "@cypress/request": "npm:^4.0.0"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -567,7 +567,7 @@ __metadata:
     yauzl: "npm:^3.3.1"
   bin:
     cypress: bin/cypress
-  checksum: 10/24540e51294b0442ecc413e23903805ea987e69977b4a94d8ad7f5247f3456758745252eccd2f045780aae038a86a55ce8cbce4aa6c1248255e0bbc42338adbc
+  checksum: 10/ea33937b4f713bf3451a16d16c7a542e1de2f89d9343c311f4177a0d4c00b8d1bbcd85e57d8497e9a26f9a4f141e13af929efef04c981931dc222ab0b45f581b
   languageName: node
   linkType: hard
 
@@ -1548,7 +1548,7 @@ __metadata:
   resolution: "tests@workspace:."
   dependencies:
     adm-zip: "npm:^0.6.1"
-    cypress: "npm:^16.1.1"
+    cypress: "npm:^16.2.0"
     cypress-map: "npm:^1.57.1"
     typescript: "npm:^7.0.2"
   languageName: unknown
