@@ -7,13 +7,15 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.4",
-        "ext-mbstring": "*",
+        "ext-apcu": "*",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
         "ext-posix": "*",
         "ext-sockets": "*",
         "clue/docker-react": "^1.6.0",
@@ -57,6 +59,14 @@
         "symfony/debug-bundle": "8.1.*",
         "symfony/stopwatch": "8.1.*",
         "symfony/web-profiler-bundle": "8.1.*"
+    },
+    "suggest": {
+        "ext-pcntl": "*",
+        "ext-pdo_mysql": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-pdo_sqlite": "*",
+        "ext-sysvsem": "*",
+        "ext-uuid": "*"
     },
     "config": {
         "allow-plugins": {
