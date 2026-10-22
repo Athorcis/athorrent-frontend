@@ -1,6 +1,7 @@
 #syntax=docker/dockerfile:1.7-labs
 
 ARG PHP_VERSION=8.5.12
+ARG PHP_EXTENSION_INSTALLER_VERSION=2.12.3
 ARG COMPOSER_VERSION=2.10.3
 ARG NODEJS_VERSION=26.12.0
 ARG NGINX_VERSION=1.31.8
@@ -15,9 +16,12 @@ ARG RUN_DIR=/var/www/athorrent
 ARG SYMFONY_APP_ENV=prod
 ARG COMPOSER_ARGS="--no-dev"
 
+FROM mlocati/php-extension-installer:${PHP_EXTENSION_INSTALLER_VERSION} AS pei
+
 FROM php:${PHP_VERSION}-fpm AS base
 
-RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
+RUN --mount=type=bind,from=pei,source=/usr/bin/install-php-extensions,target=/install-php-extensions \
+    /install-php-extensions \
       apcu intl pcntl pdo_mysql pdo_pgsql pdo_sqlite sockets sysvsem uuid
 
 RUN --mount=type=cache,target=/var/cache/apt \
@@ -41,8 +45,9 @@ VOLUME ["$RUN_DIR/var/lib", "$RUN_DIR/var/user"]
 
 FROM base AS builder
 
-RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
-      @composer-${COMPOSER_VERSION}
+ARG COMPOSER_VERSION
+RUN --mount=type=bind,from=pei,source=/usr/bin/install-php-extensions,target=/install-php-extensions \
+    /install-php-extensions @composer-${COMPOSER_VERSION}
 
 ARG NODEJS_VERSION
 
@@ -130,7 +135,6 @@ COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
 COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public/build
 COPY --from=lint $BUILD_DIR/.lint-ok $RUN_DIR/.lint-ok
 
-ARG RUN_USER
 ARG SYMFONY_APP_ENV
 RUN set -ex ;\
     rm -f .lint-ok ;\
@@ -143,8 +147,8 @@ FROM builder AS dev
 
 USER root
 
-RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
-      spx xdebug
+RUN --mount=type=bind,from=pei,source=/usr/bin/install-php-extensions,target=/install-php-extensions \
+    /install-php-extensions spx xdebug
 
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates
 
