@@ -17,6 +17,7 @@ ARG SYMFONY_APP_ENV=prod
 ARG COMPOSER_ARGS="--no-dev"
 
 FROM mlocati/php-extension-installer:${PHP_EXTENSION_INSTALLER_VERSION} AS pei
+FROM composer:${COMPOSER_VERSION} AS composer
 
 FROM php:${PHP_VERSION}-fpm AS base
 
@@ -45,8 +46,7 @@ VOLUME ["$RUN_DIR/var/lib", "$RUN_DIR/var/user"]
 
 FROM base AS builder
 
-ARG COMPOSER_VERSION
-COPY --from=composer:${COMPOSER_VERSION} /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 ARG NODEJS_VERSION
 
