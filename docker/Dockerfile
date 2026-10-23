@@ -46,8 +46,7 @@ VOLUME ["$RUN_DIR/var/lib", "$RUN_DIR/var/user"]
 FROM base AS builder
 
 ARG COMPOSER_VERSION
-RUN --mount=type=bind,from=pei,source=/usr/bin/install-php-extensions,target=/install-php-extensions \
-    /install-php-extensions @composer-${COMPOSER_VERSION}
+COPY --from=composer:${COMPOSER_VERSION} /usr/bin/composer /usr/bin/composer
 
 ARG NODEJS_VERSION
 
