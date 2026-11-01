@@ -2,7 +2,6 @@ import {defineConfig} from 'cypress';
 import AdmZip from 'adm-zip';
 
 export default defineConfig({
-    allowCypressEnv: false,
 
     expose: {
         locale: 'fr',
