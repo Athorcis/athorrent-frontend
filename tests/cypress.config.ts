@@ -29,4 +29,8 @@ export default defineConfig({
             });
         },
     },
+
+    hosts: {
+        'athorrent.local': '127.0.0.1',
+    }
 });
