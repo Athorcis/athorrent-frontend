@@ -16,7 +16,6 @@ declare namespace Cypress {
         torrentFile(filename: string, shouldExist?: boolean, options?: TorrentAddOptions): Chainable<string|undefined>;
         torrentMagnet(uri: string, shouldExist?: boolean, options?: TorrentAddOptions): Chainable<string|undefined>;
         torrentStatus(status: string): Chainable<string>;
-        torrentProgress(min?: number): Chainable<string>;
         torrentClick(selector: string): Chainable<string>;
     }
 }

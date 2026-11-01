@@ -1,4 +1,4 @@
-import {getFileSelector} from "../support/commands";
+import {getFileSelector, uploadFiles} from "../support/commands";
 import {HTTP_OK, pathWithLocale, resetTestData} from "../support/utils";
 import {TEST_DOWNLOAD_LIMIT} from "../support/torrent.commands";
 
@@ -34,9 +34,11 @@ describe('torrents', () => {
     });
 
     it('should not allow to remove file bound to torrents', function () {
-        cy.torrentFile('sintel.torrent', true, { downloadLimit: TEST_DOWNLOAD_LIMIT })
-            .torrentStatus('downloading')
-            .torrentProgress(0.003);
+        // We upload a file to create the torrent directory
+        // so we don't have to wait for the torrent to download
+        uploadFiles(['cypress/fixtures/files/test.txt'], ['Sintel/test.txt']);
+        cy.visit(pathWithLocale('/user/torrents/'));
+        cy.torrentFile('sintel.torrent');
 
         cy.visit(pathWithLocale('/user/files/'));
 

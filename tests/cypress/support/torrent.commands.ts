@@ -78,17 +78,6 @@ Cypress.Commands.add('torrentStatus', {
     return cy.wrap(torrentId);
 });
 
-Cypress.Commands.add('torrentProgress', {
-    prevSubject: true,
-}, (torrentId: string, min = 0) => {
-    cy.get(`#torrent-${torrentId} progress`, { timeout: 30_000 })
-        .should($el => {
-            expect(Number($el.attr('value') ?? 0)).to.be.greaterThan(min);
-        });
-
-    return cy.wrap(torrentId);
-});
-
 Cypress.Commands.add('torrentClick', {
     prevSubject: true,
 }, (torrentId: string, selector: string) => {
