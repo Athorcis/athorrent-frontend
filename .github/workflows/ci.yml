@@ -135,5 +135,5 @@ jobs:
               with:
                   artifact-name: cypress-built-image-artifacts
               env:
-                  ATHORRENT_PHP_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-php:${{ github.sha }}
-                  ATHORRENT_NGINX_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-nginx:${{ github.sha }}
+                  ATHORRENT_PHP_IMAGE: ${{ steps.meta-php.outputs.tags }}
+                  ATHORRENT_NGINX_IMAGE: ${{ steps.meta-nginx.outputs.tags }}
