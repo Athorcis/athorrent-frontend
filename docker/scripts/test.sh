@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ -z "$ATHORRENT_PHP_IMAGE" ]
 then
     docker/scripts/up-env.sh test
