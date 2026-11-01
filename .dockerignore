@@ -1,5 +1,6 @@
 .idea
 .git
+.github
 assets/images/icon.ai
 bin
 !bin/console
