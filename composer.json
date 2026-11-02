@@ -75,6 +75,11 @@
             "symfony/runtime": true
         },
         "bump-after-update": true,
+        "policy": {
+            "cooldown": {
+                "period": "7days"
+            }
+        },
         "sort-packages": true
     },
     "autoload": {
