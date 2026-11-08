@@ -5,6 +5,9 @@ ARG PHP_EXTENSION_INSTALLER_VERSION=2.13.1
 ARG COMPOSER_VERSION=2.11.1
 ARG NODEJS_VERSION=26.13.0
 ARG NGINX_VERSION=1.31.8
+ARG APP_VERSION=dev
+ARG GIT_REVISION=unknown
+ARG IMAGE_CREATED=unknown
 
 ARG UID=33
 ARG GID=33
@@ -167,6 +170,20 @@ WORKDIR $RUN_DIR
 
 FROM base AS php
 
+ARG PHP_VERSION
+ARG APP_VERSION
+ARG GIT_REVISION
+ARG IMAGE_CREATED
+LABEL org.opencontainers.image.title="Athorrent PHP" \
+      org.opencontainers.image.description="PHP application runtime for Athorrent" \
+      org.opencontainers.image.source="https://github.com/athorcis/athorrent-frontend" \
+      org.opencontainers.image.vendor="Athorcis" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.version="${APP_VERSION}" \
+      org.opencontainers.image.revision="${GIT_REVISION}" \
+      org.opencontainers.image.base.name="php:${PHP_VERSION}-fpm" \
+      org.opencontainers.image.created="${IMAGE_CREATED}"
+
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
 COPY docker/conf/php/zz-fpm-prod.ini /usr/local/etc/php-fpm.d/
 
@@ -186,6 +203,20 @@ RUN mkdir -p /var/cache/nginx/qb_assets && chown nginx:nginx /var/cache/nginx/qb
 VOLUME ["/var/cache/nginx/qb_assets"]
 
 FROM nginx-base AS nginx
+
+ARG NGINX_VERSION
+ARG APP_VERSION
+ARG GIT_REVISION
+ARG IMAGE_CREATED
+LABEL org.opencontainers.image.title="Athorrent Nginx" \
+      org.opencontainers.image.description="Nginx web server for Athorrent" \
+      org.opencontainers.image.source="https://github.com/athorcis/athorrent-frontend" \
+      org.opencontainers.image.vendor="Athorcis" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.version="${APP_VERSION}" \
+      org.opencontainers.image.revision="${GIT_REVISION}" \
+      org.opencontainers.image.base.name="nginx:${NGINX_VERSION}-alpine-slim" \
+      org.opencontainers.image.created="${IMAGE_CREATED}"
 
 ARG RUN_DIR
 WORKDIR $RUN_DIR

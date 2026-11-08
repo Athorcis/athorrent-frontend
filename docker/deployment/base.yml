@@ -14,6 +14,10 @@ x-php-base: &php-base
         context: ../..
         dockerfile: docker/Dockerfile
         target: php
+        args:
+            APP_VERSION: ${APP_VERSION:-dev}
+            GIT_REVISION: ${GIT_REVISION:-unknown}
+            IMAGE_CREATED: ${IMAGE_CREATED:-unknown}
     env_file:
         - ../../.env
 
@@ -56,6 +60,10 @@ services:
             context: ../..
             dockerfile: docker/Dockerfile
             target: nginx
+            args:
+                APP_VERSION: ${APP_VERSION:-dev}
+                GIT_REVISION: ${GIT_REVISION:-unknown}
+                IMAGE_CREATED: ${IMAGE_CREATED:-unknown}
         hostname: athorrent-nginx
         volumes:
             - user_data:/var/www/athorrent/var/user:ro
