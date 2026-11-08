@@ -55,7 +55,6 @@
         "phpstan/phpstan": "^2.3.4",
         "phpstan/phpstan-doctrine": "^2.1",
         "phpstan/phpstan-symfony": "^2.1.1",
-        "roave/security-advisories": "dev-latest",
         "symfony/debug-bundle": "8.1.*",
         "symfony/stopwatch": "8.1.*",
         "symfony/web-profiler-bundle": "8.1.*"
