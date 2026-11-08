@@ -1,13 +1,13 @@
 
 services:
     backend-manager:
-        image: ${ATHORRENT_PHP_IMAGE}
+        image: athorrent-php:local
         build: !reset null
 
     php:
-        image: ${ATHORRENT_PHP_IMAGE}
+        image: athorrent-php:local
         build: !reset null
 
     nginx:
-        image: ${ATHORRENT_NGINX_IMAGE}
+        image: athorrent-nginx:local
         build: !reset null
