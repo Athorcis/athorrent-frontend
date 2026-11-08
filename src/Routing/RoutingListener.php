@@ -35,7 +35,7 @@ class RoutingListener implements EventSubscriberInterface
     {
         return [
             KernelEvents::VIEW => 'onKernelView',
-            KernelEvents::REQUEST => 'onKernelRequest'
+            KernelEvents::REQUEST => 'onKernelRequest',
         ];
     }
 
@@ -75,13 +75,14 @@ class RoutingListener implements EventSubscriberInterface
                             if ($routeLocale) {
                                 $ajaxRouteDescriptors[$action][$prefixId] = [
                                     'method' => $route->getMethods()[0],
-                                    'pattern' => $route->getPath()
+                                    'pattern' => $route->getPath(),
                                 ];
                             }
-                        } elseif (!$routeLocale) {
+                        }
+                        elseif (!$routeLocale) {
                             $ajaxRouteDescriptors[$action][$prefixId] = [
                                 'method' => $route->getMethods()[0],
-                                'pattern' => $route->getPath()
+                                'pattern' => $route->getPath(),
                             ];
                         }
                     }

@@ -21,7 +21,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Throwable;
 
-enum ResetMode: string {
+enum ResetMode: string
+{
     case Full = 'full';
     case Quick = 'quick';
 }
@@ -30,20 +31,25 @@ enum ResetMode: string {
 class InitCommand
 {
     public function __construct(
-        #[Lazy] private BackendManagerProxy $backendManager,
-        #[Lazy] private UserRepository      $userRepository,
-        #[Lazy] private EntityManagerInterface $entityManager,
-        #[Lazy] private TorrentManagerFactory $torrentManagerFactory,
-        #[Lazy] private UserManager $userManager,
-    )
-    {
+        #[Lazy]
+        private BackendManagerProxy $backendManager,
+        #[Lazy]
+        private UserRepository $userRepository,
+        #[Lazy]
+        private EntityManagerInterface $entityManager,
+        #[Lazy]
+        private TorrentManagerFactory $torrentManagerFactory,
+        #[Lazy]
+        private UserManager $userManager,
+    ) {
     }
 
     public function __invoke(
-        #[Option] ?ResetMode $reset = null,
-        #[Option] bool $noUnreachableBackend = false,
-    ): int
-    {
+        #[Option]
+        ?ResetMode $reset = null,
+        #[Option]
+        bool $noUnreachableBackend = false,
+    ): int {
         $this->backendManager->setAllowTransportExceptions(!$noUnreachableBackend);
 
         if ($reset) {
@@ -118,6 +124,7 @@ class InitCommand
     {
         $connection = $this->entityManager->getConnection();
         $schemaManager = $connection->createSchemaManager();
+
         return $schemaManager->tableExists('user');
     }
 

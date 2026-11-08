@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
+
 use function in_array;
 
 /**
@@ -21,7 +22,7 @@ class CompiledUrlGenerator extends UrlGenerator
     /**
      * @param array<string, list<array<string, mixed>>> $compiledRoutes
      */
-    public function __construct(private readonly array $compiledRoutes, RequestContext $context, LoggerInterface|null $logger = null, private readonly ?string $defaultLocale = null)
+    public function __construct(private readonly array $compiledRoutes, RequestContext $context, ?LoggerInterface $logger = null, private readonly ?string $defaultLocale = null)
     {
         $this->context = $context;
         $this->logger = $logger;
@@ -44,7 +45,8 @@ class CompiledUrlGenerator extends UrlGenerator
 
         if (isset($parameters['_prefixId'])) {
             $prefixId = $parameters['_prefixId'];
-        } else {
+        }
+        else {
             $currentPrefixId = $this->context->getParameter('_prefixId');
 
             foreach ($this->actionMap[$name] as $prefixId) {
@@ -66,16 +68,16 @@ class CompiledUrlGenerator extends UrlGenerator
             ?? $this->context->getParameter('_locale')
                 ?: $this->defaultLocale;
 
-        if (null !== $locale) {
-
+        if ($locale !== null) {
             $tmpLocale = $locale;
 
             do {
-                if (($this->compiledRoutes[$name.'.'.$tmpLocale][1]['_canonical_route'] ?? null) === $name) {
-                    $name .= '.'.$tmpLocale;
+                if (($this->compiledRoutes[$name . '.' . $tmpLocale][1]['_canonical_route'] ?? null) === $name) {
+                    $name .= '.' . $tmpLocale;
                     break;
                 }
-            } while (false !== $tmpLocale = strstr((string) $tmpLocale, '_', true));
+            }
+            while (false !== $tmpLocale = strstr((string) $tmpLocale, '_', true));
         }
 
         if (!isset($this->compiledRoutes[$name])) {
@@ -100,7 +102,8 @@ class CompiledUrlGenerator extends UrlGenerator
         if (isset($defaults['_canonical_route'], $defaults['_locale'])) {
             if (!in_array('_locale', $variables, true)) {
                 unset($parameters['_locale']);
-            } elseif (!isset($parameters['_locale'])) {
+            }
+            elseif (!isset($parameters['_locale'])) {
                 $parameters['_locale'] = $defaults['_locale'];
             }
         }

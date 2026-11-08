@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Athorrent\Backend;
 
-enum BackendState: string {
+enum BackendState: string
+{
     case Unknown = 'unknown';
     case Starting = 'starting';
     case Running = 'running';

@@ -17,7 +17,8 @@ class LocalizedKeyGenerator extends KeyGenerator
     {
         if ($value === null) {
             $keySuffix = '';
-        } else {
+        }
+        else {
             $keySuffix = '.' . parent::generateKey($value);
         }
 

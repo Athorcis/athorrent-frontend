@@ -6,6 +6,7 @@ namespace Athorrent\Notification;
 
 use Athorrent\Security\SameOrigin;
 use Athorrent\View\View;
+use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -62,6 +63,7 @@ class NotificationListener implements EventSubscriberInterface
     {
         /** @var FlashBagAwareSessionInterface $session */
         $session = $request->getSession();
+
         return $session->getFlashBag();
     }
 
@@ -87,12 +89,13 @@ class NotificationListener implements EventSubscriberInterface
 
         if ($action) {
             $url = $this->urlGenerator->generate($action);
-        } else {
+        }
+        else {
             $url = SameOrigin::getSameOriginReferer($request);
         }
 
         if ($url === null) {
-            throw new \RuntimeException('fail to detect redirect url');
+            throw new RuntimeException('fail to detect redirect url');
         }
 
         return new RedirectResponse($url, 302, [

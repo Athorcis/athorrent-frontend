@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
+
 use function React\Async\async;
 
 class BackendManagerCommand extends Command
@@ -30,7 +31,7 @@ class BackendManagerCommand extends Command
         $destroyServer = $this->registerHealthEndpoint($output);
 
         $interruptionHandler = SignalHandler::create(null, function (string $signalName, SignalHandler $self) use ($output, $destroyServer) {
-            $output->writeln(sprintf("Received signal %s", $signalName));
+            $output->writeln(sprintf('Received signal %s', $signalName));
 
             // Defer stop off the signal handler or it can crash: https://github.com/php/php-src/pull/9028
             $promise = $this->backendManager->stop();
@@ -43,10 +44,10 @@ class BackendManagerCommand extends Command
         });
 
         $updateHandler = SignalHandler::create([SignalHandler::SIGUSR1], function (string $signalName, SignalHandler $self) use ($output) {
-            $output->writeln(sprintf("Received signal %s", $signalName));
+            $output->writeln(sprintf('Received signal %s', $signalName));
 
             // We have to execute this asynchronously or it crashes: https://github.com/php/php-src/pull/9028
-            Loop::get()->futureTick(async(function () use($self) {
+            Loop::get()->futureTick(async(function () use ($self) {
                 $this->backendManager->update();
                 $self->reset();
             }));
@@ -73,21 +74,21 @@ class BackendManagerCommand extends Command
                 ]);
             }
             elseif ($path === '/user/add' && $request->getMethod() === 'POST') {
-                $this->backendManager->addUser((int)$request->getQueryParams()['id']);
+                $this->backendManager->addUser((int) $request->getQueryParams()['id']);
 
                 return Response::json([
                     'status' => 'ok',
                 ]);
             }
             elseif ($path === '/user/remove' && $request->getMethod() === 'DELETE') {
-                $this->backendManager->removeUser((int)$request->getQueryParams()['id']);
+                $this->backendManager->removeUser((int) $request->getQueryParams()['id']);
 
                 return Response::json([
                     'status' => 'ok',
                 ]);
             }
             elseif ($path === '/user/detach' && $request->getMethod() === 'DELETE') {
-                $this->backendManager->detachUser((int)$request->getQueryParams()['id']);
+                $this->backendManager->detachUser((int) $request->getQueryParams()['id']);
 
                 return Response::json([
                     'status' => 'ok',
@@ -100,11 +101,13 @@ class BackendManagerCommand extends Command
                     'status' => 'ok',
                 ]);
             }
-        } catch (HttpExceptionInterface $e) {
+        }
+        catch (HttpExceptionInterface $e) {
             return Response::json(['status' => 'error', 'message' => $e->getMessage()])->withStatus($e->getStatusCode());
         }
         catch (Throwable $e) {
             dump($e);
+
             return Response::json(['status' => 'error', 'message' => $e->getMessage()])->withStatus(500);
         }
 

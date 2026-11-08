@@ -22,7 +22,6 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
  *     potatoenabled: bool,
  *     caps: list<array{ID: string, Name: string}>,
  * }
- *
  * @phpstan-type JackettPublicApi_Result array{
  *     FirstSeen: string,
  *     Tracker: string,
@@ -69,7 +68,6 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
  *     UploadVolumeFactor: float,
  *     Gain: float,
  * }
- *
  * @phpstan-type JackettPublicApi_Indexer array{
  *     ID: string,
  *     Name: string,
@@ -78,7 +76,6 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
  *     Error: string|null,
  *     ElapsedTime: int,
  * }
- *
  * @phpstan-type JackettPublicApi_Results array{
  *     Results: list<JackettPublicApi_Result>,
  *     Indexers: list<JackettPublicApi_Indexer>,
@@ -88,7 +85,9 @@ class JackettApi
 {
     private ?Cookie $authCookie = null;
 
-    public function __construct(private readonly HttpClientInterface $http) {}
+    public function __construct(private readonly HttpClientInterface $http)
+    {
+    }
 
     /**
      * @param array<string, mixed> $options

@@ -22,13 +22,14 @@ class TorrentManagerFactory
         private readonly CacheInterface $cache,
         private readonly Filesystem $fs,
         private readonly BackendFactory $backendFactory,
-    )
-    {}
+    ) {
+    }
 
     protected function doCreate(User $user): TorrentManagerInterface
     {
         /** @var QBittorrentBackend $backend */
         $backend = $this->backendFactory->create($user);
+
         return new QBittorrentManager($this->cache, $this->fs, $user, $backend);
     }
 

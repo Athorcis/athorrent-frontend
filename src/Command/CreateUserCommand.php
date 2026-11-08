@@ -22,11 +22,13 @@ class CreateUserCommand extends Command
      * @param list<string> $roles
      */
     public function __invoke(
-        #[Argument] string $username,
-        #[Argument] string $password,
-        #[Argument(suggestedValues: [self::class, 'suggestRoles'])] array $roles,
-    ): int
-    {
+        #[Argument]
+        string $username,
+        #[Argument]
+        string $password,
+        #[Argument(suggestedValues: [self::class, 'suggestRoles'])]
+        array $roles,
+    ): int {
         $roles = array_map(UserRole::from(...), $roles);
 
         $this->userManager->createUser($username, $password, $roles);

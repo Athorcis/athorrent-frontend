@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Throwable;
 
 readonly class UserManager
 {
@@ -58,7 +59,8 @@ readonly class UserManager
         try {
             $this->initUserDirs($user);
             $this->backendManager->addUser($user);
-        } catch (\Throwable $e) {
+        }
+        catch (Throwable $e) {
             $this->removeUser($user, true);
             throw $e;
         }
@@ -102,7 +104,8 @@ readonly class UserManager
     {
         try {
             $this->backendManager->removeUser($user);
-        } catch (\Throwable $t) {
+        }
+        catch (Throwable $t) {
             if (!$creationCleanup) {
                 throw $t;
             }
@@ -112,7 +115,8 @@ readonly class UserManager
 
         try {
             $this->removeUserDirs($user);
-        } catch (\Throwable $t) {
+        }
+        catch (Throwable $t) {
             if (!$creationCleanup) {
                 throw $t;
             }
@@ -129,7 +133,7 @@ readonly class UserManager
             $this->entityManager->remove($user);
             $this->entityManager->flush();
         }
-        catch (\Throwable $t) {
+        catch (Throwable $t) {
             if (!$creationCleanup) {
                 throw $t;
             }

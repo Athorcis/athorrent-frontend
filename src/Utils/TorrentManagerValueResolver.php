@@ -33,7 +33,7 @@ class TorrentManagerValueResolver implements ValueResolverInterface
 
             if ($user instanceof User) {
                 return [
-                    $this->torrentManagerFactory->create($user)
+                    $this->torrentManagerFactory->create($user),
                 ];
             }
         }

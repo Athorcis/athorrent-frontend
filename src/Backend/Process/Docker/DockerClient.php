@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Athorrent\Backend\Process\Docker;
 
+use Closure;
 use Clue\React\Docker\Client;
 use Clue\React\Docker\Io\ResponseParser;
 use React\Http\Browser;
@@ -42,6 +43,6 @@ class DockerClient extends Client
 
     private function accessPrivate(string $property): mixed
     {
-        return \Closure::bind(fn () => $this->{$property}, $this, Client::class)();
+        return Closure::bind(fn () => $this->{$property}, $this, Client::class)();
     }
 }

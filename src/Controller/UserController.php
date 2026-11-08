@@ -86,7 +86,8 @@ class UserController extends AbstractController
      */
     #[Route(path: '/{userId}/size', methods: 'POST', options: ['expose' => true])]
     public function updateUserSize(
-        #[MapEntity(id: 'userId')] User $user,
+        #[MapEntity(id: 'userId')]
+        User $user,
         UserManager $userManager,
         TwigHelperExtension $twigHelper,
     ): array {

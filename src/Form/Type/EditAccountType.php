@@ -62,7 +62,7 @@ class EditAccountType extends AbstractType
                     'invalid_message' => 'error.passwordsDiffer',
                     'label' => 'account.edit.new_password',
                     'required' => false,
-                    'first_options'  => [
+                    'first_options' => [
                         'label' => 'account.edit.new_password',
                         'hash_property_path' => 'password',
                         'attr' => ['autocomplete' => 'new-password'],
@@ -91,7 +91,7 @@ class EditAccountType extends AbstractType
 
         $builder->get('roles')
             ->addModelTransformer(new CallbackTransformer(
-                fn ($rolesAsArray) => count($rolesAsArray) ? $this->translator->trans($rolesAsArray[0]): null,
+                fn ($rolesAsArray) => count($rolesAsArray) ? $this->translator->trans($rolesAsArray[0]) : null,
                 fn ($rolesAsString) => [$rolesAsString]
             ));
     }

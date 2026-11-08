@@ -21,7 +21,6 @@ use Athorrent\Database\Entity\User;
  *     paused: bool,
  * }
  */
-
 interface TorrentManagerInterface
 {
     public function getUser(): User;
@@ -42,6 +41,7 @@ interface TorrentManagerInterface
     public function getPaths(): array;
 
     public function pauseTorrent(string $hash): string;
+
     public function resumeTorrent(string $hash): string;
 
     public function removeTorrent(string $hash): string;

@@ -7,7 +7,7 @@ namespace Athorrent\Utils;
 use Athorrent\Database\Entity\User;
 use Symfony\Component\Filesystem\Filesystem;
 
-readonly abstract class AbstractTorrentManager implements TorrentManagerInterface
+abstract readonly class AbstractTorrentManager implements TorrentManagerInterface
 {
     protected function __construct(protected Filesystem $fs, protected User $user)
     {

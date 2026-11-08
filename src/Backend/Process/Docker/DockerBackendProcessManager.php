@@ -14,13 +14,14 @@ use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Throwable;
+
 use function React\Async\await;
 use function React\Async\delay;
 
 #[AsTaggedItem('docker')]
 class DockerBackendProcessManager implements BackendProcessManagerInterface
 {
-    /** @var array<int, DockerBackendProcess>  */
+    /** @var array<int, DockerBackendProcess> */
     private array $processes = [];
 
     public function __construct(
@@ -36,8 +37,8 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
         private readonly string $network,
         private readonly EntityManagerInterface $entityManager,
         private readonly UserManager $userManager,
-    )
-    {}
+    ) {
+    }
 
     public function isPersistent(): bool
     {
@@ -87,6 +88,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
     public function listRunningProcesses(): array
     {
         $this->processes = $this->listProcesses(false);
+
         return $this->processes;
     }
 
@@ -172,7 +174,7 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
             $mountExtra = [
                 'VolumeOptions' => [
                     'Subpath' => $source,
-                ]
+                ],
             ];
         }
         else {
@@ -203,11 +205,11 @@ class DockerBackendProcessManager implements BackendProcessManagerInterface
                 'NetworkMode' => $this->network,
                 'PortBindings' => [
                     "$port/tcp" => [[
-                        "HostPort" => "$port",
+                        'HostPort' => "$port",
                     ]],
                     "$port/udp" => [[
-                        "HostPort" => "$port",
-                    ]]
+                        'HostPort' => "$port",
+                    ]],
                 ],
                 'Mounts' => [
                     $this->getMountConfig(

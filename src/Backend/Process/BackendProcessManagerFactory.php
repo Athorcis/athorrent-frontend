@@ -12,8 +12,9 @@ readonly class BackendProcessManagerFactory
 {
     public function __construct(
         #[AutowireLocator(BackendProcessManagerInterface::class)]
-        private ContainerInterface $serviceLocator
-    ) {}
+        private ContainerInterface $serviceLocator,
+    ) {
+    }
 
     public function get(string $type): BackendProcessManagerInterface
     {

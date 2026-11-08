@@ -31,8 +31,7 @@ class TwigHelperExtension extends AbstractExtension
         private readonly IconRendererInterface $iconRenderer,
         #[Autowire('%kernel.default_locale%')]
         private readonly string $defaultLocale,
-    )
-    {
+    ) {
     }
 
     public function getFunctions(): array
@@ -63,11 +62,14 @@ class TwigHelperExtension extends AbstractExtension
     {
         if ($value->isDirectory()) {
             return 'directory';
-        } elseif ($value->isText()) {
+        }
+        elseif ($value->isText()) {
             return 'text-file';
-        } elseif ($value->isImage()) {
+        }
+        elseif ($value->isImage()) {
             return 'image-file';
-        } elseif ($value->isPlayable()) {
+        }
+        elseif ($value->isPlayable()) {
             return 'playable-file';
         }
 

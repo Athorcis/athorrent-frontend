@@ -21,20 +21,20 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
     }
 
     /**
-     * @param array<string, mixed> $globals
+     * @param array<string, mixed>    $globals
      * @param ReflectionClass<object> $class
      */
     protected function addRouteWithoutLocale(RouteCollection $collection, Route $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
     {
         $attr->defaults = array_replace($attr->defaults, [
-            '_locale' => $this->defaultLocale
+            '_locale' => $this->defaultLocale,
         ]);
 
         parent::addRoute($collection, $attr, $globals, $class, $method);
     }
 
     /**
-     * @param array<string, mixed> $globals
+     * @param array<string, mixed>    $globals
      * @param ReflectionClass<object> $class
      */
     protected function addRouteWithLocale(RouteCollection $collection, Route $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
@@ -48,8 +48,8 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
     }
 
     /**
-     * @param Route $attr
-     * @param array<string, mixed> $globals
+     * @param Route                   $attr
+     * @param array<string, mixed>    $globals
      * @param ReflectionClass<object> $class
      */
     protected function addRoute(RouteCollection $collection, object $attr, array $globals, ReflectionClass $class, ReflectionMethod $method): void
@@ -60,7 +60,7 @@ class AttributeClassLoader extends AttributeRouteControllerLoader
 
         $attr->defaults = array_replace($attr->defaults, [
             '_action' => $method->getName(),
-            '_prefixId' => $globals['name'] ?? ''
+            '_prefixId' => $globals['name'] ?? '',
         ]);
 
         $this->addRouteWithLocale($collection, clone $attr, $globals, $class, $method);
