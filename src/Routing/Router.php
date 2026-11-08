@@ -17,9 +17,11 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
+
 use function function_exists;
 use function in_array;
 use function ini_get;
+
 use const FILTER_VALIDATE_BOOL;
 use const PHP_SAPI;
 
@@ -39,7 +41,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
     private static ?array $cache = [];
 
     public function __construct(
-        private readonly BaseRouter $inner
+        private readonly BaseRouter $inner,
     ) {
         $this->inner->setOption('generator_class', CompiledUrlGenerator::class);
     }
@@ -54,13 +56,13 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
      */
     public function getActionMap(): array
     {
-        if (null !== $this->actionMap) {
+        if ($this->actionMap !== null) {
             return $this->actionMap;
         }
 
         $cacheDir = $this->inner->getOption('cache_dir');
 
-        if (null === $cacheDir) {
+        if ($cacheDir === null) {
             $dumper = $this->getActionMapDumperInstance();
             $this->actionMap = $dumper->generateActionMap();
         }
@@ -95,7 +97,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
     private function generateActionMapCache(string $cacheDir): string
     {
         $configCache = $this->getConfigCacheFactory()->cache(
-            $cacheDir.'/action-map.php',
+            $cacheDir . '/action-map.php',
             function (ConfigCacheInterface $cache): void {
                 $dumper = $this->getActionMapDumperInstance();
 
@@ -121,11 +123,11 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
     /** @return ActionMap */
     private static function readCache(string $path): array
     {
-        if ([] === self::$cache && function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOL) && (!in_array(PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOL))) {
+        if (self::$cache === [] && function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOL) && (!in_array(PHP_SAPI, ['cli', 'phpdbg'], true) || filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOL))) {
             self::$cache = null;
         }
 
-        if (null === self::$cache) {
+        if (self::$cache === null) {
             return require $path;
         }
 
@@ -174,7 +176,7 @@ class Router implements RouterInterface, RequestMatcherInterface, WarmableInterf
     {
         $warmed = $this->inner->warmUp($cacheDir, $buildDir);
 
-        if (null === $this->inner->getOption('cache_dir')) {
+        if ($this->inner->getOption('cache_dir') === null) {
             return $warmed;
         }
 

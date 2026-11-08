@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
+use function in_array;
+
 readonly class LogoutListener implements EventSubscriberInterface
 {
     /**
@@ -28,7 +30,7 @@ readonly class LogoutListener implements EventSubscriberInterface
     {
         $locale = $event->getRequest()->query->getString('_locale', $this->defaultLocale);
 
-        if (!\in_array($locale, $this->locales, true)) {
+        if (!in_array($locale, $this->locales, true)) {
             $locale = $this->defaultLocale;
         }
 

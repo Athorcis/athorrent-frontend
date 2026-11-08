@@ -28,6 +28,7 @@ readonly class AuthenticationFailureHandler implements AuthenticationFailureHand
         }
 
         $notification = new ErrorNotification('error.loginFailure');
+
         return $this->notificationListener->handleNotification($notification, $request);
     }
 }

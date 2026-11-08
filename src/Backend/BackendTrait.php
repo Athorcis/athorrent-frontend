@@ -82,6 +82,6 @@ trait BackendTrait
 
     public function __toString(): string
     {
-        return sprintf("backend[%d]", $this->user->getId());
+        return sprintf('backend[%d]', $this->user->getId());
     }
 }

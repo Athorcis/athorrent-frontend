@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Athorrent\Filesystem;
 
-
 use Athorrent\Backend\BackendUnavailableException;
 use Athorrent\Database\Entity\User;
 use Athorrent\Utils\TorrentManagerInterface;
@@ -44,7 +43,7 @@ class TorrentFilesystem extends UserFilesystem
      */
     protected function getTorrentPaths(): array
     {
-       return $this->torrentPaths ??= $this->torrentManager->getPaths();
+        return $this->torrentPaths ??= $this->torrentManager->getPaths();
     }
 
     /**
@@ -61,6 +60,7 @@ class TorrentFilesystem extends UserFilesystem
         }
         catch (BackendUnavailableException) {
             $this->torrentManagerFailed = true;
+
             return true;
         }
 

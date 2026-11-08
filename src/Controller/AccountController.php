@@ -26,7 +26,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * Remove the logged-in user from Doctrine then reload the user from the database
+     * Remove the logged-in user from Doctrine then reload the user from the database.
      */
     protected function reloadUser(): ?UserInterface
     {

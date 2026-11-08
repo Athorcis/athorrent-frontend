@@ -174,7 +174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
      */
     public function setRoles(array $roles): void
     {
-        $this->hasRoles = new ArrayCollection(array_map(fn($role) => new UserHasRole($this, UserRole::fromOrSelf($role)), $roles));
+        $this->hasRoles = new ArrayCollection(array_map(fn ($role) => new UserHasRole($this, UserRole::fromOrSelf($role)), $roles));
     }
 
     /**
@@ -233,7 +233,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }
@@ -246,7 +246,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, CacheKe
     public function getPath(string $path): string
     {
         // @phpstan-ignore constant.notFound
-        return Path::join(USER_ROOT_DIR, (string)$this->id, $path);
+        return Path::join(USER_ROOT_DIR, (string) $this->id, $path);
     }
 
     public function getBackendPath(string $path = ''): string

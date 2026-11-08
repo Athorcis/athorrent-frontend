@@ -42,7 +42,8 @@ class TorrentController extends AbstractController
             $torrents = $torrentManager->getTorrents();
 
             usort(
-                $torrents, fn($a, $b) => strcmp($a['name'], $b['name'])
+                $torrents,
+                fn ($a, $b) => strcmp($a['name'], $b['name'])
             );
 
             $backendAvailable = true;
@@ -50,8 +51,8 @@ class TorrentController extends AbstractController
             $backendUpdating = false;
             $backendStopped = false;
             $alertLevel = 'none';
-
-        } catch (BackendUnavailableException $e) {
+        }
+        catch (BackendUnavailableException $e) {
             $this->logger->error('backend unavailable', ['exception' => $e]);
 
             $torrents = [];
@@ -83,7 +84,7 @@ class TorrentController extends AbstractController
                 'error.fileTooBig',
                 'error.serverError',
                 'error.title',
-            ]
+            ],
         ]);
     }
 
@@ -96,9 +97,9 @@ class TorrentController extends AbstractController
         Request $request,
         TorrentManagerInterface $torrentManager,
         ValidatorInterface $validator,
-        #[MapQueryParameter] ?int $downloadLimit = null,
-    ): array
-    {
+        #[MapQueryParameter]
+        ?int $downloadLimit = null,
+    ): array {
         $this->applyTestDownloadLimit($downloadLimit, $torrentManager);
 
         /** @var UploadedFile $file */
@@ -109,7 +110,6 @@ class TorrentController extends AbstractController
             new Assert\File(
                 maxSize: 1_048_576,
                 mimeTypes: ['application/x-bittorrent'],
-
                 maxSizeMessage: 'error.fileTooBig',
                 mimeTypesMessage: 'error.notATorrent',
                 uploadIniSizeErrorMessage: 'error.fileTooBig',
@@ -130,7 +130,7 @@ class TorrentController extends AbstractController
         }
         catch (ClientException $e) {
             if ($e->getResponse()->getStatusCode() === 415) {
-                throw new UserVisibleException("error.invalidTorrentFile");
+                throw new UserVisibleException('error.invalidTorrentFile');
             }
 
             throw $e;
@@ -144,9 +144,9 @@ class TorrentController extends AbstractController
      */
     #[Route(path: '/magnet', methods: 'GET')]
     public function addMagnet(
-        #[MapQueryParameter] ?string $magnet = null,
-    ): RedirectResponse
-    {
+        #[MapQueryParameter]
+        ?string $magnet = null,
+    ): RedirectResponse {
         $parameters = $magnet !== null ? ['magnet' => $magnet] : [];
 
         return new RedirectResponse($this->generateUrl('listTorrents', $parameters, UrlGeneratorInterface::RELATIVE_PATH));
@@ -160,9 +160,9 @@ class TorrentController extends AbstractController
     public function addMagnets(
         Request $request,
         TorrentManagerInterface $torrentManager,
-        #[MapQueryParameter] ?int $downloadLimit = null,
-    ): array
-    {
+        #[MapQueryParameter]
+        ?int $downloadLimit = null,
+    ): array {
         $this->applyTestDownloadLimit($downloadLimit, $torrentManager);
 
         $magnets = $request->request->all('magnets');
@@ -202,6 +202,7 @@ class TorrentController extends AbstractController
     public function pauseTorrent(TorrentManagerInterface $torrentManager, string $hash): array
     {
         $torrentManager->pauseTorrent($hash);
+
         return [];
     }
 
@@ -213,6 +214,7 @@ class TorrentController extends AbstractController
     public function resumeTorrent(TorrentManagerInterface $torrentManager, string $hash): array
     {
         $torrentManager->resumeTorrent($hash);
+
         return [];
     }
 
@@ -224,6 +226,7 @@ class TorrentController extends AbstractController
     public function removeTorrent(TorrentManagerInterface $torrentManager, string $hash): array
     {
         $torrentManager->removeTorrent($hash);
+
         return [];
     }
 

@@ -60,7 +60,8 @@ readonly class FilesystemValueResolver implements ValueResolverInterface
 
         if ($request->attributes->has('id') && $request->attributes->get('_prefixId') === 'sharedFiles_') {
             $filesystem = $this->filesystemFactory->createSharedFilesystem($request->attributes->get('id'));
-        } else {
+        }
+        else {
             $filesystem = $this->filesystemFactory->createTorrentFilesystem();
         }
 

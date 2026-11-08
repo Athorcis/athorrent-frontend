@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route(path: "/tests", options: ['csrf' => false], env: "test")]
+#[Route(path: '/tests', options: ['csrf' => false], env: 'test')]
 class TestsController extends AbstractController
 {
-    #[Route(path: "/reset-data", methods: "POST")]
+    #[Route(path: '/reset-data', methods: 'POST')]
     public function resetData(KernelInterface $kernel): Response
     {
         $application = new Application($kernel);

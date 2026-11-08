@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Throwable;
+
 use function React\Async\async;
 use function React\Async\await;
 use function React\Async\delay;
@@ -42,19 +43,19 @@ class BackendManager
     /** @var SplObjectStorage<PromiseInterface<void>, void> */
     private SplObjectStorage $sleepPromises;
 
-    /** @var array<int, BackendInterface>  */
+    /** @var array<int, BackendInterface> */
     private array $backends;
 
     /** @var SplObjectStorage<BackendInterface, void> */
     private SplObjectStorage $failedBackends;
 
-    /** @var SplQueue<BackendInterface>  */
+    /** @var SplQueue<BackendInterface> */
     private SplQueue $startQueue;
 
-    /** @var SplQueue<BackendInterface>  */
+    /** @var SplQueue<BackendInterface> */
     private SplQueue $heartbeatQueue;
 
-    /** @var SplQueue<BackendInterface>  */
+    /** @var SplQueue<BackendInterface> */
     private SplQueue $nextHeartbeatQueue;
 
     /** @var array<int, true> */
@@ -110,6 +111,7 @@ class BackendManager
     {
         if (!$this->backendProcessManager->supportsUpdate()) {
             $this->logger->warning('Backend manager does not support update');
+
             return;
         }
 
@@ -132,9 +134,11 @@ class BackendManager
                 try {
                     $this->doStop($keepBackends);
                     $resolve(null);
-                } catch (Throwable $e) {
+                }
+                catch (Throwable $e) {
                     $reject($e);
-                } finally {
+                }
+                finally {
                     $this->stopping = false;
                     $this->stopPromise = null;
                 }
@@ -168,7 +172,8 @@ class BackendManager
 
                     $this->cleanProcess($backend);
                     $backend->setState(BackendState::Stopped);
-                } elseif ($state !== BackendState::Failed) {
+                }
+                elseif ($state !== BackendState::Failed) {
                     $this->logger->info(sprintf('Cleaning up %s...', $backend));
                     $this->cleanProcess($backend);
                 }
@@ -182,8 +187,10 @@ class BackendManager
 
     protected function dottedSleep(float $time): bool
     {
-        for ($i = 0; $i < $time; $i++) {
-            if (!$this->sleep(1)) return false;
+        for ($i = 0; $i < $time; ++$i) {
+            if (!$this->sleep(1)) {
+                return false;
+            }
 
             if (count($this->stopRequested) > 0) {
                 break;
@@ -227,25 +234,26 @@ class BackendManager
     {
         if ($this->isStopRequested($backend)) {
             $backend->setState(BackendState::Stopping);
+
             return;
         }
 
         $user = $backend->getUser();
 
-        $limiter = $this->backendRestartLimiter->create((string)$user->getId());
+        $limiter = $this->backendRestartLimiter->create((string) $user->getId());
 
         if ($limiter->consume()->isAccepted()) {
             try {
                 $backend->setProcess($this->createProcess($backend));
                 $this->heartbeatQueue->enqueue($backend);
-
-            } catch (Throwable $exception) {
+            }
+            catch (Throwable $exception) {
                 $this->logger->error(sprintf('Failed to start %s : %s', $backend, $exception->getMessage()), ['exception' => $exception]);
                 $this->startQueue->enqueue($backend);
             }
         }
         else {
-            $this->logger->error(sprintf("Failed to start %s too many times", $backend));
+            $this->logger->error(sprintf('Failed to start %s too many times', $backend));
             $backend->setState(BackendState::Failed);
             $this->failedBackends->offsetSet($backend);
             $this->cleanProcess($backend);
@@ -262,11 +270,15 @@ class BackendManager
                     return;
                 }
 
-                if (!$this->sleep(5)) return;
+                if (!$this->sleep(5)) {
+                    return;
+                }
             }
 
             if ($this->startQueue->isEmpty()) {
-                if (!$this->dottedSleep(5)) return;
+                if (!$this->dottedSleep(5)) {
+                    return;
+                }
             }
         }
     }
@@ -275,6 +287,7 @@ class BackendManager
     {
         if ($this->isStopRequested($backend)) {
             $backend->setState(BackendState::Stopping);
+
             return;
         }
 
@@ -286,7 +299,8 @@ class BackendManager
             if ($restart) {
                 $this->logger->error(sprintf('Heartbeat to %s failed', $backend));
             }
-        } catch (Throwable $e) {
+        }
+        catch (Throwable $e) {
             $this->logger->error(sprintf('Fail to send heartbeat to %s : %s', $backend, $e->getMessage()), ['exception' => $e]);
             $restart = true;
         }
@@ -347,7 +361,9 @@ class BackendManager
                 }
             }
 
-            if (!$this->dottedSleep(10)) return;
+            if (!$this->dottedSleep(10)) {
+                return;
+            }
         }
     }
 
@@ -357,6 +373,7 @@ class BackendManager
     protected function initializeBackends(): array
     {
         $users = $this->userRepo->findAll();
+
         return $this->initializeBackendsForUsers($users);
     }
 
@@ -457,7 +474,6 @@ class BackendManager
 
     /**
      * @param BackendState[] $states
-     * @return void
      */
     protected function waitForState(BackendInterface $backend, array $states): void
     {
@@ -486,7 +502,8 @@ class BackendManager
 
             $this->cleanProcess($backend);
             $this->finalizeBackendStop($id, $backend);
-        } finally {
+        }
+        finally {
             unset($this->removingUser[$id]);
         }
     }
@@ -499,7 +516,8 @@ class BackendManager
         if (in_array($state, [BackendState::Starting, BackendState::Updating, BackendState::Running, BackendState::Unknown], true)) {
             $this->stopRequested[$id] = true;
             $this->waitForState($backend, [BackendState::Stopping]);
-        } elseif ($state === BackendState::Failed) {
+        }
+        elseif ($state === BackendState::Failed) {
             $this->failedBackends->offsetUnset($backend);
         }
 
@@ -534,14 +552,15 @@ class BackendManager
 
             $this->detachProcess($backend);
             $this->finalizeBackendStop($id, $backend);
-        } finally {
+        }
+        finally {
             unset($this->removingUser[$id]);
         }
     }
 
     protected function resetRestartLimiter(int $id): void
     {
-        $this->backendRestartLimiter->create((string)$id)->reset();
+        $this->backendRestartLimiter->create((string) $id)->reset();
     }
 
     public function clear(): void
@@ -580,13 +599,13 @@ class BackendManager
      */
     protected function createProcess(BackendInterface $backend): BackendProcessInterface
     {
-        $this->logger->info(sprintf("Cleaning up %s...", $backend));
+        $this->logger->info(sprintf('Cleaning up %s...', $backend));
         $this->cleanProcess($backend);
 
-        $this->logger->info(sprintf("Starting %s...", $backend));
+        $this->logger->info(sprintf('Starting %s...', $backend));
 
         try {
-            $process = await(timeout(async(fn() => $this->backendProcessManager->create($backend->getUser()))(), 30));
+            $process = await(timeout(async(fn () => $this->backendProcessManager->create($backend->getUser()))(), 30));
         }
         catch (Throwable $e) {
             $this->cleanProcess($backend);
@@ -612,7 +631,7 @@ class BackendManager
             delay(0.5);
         }
 
-        $this->logger->info(sprintf("Started %s", $backend));
+        $this->logger->info(sprintf('Started %s', $backend));
 
         return $process;
     }

@@ -63,7 +63,8 @@ abstract class AbstractFileController extends AbstractController
     {
         if ($this instanceof FileController && $dirEntry->isRoot()) {
             $title = $this->translator->trans('files.title');
-        } else {
+        }
+        else {
             $title = $dirEntry->getName();
         }
 
@@ -88,7 +89,7 @@ abstract class AbstractFileController extends AbstractController
                 'common.copy',
                 'error.fileTooBig',
                 'error.serverError',
-            ]
+            ],
         ], 'listFiles');
     }
 
@@ -144,7 +145,7 @@ abstract class AbstractFileController extends AbstractController
             return $this->sendDirectory($entry, 'attachment');
         }
 
-        return $this->sendFile($request, $entry,'attachment');
+        return $this->sendFile($request, $entry, 'attachment');
     }
 
     #[Route(path: '/play', methods: 'GET')]
@@ -152,7 +153,8 @@ abstract class AbstractFileController extends AbstractController
     {
         if ($entry->isAudio()) {
             $template = 'playAudio';
-        } elseif ($entry->isVideo()) {
+        }
+        elseif ($entry->isVideo()) {
             $template = 'playVideo';
         }
         else {
@@ -168,7 +170,7 @@ abstract class AbstractFileController extends AbstractController
             'name' => $entry->getName(),
             'breadcrumb' => $breadcrumb,
             'type' => $entry->getMimeType(),
-            'src' => $path
+            'src' => $path,
         ], $template);
     }
 
@@ -184,7 +186,7 @@ abstract class AbstractFileController extends AbstractController
 
         $data = [
             'name' => $entry->getName(),
-            'breadcrumb' => $breadcrumb
+            'breadcrumb' => $breadcrumb,
         ];
 
         if ($entry->isText()) {
@@ -195,7 +197,8 @@ abstract class AbstractFileController extends AbstractController
             }
 
             $data['text'] = $text;
-        } elseif ($entry->isImage()) {
+        }
+        elseif ($entry->isImage()) {
             $data['src'] = $relativePath;
         }
 

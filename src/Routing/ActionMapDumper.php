@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Athorrent\Routing;
 
 use Symfony\Component\Routing\RouteCollection;
+
 use function var_export;
 
 /**

@@ -52,6 +52,7 @@
         "twig/twig": "^3.30.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
         "phpstan/phpstan": "^2.3.4",
         "phpstan/phpstan-doctrine": "^2.1",
         "phpstan/phpstan-symfony": "^2.1.1",
@@ -109,12 +110,14 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "lint:php-cs-fixer": "php-cs-fixer fix --dry-run --diff --using-cache=no",
         "lint:phpstan": "phpstan analyse --memory-limit 1G",
         "lint:container": "php bin/console lint:container",
         "lint:twig": "php bin/console lint:twig templates",
         "lint:yaml": "php bin/console lint:yaml config translations --parse-tags",
         "lint:translations": "php bin/console lint:translations",
         "lint": [
+            "@lint:php-cs-fixer",
             "@lint:phpstan",
             "@lint:container",
             "@lint:twig",

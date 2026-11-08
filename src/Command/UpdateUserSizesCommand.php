@@ -23,7 +23,8 @@ class UpdateUserSizesCommand
 
     public function __invoke(
         OutputInterface $output,
-        #[Argument(description: 'Optional user id; omit to update all users')] ?int $userId = null,
+        #[Argument(description: 'Optional user id; omit to update all users')]
+        ?int $userId = null,
     ): int {
         if ($userId === null) {
             $users = $this->userRepository->findAll();
@@ -36,6 +37,7 @@ class UpdateUserSizesCommand
             }
             else {
                 $output->writeln(sprintf('<error>User %d not found</error>', $userId));
+
                 return Command::FAILURE;
             }
         }

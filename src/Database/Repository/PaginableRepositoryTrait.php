@@ -38,13 +38,13 @@ trait PaginableRepositoryTrait
         $qb = $this->getQueryBuilderForPagination();
 
         if (count($criteria) > 0) {
-            $qb->where($this->getEntityAlias().'.'.$criteria[0].' = :'.$criteria[0]);
+            $qb->where($this->getEntityAlias() . '.' . $criteria[0] . ' = :' . $criteria[0]);
             $qb->setParameter($criteria[0], $criteria[1]);
         }
 
         if (count($sort) > 0) {
             foreach ($sort as $field => $order) {
-                $qb->addOrderBy($this->getEntityAlias().'.'.$field, $order);
+                $qb->addOrderBy($this->getEntityAlias() . '.' . $field, $order);
             }
         }
 

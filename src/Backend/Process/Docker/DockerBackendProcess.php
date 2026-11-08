@@ -7,6 +7,7 @@ namespace Athorrent\Backend\Process\Docker;
 use Athorrent\Backend\Process\BackendProcessInterface;
 use Clue\React\Docker\Client;
 use React\Http\Message\ResponseException;
+
 use function React\Async\await;
 
 class DockerBackendProcess implements BackendProcessInterface
@@ -16,13 +17,14 @@ class DockerBackendProcess implements BackendProcessInterface
     public function __construct(
         private readonly Client $docker,
         private readonly string $containerId,
-    )
-    {}
+    ) {
+    }
 
     public function isRunning(): bool
     {
         try {
             $data = await($this->docker->containerInspect($this->containerId));
+
             return $data['State']['Status'] === 'running';
         }
         catch (ResponseException $e) {
@@ -37,6 +39,7 @@ class DockerBackendProcess implements BackendProcessInterface
     public function getImageId(): string
     {
         $data = await($this->docker->containerInspect($this->containerId));
+
         return $data['Image'];
     }
 

@@ -13,6 +13,7 @@ use Athorrent\View\PaginatedView;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
+use RuntimeException;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,7 +73,7 @@ class SharingController extends AbstractController
                 ]);
 
                 if ($sharing === null) {
-                    throw new \RuntimeException('failed to load sharing');
+                    throw new RuntimeException('failed to load sharing');
                 }
             }
         }

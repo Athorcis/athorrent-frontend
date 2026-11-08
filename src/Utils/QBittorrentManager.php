@@ -19,7 +19,6 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
  * @phpstan-import-type TorrentState from TorrentManagerInterface
  * @phpstan-import-type TorrentInfo from TorrentManagerInterface
  */
-
 readonly class QBittorrentManager extends AbstractTorrentManager
 {
     private QBittorrentBackend $backend;
@@ -69,7 +68,8 @@ readonly class QBittorrentManager extends AbstractTorrentManager
             ]);
 
             return $data['added_torrent_ids'];
-        } catch (ClientExceptionInterface $e) {
+        }
+        catch (ClientExceptionInterface $e) {
             if ($e->getCode() === 409) {
                 throw new TorrentAlreadyAdded($torrent, $e);
             }
@@ -83,7 +83,7 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     {
         $ids = $this->addTorrents(['urls' => $url], $url);
 
-        if (count($ids) > 0 ){
+        if (count($ids) > 0) {
             return ['hash' => $ids[0]];
         }
 
@@ -101,9 +101,9 @@ readonly class QBittorrentManager extends AbstractTorrentManager
         }
 
         try {
-            $ids = $this->addTorrents(['torrents' => $torrentFile,], basename($path));
+            $ids = $this->addTorrents(['torrents' => $torrentFile], basename($path));
 
-            if (count($ids) > 0 ){
+            if (count($ids) > 0) {
                 return ['hash' => $ids[0]];
             }
 
@@ -124,7 +124,7 @@ readonly class QBittorrentManager extends AbstractTorrentManager
     {
         $uriParts = parse_url($uri);
 
-        if (!(is_array($uriParts) && count($uriParts) === 2  && isset($uriParts['scheme']) && $uriParts['scheme'] === 'magnet' && isset($uriParts['query']))) {
+        if (!(is_array($uriParts) && count($uriParts) === 2 && isset($uriParts['scheme']) && $uriParts['scheme'] === 'magnet' && isset($uriParts['query']))) {
             return null;
         }
 

@@ -21,23 +21,23 @@ class QBittorrentClient
     public function __construct(
         private readonly CacheInterface $cache,
         private readonly HttpClientInterface $http,
-        private readonly User $user)
-    {
+        private readonly User $user,
+    ) {
     }
 
     protected function getBaseUrl(): string
     {
-        return  'http://' . ($this->user->getClientIp() ?? 'host.docker.internal') . ':8080';
+        return 'http://' . ($this->user->getClientIp() ?? 'host.docker.internal') . ':8080';
     }
 
     /**
      * @param array<string, mixed> $options
-     * @return ResponseInterface
      * @throws ExceptionInterface
      */
     protected function doRequest(string $method, string $url, array $options): ResponseInterface
     {
         $options['headers']['Cookie'] = 'SID=' . $this->getSid();
+
         return $this->http->request($method, $url, $options);
     }
 
@@ -75,6 +75,7 @@ class QBittorrentClient
             foreach ($cookies as $cookie) {
                 if (preg_match('/SID=([^;]+)/', $cookie, $matches) === 1) {
                     $item->expiresAfter(60 * 30);
+
                     return $matches[1];
                 }
             }

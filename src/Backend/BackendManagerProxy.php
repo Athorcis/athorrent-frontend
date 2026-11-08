@@ -16,9 +16,7 @@ class BackendManagerProxy
     public function __construct(
         private HttpClientInterface $http,
         private LoggerInterface $logger,
-    )
-    {
-
+    ) {
     }
 
     public function setAllowTransportExceptions(bool $allowTransportExceptions): void
@@ -38,6 +36,7 @@ class BackendManagerProxy
         catch (TransportExceptionInterface $e) {
             if ($this->allowTransportExceptions) {
                 $this->logger->notice(sprintf('Failed to connect to backend manager : %s', $e->getMessage()));
+
                 return;
             }
 

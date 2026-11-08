@@ -8,6 +8,7 @@ use Athorrent\Database\Repository\SharingRepository;
 use Athorrent\Filesystem\Requirements;
 use Athorrent\Filesystem\UserFilesystemEntry;
 use Athorrent\UserVisibleException;
+use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
+use Throwable;
 
 #[Route(path: '/user/files', name: 'files_')]
 class FileController extends AbstractFileController
@@ -77,7 +79,7 @@ class FileController extends AbstractFileController
                     throw new UserVisibleException('error.fileExists');
                 }
 
-                throw new \RuntimeException(sprintf('Failed to create file "%s"', $path));
+                throw new RuntimeException(sprintf('Failed to create file "%s"', $path));
             }
 
             fclose($handle);
@@ -146,7 +148,8 @@ class FileController extends AbstractFileController
             $fs->mkdir(dirname($outputPath));
 
             return $this->assembleChunks($chunkDir, $outputPath, $totalChunks, $expectedSize);
-        } finally {
+        }
+        finally {
             $fs->remove($chunkDir);
         }
     }
@@ -160,7 +163,7 @@ class FileController extends AbstractFileController
         $out = fopen($outputPath, 'wb');
 
         if ($out === false) {
-            throw new \RuntimeException(sprintf('Failed to open output path "%s"', $outputPath));
+            throw new RuntimeException(sprintf('Failed to open output path "%s"', $outputPath));
         }
 
         try {
@@ -169,16 +172,18 @@ class FileController extends AbstractFileController
                 $in = fopen($chunkPath, 'rb');
 
                 if ($in === false) {
-                    throw new \RuntimeException(sprintf('Failed to read chunk "%s"', $chunkPath));
+                    throw new RuntimeException(sprintf('Failed to read chunk "%s"', $chunkPath));
                 }
 
                 try {
                     stream_copy_to_stream($in, $out);
-                } finally {
+                }
+                finally {
                     fclose($in);
                 }
             }
-        } catch (\Throwable $e) {
+        }
+        catch (Throwable $e) {
             fclose($out);
             @unlink($outputPath);
             throw $e;
@@ -190,7 +195,7 @@ class FileController extends AbstractFileController
 
         if ($actualSize !== $expectedSize) {
             @unlink($outputPath);
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Assembled size mismatch for "%s": expected %d bytes, got %d',
                 $outputPath,
                 $expectedSize,

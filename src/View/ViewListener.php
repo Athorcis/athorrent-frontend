@@ -21,7 +21,7 @@ readonly class ViewListener implements EventSubscriberInterface
     {
         return [KernelEvents::VIEW => [
             ['onEarlyKernelView', 255],
-            ['onLateKernelView', -255]
+            ['onLateKernelView', -255],
         ]];
     }
 
@@ -37,15 +37,17 @@ readonly class ViewListener implements EventSubscriberInterface
             }
 
             $data = $result->render($request, $this->translator, $this->renderer);
-        } elseif ($result === null || is_array($result)) {
+        }
+        elseif ($result === null || is_array($result)) {
             $data = $result;
-        } else {
+        }
+        else {
             return;
         }
 
         $event->setControllerResult([
             'status' => 'success',
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -55,7 +57,8 @@ readonly class ViewListener implements EventSubscriberInterface
 
         if ($result instanceof View) {
             $response = new Response($result->render($event->getRequest(), $this->translator, $this->renderer));
-        } elseif (is_array($result)) {
+        }
+        elseif (is_array($result)) {
             $response = new JsonResponse($result);
         }
 

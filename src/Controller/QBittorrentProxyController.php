@@ -24,9 +24,10 @@ class QBittorrentProxyController extends AbstractController
     public function __construct(
         private readonly BackendFactory $backendFactory,
         private readonly HttpClientInterface $http,
-    ) {}
+    ) {
+    }
 
-    #[Route('/user/qb/{path}', requirements: ['path' => '.*'], methods: ['GET','POST','PUT','PATCH','DELETE'], options: ['csrf' => false])]
+    #[Route('/user/qb/{path}', requirements: ['path' => '.*'], methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], options: ['csrf' => false])]
     public function proxyToQBittorrent(Request $request, string $path, UrlGeneratorInterface $urlGenerator): Response
     {
         if (!$request->isMethodSafe() && !SameOrigin::isSameOrigin($request)) {
@@ -74,7 +75,8 @@ class QBittorrentProxyController extends AbstractController
 
         if (str_starts_with($contentType, 'text/html')) {
             $response = $this->createHtmlProxyResponse($qbResponse, $status, $urlGenerator);
-        } else {
+        }
+        else {
             $response = $this->createStreamedProxyResponse($qbResponse, $status);
         }
 
@@ -149,7 +151,6 @@ class QBittorrentProxyController extends AbstractController
      * Détecte une requête formulaire dont le corps brut n'est plus lisible.
      *
      * @param Request $request - Requête entrante
-     * @return bool
      */
     private function isParsedFormRequest(Request $request): bool
     {
@@ -223,8 +224,8 @@ class QBittorrentProxyController extends AbstractController
     }
 
     /**
-     * @param array<string, string> $headers - En-têtes à filtrer
-     * @param string[] $toRemove
+     * @param array<string, string> $headers  - En-têtes à filtrer
+     * @param string[]              $toRemove
      * @return array<string, string>
      */
     private function removeHeaders(array $headers, array $toRemove): array

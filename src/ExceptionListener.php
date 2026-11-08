@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 use Twig\Environment;
+
 use function Symfony\Component\String\u;
 
 readonly class ExceptionListener implements EventSubscriberInterface
@@ -40,7 +41,7 @@ readonly class ExceptionListener implements EventSubscriberInterface
             KernelEvents::EXCEPTION => [
                 ['onKernelException', 0],
                 ['onEarlyKernelException', 10],
-            ]
+            ],
         ];
     }
 
@@ -51,7 +52,8 @@ readonly class ExceptionListener implements EventSubscriberInterface
     {
         if ($throwable instanceof HttpException) {
             $statusCode = $throwable->getStatusCode();
-        } else {
+        }
+        else {
             $statusCode = 500;
         }
 
@@ -62,7 +64,8 @@ readonly class ExceptionListener implements EventSubscriberInterface
         }
         elseif ($throwable instanceof NotFoundHttpException) {
             $messageKey = 'error.pageNotFound';
-        } else {
+        }
+        else {
             $messageKey = 'error.unknownError';
         }
 
@@ -88,7 +91,8 @@ readonly class ExceptionListener implements EventSubscriberInterface
                 'code' => $errorCode,
                 'error' => $message,
             ], $statusCode);
-        } else {
+        }
+        else {
             try {
                 $html = $this->twig->render('pages/error.html.twig', ['error' => $message, 'code' => $statusCode, 'js_vars' => []]);
                 $response = new Response($html);

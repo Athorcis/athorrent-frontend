@@ -20,10 +20,11 @@ class SearchController extends AbstractController
     public function showSearch(
         JackettApi $jackett,
         CacheInterface $cache,
-        #[MapQueryParameter(name: 'q')] string $query = '',
-        #[MapQueryParameter] string $source = 'all',
-    ): View
-    {
+        #[MapQueryParameter(name: 'q')]
+        string $query = '',
+        #[MapQueryParameter]
+        string $source = 'all',
+    ): View {
         $sources = $cache->get('search.trackers', fn () => $jackett->getConfiguredIndexers());
         $sourceIds = array_column($sources, 'id');
 
@@ -33,7 +34,8 @@ class SearchController extends AbstractController
 
         if ($query === '') {
             $results = [];
-        } else {
+        }
+        else {
             $results = $jackett->getResults($query, $source);
         }
 

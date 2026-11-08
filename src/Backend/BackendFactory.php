@@ -19,8 +19,9 @@ class BackendFactory
 
     public function __construct(
         private readonly CacheInterface $cache,
-        private readonly HttpClientInterface $http)
-    {}
+        private readonly HttpClientInterface $http,
+    ) {
+    }
 
     protected function doCreate(User $user): BackendInterface
     {

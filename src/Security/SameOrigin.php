@@ -33,7 +33,7 @@ final class SameOrigin
     public static function isSameOrigin(Request $request): bool
     {
         if (null !== $header = $request->headers->get('Sec-Fetch-Site')) {
-            return 'same-origin' === $header;
+            return $header === 'same-origin';
         }
 
         foreach (['Origin', 'Referer'] as $header) {

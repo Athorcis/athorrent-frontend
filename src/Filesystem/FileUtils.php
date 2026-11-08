@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Athorrent\Filesystem;
 
 use FilesystemIterator;
+use RuntimeException;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 class FileUtils extends \Symfony\Component\Filesystem\Filesystem
@@ -22,7 +23,8 @@ class FileUtils extends \Symfony\Component\Filesystem\Filesystem
                 /** @var iterable<string> $iterator */
                 $iterator = new FilesystemIterator($file, FilesystemIterator::CURRENT_AS_PATHNAME | FilesystemIterator::SKIP_DOTS);
                 $size += $this->getSize($iterator);
-            } else {
+            }
+            else {
                 $bytes = @filesize($file);
 
                 if ($bytes === false) {
@@ -55,7 +57,7 @@ class FileUtils extends \Symfony\Component\Filesystem\Filesystem
             $userInfo = posix_getpwuid(posix_getuid());
 
             if ($userInfo === false) {
-                throw new \RuntimeException("user $user doesn't exist");
+                throw new RuntimeException("user $user doesn't exist");
             }
 
             $chown = $userInfo['name'] !== $user;

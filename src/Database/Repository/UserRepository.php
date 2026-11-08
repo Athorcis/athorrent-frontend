@@ -63,5 +63,4 @@ class UserRepository extends EntityRepository implements PaginableRepositoryInte
 
         return max(6881, $nextAvailablePort);
     }
-
 }

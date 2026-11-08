@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Athorrent\Filesystem;
 
+use RuntimeException;
 use Symfony\Component\Mime\FileBinaryMimeTypeGuesser;
 use Symfony\Component\Mime\MimeTypes;
 
@@ -31,7 +32,7 @@ class FilesystemEntry extends AbstractFilesystemEntry
 
     public function isDirectory(): bool
     {
-       return $this->isDir ??= is_dir($this->path);
+        return $this->isDir ??= is_dir($this->path);
     }
 
     public function isFile(): bool
@@ -44,7 +45,7 @@ class FilesystemEntry extends AbstractFilesystemEntry
         $timestamp = filemtime($this->path);
 
         if ($timestamp === false) {
-            throw new \RuntimeException('Unable to get file modification timestamp for ' . $this->path);
+            throw new RuntimeException('Unable to get file modification timestamp for ' . $this->path);
         }
 
         return $timestamp;
@@ -68,7 +69,7 @@ class FilesystemEntry extends AbstractFilesystemEntry
             $this->mimeType = $mimeUtils->guessMimeType($this->path);
 
             if ($this->mimeType === null) {
-                throw new \RuntimeException('Unable to guess mime type for ' . $this->path);
+                throw new RuntimeException('Unable to guess mime type for ' . $this->path);
             }
         }
 
@@ -82,7 +83,7 @@ class FilesystemEntry extends AbstractFilesystemEntry
             : file_get_contents($this->path, false, null, 0, $maxBytes);
 
         if ($content === false) {
-            throw new \RuntimeException('Unable to read file ' . $this->path);
+            throw new RuntimeException('Unable to read file ' . $this->path);
         }
 
         if ($maxBytes !== null) {

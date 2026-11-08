@@ -18,13 +18,13 @@ class Kernel extends BaseKernel
         parent::boot();
 
         if (!defined('USER_ROOT_DIR')) {
-            define('USER_ROOT_DIR', $this->getProjectDir() . '/var' . '/user');
+            define('USER_ROOT_DIR', $this->getProjectDir() . '/var/user');
         }
     }
 
     public function getProjectDir(): string
     {
-        if (null === $this->projectDir) {
+        if ($this->projectDir === null) {
             $this->projectDir = dirname(__DIR__);
         }
 

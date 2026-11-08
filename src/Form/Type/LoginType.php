@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+use function is_string;
+
 /**
  * @extends AbstractType<mixed>
  */
@@ -88,6 +90,6 @@ class LoginType extends AbstractType
 
         $targetPath = $request->getSession()->get('_security.main.target_path');
 
-        return \is_string($targetPath) && $targetPath !== '';
+        return is_string($targetPath) && $targetPath !== '';
     }
 }

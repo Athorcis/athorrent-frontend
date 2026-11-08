@@ -11,6 +11,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+use function in_array;
+
 /**
  * Merges ADDITIONAL_CSP_HEADER into the response CSP, and allows
  * style-src 'unsafe-inline' on media play pages for @videojs/html.
@@ -43,7 +45,7 @@ readonly class ContentSecurityPolicyListener implements EventSubscriberInterface
         $overlay = ContentSecurityPolicy::parse($this->additionalCspHeader);
 
         $subroute = $event->getRequest()->attributes->get('_subroute');
-        if (\in_array($subroute, self::PLAY_SUBROUTES, true)) {
+        if (in_array($subroute, self::PLAY_SUBROUTES, true)) {
             $overlay = $overlay->withSources('style-src', "'unsafe-inline'");
         }
 

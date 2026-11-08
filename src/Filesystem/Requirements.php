@@ -13,5 +13,6 @@ readonly class Requirements
         public bool $path = false,
         public bool $dir = false,
         public bool $file = false,
-    ) {}
+    ) {
+    }
 }

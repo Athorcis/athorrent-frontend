@@ -13,8 +13,8 @@ class PaginatedView extends View
 {
     /**
      * @param PaginableRepositoryInterface<mixed> $entityRepository
-     * @param array{}|array{string, mixed} $criteria
-     * @param array<string, 'ASC'|'DESC'> $sort
+     * @param array{}|array{string, mixed}        $criteria
+     * @param array<string, 'ASC'|'DESC'>         $sort
      */
     public function __construct(Request $request, PaginableRepositoryInterface $entityRepository, int $countPerPage, array $criteria = [], array $sort = [])
     {
@@ -39,8 +39,8 @@ class PaginatedView extends View
             'pagination' => [
                 'entities' => iterator_to_array($paginator),
                 'lastPage' => ceil($count / $countPerPage),
-                'page' => $page
-            ]
+                'page' => $page,
+            ],
         ]);
     }
 }

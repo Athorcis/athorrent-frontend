@@ -16,7 +16,7 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
 {
     private ?Sharing $sharing = null;
 
-    public function __construct(UserFilesystem $filesystem, string $path, FilesystemEntry|null $internalEntry = null)
+    public function __construct(UserFilesystem $filesystem, string $path, ?FilesystemEntry $internalEntry = null)
     {
         parent::__construct($filesystem, $path, $internalEntry);
     }
@@ -70,10 +70,10 @@ class UserFilesystemEntry extends SubFilesystemEntry implements CacheKeyGetterIn
     public function getCacheKey(): string
     {
         $sharable = $this->isSharable();
-        $rawKey = $this->internalEntry->path . $this->getModificationTimestamp() . (int)$sharable;
+        $rawKey = $this->internalEntry->path . $this->getModificationTimestamp() . (int) $sharable;
 
         if ($sharable) {
-            $rawKey .= (int)$this->isShared();
+            $rawKey .= (int) $this->isShared();
         }
 
         return base64_encode($rawKey);

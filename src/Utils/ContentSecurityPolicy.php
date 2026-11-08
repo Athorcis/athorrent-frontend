@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Athorrent\Utils;
 
+use function array_key_exists;
+use function in_array;
+use function is_array;
+
 /**
  * Parses, merges, and serializes Content-Security-Policy header values.
  *
@@ -76,7 +80,7 @@ final readonly class ContentSecurityPolicy
                 continue;
             }
 
-            $existing = \is_array($directives[$name] ?? null) ? $directives[$name] : [];
+            $existing = is_array($directives[$name] ?? null) ? $directives[$name] : [];
             $directives[$name] = array_values(array_unique([...$existing, ...$tokens]));
         }
 
@@ -94,17 +98,19 @@ final readonly class ContentSecurityPolicy
 
         foreach ($other->directives as $name => $value) {
             if ($value === true) {
-                if (!\array_key_exists($name, $merged)) {
+                if (!array_key_exists($name, $merged)) {
                     $merged[$name] = true;
                 }
                 continue;
             }
 
-            if (\array_key_exists($name, $merged) && \is_array($merged[$name])) {
+            if (array_key_exists($name, $merged) && is_array($merged[$name])) {
                 $existing = $merged[$name];
-            } elseif (\array_key_exists($name, $merged)) {
+            }
+            elseif (array_key_exists($name, $merged)) {
                 $existing = [];
-            } else {
+            }
+            else {
                 $existing = $this->effectiveFallbackSources($name);
             }
 
@@ -148,14 +154,14 @@ final readonly class ContentSecurityPolicy
             'style-src-elem', 'style-src-attr' => ['style-src', 'default-src'],
             'frame-src', 'worker-src' => ['child-src', 'default-src'],
             'fenced-frame-src' => ['frame-src', 'child-src', 'default-src'],
-            default => \in_array($directive, self::DEFAULT_SRC_FALLBACKS, true)
+            default => in_array($directive, self::DEFAULT_SRC_FALLBACKS, true)
                 ? ['default-src']
                 : [],
         };
 
         foreach ($chain as $fallback) {
             $value = $this->directives[$fallback] ?? null;
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 return $value;
             }
         }

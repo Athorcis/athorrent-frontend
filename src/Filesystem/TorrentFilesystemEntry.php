@@ -16,7 +16,7 @@ class TorrentFilesystemEntry extends UserFilesystemEntry
 
     private ?bool $torrentBound = null;
 
-    public function __construct(TorrentFilesystem $filesystem, string $path, FilesystemEntry|null $internalEntry = null)
+    public function __construct(TorrentFilesystem $filesystem, string $path, ?FilesystemEntry $internalEntry = null)
     {
         parent::__construct($filesystem, $path, $internalEntry);
     }

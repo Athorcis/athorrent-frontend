@@ -13,9 +13,8 @@ interface PaginableRepositoryInterface
 {
     /**
      * @param array{}|array{string, mixed} $criteria
-     * @param array<string, 'ASC'|'DESC'> $sort
+     * @param array<string, 'ASC'|'DESC'>  $sort
      * @return Paginator<T>
      */
     public function paginate(int $limit, int $offset, array $criteria = [], array $sort = []): Paginator;
-
 }

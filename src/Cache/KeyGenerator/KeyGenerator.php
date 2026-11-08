@@ -12,7 +12,7 @@ class KeyGenerator implements KeyGeneratorInterface
     public function generateKey(CacheKeyGetterInterface|array|string $value): string
     {
         if ($value instanceof CacheKeyGetterInterface) {
-           return $value->getCacheKey();
+            return $value->getCacheKey();
         }
 
         if (is_array($value)) {

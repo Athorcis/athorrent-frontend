@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Athorrent\View;
 
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,8 +17,7 @@ class View
         private readonly ViewType $type,
         private array $data = [],
         private readonly ?string $name = null,
-    )
-    {
+    ) {
     }
 
     protected function resolveViewType(Request $request): ViewType
@@ -74,7 +74,7 @@ class View
         $name = $this->name ?? $renderer->getDefaultTemplateName();
 
         if ($name === null) {
-            throw new \RuntimeException('failed to render view without template name');
+            throw new RuntimeException('failed to render view without template name');
         }
 
         $data = $this->data;
