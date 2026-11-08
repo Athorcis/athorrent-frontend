@@ -7,7 +7,7 @@ namespace Athorrent\Database\Repository;
 use Athorrent\Database\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\Tools\Pagination\WindowPage;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -30,9 +30,9 @@ class UserRepository extends EntityRepository implements PaginableRepositoryInte
     }
 
     /**
-     * @return Paginator<User>
+     * @return WindowPage<User>
      */
-    protected function paginateQueryBuilder(QueryBuilder $qb, int $limit, int $offset): Paginator
+    protected function paginateQueryBuilder(QueryBuilder $qb, int $limit, int $offset): WindowPage
     {
         $qb->addSelect('uhr');
         $qb->join('u.hasRoles', 'uhr');

@@ -26,9 +26,9 @@ class PaginatedView extends View
 
         $offset = $countPerPage * ($page - 1);
 
-        $paginator = $entityRepository->paginate($countPerPage, $offset, $criteria, $sort);
+        $windowPage = $entityRepository->paginate($countPerPage, $offset, $criteria, $sort);
 
-        $count = count($paginator);
+        $count = $windowPage->getTotalCount();
 
         if ($offset >= $count && $count > 0) {
             throw new NotFoundHttpException();
@@ -37,7 +37,7 @@ class PaginatedView extends View
         parent::__construct(ViewType::Page, [
             'action' => $request->attributes->get('_action'),
             'pagination' => [
-                'entities' => iterator_to_array($paginator),
+                'entities' => $windowPage->getItems(),
                 'lastPage' => ceil($count / $countPerPage),
                 'page' => $page,
             ],
