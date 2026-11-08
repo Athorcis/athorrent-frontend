@@ -1,18 +1,47 @@
-.idea
-.git
-.github
-assets/images/icon.ai
-bin
-!bin/console
-node_modules
-public/build
-var
-vendor
-.env.local
-composer.phar
+.gitignore
+/.git
+/.github
 
+/.idea
+/.editorconfig
+
+# Release please
+/.release-please-manifest.json
+/release-please-config.json
+
+# Plain text
+/AGENTS.md
+/LICENSE
+/README.md
+
+# Yarn
 .yarn/*
 !.yarn/releases
 !.yarn/plugins
 !.yarn/patches
 .pnp.*
+
+# Docker
+/.devcontainer
+/.dockerignore
+/docker/*
+!/docker/conf
+
+/tests
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
