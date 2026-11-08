@@ -220,8 +220,8 @@ Tests expect the application at `https://athorrent.local`.
 
 ## Production
 
-Production images are built via Docker Bake and published to GitHub Container
-Registry on each push to `master`:
+Production images are built via Docker Bake, tested, and published to GitHub
+Container Registry only when the `master` commit has a Git tag:
 
 - `ghcr.io/athorcis/athorrent-frontend-php`
 - `ghcr.io/athorcis/athorrent-frontend-nginx`

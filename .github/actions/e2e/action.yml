@@ -1,5 +1,5 @@
-name: Run E2E tests
-description: Run the Cypress E2E suite and collect failure diagnostics
+name: Build and test Docker images
+description: Build local Docker images, run the Cypress E2E suite, and collect failure diagnostics
 
 inputs:
     artifact-name:
@@ -9,6 +9,16 @@ inputs:
 runs:
     using: composite
     steps:
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v4
+
+        - name: Build local images
+          shell: bash
+          run: |
+              docker/scripts/build.sh \
+              --set "*.cache-from=type=gha,scope=build-${GITHUB_REF_NAME}" \
+              --set "*.cache-to=type=gha,mode=max,scope=build-${GITHUB_REF_NAME}"
+
         - name: Run Cypress tests
           shell: bash
           run: docker/scripts/test.sh

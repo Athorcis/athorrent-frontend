@@ -1,13 +1,8 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
-if [ -z "$ATHORRENT_PHP_IMAGE" ]
-then
-    docker/scripts/up-env.sh test
-else
-    docker/scripts/up-env.sh test ci
-fi
+docker/scripts/up-env.sh test
 
 cd tests
 yarn install --immutable
