@@ -16,9 +16,11 @@ use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Lazy;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Throwable;
 
 enum ResetMode: string
@@ -31,6 +33,7 @@ enum ResetMode: string
 readonly class InitCommand
 {
     public function __construct(
+        private KernelInterface $kernel,
         #[Lazy]
         private BackendManagerProxy $backendManager,
         #[Lazy]
@@ -45,6 +48,7 @@ readonly class InitCommand
     }
 
     public function __invoke(
+        SymfonyStyle $io,
         #[Option]
         ?ResetMode $reset = null,
         #[Option]
@@ -54,20 +58,29 @@ readonly class InitCommand
 
         if ($reset) {
             $rootUser = $this->reset($reset);
-            $this->init($rootUser?->getClientIp());
+            $this->init($io, $rootUser?->getClientIp());
         }
         elseif (!$this->doesUserTableExist()) {
-            $this->init();
+            $this->init($io);
         }
 
         return Command::SUCCESS;
     }
 
-    private function init(?string $clientIp = null): void
+    private function init(SymfonyStyle $io, ?string $clientIp = null): void
     {
         $this->createSchema();
 
-        $this->userManager->createUser('admin', 'test', 'ROLE_ADMIN', $clientIp);
+        $password = in_array($this->kernel->getEnvironment(), ['dev', 'test'], true)
+            ? 'test'
+            : bin2hex(random_bytes(24));
+
+        $this->userManager->createUser('admin', $password, 'ROLE_ADMIN', $clientIp);
+
+        if ($this->kernel->getEnvironment() === 'prod') {
+            $io->success('Created the initial admin account.');
+            $io->warning(sprintf('Save this generated password; it will not be shown again: %s', $password));
+        }
     }
 
     private function reset(ResetMode $reset): ?User

@@ -126,7 +126,9 @@ yarn install
 
 Database initialization is handled by `app:init`, which `up-env.sh` runs
 automatically before starting the stack. On first start, it creates the
-schema and a default `admin` / `test` account.
+schema and an `admin` account. The password is `test` in `dev` and `test`
+environments. In `prod`, initialization generates a random password and prints
+it once; save it securely before discarding the command output.
 
 To run it manually from the container shell:
 
@@ -165,7 +167,7 @@ yarn build
 ```
 
 Open [https://athorrent.local](https://athorrent.local) and log in with
-`admin` / `test` (or the account you created above).
+`admin` / `test` in development (or the account you created above).
 
 ## Dev container
 
@@ -186,7 +188,7 @@ bash docker/scripts/up-env.sh test
 ```
 
 This runs `app:init --reset=full`, which drops and recreates the test
-database, clears user data, and creates a default `admin` / `test` account.
+database, clears user data, and creates the default `admin` / `test` account.
 
 During Cypress runs, each test suite resets data via `POST /tests/reset-data`,
 which performs a quicker reset that preserves the root user directory.
