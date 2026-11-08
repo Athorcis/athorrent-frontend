@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Athorrent\Database\Repository;
 
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
+use Doctrine\ORM\Tools\Pagination\Window;
+use Doctrine\ORM\Tools\Pagination\WindowPage;
 
 /**
  * @template T
@@ -20,20 +22,17 @@ trait PaginableRepositoryTrait
     }
 
     /**
-     * @return Paginator<T>
+     * @return WindowPage<T>
      */
-    protected function paginateQueryBuilder(QueryBuilder $qb, int $limit, int $offset): Paginator
+    protected function paginateQueryBuilder(QueryBuilder $qb, int $limit, int $offset): WindowPage
     {
-        $qb->setMaxResults($limit);
-        $qb->setFirstResult($offset);
-
-        return new Paginator($qb->getQuery());
+        return (new OffsetPaginator())->paginate($qb, new Window($offset, $limit));
     }
 
     /**
-     * @return Paginator<T>
+     * @return WindowPage<T>
      */
-    public function paginate(int $limit, int $offset, array $criteria = [], array $sort = []): Paginator
+    public function paginate(int $limit, int $offset, array $criteria = [], array $sort = []): WindowPage
     {
         $qb = $this->getQueryBuilderForPagination();
 
