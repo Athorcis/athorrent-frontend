@@ -6,6 +6,12 @@ upEnv() {
     local env=${1:-dev}
     local scriptDir
     scriptDir=$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")
+    local repoRoot
+    repoRoot=$(dirname -- "$(dirname -- "$scriptDir")")
+
+    export APP_VERSION="${APP_VERSION:-$(git -C "$repoRoot" describe --tags --always --dirty)}"
+    export GIT_REVISION="${GIT_REVISION:-$(git -C "$repoRoot" rev-parse HEAD)}"
+    export IMAGE_CREATED="${IMAGE_CREATED:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
 
     local composeFilePath
     composeFilePath=$(dirname -- "$scriptDir")/deployment/$env.yml
