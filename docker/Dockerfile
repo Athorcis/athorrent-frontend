@@ -35,13 +35,13 @@ COPY docker/conf/php/base.ini /usr/local/etc/php/conf.d/
 COPY docker/conf/php/zz-fpm-base.ini /usr/local/etc/php-fpm.d/
 
 ARG RUN_USER
-RUN set -ex ;\
+RUN set -xeuo pipefail ;\
     mkdir -p /var/lib/php/session ;\
     chown $RUN_USER /var/lib/php/session
 VOLUME ["/var/lib/php/session"]
 
 ARG RUN_DIR
-RUN set -ex ;\
+RUN set -xeuo pipefail ;\
     mkdir -p "$RUN_DIR/var/lib" "$RUN_DIR/var/user" ;\
     chown $RUN_USER -R $RUN_DIR
 VOLUME ["$RUN_DIR/var/lib", "$RUN_DIR/var/user"]
@@ -56,7 +56,7 @@ ARG NODEJS_VERSION
 
 RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
-    set -eux; \
+    set -xeuo pipefail ;\
     curl -sSL -o- https://deb.nodesource.com/setup_${NODEJS_VERSION%%.*}.x | bash ;\
     apt-get install -y --no-install-recommends \
         nodejs=$(apt-cache policy nodejs | grep $NODEJS_VERSION | grep -v Candidate | awk '{ print $1 }') \
@@ -79,7 +79,7 @@ ARG UID
 ARG GID
 ARG COMPOSER_ARGS
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.composer/ \
-    set -ex ;\
+    set -xeuo pipefail ;\
     composer validate ;\
     composer install ${COMPOSER_ARGS} --no-scripts
 
@@ -118,7 +118,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.composer/ \
 
 COPY --chown=$RUN_USER --parents assets/icons bin config public src templates translations .env phpstan.dist.neon phpstan-baseline.neon $BUILD_DIR/
 
-RUN set -ex ;\
+RUN set -xeuo pipefail ;\
     APP_ENV=dev php bin/console cache:warmup -v ;\
     APP_ENV=dev composer lint ;\
     touch $BUILD_DIR/.lint-ok
@@ -131,7 +131,7 @@ USER $RUN_USER
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
-COPY --chown=$RUN_USER --parents assets/icons bin config public src templates translations .env $RUN_DIR
+COPY --chown=$RUN_USER --parents assets/icons bin config public src templates translations .env $RUN_DIR/
 
 ARG BUILD_DIR
 COPY --chown=$RUN_USER --from=composer-build $BUILD_DIR/vendor $RUN_DIR/vendor
@@ -139,7 +139,7 @@ COPY --chown=$RUN_USER --from=yarn-build $BUILD_DIR/public/build $RUN_DIR/public
 COPY --from=lint $BUILD_DIR/.lint-ok $RUN_DIR/.lint-ok
 
 ARG SYMFONY_APP_ENV
-RUN set -ex ;\
+RUN set -xeuo pipefail ;\
     rm -f .lint-ok ;\
     # If we don't create the database first warmup doesn't create all metadata cache \
     APP_SECRET=dummy php bin/console doctrine:schema:create --env=$SYMFONY_APP_ENV -v ;\
@@ -148,7 +148,7 @@ RUN set -ex ;\
 
 FROM builder AS dev
 
-USER root
+USER 0
 
 RUN --mount=type=bind,from=pei,source=/usr/bin/install-php-extensions,target=/install-php-extensions \
     /install-php-extensions spx xdebug
