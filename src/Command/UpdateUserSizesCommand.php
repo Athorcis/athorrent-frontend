@@ -13,11 +13,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand('user:update-sizes', 'Recalculate and store disk usage for users')]
-class UpdateUserSizesCommand
+readonly class UpdateUserSizesCommand
 {
     public function __construct(
-        private readonly UserManager $userManager,
-        private readonly UserRepository $userRepository,
+        private UserManager $userManager,
+        private UserRepository $userRepository,
     ) {
     }
 

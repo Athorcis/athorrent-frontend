@@ -28,7 +28,7 @@ enum ResetMode: string
 }
 
 #[AsCommand('app:init')]
-class InitCommand
+readonly class InitCommand
 {
     public function __construct(
         #[Lazy]
