@@ -201,8 +201,12 @@ configured.
 ```sh
 cd tests
 yarn install --immutable
+yarn lint
 yarn cypress run
 ```
+
+`yarn lint` runs ESLint and TypeScript checks for the Cypress tests. The
+`docker/scripts/test.sh` workflow runs this check before the E2E suite.
 
 To run against a non-default locale (default is `fr`):
 

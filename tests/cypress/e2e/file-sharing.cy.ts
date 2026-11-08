@@ -9,9 +9,12 @@ function uploadAndShare(path: string) {
     cy.get('#dialog-sharing-link').as('dialog');
     cy.get('@dialog').should('be.visible');
 
-    return cy.get('@dialog').find('.modal-body a').invoke('attr', 'href').then(async (url) => {
-        await cy.get('@dialog').find('.close').click();
-        return {basename, selector, url};
+    return cy.get('@dialog').find('.modal-body a').invoke('attr', 'href').then((url) => {
+        if (typeof url !== 'string') {
+            throw new Error('Sharing link is missing its href.');
+        }
+
+        return cy.get('@dialog').find('.close').click().then(() => ({basename, selector, url}));
     });
 }
 

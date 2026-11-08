@@ -1,6 +1,13 @@
 import {getFileSelector, uploadFile, uploadFiles} from "../support/commands";
 import {pathWithLocale, resetTestData} from "../support/utils";
 
+const PLAY_WAIT = 1500;
+const PLAY_MIN_DURATION = 1;
+const PLAY_MAX_DURATION = 2;
+
+// eslint-disable-next-line no-magic-numbers -- 8 MiB + 1 KiB
+const CHUNKED_FILE_SIZE = 8 * 1024 * 1024 + 1024;
+const CHUNKED_FILE_FILLER = 0x65;
 
 function waitForPlayerStart(selector: string) {
     cy.get(selector).then(async ($media) => {
@@ -22,9 +29,10 @@ function playPlayer(mediaSelector: string) {
     waitForPlayerStart(mediaSelector);
 }
 
+
 function pausePlayerAndAssertElapsed(mediaSelector: string) {
     playPlayer(mediaSelector);
-    cy.wait(1500);
+    cy.wait(PLAY_WAIT);
 
     if (mediaSelector === 'video') {
         cy.get(mediaSelector).trigger('mouseover');
@@ -37,8 +45,8 @@ function pausePlayerAndAssertElapsed(mediaSelector: string) {
         const media = $el[0] as HTMLMediaElement;
 
         expect(media.paused).to.eq(true);
-        expect(media.currentTime).to.be.at.least(1);
-        expect(media.currentTime).to.be.lessThan(2);
+        expect(media.currentTime).to.be.at.least(PLAY_MIN_DURATION);
+        expect(media.currentTime).to.be.lessThan(PLAY_MAX_DURATION);
     });
 }
 
@@ -74,10 +82,9 @@ describe('user-files', () => {
     it('should allow chunked file upload', () => {
         // Must exceed UploadManager CHUNK_SIZE (8 MiB). ASCII fill: uploadFile() uses
         // cy.intercept(), which UTF-8-mangles high bytes on small last chunks.
-        // eslint-disable-next-line no-magic-numbers -- 8 MiB + 1 KiB
-        const fileSize = 8 * 1024 * 1024 + 1024;
+        const fileSize = CHUNKED_FILE_SIZE;
         const filePath = 'cypress/fixtures/files/chunked.bin';
-        const contents = Cypress.Buffer.alloc(fileSize, 0x65);
+        const contents = Cypress.Buffer.alloc(fileSize, CHUNKED_FILE_FILLER);
 
         cy.writeFile(filePath, contents, null);
 
