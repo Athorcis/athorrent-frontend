@@ -14,8 +14,8 @@ class BackendManagerProxy
     private bool $allowTransportExceptions = false;
 
     public function __construct(
-        private HttpClientInterface $http,
-        private LoggerInterface $logger,
+        private readonly HttpClientInterface $http,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
