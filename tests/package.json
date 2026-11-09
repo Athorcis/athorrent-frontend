@@ -8,7 +8,7 @@
     "cypress": "^16.2.1",
     "cypress-map": "^1.57.1",
     "eslint": "^10.14.0",
-    "globals": "^16.5.0",
+    "globals": "^17.14.0",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.1"
   },
