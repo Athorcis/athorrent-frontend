@@ -165,6 +165,9 @@ xdebug.client_port=9003
 xdebug.client_host=172.27.0.1
 EOF
 
+# Allow root to write xdebug.log
+RUN touch /tmp/xdebug.log && chmod 0666 /tmp/xdebug.log
+
 ARG RUN_DIR
 WORKDIR $RUN_DIR
 
