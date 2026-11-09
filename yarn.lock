@@ -2788,7 +2788,7 @@ __metadata:
     typescript-eslint: "npm:^8.72.1"
     typescript-http-client: "npm:~0.10.5"
     webpack: "npm:^5.112.2"
-    webpack-cli: "npm:^7.3.0"
+    webpack-cli: "npm:^7.3.1"
     webpack-notifier: "npm:^1.17.0"
   languageName: unknown
   linkType: soft
@@ -3626,16 +3626,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-up@npm:^4.0.0":
-  version: 4.1.0
-  resolution: "find-up@npm:4.1.0"
-  dependencies:
-    locate-path: "npm:^5.0.0"
-    path-exists: "npm:^4.0.0"
-  checksum: 10/4c172680e8f8c1f78839486e14a43ef82e9decd0e74145f40707cc42e7420506d5ec92d9a11c22bd2c48fb0c384ea05dd30e10dd152fefeec6f2f75282a8b844
-  languageName: node
-  linkType: hard
-
 "find-up@npm:^5.0.0":
   version: 5.0.0
   resolution: "find-up@npm:5.0.0"
@@ -3905,18 +3895,6 @@ __metadata:
     parent-module: "npm:^1.0.0"
     resolve-from: "npm:^4.0.0"
   checksum: 10/2cacfad06e652b1edc50be650f7ec3be08c5e5a6f6d12d035c440a42a8cc028e60a5b99ca08a77ab4d6b1346da7d971915828f33cdab730d3d42f08242d09baa
-  languageName: node
-  linkType: hard
-
-"import-local@npm:^3.2.0":
-  version: 3.2.0
-  resolution: "import-local@npm:3.2.0"
-  dependencies:
-    pkg-dir: "npm:^4.2.0"
-    resolve-cwd: "npm:^3.0.0"
-  bin:
-    import-local-fixture: fixtures/cli.js
-  checksum: 10/0b0b0b412b2521739fbb85eeed834a3c34de9bc67e670b3d0b86248fc460d990a7b116ad056c084b87a693ef73d1f17268d6a5be626bb43c998a8b1c8a230004
   languageName: node
   linkType: hard
 
@@ -4195,15 +4173,6 @@ __metadata:
     emojis-list: "npm:^3.0.0"
     json5: "npm:^2.1.2"
   checksum: 10/28bd9af2025b0cb2fc6c9c2d8140a75a3ab61016e5a86edf18f63732216e985a50bf2479a662555beb472a54d12292e380423705741bfd2b54cab883aa067f18
-  languageName: node
-  linkType: hard
-
-"locate-path@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "locate-path@npm:5.0.0"
-  dependencies:
-    p-locate: "npm:^4.1.0"
-  checksum: 10/83e51725e67517287d73e1ded92b28602e3ae5580b301fe54bfb76c0c723e3f285b19252e375712316774cf52006cb236aed5704692c32db0d5d089b69696e30
   languageName: node
   linkType: hard
 
@@ -4529,15 +4498,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-limit@npm:^2.2.0":
-  version: 2.3.0
-  resolution: "p-limit@npm:2.3.0"
-  dependencies:
-    p-try: "npm:^2.0.0"
-  checksum: 10/84ff17f1a38126c3314e91ecfe56aecbf36430940e2873dadaa773ffe072dc23b7af8e46d4b6485d302a11673fe94c6b67ca2cfbb60c989848b02100d0594ac1
-  languageName: node
-  linkType: hard
-
 "p-limit@npm:^3.0.2":
   version: 3.1.0
   resolution: "p-limit@npm:3.1.0"
@@ -4547,28 +4507,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-locate@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "p-locate@npm:4.1.0"
-  dependencies:
-    p-limit: "npm:^2.2.0"
-  checksum: 10/513bd14a455f5da4ebfcb819ef706c54adb09097703de6aeaa5d26fe5ea16df92b48d1ac45e01e3944ce1e6aa2a66f7f8894742b8c9d6e276e16cd2049a2b870
-  languageName: node
-  linkType: hard
-
 "p-locate@npm:^5.0.0":
   version: 5.0.0
   resolution: "p-locate@npm:5.0.0"
   dependencies:
     p-limit: "npm:^3.0.2"
   checksum: 10/1623088f36cf1cbca58e9b61c4e62bf0c60a07af5ae1ca99a720837356b5b6c5ba3eb1b2127e47a06865fee59dd0453cad7cc844cda9d5a62ac1a5a51b7c86d3
-  languageName: node
-  linkType: hard
-
-"p-try@npm:^2.0.0":
-  version: 2.2.0
-  resolution: "p-try@npm:2.2.0"
-  checksum: 10/f8a8e9a7693659383f06aec604ad5ead237c7a261c18048a6e1b5b85a5f8a067e469aa24f5bc009b991ea3b058a87f5065ef4176793a200d4917349881216cae
   languageName: node
   linkType: hard
 
@@ -4632,15 +4576,6 @@ __metadata:
   version: 4.0.5
   resolution: "picomatch@npm:4.0.5"
   checksum: 10/8bad770af9dcdb7f94ad1a893adcbe08a97d75a18872f8fed37161d3124217471c402b3929f051532f795f4ff2e53dcebb1644df4c1a5f3a9c476fef3b9f8c51
-  languageName: node
-  linkType: hard
-
-"pkg-dir@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "pkg-dir@npm:4.2.0"
-  dependencies:
-    find-up: "npm:^4.0.0"
-  checksum: 10/9863e3f35132bf99ae1636d31ff1e1e3501251d480336edb1c211133c8d58906bed80f154a1d723652df1fda91e01c7442c2eeaf9dc83157c7ae89087e43c8d6
   languageName: node
   linkType: hard
 
@@ -4943,26 +4878,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve-cwd@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "resolve-cwd@npm:3.0.0"
-  dependencies:
-    resolve-from: "npm:^5.0.0"
-  checksum: 10/546e0816012d65778e580ad62b29e975a642989108d9a3c5beabfb2304192fa3c9f9146fbdfe213563c6ff51975ae41bac1d3c6e047dd9572c94863a057b4d81
-  languageName: node
-  linkType: hard
-
 "resolve-from@npm:^4.0.0":
   version: 4.0.0
   resolution: "resolve-from@npm:4.0.0"
   checksum: 10/91eb76ce83621eea7bbdd9b55121a5c1c4a39e54a9ce04a9ad4517f102f8b5131c2cf07622c738a6683991bf54f2ce178f5a42803ecbd527ddc5105f362cc9e3
-  languageName: node
-  linkType: hard
-
-"resolve-from@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "resolve-from@npm:5.0.0"
-  checksum: 10/be18a5e4d76dd711778664829841cde690971d02b6cbae277735a09c1c28f407b99ef6ef3cd585a1e6546d4097b28df40ed32c4a287b9699dcf6d7f208495e23
   languageName: node
   linkType: hard
 
@@ -6022,15 +5941,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-cli@npm:^7.3.0":
-  version: 7.3.0
-  resolution: "webpack-cli@npm:7.3.0"
+"webpack-cli@npm:^7.3.1":
+  version: 7.3.1
+  resolution: "webpack-cli@npm:7.3.1"
   dependencies:
     "@discoveryjs/json-ext": "npm:^1.1.0"
     commander: "npm:^14.0.3"
-    cross-spawn: "npm:^7.0.6"
     envinfo: "npm:^7.21.0"
-    import-local: "npm:^3.2.0"
     interpret: "npm:^3.1.1"
     rechoir: "npm:^1.0.0"
     webpack-merge: "npm:^6.0.1"
@@ -6057,7 +5974,7 @@ __metadata:
       optional: true
   bin:
     webpack-cli: bin/cli.js
-  checksum: 10/4c8c43194ce473bd7d9aa459d3f1415899cbf02dc5a3c7d7b25a3519af3c892b55abae7f8e34e310ea8e69a4a81ac7c1bccc38f04a725bdcc35d2c416c3c8db2
+  checksum: 10/e3966b4e0f86e36ebba92e296529b1de07ac708d09015b3bfb9526b7db3c240ec30ceba1bc7809427b7ea3a707345b9deba077eee09a7ba7a7314b4c0ce8fdbb
   languageName: node
   linkType: hard
 
