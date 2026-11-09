@@ -20,12 +20,6 @@ do
     valid_tags+=("$tag")
 done
 
-if [ "${#valid_tags[@]}" -eq 0 ]
-then
-    echo "Commit $SOURCE_REVISION has no valid Git tags; skipping publish"
-    exit 0
-fi
-
 if [ -n "${REGISTRY_USERNAME:-}" ] && [ -n "${REGISTRY_PASSWORD:-}" ]
 then
     printf '%s' "$REGISTRY_PASSWORD" | docker login "$REGISTRY" \
