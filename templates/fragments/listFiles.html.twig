@@ -12,10 +12,10 @@
             {% for file in files %}
                 {% if file.isCachable %}
                     {% cache cache_key('file', file) %}
-                        {% include 'fragments/file.html.twig' %}
+                        {{ include('fragments/file.html.twig') }}
                     {% endcache %}
                 {% else %}
-                    {% include 'fragments/file.html.twig' %}
+                    {{ include('fragments/file.html.twig') }}
                 {% endif %}
             {% endfor %}
         </tbody>

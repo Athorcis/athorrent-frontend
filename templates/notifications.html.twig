@@ -1,12 +1,12 @@
 {% for notification in notifications %}
-    {% if notification.type.value == "error" %}
+    {% if notification.type.value == 'error' %}
         <div class="alert alert-danger alert-dismissible" role="alert">
             <button class="icon-only close" aria-label="{{ 'common.close'|trans }}">
                 {{ icon('close') }}
             </button>
             {{ notification.message|trans }}
         </div>
-    {% elseif notification.type.value == "success" %}
+    {% elseif notification.type.value == 'success' %}
         <div class="alert alert-success alert-dismissible" role="alert">
             <button class="icon-only close" aria-label="{{ 'common.close'|trans }}">
                 {{ icon('close') }}

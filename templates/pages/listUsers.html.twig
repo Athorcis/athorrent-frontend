@@ -69,7 +69,7 @@
                             {{ icon('reload') }}
                         </button>
 
-                        {#- -#}
+                        {#--#}
                         <button class="icon-only danger user-remove" aria-label="{{ 'users.remove'|trans }}" {% if user.id == 1 or user.id == userId %}disabled{% endif %}>
                             {{ icon('close') }}
                         </button>
@@ -80,6 +80,6 @@
         </tbody>
     </table>
 
-    {% include "fragments/pagination.html.twig" %}
+    {{ include('fragments/pagination.html.twig') }}
 
 {% endblock %}

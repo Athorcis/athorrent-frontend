@@ -12,7 +12,7 @@
 
 {% block content %}
     <header class="main-header">
-        <h1 title="{{ title}}">{{ title }}</h1>
+        <h1 title="{{ title }}">{{ title }}</h1>
 
         {% if dir.writable %}
             <button class="primary add-button" popovertarget="add-button-popover">
@@ -32,16 +32,16 @@
             </ul>
         {% endif %}
 
-        {% include 'fragments/breadcrumb.html.twig' %}
+        {{ include('fragments/breadcrumb.html.twig') }}
     </header>
 
-    {% include 'fragments/listFiles.html.twig' %}
+    {{ include('fragments/listFiles.html.twig') }}
 {% endblock %}
 
 {% block templates %}
     {{ parent() }}
 
     <template id="template-dropzone-preview">
-        {% include "fragments/dropzonePreview.html.twig" %}
+        {{ include('fragments/dropzonePreview.html.twig') }}
     </template>
 {% endblock %}

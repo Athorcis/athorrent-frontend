@@ -33,18 +33,18 @@
         {% endif %}
     >
         {% set navbar_visible = is_auth_required() %}
-        {% include 'top-bar.html.twig' %}
+        {{ include('top-bar.html.twig') }}
 
         <div class="main-layout">
             {% if navbar_visible %}
-                {% include 'nav.html.twig' %}
+                {{ include('nav.html.twig') }}
                 <div class="sidebar-backdrop"></div>
             {% endif %}
 
             <main>
                 {% if notifications is defined %}
                     <div class="alert-stack">
-                        {% include 'notifications.html.twig' %}
+                        {{ include('notifications.html.twig') }}
                     </div>
                 {% endif %}
 
@@ -52,10 +52,9 @@
             </main>
         </div>
 
-
         {% cache cache_key('footer', route) %}
             {% block templates %}
-                <template id="template-modal">{% include "fragments/modal.html.twig" %}</template>
+                <template id="template-modal">{{ include('fragments/modal.html.twig') }}</template>
             {% endblock %}
 
             {% block main_script %}

@@ -481,5 +481,14 @@
     },
     "ua-parser/uap-php": {
         "version": "v3.9.14"
+    },
+    "vincentlanglet/twig-cs-fixer": {
+        "version": "4.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "0a2d420aa6554f632804a3f21624e16314fe8588"
+        }
     }
 }
