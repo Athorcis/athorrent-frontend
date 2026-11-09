@@ -1324,10 +1324,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^16.5.0":
-  version: 16.5.0
-  resolution: "globals@npm:16.5.0"
-  checksum: 10/f9e8a2a13f50222c127030a619e283e7bbfe32966316bdde0715af1d15a7e40cb9c24ff52cad59671f97762ed8b515353c2f8674f560c63d9385f19ee26735a6
+"globals@npm:^17.14.0":
+  version: 17.14.0
+  resolution: "globals@npm:17.14.0"
+  checksum: 10/3d889e226ee8f4401abc568cd853d017b6407b24744c28b3d8260c65200174082bb77eeefecf4d2b40ab48e9484a2b163b1372c8addf782f49ecd546faf27ceb
   languageName: node
   linkType: hard
 
@@ -2227,7 +2227,7 @@ __metadata:
     cypress: "npm:^16.2.1"
     cypress-map: "npm:^1.57.1"
     eslint: "npm:^10.14.0"
-    globals: "npm:^16.5.0"
+    globals: "npm:^17.14.0"
     typescript: "npm:~6.0.3"
     typescript-eslint: "npm:^8.72.1"
   languageName: unknown
