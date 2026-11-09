@@ -5,6 +5,6 @@
 {% block content %}
     <header class="main-header">
         <h1 title="{{ name }}">{{ name }}</h1>
-        {% include 'fragments/breadcrumb.html.twig' %}
+        {{ include('fragments/breadcrumb.html.twig') }}
     </header>
 {% endblock %}

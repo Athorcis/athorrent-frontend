@@ -55,7 +55,7 @@
     {% endcache %}
 {% else %}
     {% if not backend_available %}
-        <div class="alert alert-{% if alert_level == 'error' %}danger{% else%}warning{% endif %} backend-alert" role="alert">
+        <div class="alert alert-{% if alert_level == 'error' %}danger{% else %}warning{% endif %} backend-alert" role="alert">
             {% if backend_starting %}
                 {{ 'torrents.unavailable.starting'|trans }}
             {% elseif backend_updating %}

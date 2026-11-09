@@ -14,7 +14,7 @@
             <li><a href="{{ path(action, { page: page - 1 }) }}" aria-label="{{ 'common.previous'|trans }}">&laquo;</a></li>
         {% endif %}
 
-        {% for i in startPage .. endPage %}
+        {% for i in startPage..endPage %}
             <li{% if i == page %} class="active"{% endif %}><a href="{{ path(action, { page: i }) }}">{{ i }}</a></li>
         {% endfor %}
 

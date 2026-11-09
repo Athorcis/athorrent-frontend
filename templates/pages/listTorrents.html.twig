@@ -1,4 +1,4 @@
-{% extends "skeleton.html.twig" %}
+{% extends 'skeleton.html.twig' %}
 
 {% block title %}{{ 'torrents.title'|trans }} - {{ 'app.name'|trans }}{% endblock %}
 
@@ -17,7 +17,7 @@
         </h1>
 
         {% if app.user.clientType === 'qbittorrent' %}
-            <a href="{{ path('proxyToQBittorrent', { path: ''}) }}" target="_blank" class="button open-qbittorrent-ui">
+            <a href="{{ path('proxyToQBittorrent', { path: '' }) }}" target="_blank" class="button open-qbittorrent-ui">
                 {{ icon('open') }}{{ 'torrents.advanced'|trans }}
             </a>
         {% endif %}
@@ -40,7 +40,7 @@
     </header>
 
     <div class="torrent-list">
-        {% include "fragments/listTorrents.html.twig" %}
+        {{ include('fragments/listTorrents.html.twig') }}
     </div>
 {% endblock %}
 
@@ -48,6 +48,6 @@
     {{ parent() }}
 
     <template id="template-dropzone-preview">
-        {% include "fragments/dropzonePreview.html.twig" %}
+        {{ include('fragments/dropzonePreview.html.twig') }}
     </template>
 {% endblock %}

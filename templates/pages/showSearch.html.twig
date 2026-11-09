@@ -30,7 +30,7 @@
         {% if results is empty %}
             <div class="alert alert-info" role="alert">{{ 'search.no-results'|trans }}</div>
         {% else %}
-            {% include 'fragments/searchResults.html.twig' %}
+            {{ include('fragments/searchResults.html.twig') }}
         {% endif %}
     {% endif %}
 {% endblock %}
