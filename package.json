@@ -14,7 +14,7 @@
     "url": "https://github.com/athorcis/athorrent-frontend.git"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.10",
+    "@babel/core": "^8.1.0",
     "@babel/preset-env": "^8.0.7",
     "@babel/preset-typescript": "^8.0.7",
     "@eslint/js": "^10.0.1",
