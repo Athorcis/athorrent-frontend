@@ -194,7 +194,7 @@ class FilesPage extends AbstractPage {
             type,
 
             dropzone: {
-                maxFilesize: 1000,
+                maxFilesize: 10_000,
                 autoQueue: false,
             },
 
