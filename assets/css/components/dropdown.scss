@@ -24,7 +24,8 @@
     }
 
     hr {
-        border: $border 0 0;
+        border: 0;
+        border-top: $border;
         margin: 3px 0;
     }
 }
