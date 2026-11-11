@@ -116,7 +116,7 @@ ARG GID
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/var/www/.composer/ \
     composer install --no-scripts
 
-COPY --chown=$RUN_USER --parents assets/icons bin config public src templates translations .env phpstan.dist.neon phpstan-baseline.neon $BUILD_DIR/
+COPY --chown=$RUN_USER --parents assets/icons bin config public src templates translations .env .php-cs-fixer.dist.php .twig-cs-fixer.dist.php phpstan.dist.neon phpstan-baseline.neon $BUILD_DIR/
 
 RUN set -xeuo pipefail ;\
     APP_ENV=dev php bin/console cache:warmup -v ;\
