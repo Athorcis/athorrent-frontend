@@ -2,8 +2,8 @@
 x-php-base: &php-base
     build:
         args: &build_args
-            - SYMFONY_APP_ENV=test
-            - COMPOSER_ARGS=
+            SYMFONY_APP_ENV: test
+            COMPOSER_ARGS: ""
     env_file:
         - ../../.env.test
 
@@ -17,4 +17,3 @@ services:
     nginx:
         build:
             args: *build_args
-
