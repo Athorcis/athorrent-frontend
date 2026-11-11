@@ -90,6 +90,7 @@ files:
     parentDirectory: Parent directory
     open: Open
     download: Download
+    downloadDirectoryTooltip: Download the current directory as an archive
     display: Display
     truncated: <truncated>
     play: Play

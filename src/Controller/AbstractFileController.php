@@ -116,9 +116,15 @@ abstract class AbstractFileController extends AbstractController
 
     protected function sendDirectory(UserFilesystemEntry $entry, string $contentDisposition): StreamedResponse
     {
+        $name = $entry->getName();
+
+        if ($entry->isRoot() && $name === '') {
+            $name = 'athorrent-export';
+        }
+
         $headers = [
             'Content-Type' => 'application/zip',
-            'Content-Disposition' => HeaderUtils::makeDisposition($contentDisposition, $entry->getName() . '.zip'),
+            'Content-Disposition' => HeaderUtils::makeDisposition($contentDisposition, $name . '.zip'),
             'X-Accel-Buffering' => 'no',
         ];
 

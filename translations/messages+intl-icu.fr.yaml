@@ -88,6 +88,7 @@ files:
     parentDirectory: Dossier parent
     open: Ouvrir
     download: Télécharger
+    downloadDirectoryTooltip: Télécharger le dossier courant en tant qu'archive
     display: Afficher
     truncated: <tronqué>
     play: Lire
