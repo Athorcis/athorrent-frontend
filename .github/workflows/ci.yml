@@ -72,6 +72,7 @@ jobs:
               shell: bash
               env:
                   REGISTRY: ${{ env.REGISTRY }}
+                  REGISTRY_NAMESPACE: ${{ github.repository_owner }}
                   REGISTRY_USERNAME: ${{ github.actor }}
                   REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
                   SOURCE_REVISION: ${{ github.sha }}

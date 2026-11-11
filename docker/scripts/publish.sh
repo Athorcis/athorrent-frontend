@@ -3,9 +3,11 @@
 set -euo pipefail
 
 REGISTRY="${REGISTRY:-docker.io}"
+REGISTRY_NAMESPACE="${REGISTRY_NAMESPACE:-}"
+REGISTRY_NAMESPACE="${REGISTRY_NAMESPACE,,}"
 PUBLISH_BRANCH="${PUBLISH_BRANCH:-master}"
 SOURCE_REVISION="${SOURCE_REVISION:-$(git rev-parse HEAD)}"
-IMAGE_PREFIX="${REGISTRY}/athorrent-frontend"
+IMAGE_PREFIX="${REGISTRY}/${REGISTRY_NAMESPACE:+${REGISTRY_NAMESPACE}/}athorrent-frontend"
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 images=(php nginx)
 source_images=("athorrent-php:local" "athorrent-nginx:local")
