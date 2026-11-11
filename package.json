@@ -21,7 +21,11 @@
     "@symfony/webpack-encore": "^7.2.0",
     "@types/node": "^26.6.6",
     "autoprefixer": "^10.6.2",
+    "commit-and-tag-version": "^13.3.0",
     "compression-webpack-plugin": "^12.0.0",
+    "conventional-changelog-conventionalcommits": "^10.4.1",
+    "conventional-commits-filter": "^6.0.1",
+    "conventional-commits-parser": "^7.1.4",
     "eslint": "^10.14.0",
     "jiti": "^2.7.0",
     "postcss": "^8.5.32",
@@ -42,6 +46,10 @@
   "resolutions": {
     "@parcel/watcher": "npm:empty-npm-package@1.0.0"
   },
+  "commit-and-tag-version": {
+    "packageFiles": [],
+    "bumpFiles": []
+  },
   "scripts": {
     "dev-server": "encore dev-server",
     "dev": "encore dev",
@@ -49,6 +57,7 @@
     "lint:js": "eslint ./assets",
     "lint:css": "stylelint \"assets/css/**/*.scss\"",
     "lint": "yarn lint:js && yarn lint:css",
+    "bump": "commit-and-tag-version",
     "build": "yarn lint && encore production --progress"
   }
 }
