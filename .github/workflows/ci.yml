@@ -59,6 +59,15 @@ jobs:
               with:
                   artifact-name: cypress-built-image-artifacts
 
+            - name: Set up Trivy
+              uses: aquasecurity/setup-trivy@v0.3.1
+
+            - name: Set up ORAS
+              uses: oras-project/setup-oras@v2.0.3
+
+            - name: Generate image SBOMs
+              run: bash docker/scripts/generate-sbom.sh
+
             - name: Publish tested Docker images
               shell: bash
               env:
