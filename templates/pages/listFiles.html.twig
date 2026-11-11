@@ -14,6 +14,10 @@
     <header class="main-header">
         <h1 title="{{ title }}">{{ title }}</h1>
 
+        <a class="button download-directory" href="{{ path('downloadFile', { path: dir.path }) }}" aria-label="{{ 'files.downloadDirectoryTooltip'|trans }}">
+            {{ icon('download') }}{{ 'files.download'|trans }}
+        </a>
+
         {% if dir.writable %}
             <button class="primary add-button" popovertarget="add-button-popover">
                 {{ icon('plus') }}{{ 'files.add'|trans }}

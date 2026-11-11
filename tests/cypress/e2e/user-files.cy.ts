@@ -172,6 +172,18 @@ describe('user-files', () => {
         cy.task('listZipEntries', 'cypress/downloads/folder.zip').should('deep.equal', ['a.txt', 'b.txt']);
     });
 
+    it('should download the root directory as athorrent-export.zip', () => {
+        uploadFiles(
+            ['cypress/fixtures/files/test.txt', 'cypress/fixtures/files/test.txt'],
+            ['a.txt', 'b.txt'],
+        );
+
+        cy.get('.download-directory').click();
+
+        cy.readFile('cypress/downloads/athorrent-export.zip', null).should('not.be.null');
+        cy.task('listZipEntries', 'cypress/downloads/athorrent-export.zip').should('deep.equal', ['a.txt', 'b.txt']);
+    });
+
     // @TODO check directory upload
 
     //@TODO check inner directories
