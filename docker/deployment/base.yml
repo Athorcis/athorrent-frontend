@@ -47,6 +47,8 @@ services:
             - db_data:/var/www/athorrent/var/lib
             - user_data:/var/www/athorrent/var/user
             - /var/run/docker.sock:/var/run/docker.sock
+        tmpfs:
+            - /var/lib/php/session
 
     php:
         <<: *php-base
