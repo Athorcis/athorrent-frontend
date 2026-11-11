@@ -232,19 +232,21 @@ Container Registry on `master` and for version tags:
 - `ghcr.io/athorcis/athorrent-frontend-php`
 - `ghcr.io/athorcis/athorrent-frontend-nginx`
 
-Releases and `CHANGELOG.md` are managed by
-[Release Please](https://github.com/googleapis/release-please). To enable it,
-add a repository secret named `RELEASE_PLEASE_TOKEN` containing a fine-grained
-personal access token with **Contents: read and write** and
-**Pull requests: read and write** access to this repository. This token is
-needed so the version tags created by Release Please trigger the Docker publish
-workflow.
+Generate the release changelog locally with
+[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version).
+It is installed with Yarn. Use Conventional Commit messages (for example,
+`feat: add queue controls` or `fix: handle expired sessions`), then run:
 
-Use Conventional Commit messages (for example, `feat: add queue controls` or
-`fix: handle expired sessions`) and push changes to `master`. Release Please
-will open or update a release PR with the version and changelog changes. Review
-and merge that PR to create the GitHub Release and version tag; the CI workflow
-then tests and publishes the tagged images.
+```sh
+yarn bump
+```
+
+The tool derives the next version from Conventional Commits and the latest Git
+tag, updates `CHANGELOG.md`, creates a release commit, and creates the matching
+version tag locally. It does not contact GitHub. Review the release commit, then
+push the commit and tag when you are ready. Add `--dry-run` to preview without
+writing files, committing, or tagging. The CI workflow tests and publishes the
+tagged images.
 
 Build locally:
 
