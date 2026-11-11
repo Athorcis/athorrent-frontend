@@ -52,6 +52,7 @@ export class UploadManager implements UploadManagerInterface{
             dictFileTooBig: this.translator.translate('error.fileTooBig'),
             dictResponseError: this.translator.translate('error.serverError'),
             previewTemplate: document.querySelector('#template-dropzone-preview')!.innerHTML,
+            createImageThumbnails: false,
             parallelUploads: 1,
             chunking: true,
             chunkSize: CHUNK_SIZE,
