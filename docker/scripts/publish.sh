@@ -11,7 +11,7 @@ IMAGE_PREFIX="${REGISTRY}/${REGISTRY_NAMESPACE:+${REGISTRY_NAMESPACE}/}athorrent
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 images=(php nginx)
 source_images=("athorrent-php:local" "athorrent-nginx:local")
-SBOM_DIR="${ROOT_DIR}/sbom"
+SBOM_DIR="sbom"
 project_sbom="${SBOM_DIR}/project.cdx.json"
 
 mapfile -t tags < <(git tag --points-at "$SOURCE_REVISION")
@@ -53,6 +53,7 @@ do
     done
 
     if [ "${CI:-}" = "true" ]; then
+        pushd "$ROOT_DIR" >/dev/null
         digest="$(oras manifest fetch --descriptor "${image_ref}:${SOURCE_REVISION}" | jq -er '.digest')"
         oras attach \
             --artifact-type application/vnd.cyclonedx+json \
@@ -65,5 +66,6 @@ do
             "${image_ref}@${digest}" \
             "${project_sbom}:application/vnd.cyclonedx+json"
         echo "Attached project CycloneDX SBOM to ${image_ref}@${digest}"
+        popd >/dev/null
     fi
 done
