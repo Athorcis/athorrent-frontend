@@ -12,6 +12,8 @@ services:
         <<: *php-base
 
     php:
+        tmpfs:
+            - /var/lib/php/session
         <<: *php-base
 
     nginx:
