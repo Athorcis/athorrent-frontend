@@ -75,7 +75,7 @@
             "symfony/flex": true,
             "symfony/runtime": true
         },
-        "bump-after-update": false,
+        "bump-after-update": true,
         "policy": {
             "cooldown": {
                 "period": "7days"
