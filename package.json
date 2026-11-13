@@ -34,7 +34,7 @@
     "postcss-media-minmax": "^5.0.0",
     "sass-embedded": "^1.108.0",
     "sass-loader": "^17.1.0",
-    "stylelint": "~17.16.0",
+    "stylelint": "~18.0.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-scss": "^7.4.0",
     "ts-loader": "^9.6.2",
