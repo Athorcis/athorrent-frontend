@@ -2026,9 +2026,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@symfony/webpack-encore@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "@symfony/webpack-encore@npm:7.2.0"
+"@symfony/webpack-encore@npm:^7.2.1":
+  version: 7.2.1
+  resolution: "@symfony/webpack-encore@npm:7.2.1"
   dependencies:
     "@kocal/friendly-errors-webpack-plugin": "npm:^3.0.0"
     babel-loader: "npm:^10.0.0"
@@ -2149,7 +2149,7 @@ __metadata:
       optional: true
   bin:
     encore: dist/bin/encore.js
-  checksum: 10/678f0c18f51a1a81ed3bf57fdcd92394929f4f2594eb12bb8c1e95503bb1e4e722a2a7c0fff8f4fb0e90e659a9b8fac0dc94d635cea1286174b85e5c3f33e1a9
+  checksum: 10/3b17f2af46feb5bedccb804804c50f495aea439d5a2293db90570aaef7d21163ac7ae2e36e9c12372efd29ef90bb66d7dcb7e87fa14348c1fc121f6f682d1f5c
   languageName: node
   linkType: hard
 
@@ -2882,7 +2882,7 @@ __metadata:
     "@babel/preset-env": "npm:^8.0.7"
     "@babel/preset-typescript": "npm:^8.0.7"
     "@eslint/js": "npm:^10.0.1"
-    "@symfony/webpack-encore": "npm:^7.2.0"
+    "@symfony/webpack-encore": "npm:^7.2.1"
     "@types/node": "npm:^26.6.6"
     "@videojs/html": "npm:^10.3.0"
     autoprefixer: "npm:^10.6.2"
