@@ -6,10 +6,6 @@
 /.idea
 /.editorconfig
 
-# Release please
-/.release-please-manifest.json
-/release-please-config.json
-
 # Plain text
 /AGENTS.md
 /CHANGELOG.md
