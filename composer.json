@@ -44,7 +44,7 @@
         "symfony/uid": "8.1.*",
         "symfony/ux-icons": "^3.7.0",
         "symfony/validator": "8.1.*",
-        "symfony/webpack-encore-bundle": "^2.4.2",
+        "symfony/webpack-encore-bundle": "^2.4.3",
         "symfony/yaml": "8.1.*",
         "twig/cache-extra": "^3.28",
         "twig/extra-bundle": "^3.29",
@@ -52,9 +52,9 @@
         "twig/twig": "^3.30.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.95.28",
+        "friendsofphp/php-cs-fixer": "^3.95.30",
         "phpstan/phpstan": "^2.3.5",
-        "phpstan/phpstan-doctrine": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.1.2",
         "phpstan/phpstan-symfony": "^2.1.1",
         "symfony/debug-bundle": "8.1.*",
         "symfony/stopwatch": "8.1.*",

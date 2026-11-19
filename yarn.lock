@@ -2912,7 +2912,7 @@ __metadata:
     sass-loader: "npm:^17.1.0"
     stylelint: "npm:~17.16.0"
     stylelint-config-standard-scss: "npm:^17.0.0"
-    stylelint-scss: "npm:^7.4.0"
+    stylelint-scss: "npm:^7.5.0"
     ts-loader: "npm:^9.6.2"
     typescript: "npm:~6.0.3"
     typescript-eslint: "npm:^8.72.2"
@@ -5979,9 +5979,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylelint-scss@npm:^7.4.0":
-  version: 7.4.0
-  resolution: "stylelint-scss@npm:7.4.0"
+"stylelint-scss@npm:^7.5.0":
+  version: 7.5.0
+  resolution: "stylelint-scss@npm:7.5.0"
   dependencies:
     "@csstools/css-calc": "npm:^3.4.3"
     "@csstools/css-parser-algorithms": "npm:^4.0.0"
@@ -5995,8 +5995,8 @@ __metadata:
     postcss-selector-parser: "npm:^7.1.6"
     postcss-value-parser: "npm:^4.2.0"
   peerDependencies:
-    stylelint: ^16.8.2 || ^17.0.0
-  checksum: 10/e669fb02354f8fe3b21c1df435094cc00932a4abb51899c1db3670658c7f9c0b80f4796c0e29dbe62ff1bbd047396b25806667ed082547a6d7340bda35e8ad38
+    stylelint: ^16.8.2 || ^17.0.0 || ^18.0.0
+  checksum: 10/e9f2e806fba3155b110457b2bc0bc156b916f798f8ba5bcf1f899af83032c4b65f5281e5cd55a1b7dfc95bd2038b3107e2cfcd77b0a718505b2dcd302c4a3485
   languageName: node
   linkType: hard
 
