@@ -1,7 +1,5 @@
 #syntax=docker/dockerfile:1.7-labs
 
-ARG PHP_EXTENSION_INSTALLER_VERSION=2.13.2
-ARG COMPOSER_VERSION=2.11.2
 ARG NODEJS_VERSION=26.13.1
 ARG APP_VERSION=dev
 ARG GIT_REVISION=unknown
@@ -17,7 +15,9 @@ ARG RUN_DIR=/var/www/athorrent
 ARG SYMFONY_APP_ENV=prod
 ARG COMPOSER_ARGS="--no-dev"
 
-FROM mlocati/php-extension-installer:${PHP_EXTENSION_INSTALLER_VERSION} AS pei
+FROM docker.io/mlocati/php-extension-installer:2.13@sha256:4fd45396c16685266d32bf147a24ecd5e81029d3820295895bf4a90131190ac9 AS pei
+
+FROM docker.io/composer:2.11@sha256-12d3bebef9c7c1b0466978288f5f628312786137398101206121e75cb9dd1198 AS composer
 
 FROM docker.io/php:8.5-fpm@sha256:baf3ea13a8207fa18e1011bad1016e8b5e59fc974c6966d0efa6f36a16f875f0 AS base
 
@@ -46,9 +46,7 @@ VOLUME ["$RUN_DIR/var/lib", "$RUN_DIR/var/user"]
 
 FROM base AS builder
 
-ARG COMPOSER_VERSION
-RUN --mount=type=bind,from=pei,source=/usr/bin/install-php-extensions,target=/install-php-extensions \
-    /install-php-extensions @composer-${COMPOSER_VERSION}
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 ARG NODEJS_VERSION
 
