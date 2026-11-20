@@ -1,6 +1,7 @@
 #syntax=docker/dockerfile:1.7-labs
 
-ARG NODEJS_VERSION=26.13.1
+ARG YARN_SWITCH_VERSION=6.0.0-rc.23
+ARG YARN_SWITCH_SHA256=7ad2eb4960738721c375a25986f652b12befea0b8309440229fe9252c97d3849
 ARG APP_VERSION=dev
 ARG GIT_REVISION=unknown
 ARG IMAGE_CREATED=unknown
@@ -18,6 +19,23 @@ ARG COMPOSER_ARGS="--no-dev"
 FROM docker.io/mlocati/php-extension-installer:2.13.2@sha256:4fd45396c16685266d32bf147a24ecd5e81029d3820295895bf4a90131190ac9 AS pei
 
 FROM docker.io/composer:2.11.2@sha256:919efe8e62179c71dfd31fad035fd671fe7454211c6b2aa30a10af0ab4acedba AS composer
+
+FROM docker.io/node:26.13.1-slim@sha256:e6bedef217677b276c591795e169840edd9096dbf13f29df8ef8d1856b8820bc AS node
+
+ARG YARN_SWITCH_VERSION
+ARG YARN_SWITCH_SHA256
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends ca-certificates curl unzip; \
+    rm -rf /var/lib/apt/lists/*; \
+    curl --fail --location --silent --show-error \
+        "https://repo.yarnpkg.com/releases/${YARN_SWITCH_VERSION}/x86_64-unknown-linux-musl" \
+        --output /tmp/yarn.zip; \
+    echo "$YARN_SWITCH_SHA256  /tmp/yarn.zip" | sha256sum --check --strict -; \
+    unzip -p /tmp/yarn.zip yarn > /usr/local/bin/yarn; \
+    chmod 0755 /usr/local/bin/yarn; \
+    rm /tmp/yarn.zip
 
 FROM docker.io/php:8.5.12-fpm@sha256:baf3ea13a8207fa18e1011bad1016e8b5e59fc974c6966d0efa6f36a16f875f0 AS base
 
@@ -46,24 +64,15 @@ VOLUME ["$RUN_DIR/var/lib", "$RUN_DIR/var/user"]
 
 FROM base AS builder
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
     apt-get install -y --no-install-recommends \
         unzip
 
-ARG NODEJS_VERSION
-
-RUN --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt \
-    set -xeuo pipefail ;\
-    curl -sSL -o- https://deb.nodesource.com/setup_${NODEJS_VERSION%%.*}.x | bash ;\
-    apt-get install -y --no-install-recommends \
-        nodejs=$(apt-cache policy nodejs | grep $NODEJS_VERSION | grep -v Candidate | awk '{ print $1 }') \
-    ;\
-    curl -s https://repo.yarnpkg.com/install | bash ;\
-    mv ~/.yarn/switch/bin/yarn /usr/local/bin/yarn
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/bin/yarn /usr/local/bin/yarn
 
 ARG RUN_USER
 USER $RUN_USER
