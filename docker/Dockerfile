@@ -48,6 +48,11 @@ FROM base AS builder
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    apt-get install -y --no-install-recommends \
+        unzip
+
 ARG NODEJS_VERSION
 
 RUN --mount=type=cache,target=/var/cache/apt \
