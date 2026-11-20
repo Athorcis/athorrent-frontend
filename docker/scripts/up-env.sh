@@ -29,7 +29,7 @@ upEnv() {
     then
         composeArgs+=("-f" "$(dirname -- "$scriptDir")/deployment/base.ci.yml")
     else
-        createArgs+=(--build --pull always)
+        createArgs+=(--build)
     fi
 
     docker compose "${composeArgs[@]}" "${createArgs[@]}"
