@@ -37,7 +37,7 @@ RUN set -eux; \
     chmod 0755 /usr/local/bin/yarn; \
     rm /tmp/yarn.zip
 
-FROM docker.io/php:8.5.12-fpm@sha256:baf3ea13a8207fa18e1011bad1016e8b5e59fc974c6966d0efa6f36a16f875f0 AS base
+FROM docker.io/php:8.6.0RC5-fpm@sha256:553329af7cef79979dd162eda43fd498095c7c6b1e48d166a08475e3cc52ee58 AS base
 
 RUN --mount=type=bind,from=pei,source=/usr/bin/install-php-extensions,target=/install-php-extensions \
     /install-php-extensions \
