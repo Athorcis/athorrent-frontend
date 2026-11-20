@@ -10,7 +10,7 @@ runs:
     using: composite
     steps:
         - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v4
+          uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
 
         - name: Build local images
           shell: bash
@@ -25,7 +25,7 @@ runs:
 
         - name: Upload Cypress artifacts
           if: failure()
-          uses: actions/upload-artifact@v7
+          uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
           with:
               name: ${{ inputs.artifact-name }}
               path: |
