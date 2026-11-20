@@ -1,10 +1,8 @@
 #syntax=docker/dockerfile:1.7-labs
 
-ARG PHP_VERSION=8.5.12
 ARG PHP_EXTENSION_INSTALLER_VERSION=2.13.2
 ARG COMPOSER_VERSION=2.11.2
 ARG NODEJS_VERSION=26.13.1
-ARG NGINX_VERSION=1.31.9
 ARG APP_VERSION=dev
 ARG GIT_REVISION=unknown
 ARG IMAGE_CREATED=unknown
@@ -21,7 +19,7 @@ ARG COMPOSER_ARGS="--no-dev"
 
 FROM mlocati/php-extension-installer:${PHP_EXTENSION_INSTALLER_VERSION} AS pei
 
-FROM php:${PHP_VERSION}-fpm AS base
+FROM docker.io/php:8.5-fpm@sha256:baf3ea13a8207fa18e1011bad1016e8b5e59fc974c6966d0efa6f36a16f875f0 AS base
 
 RUN --mount=type=bind,from=pei,source=/usr/bin/install-php-extensions,target=/install-php-extensions \
     /install-php-extensions \
@@ -173,7 +171,6 @@ WORKDIR $RUN_DIR
 
 FROM base AS php
 
-ARG PHP_VERSION
 ARG APP_VERSION
 ARG GIT_REVISION
 ARG IMAGE_CREATED
@@ -184,7 +181,7 @@ LABEL org.opencontainers.image.title="Athorrent PHP" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.version="${APP_VERSION}" \
       org.opencontainers.image.revision="${GIT_REVISION}" \
-      org.opencontainers.image.base.name="php:${PHP_VERSION}-fpm" \
+      org.opencontainers.image.base.name="docker.io/php:8.5-fpm" \
       org.opencontainers.image.created="${IMAGE_CREATED}"
 
 COPY docker/conf/php/prod.ini /usr/local/etc/php/conf.d/
@@ -200,14 +197,13 @@ COPY --chown=$RUN_USER --from=full-build $RUN_DIR $RUN_DIR
 
 VOLUME ["$RUN_DIR/var/user"]
 
-FROM nginx:${NGINX_VERSION}-alpine-slim AS nginx-base
+FROM docker.io/nginx:1.31.9-alpine-slim@sha256:5bfced78d24d644270bedb0a9968697042e38d5c03fb6354603df025279c1cbe AS nginx-base
 COPY docker/conf/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 RUN mkdir -p /var/cache/nginx/qb_assets && chown nginx:nginx /var/cache/nginx/qb_assets
 VOLUME ["/var/cache/nginx/qb_assets"]
 
 FROM nginx-base AS nginx
 
-ARG NGINX_VERSION
 ARG APP_VERSION
 ARG GIT_REVISION
 ARG IMAGE_CREATED
@@ -218,7 +214,7 @@ LABEL org.opencontainers.image.title="Athorrent Nginx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.version="${APP_VERSION}" \
       org.opencontainers.image.revision="${GIT_REVISION}" \
-      org.opencontainers.image.base.name="nginx:${NGINX_VERSION}-alpine-slim" \
+      org.opencontainers.image.base.name="docker.io/nginx:1.31.9-alpine-slim" \
       org.opencontainers.image.created="${IMAGE_CREATED}"
 
 ARG RUN_DIR

@@ -23,7 +23,7 @@ x-php-base: &php-base
 
 services:
     jackett:
-        image: linuxserver/jackett:latest
+        image: docker.io/linuxserver/jackett:version-v0.24.3055@sha256:19802345fcc60a536802d29f36db073a77193fcd2f8fe3d067f604fc60a77352
         hostname: athorrent-jackett
         environment:
             - PUID=1000
@@ -74,7 +74,7 @@ services:
             - php
 
     reverse-proxy:
-        image: caddy
+        image: docker.io/caddy:2.11@sha256:4851e54a46b206517c574821bb5cc67f170d2156041e9fbc4c9193b45e84a75b
         hostname: athorrent-caddy
         depends_on:
             - nginx
