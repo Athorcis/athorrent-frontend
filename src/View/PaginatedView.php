@@ -13,6 +13,7 @@ class PaginatedView extends View
 {
     /**
      * @param PaginableRepositoryInterface<mixed> $entityRepository
+     * @param int<1, max> $countPerPage
      * @param array{}|array{string, mixed}        $criteria
      * @param array<string, 'ASC'|'DESC'>         $sort
      */

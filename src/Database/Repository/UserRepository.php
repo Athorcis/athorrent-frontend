@@ -30,6 +30,8 @@ class UserRepository extends EntityRepository implements PaginableRepositoryInte
     }
 
     /**
+     * @param int<1, max> $limit
+     * @param int<0, max> $offset
      * @return WindowPage<User>
      */
     protected function paginateQueryBuilder(QueryBuilder $qb, int $limit, int $offset): WindowPage

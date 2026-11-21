@@ -12,6 +12,8 @@ use Doctrine\ORM\Tools\Pagination\WindowPage;
 interface PaginableRepositoryInterface
 {
     /**
+     * @param int<1, max> $limit
+     * @param int<0, max> $offset
      * @param array{}|array{string, mixed} $criteria
      * @param array<string, 'ASC'|'DESC'>  $sort
      * @return WindowPage<T>

@@ -22,6 +22,8 @@ trait PaginableRepositoryTrait
     }
 
     /**
+     * @param int<1, max> $limit
+     * @param int<0, max> $offset
      * @return WindowPage<T>
      */
     protected function paginateQueryBuilder(QueryBuilder $qb, int $limit, int $offset): WindowPage
@@ -30,6 +32,8 @@ trait PaginableRepositoryTrait
     }
 
     /**
+     * @param int<1, max> $limit
+     * @param int<0, max> $offset
      * @return WindowPage<T>
      */
     public function paginate(int $limit, int $offset, array $criteria = [], array $sort = []): WindowPage
