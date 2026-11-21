@@ -18,8 +18,6 @@ describe('user-management', () => {
         createAltUser();
     });
 
-    // @TODO need to find a way to make it work in test env
-    /*
     it('should switch between users', () => {
         createAltUser();
 
@@ -27,9 +25,9 @@ describe('user-management', () => {
 
         cy.get('.user-switch').click();
         cy.url().should('contain', pathWithLocale('/user/files/'));
-        getLogoutButton().click();
+        cy.get(`.sidebar > a[href="${pathWithLocale('/administration/users/')}"]`).should('not.exists');
+        cy.logout('.exit-impersonation-button');
     });
-    */
 
     it('should compute a user\'s size via admin', () => {
         uploadFile('cypress/fixtures/files/test.txt');

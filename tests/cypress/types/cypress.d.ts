@@ -8,7 +8,7 @@ declare namespace Cypress {
     interface Chainable {
         elementExists(selector: string): Chainable<null>;
         login(username?: string, password?: string): Chainable<null>;
-        logout(): Chainable<null>;
+        logout(logoutButtonSelector?: string): Chainable<null>;
         dropdownItem(selector: string, parentSelector: string): Chainable<null>;
         dropdownItem(selector: string, parentSelector: string, skipOpen: boolean): Chainable<null>;
         confirmModal(): Chainable<JQuery<HTMLElement>>;

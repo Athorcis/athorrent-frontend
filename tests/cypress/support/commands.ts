@@ -34,12 +34,13 @@ Cypress.Commands.add('login', function (username: string = DEFAULT_USERNAME, pas
 
 const LOGOUT_BUTTON_SELECTOR = '.logout-button';
 
-export function getLogoutButton() {
-    return cy.get(LOGOUT_BUTTON_SELECTOR);
+export function getLogoutButton(logoutButtonSelector?: string) {
+    return cy.get(logoutButtonSelector ?? LOGOUT_BUTTON_SELECTOR);
 }
-Cypress.Commands.add('logout', function () {
+
+Cypress.Commands.add('logout', function (logoutButtonSelector?: string) {
     cy.visit(pathWithLocale('/user/files/'));
-    getLogoutButton().click();
+    getLogoutButton(logoutButtonSelector).click();
     Cypress.session.clearAllSavedSessions();
 });
 
