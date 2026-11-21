@@ -44,6 +44,7 @@
         "symfony/uid": "8.1.*",
         "symfony/ux-icons": "^3.7.0",
         "symfony/validator": "8.1.*",
+        "symfony/web-link": "8.1.*",
         "symfony/webpack-encore-bundle": "^2.4.3",
         "symfony/yaml": "8.1.*",
         "twig/cache-extra": "^3.28",
