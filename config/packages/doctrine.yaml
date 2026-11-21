@@ -19,7 +19,6 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Database/Entity'
                 prefix: 'Athorrent\Database\Entity'
-                alias: Athorrent
 
 when@test:
     doctrine:
