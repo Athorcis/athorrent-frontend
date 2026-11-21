@@ -24,7 +24,7 @@ function waitForPlayerStart(selector: string) {
 }
 
 function playPlayer(mediaSelector: string) {
-    cy.get('media-play-button').click();
+    cy.get('media-play-button').filter(':visible').click();
 
     waitForPlayerStart(mediaSelector);
 }
@@ -35,10 +35,10 @@ function pausePlayerAndAssertElapsed(mediaSelector: string) {
     cy.wait(PLAY_WAIT);
 
     if (mediaSelector === 'video') {
-        cy.get(mediaSelector).trigger('mouseover');
+        cy.get('video-neutral-skin').trigger('mouseover');
     }
 
-    cy.get('media-play-button')
+    cy.get('media-controls-content media-play-button')
         .click();
 
     cy.get(mediaSelector).should(($el) => {
