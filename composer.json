@@ -20,7 +20,7 @@
         "ext-sockets": "*",
         "clue/docker-react": "^1.6.0",
         "doctrine/doctrine-bundle": "^3.3.4",
-        "doctrine/orm": "^3.8.0",
+        "doctrine/orm": "~3.7.7",
         "knplabs/knp-time-bundle": "^2.5",
         "nelmio/security-bundle": "^3.9",
         "react/async": "^4.3",
@@ -59,7 +59,7 @@
         "symfony/debug-bundle": "8.1.*",
         "symfony/stopwatch": "8.1.*",
         "symfony/web-profiler-bundle": "8.1.*",
-        "vincentlanglet/twig-cs-fixer": "^4.1"
+        "vincentlanglet/twig-cs-fixer": "^4.1.2"
     },
     "suggest": {
         "ext-pcntl": "*",
