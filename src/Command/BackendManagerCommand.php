@@ -11,6 +11,7 @@ use React\Http\HttpServer;
 use React\Http\Message\Response;
 use React\Socket\SocketServer;
 use Seld\Signal\SignalHandler;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,11 +20,12 @@ use Throwable;
 
 use function React\Async\async;
 
+#[AsCommand(name: 'backend-manager:run')]
 class BackendManagerCommand extends Command
 {
     public function __construct(private readonly BackendManager $backendManager)
     {
-        parent::__construct('backend-manager:run');
+        parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
