@@ -998,19 +998,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-optional-chaining@npm:^8.0.1":
-  version: 8.0.1
-  resolution: "@babel/plugin-transform-optional-chaining@npm:8.0.1"
-  dependencies:
-    "@babel/helper-plugin-utils": "npm:^8.0.1"
-    "@babel/helper-skip-transparent-expression-wrappers": "npm:^8.0.0"
-  peerDependencies:
-    "@babel/core": ^8.0.0
-  checksum: 10/0098572efbf897678ba2e58cdf53fabb699bffe7c90c6be83879e1b799e167306e406ae03721656e51d333cca037b60e643ad2fbba82c4738af09d709973cc64
-  languageName: node
-  linkType: hard
-
-"@babel/plugin-transform-optional-chaining@npm:^8.0.5":
+"@babel/plugin-transform-optional-chaining@npm:^8.0.1, @babel/plugin-transform-optional-chaining@npm:^8.0.5":
   version: 8.0.5
   resolution: "@babel/plugin-transform-optional-chaining@npm:8.0.5"
   dependencies:
