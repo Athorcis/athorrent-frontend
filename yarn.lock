@@ -1081,13 +1081,13 @@ __metadata:
   linkType: hard
 
 "@babel/plugin-transform-regenerator@npm:^8.0.6":
-  version: 8.0.6
-  resolution: "@babel/plugin-transform-regenerator@npm:8.0.6"
+  version: 8.1.2
+  resolution: "@babel/plugin-transform-regenerator@npm:8.1.2"
   dependencies:
     "@babel/helper-plugin-utils": "npm:^8.0.1"
   peerDependencies:
     "@babel/core": ^8.0.0
-  checksum: 10/fdadcf2684d2aad48fd74e31241cc196bd2b6e2f4d85645d31113160628ab8949fd517237182513b77fd3251d148062859a5775af90555981e57c7194a425de5
+  checksum: 10/04d26cc03116fac8409a280b2c47ffb96a30d1ff7a6d61be8611dfb4ffd68fd9e8a1f48cf0d2e7babcd3e9eeee406ba15ad7c90b826cd248fec9df9dcfad6434
   languageName: node
   linkType: hard
 
