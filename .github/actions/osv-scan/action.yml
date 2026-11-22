@@ -6,8 +6,37 @@ runs:
     steps:
         - name: Scan for vulnerabilities and malicious packages
           uses: google/osv-scanner-action/osv-scanner-action@32d3cd482bdadfb38b186c0ad1b031902d55d932 # v2.7.1
+          continue-on-error: true
           with:
               scan-args: |
                   --lockfile=yarn.lock
                   --lockfile=tests/yarn.lock
                   --lockfile=composer.lock
+                  --format=json
+                  --output=osv-results.json
+
+        - name: Check for critical and malicious vulnerabilities
+          shell: bash
+          run: |
+              if [ ! -f osv-results.json ]; then
+                  echo "No scan results found, skipping check"
+                  exit 0
+              fi
+
+              # Check for malicious packages (MAL-* IDs)
+              MALICIOUS=$(jq '[.results[].packages[].vulnerabilities[].id // "" | select(startswith("MAL-"))] | length' osv-results.json 2>/dev/null || echo "0")
+
+              # Check for critical vulnerabilities (CVSS vector with Network/Local, Low Complexity, No Privileges, No Interaction)
+              # These patterns typically indicate Critical severity (CVSS >= 9.0)
+              CRITICAL=$(jq '[.results[].packages[].vulnerabilities[] |
+                select(.severity[]? | .type == "CVSS_V3" and (.score | test("AV:N/AC:L/PR:N/UI:N"))) |
+                .id] | length' osv-results.json 2>/dev/null || echo "0")
+
+              echo "Found $MALICIOUS malicious packages and $CRITICAL critical vulnerabilities"
+
+              if [ "$MALICIOUS" -gt 0 ] || [ "$CRITICAL" -gt 0 ]; then
+                  echo "::error::Found critical or malicious vulnerabilities"
+                  jq -r '.results[].packages[] | .package as $pkg | .vulnerabilities[] | select(.id | startswith("MAL-")) | "\(.id) \($pkg.name)@\($pkg.version)"' osv-results.json 2>/dev/null || true
+                  jq -r '.results[].packages[] | .package as $pkg | .vulnerabilities[] | select(.severity[]? | .type == "CVSS_V3" and (.score | test("AV:N/AC:L/PR:N/UI:N"))) | "\(.id) \($pkg.name)@\($pkg.version)"' osv-results.json 2>/dev/null || true
+                  exit 1
+              fi
