@@ -5,7 +5,7 @@ runs:
     using: composite
     steps:
         - name: Scan for vulnerabilities and malicious packages
-          uses: google/osv-scanner-action@b4833200e1e4c34a110653a4d80a5e6b3c6b5a3f # v2.7.1
+          uses: google/osv-scanner-action@32d3cd482bdadfb38b186c0ad1b031902d55d932 # v2.7.1
           with:
               scan-args: |
                   --lockfile=yarn.lock
