@@ -26,17 +26,20 @@ runs:
               # Check for malicious packages (MAL-* IDs)
               MALICIOUS=$(jq '[.results[].packages[].vulnerabilities[].id // "" | select(startswith("MAL-"))] | length' osv-results.json 2>/dev/null || echo "0")
 
-              # Check for critical vulnerabilities (CVSS vector with Network/Local, Low Complexity, No Privileges, No Interaction)
-              # These patterns typically indicate Critical severity (CVSS >= 9.0)
-              CRITICAL=$(jq '[.results[].packages[].vulnerabilities[] |
-                select(.severity[]? | .type == "CVSS_V3" and (.score | test("AV:N/AC:L/PR:N/UI:N"))) |
-                .id] | length' osv-results.json 2>/dev/null || echo "0")
+              # Check for critical vulnerabilities using pre-computed max_severity from groups (CVSS >= 9.0)
+              # groups[].max_severity is a string like "9.2", "7.5", etc.
+              CRITICAL=$(jq '[.results[].packages[] |
+                .groups // [] | .[] | select((.max_severity // "" | tonumber) >= 9.0) | .ids[]
+              ] | length' osv-results.json 2>/dev/null || echo "0")
 
               echo "Found $MALICIOUS malicious packages and $CRITICAL critical vulnerabilities"
 
               if [ "$MALICIOUS" -gt 0 ] || [ "$CRITICAL" -gt 0 ]; then
                   echo "::error::Found critical or malicious vulnerabilities"
                   jq -r '.results[].packages[] | .package as $pkg | .vulnerabilities[] | select(.id | startswith("MAL-")) | "\(.id) \($pkg.name)@\($pkg.version)"' osv-results.json 2>/dev/null || true
-                  jq -r '.results[].packages[] | .package as $pkg | .vulnerabilities[] | select(.severity[]? | .type == "CVSS_V3" and (.score | test("AV:N/AC:L/PR:N/UI:N"))) | "\(.id) \($pkg.name)@\($pkg.version)"' osv-results.json 2>/dev/null || true
+                  # List critical vulns by finding groups with max_severity >= 9.0 and matching their IDs
+                  jq -r '.results[].packages[] | .package as $pkg |
+                    (.groups // [] | .[] | select((.max_severity // "" | tonumber) >= 9.0) | .ids[]) as $crit_id |
+                    .vulnerabilities[] | select(.id == $crit_id) | "\(.id) \($pkg.name)@\($pkg.version)"' osv-results.json 2>/dev/null || true
                   exit 1
               fi
