@@ -14,7 +14,6 @@ updates:
     allow:
       - dependency-type: "direct"
         update-types: ["version-update:semver-minor", "version-update:semver-patch"]
-      - dependency-type: "indirect"
   - package-ecosystem: "composer"
     directory: "/"
     schedule:
@@ -24,7 +23,6 @@ updates:
     allow:
       - dependency-type: "direct"
         update-types: ["version-update:semver-minor", "version-update:semver-patch"]
-      - dependency-type: "indirect"
   - package-ecosystem: "docker"
     directory: "/docker"
     schedule:
@@ -52,4 +50,3 @@ updates:
     allow:
       - dependency-type: "direct"
         update-types: ["version-update:semver-minor", "version-update:semver-patch"]
-      - dependency-type: "indirect"
