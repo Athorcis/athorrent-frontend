@@ -11,4 +11,3 @@ runs:
                   --lockfile=yarn.lock
                   --lockfile=tests/yarn.lock
                   --lockfile=composer.lock
-                  --lockfile=docker/Dockerfile
