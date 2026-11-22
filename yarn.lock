@@ -305,15 +305,15 @@ __metadata:
   linkType: hard
 
 "@babel/helper-module-transforms@npm:^8.0.1":
-  version: 8.0.1
-  resolution: "@babel/helper-module-transforms@npm:8.0.1"
+  version: 8.1.2
+  resolution: "@babel/helper-module-transforms@npm:8.1.2"
   dependencies:
     "@babel/helper-module-imports": "npm:^8.0.0"
-    "@babel/helper-validator-identifier": "npm:^8.0.0"
-    "@babel/traverse": "npm:^8.0.0"
+    "@babel/helper-validator-identifier": "npm:^8.0.6"
+    "@babel/traverse": "npm:^8.1.2"
   peerDependencies:
     "@babel/core": ^8.0.0
-  checksum: 10/cccf680dacfd8d961ee67a5519247a60bac9be814459894fd99aacbc51217ac6869b75844a48a2fb20d1ca0184a7e00f2998c74e87506f154d51f50b43b5e4f3
+  checksum: 10/641069b979cbd1d51167b1a9627b21b8f25eb46d0ee77b62eebc7d5a9d77a557a2d7ad56546dcdf8199220a21bd92df5ed0cb46252e5c104544c7b14ab5771aa
   languageName: node
   linkType: hard
 
