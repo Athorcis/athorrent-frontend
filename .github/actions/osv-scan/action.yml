@@ -1,0 +1,14 @@
+name: OSV Security Scan
+description: Scan lockfiles for vulnerabilities and malicious packages
+
+runs:
+    using: composite
+    steps:
+        - name: Scan for vulnerabilities and malicious packages
+          uses: google/osv-scanner-action@74e6d72e3f29d7355f6e25e9c198b8dd3a9572e6 # v2
+          with:
+              scan-args: |
+                  --lockfile=yarn.lock
+                  --lockfile=tests/yarn.lock
+                  --lockfile=composer.lock
+                  --lockfile=docker/Dockerfile

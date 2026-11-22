@@ -15,12 +15,42 @@ permissions:
     pull-requests: write
 
 jobs:
-    enable-automerge:
+    check-age:
         if: github.actor == 'dependabot[bot]'
         runs-on: ubuntu-latest
 
         steps:
-            - name: Enable auto-merge
+            - name: Check PR age
+              id: pr-age
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  PR_URL: ${{ github.event.pull_request.html_url }}
+              run: |
+                CREATED=$(gh pr view "$PR_URL" --json createdAt --jq '.createdAt')
+                CREATED_EPOCH=$(date -d "$CREATED" +%s)
+                NOW_EPOCH=$(date +%s)
+                AGE_DAYS=$(( (NOW_EPOCH - CREATED_EPOCH) / 86400 ))
+                echo "age_days=$AGE_DAYS" >> "$GITHUB_OUTPUT"
+                echo "PR is $AGE_DAYS days old"
+
+        outputs:
+            age_days: ${{ steps.pr-age.outputs.age_days }}
+
+    automerge:
+        needs: check-age
+        if: needs.check-age.outputs.age_days >= 7
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+              with:
+                  persist-credentials: false
+
+            - name: Scan for vulnerabilities and malicious packages
+              uses: ./.github/actions/osv-scan
+
+            - name: Enable auto-merge after 7 days
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   PR_URL: ${{ github.event.pull_request.html_url }}

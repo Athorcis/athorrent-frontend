@@ -19,6 +19,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
     allow:
       - dependency-type: "direct"
         update-types: ["version-update:semver-minor", "version-update:semver-patch"]
