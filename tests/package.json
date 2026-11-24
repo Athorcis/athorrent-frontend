@@ -10,7 +10,7 @@
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.72.2"
+    "typescript-eslint": "^8.73.0"
   },
   "scripts": {
     "lint": "eslint cypress.config.ts cypress && tsc --noEmit --project cypress/tsconfig.json",
